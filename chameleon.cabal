@@ -1,16 +1,14 @@
 cabal-version: 1.12
 
--- This file has been generated from package.yaml by hpack version 0.33.0.
+-- This file has been generated from package.yaml by hpack version 0.34.4.
 --
 -- see: https://github.com/sol/hpack
---
--- hash: 1517c81b2ba3789b4d8ff3c90831c09365db1af49f5f55b3cf83c371e6701c10
 
-name:           bark
+name:           chameleon
 version:        0.1.0.0
 description:    Please see the README on GitHub
-homepage:       https://github.com/maybetonyfu/bark#readme
-bug-reports:    https://github.com/maybetonyfu/bark/issues
+homepage:       https://github.com/maybetonyfu/chameleon#readme
+bug-reports:    https://github.com/maybetonyfu/chameleon/issues
 author:         Tony Fu
 maintainer:     tonyfu@fastmail.com
 copyright:      2021 Tony Fu
@@ -19,7 +17,7 @@ build-type:     Simple
 
 source-repository head
   type: git
-  location: https://github.com/maybetonyfu/bark
+  location: https://github.com/maybetonyfu/chameleon
 
 library
   exposed-modules:
@@ -38,7 +36,7 @@ library
       Server
       Typing
   other-modules:
-      Paths_bark
+      Paths_chameleon
   hs-source-dirs:
       src
   build-depends:
@@ -56,10 +54,10 @@ library
     , transformers
   default-language: Haskell2010
 
-executable bark
+executable chameleon
   main-is: Main.hs
   other-modules:
-      Paths_bark
+      Paths_chameleon
   hs-source-dirs:
       app
   ghc-options: -threaded -rtsopts -with-rtsopts=-N
@@ -67,9 +65,9 @@ executable bark
       Agda
     , aeson
     , array
-    , bark
     , base
     , bytestring
+    , chameleon
     , containers
     , ghc
     , ghc-paths

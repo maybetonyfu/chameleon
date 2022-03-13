@@ -12,7 +12,7 @@ data ChStep = ChStep String Order SrcSpan SrcSpan (Int, Int)  deriving (Show, Eq
 data Order = LR | RL deriving (Show, Eq, Generic)
 
 compareConstraints :: LabeledGoal -> LabeledGoal -> [ChStep]
-compareConstraints (Label n1 (term1, term1') reason1 loc1 _) (Label n2 (term2, term2') reason2 loc2 _)
+compareConstraints (Label n1 (term1, term1') _ reason1 loc1 _) (Label n2 (term2, term2') _ reason2 loc2 _)
   | loc1 == loc2 = []
   | loc1 `within` loc2 = [ChStep "is part of" LR loc1 loc2 (n1, n2)]
   | loc2 `within` loc1 = [ChStep "is part of" RL loc1 loc2 (n1, n2)]

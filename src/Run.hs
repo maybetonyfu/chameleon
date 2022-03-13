@@ -94,7 +94,7 @@ processFile text =
                                   rightmost = last (dropWhileEnd (== leftmost) concrete)
                                   sides =
                                     zipWith
-                                      ( \t (Label n _ _ _ _) ->
+                                      ( \t (Label n _ _ _ _ _) ->
                                           if t == leftmost
                                             then (n, "L")
                                             else
@@ -195,7 +195,7 @@ graphView (g : gs) = map (\n -> Edge (goalNum g) n n) neighbors ++ map (\n -> Ed
     neighbors = map goalNum . filter (\g' -> g `adjs` g') $ gs
 
 adjs :: LabeledGoal -> LabeledGoal -> Bool
-adjs (Label _ (p1, p2) _ _ _) (Label _ (p1', p2') _ _ _) =
+adjs (Label _ (p1, p2) _ _ _ _) (Label _ (p1', p2') _ _ _ _) =
   let source = allVars p1 ++ allVars p2
       target = allVars p1' ++ allVars p2'
    in any (`elem` source) target
@@ -211,8 +211,3 @@ main = do
   putStrLn "\nSteps: "
   mapM_ print (steps res)
 
-
-
-
-I see what is going on. Because of the use ==< operator, the type restoration
-process can never fully restore the original function.

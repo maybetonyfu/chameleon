@@ -1,6 +1,6 @@
-name:                bark
+name:                chameleon
 version:             0.1.0.0
-github:              "maybetonyfu/bark"
+github:              "maybetonyfu/chameleon"
 license:             BSD3
 author:              "Tony Fu"
 maintainer:          "tonyfu@fastmail.com"
@@ -33,7 +33,7 @@ library:
   source-dirs: src
 
 executables:
-  bark:
+  chameleon:
     main:                Main.hs
     source-dirs:         app
     ghc-options:
@@ -41,5 +41,5 @@ executables:
     - -rtsopts
     - -with-rtsopts=-N
     dependencies:
-    - bark
+    - chameleon
 
