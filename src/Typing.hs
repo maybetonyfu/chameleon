@@ -29,14 +29,14 @@ data LabeledGoal = Label
   }
 
 instance Show LabeledGoal where
-  show (Label n terms _  reason _ g) = show n ++ " | " ++ show terms ++ " | " ++ reason
+  show (Label n terms _ reason _ g) = show n ++ " | " ++ show terms ++ " | " ++ reason
 
 instance Eq LabeledGoal where
-  (Label n1 terms1 _  reason1 loc1 g1) == (Label n2 terms2 _ reason2 loc2 g2)
-    = n1 == n2 && terms1 == terms2 && reason1 == reason2 && loc1 == loc2
+  (Label n1 terms1 _ reason1 loc1 g1) == (Label n2 terms2 _ reason2 loc2 g2) =
+    n1 == n2 && terms1 == terms2 && reason1 == reason2 && loc1 == loc2
 
 unlabel :: LabeledGoal -> Goal
-unlabel (Label _ _ _ _ _  g) = g
+unlabel (Label _ _ _ _ _ g) = g
 
 type SolveState = State (Int, [Scope], [FieldOrdering])
 
@@ -306,27 +306,33 @@ instance MatchTerm Exp where
     return (g : g2 ++ g1)
   matchTerm term node@(App _ e1 e2) = do
     (_, _, _) <- get
-    v1 <- freshVar
-    g1 <- matchTerm v1 e1
-    v2 <- freshVar
-    g2 <- matchTerm v2 e2
+    let unroll (App _ a b) = unroll a ++ [b]
+        unroll x = [x]
+    let exps = (unroll e1) ++ [e2]
+    ts <- freshVarN (length exps)
+    gTerms <- concat <$> zipWithM (matchTerm) ts exps
+
+    -- v1 <- freshVar
+    -- g1 <- matchTerm v1 e1
+    -- v2 <- freshVar
+    -- g2 <- matchTerm v2 e2
     f <- freshVar
     instanciation <-
-          case e1 of
-            (Var _ name) -> do
-              varname <- varByName name
-              return [(varname, f)]
-            _ -> return []
+      case (head exps) of
+        (Var _ name) -> do
+          varname <- varByName name
+          return [(varname, f)]
+        _ -> return []
     goalOrder <- getGoalOrder (ann node)
-    let label = Label goalOrder (v1, funOf [v2, term]) instanciation ("Applied") (sl e2)
+    let label = Label goalOrder (head ts, funOf (tail ts)) instanciation ("Applied") (sl node)
     let g =
           label
-            (conjN
-                      [ f ==< v1,
-                        f === funOf [v2, term]
-                      ]
+            ( conjN
+                [ f ==< head ts,
+                  f === funOf ((tail ts) ++ [term])
+                ]
             )
-    return $ g1 ++ g2 ++ [g]
+    return $ gTerms ++ [g]
   matchTerm term node@(InfixApp l e1 op e2) = do
     (_, _, _) <- get
     v1 <- freshVar
@@ -345,15 +351,14 @@ instance MatchTerm Exp where
     --       Just (_, consFun) -> consFun
     goalOrder <- getGoalOrder (ann node)
     f <- freshVar
-    let label = Label goalOrder (vOp, funOf [v1, v2, term]) [(vOp, f)]  ("Applied") (sl e2)
+    let label = Label goalOrder (vOp, funOf [v1, v2, term]) [(vOp, f)] ("Applied") (sl e2)
     let g =
           label
-            (
-                    conjN
-                      [ f ==< vOp,
-                        f === funOf [v1, v2, term]
-                        -- instanceConstraint f
-                      ]
+            ( conjN
+                [ f ==< vOp,
+                  f === funOf [v1, v2, term]
+                  -- instanceConstraint f
+                ]
             )
     return $ g1 ++ g2 ++ [g]
   matchTerm term node@(Let _ binds exp) = do
@@ -413,11 +418,11 @@ instance MatchTerm Exp where
     f <- freshVar
     let g =
           conjN
-                  [ f ==< vOp,
-                    f === funOf [vLeft, vRight, vRes],
-                    term === funOf [vRight, vRes]
-                    -- conda (map (\(t, g) -> [t === vOp, g f]) cons)
-                  ]
+            [ f ==< vOp,
+              f === funOf [vLeft, vRight, vRes],
+              term === funOf [vRight, vRes]
+              -- conda (map (\(t, g) -> [t === vOp, g f]) cons)
+            ]
 
     goalOrder <- getGoalOrder (ann node)
 
@@ -439,11 +444,11 @@ instance MatchTerm Exp where
     f <- freshVar
     let g =
           conjN
-                  [ f ==< vOp,
-                    f === funOf [vLeft, vRight, vRes],
-                    term === funOf [vLeft, vRes]
-                    -- conda (map (\(t, g) -> [t === vOp, g f]) cons)
-                  ]
+            [ f ==< vOp,
+              f === funOf [vLeft, vRight, vRes],
+              term === funOf [vLeft, vRes]
+              -- conda (map (\(t, g) -> [t === vOp, g f]) cons)
+            ]
 
     goalOrder <- getGoalOrder (ann node)
 
@@ -501,7 +506,7 @@ instance MatchTerm FieldUpdate where
     vExp <- freshVar
     gExp <- matchTerm vExp (Var l name)
     f <- freshVar
-    let g =  conj2 (f ==< fName) (f === funOf [term, vExp])
+    let g = conj2 (f ==< fName) (f === funOf [term, vExp])
     goalOrder <- getGoalOrder (ann node)
 
     let label = Label goalOrder (fName, funOf [term, vExp]) [(fName, f)] ("Applied") (sl node)
@@ -560,7 +565,7 @@ instance MatchTerm Pat where
     args <- freshVarN (length pats)
     gArgs <- concat <$> zipWithM (matchTerm) args pats
     f <- freshVar
-    let gApp =  conj2 (f ==< vFun) (f === funOf (args ++ [term]))
+    let gApp = conj2 (f ==< vFun) (f === funOf (args ++ [term]))
     goalOrder <- getGoalOrder (ann node)
     let label = Label goalOrder (vFun, funOf (args ++ [term])) [(vFun, f)] "Matched" (sl node)
     return $ label gApp : gArgs

@@ -7,6 +7,7 @@ import Builtin
 import Constraint hiding (main, processFile)
 import Control.Monad.Trans.State.Lazy
 import Data.Aeson
+import Data.ByteString (takeWhileEnd)
 import qualified Data.ByteString.Lazy.Char8 as BS
 import Data.List
 import qualified Data.Map as Map
@@ -23,7 +24,6 @@ import Reasoning
 import Scope hiding (main, processFile)
 import System.Environment
 import Typing hiding (main, processFile)
-import Data.ByteString (takeWhileEnd)
 
 data ChContext = ChContext String String String [(Int, String)] deriving (Show, Generic)
 
@@ -73,40 +73,45 @@ processFile text =
                                in compareConstraints goalA goalB
                           )
                           longestIndexPairs
-                      concreteTypes = trace ("\nOriginal Names:\n" ++ show names ++ "\nNewNames: \n" ++ show names') map (\g ->
-                          let mss = maximalSatisfiableSubset ks (longestChain \\ [g]) (goals' \\ [g])
-                          in typings ks names' mss
-                        ) longestChain
+                      concreteTypes =
+                        trace
+                          ("\nOriginal Names:\n" ++ show names ++ "\nNewNames: \n" ++ show names')
+                          map
+                          ( \g ->
+                              let mss = maximalSatisfiableSubset ks (longestChain \\ [g]) (goals' \\ [g])
+                               in typings ks names' mss
+                          )
+                          longestChain
 
                       simplifyTypes = map (\g -> typings ks names (longestChain \\ [g])) longestChain
                       altTable =
-                          -- trace ("\nSimplifed: " ++ unlines (map (show . length . nub) simplifyTypes)) $
-                            zip3 names (transpose concreteTypes)  (transpose simplifyTypes)
+                        -- trace ("\nSimplifed: " ++ unlines (map (show . length . nub) simplifyTypes)) $
+                        zip3 names (transpose concreteTypes) (transpose simplifyTypes)
                       releventSimplied = filter (\(_, concret, simplified) -> length (nub simplified) > 1) altTable
                       releventConcrete = filter (\(_, concret, simplified) -> length (nub concret) > 1) altTable
                       relevent = if null releventSimplied then releventConcrete else releventSimplied
                       contextTable =
                         trace ("Longest Chain: " ++ unlines (map show longestChain)) $
-                        map
-                          ( \(name, concrete, simplified) ->
-                              trace ("\n" ++ name ++ ":" ++ unlines (map termToType concrete)) $
-                              let leftmost = head concrete
-                                  rightmost = last (dropWhileEnd (== leftmost) concrete)
-                                  sides =
-                                    zipWith
-                                      ( \t (Label n _ _ _ _ _) ->
-                                          if t == leftmost
-                                            then (n, "L")
-                                            else
-                                              if t == rightmost
-                                                then (n, "R")
-                                                else (n, "M")
-                                      )
-                                      concrete
-                                      longestChain
-                               in ChContext (showProperName name) (termToType leftmost) (termToType rightmost) sides
-                          )
-                          relevent
+                          map
+                            ( \(name, concrete, simplified) ->
+                                trace ("\n" ++ name ++ ":" ++ unlines (map termToType concrete)) $
+                                  let leftmost = head concrete
+                                      rightmost = last (dropWhileEnd (== leftmost) concrete)
+                                      sides =
+                                        zipWith
+                                          ( \t (Label n _ _ _ _ _) ->
+                                              if t == leftmost
+                                                then (n, "L")
+                                                else
+                                                  if t == rightmost
+                                                    then (n, "R")
+                                                    else (n, "M")
+                                          )
+                                          concrete
+                                          longestChain
+                                   in ChContext (showProperName name) (termToType leftmost) (termToType rightmost) sides
+                            )
+                            relevent
                    in ChTypeError contextTable reasonings
                 else ChSuccess
         ParseFailed srcLoc message ->
@@ -118,13 +123,12 @@ processFile text =
 
 maximalSatisfiableSubset :: KanrenState -> [LabeledGoal] -> [LabeledGoal] -> [LabeledGoal]
 maximalSatisfiableSubset ks mus [] = mus
-maximalSatisfiableSubset ks mus (g:gs) =
-  let newset = g:mus
-      sat = not .null $ runGoalNWithState ks 1 (conjN (map unlabel (sortOn goalNum newset ++ sortOn goalNum newset)))
-  in if sat
+maximalSatisfiableSubset ks mus (g : gs) =
+  let newset = g : mus
+      sat = not . null $ runGoalNWithState ks 1 (conjN (map unlabel (sortOn goalNum newset ++ sortOn goalNum newset)))
+   in if sat
         then maximalSatisfiableSubset ks newset gs
         else maximalSatisfiableSubset ks mus gs
-
 
 typings :: KanrenState -> [String] -> [LabeledGoal] -> [Term]
 typings ks names goals =
@@ -141,26 +145,31 @@ showProperName :: String -> String
 showProperName = reverse . drop 1 . dropWhile (/= '.') . reverse
 
 useFunctionNewNames :: [(Term, Term)] -> [String] -> [String]
-useFunctionNewNames instanciateTable names =
-  map (go instanciateTable) names
-  where go :: [(Term, Term)] -> String -> String
-        go instTable name =
-          case lookup (var name) instTable of
-            Nothing -> name
-            Just newvar -> varToString newvar
-     
+useFunctionNewNames instanciateTable =
+  map (go instanciateTable)
+  where
+    go :: [(Term, Term)] -> String -> String
+    go instTable name =
+      maybe name varToString (lookup (var name) instTable)
+
 getMus :: KanrenState -> [LabeledGoal] -> [LabeledGoal]
 getMus ks = go []
   where
     go accumulateOuter rest =
-      let outerSat = not . null $ runGoalNWithState ks 1 (conjN (map unlabel (sortOn goalNum accumulateOuter ++ sortOn goalNum accumulateOuter)))
+      let outerSat =
+            not . null $
+              runGoalNWithState ks 1 (conjN (map unlabel (sortOn goalNum accumulateOuter ++ sortOn goalNum accumulateOuter)))
           inner accumulateInner [] =
-            let innerSat = not . null $ runGoalNWithState ks 1 (conjN (map unlabel (sortOn goalNum accumulateInner ++ sortOn goalNum accumulateInner)))
+            let innerSat =
+                  not . null $
+                    runGoalNWithState ks 1 (conjN (map unlabel (sortOn goalNum accumulateInner ++ sortOn goalNum accumulateInner)))
              in if innerSat
                   then error "Set is satisfiable"
                   else accumulateInner
           inner accumulateInner (g : gs) =
-            let innerSat = not . null $ runGoalNWithState ks 1 (conjN (map unlabel (sortOn goalNum accumulateInner ++ sortOn goalNum accumulateInner)))
+            let innerSat =
+                  not . null $
+                    runGoalNWithState ks 1 (conjN (map unlabel (sortOn goalNum accumulateInner ++ sortOn goalNum accumulateInner)))
              in if innerSat
                   then inner (g : accumulateInner) gs
                   else accumulateInner
@@ -199,7 +208,8 @@ processBuiltIn =
 
 graphView :: [LabeledGoal] -> [Edge Int Int]
 graphView [] = []
-graphView (g : gs) = map (\n -> Edge (goalNum g) n n) neighbors ++ map (\n -> Edge n (goalNum g) n) neighbors ++ graphView gs
+graphView (g : gs) =
+  map (\n -> Edge (goalNum g) n n) neighbors ++ map (\n -> Edge n (goalNum g) n) neighbors ++ graphView gs
   where
     neighbors = map goalNum . filter (\g' -> g `adjs` g') $ gs
 
@@ -219,4 +229,3 @@ main = do
   mapM_ print (contextTable res)
   putStrLn "\nSteps: "
   mapM_ print (steps res)
-
