@@ -58,12 +58,13 @@ processFile text =
            in if null res
                 then
                   let mus = getMus ks goals'
+                      instanciationTable = concatMap instanciation mus
+                      names' = trace ("\nInsta Table:\n" ++ show instanciationTable) useFunctionNewNames instanciationTable names
                       graphG = fromEdges . graphView $ mus
                       reachables = concatMap (map snd . Map.toList . reachableFrom graphG) [0 .. length goals']
                       longestIndexPairs = snd $ maximumBy (\(n, _) (m, _) -> compare n m) reachables -- [(a,b), (b,c), (c,d)]
                       longestIndexChain = (source . head $ longestIndexPairs) : map target longestIndexPairs -- [a,b,c,d]
                       longestChain = map (\n -> fromJust $ find ((== n) . goalNum) goals') longestIndexChain
-                      
                       reasonings =
                         concatMap
                           ( \(Edge a b _) ->
@@ -72,10 +73,9 @@ processFile text =
                                in compareConstraints goalA goalB
                           )
                           longestIndexPairs
-
-                      concreteTypes = map (\g ->
+                      concreteTypes = trace ("\nOriginal Names:\n" ++ show names ++ "\nNewNames: \n" ++ show names') map (\g ->
                           let mss = maximalSatisfiableSubset ks (longestChain \\ [g]) (goals' \\ [g])
-                          in typings ks names mss
+                          in typings ks names' mss
                         ) longestChain
 
                       simplifyTypes = map (\g -> typings ks names (longestChain \\ [g])) longestChain
@@ -140,6 +140,15 @@ showTyping (name, term) =
 showProperName :: String -> String
 showProperName = reverse . drop 1 . dropWhile (/= '.') . reverse
 
+useFunctionNewNames :: [(Term, Term)] -> [String] -> [String]
+useFunctionNewNames instanciateTable names =
+  map (go instanciateTable) names
+  where go :: [(Term, Term)] -> String -> String
+        go instTable name =
+          case lookup (var name) instTable of
+            Nothing -> name
+            Just newvar -> varToString newvar
+     
 getMus :: KanrenState -> [LabeledGoal] -> [LabeledGoal]
 getMus ks = go []
   where

@@ -310,18 +310,21 @@ instance MatchTerm Exp where
     g1 <- matchTerm v1 e1
     v2 <- freshVar
     g2 <- matchTerm v2 e2
+    f <- freshVar
+    instanciation <-
+          case e1 of
+            (Var _ name) -> do
+              varname <- varByName name
+              return [(varname, f)]
+            _ -> return []
     goalOrder <- getGoalOrder (ann node)
-
-    let label = Label goalOrder (v1, funOf [v2, term]) [] ("Applied") (sl e2)
+    let label = Label goalOrder (v1, funOf [v2, term]) instanciation ("Applied") (sl e2)
     let g =
           label
-            ( callFresh
-                ( \f ->
-                    conjN
+            (conjN
                       [ f ==< v1,
                         f === funOf [v2, term]
                       ]
-                )
             )
     return $ g1 ++ g2 ++ [g]
   matchTerm term node@(InfixApp l e1 op e2) = do
@@ -341,18 +344,16 @@ instance MatchTerm Exp where
     --       Nothing -> const succeeds
     --       Just (_, consFun) -> consFun
     goalOrder <- getGoalOrder (ann node)
-
-    let label = Label goalOrder (vOp, funOf [v1, v2, term]) []  ("Applied") (sl e2)
+    f <- freshVar
+    let label = Label goalOrder (vOp, funOf [v1, v2, term]) [(vOp, f)]  ("Applied") (sl e2)
     let g =
           label
-            ( callFresh
-                ( \f ->
+            (
                     conjN
                       [ f ==< vOp,
                         f === funOf [v1, v2, term]
                         -- instanceConstraint f
                       ]
-                )
             )
     return $ g1 ++ g2 ++ [g]
   matchTerm term node@(Let _ binds exp) = do
@@ -409,19 +410,18 @@ instance MatchTerm Exp where
     vRight <- freshVar
     vRes <- freshVar
     gLeft <- matchTerm vLeft exp
+    f <- freshVar
     let g =
-          callFresh
-            ( \f ->
-                conjN
+          conjN
                   [ f ==< vOp,
                     f === funOf [vLeft, vRight, vRes],
                     term === funOf [vRight, vRes]
                     -- conda (map (\(t, g) -> [t === vOp, g f]) cons)
                   ]
-            )
+
     goalOrder <- getGoalOrder (ann node)
 
-    let label = Label goalOrder (vOp, funOf [vLeft, vRight, vRes]) [] ("Applied") (sl node)
+    let label = Label goalOrder (vOp, funOf [vLeft, vRight, vRes]) [(vOp, f)] ("Applied") (sl node)
     return $
       gLeft ++ [label g]
   matchTerm term node@(RightSection l op exp) = do
@@ -436,19 +436,18 @@ instance MatchTerm Exp where
     vRight <- freshVar
     vRes <- freshVar
     gRight <- matchTerm vRight exp
+    f <- freshVar
     let g =
-          callFresh -- (a + b = c)  term = (+a) left term
-            ( \f ->
-                conjN
+          conjN
                   [ f ==< vOp,
                     f === funOf [vLeft, vRight, vRes],
                     term === funOf [vLeft, vRes]
                     -- conda (map (\(t, g) -> [t === vOp, g f]) cons)
                   ]
-            )
+
     goalOrder <- getGoalOrder (ann node)
 
-    let label = Label goalOrder (vOp, funOf [vLeft, vRight, vRes]) [] ("Applied") (sl node)
+    let label = Label goalOrder (vOp, funOf [vLeft, vRight, vRes]) [(vOp, f)] ("Applied") (sl node)
     return $
       gRight ++ [label g]
   matchTerm term node@(RecConstr _ qname fieldUpdates) = do
@@ -462,10 +461,10 @@ instance MatchTerm Exp where
     fVar <- varByName qname
     vArgs <- freshVarN (length orderedFields)
     gArgs <- concat <$> zipWithM (matchTerm) vArgs orderedFields
-    let g = callFresh (\f -> conj2 (f ==< fVar) (f === funOf (vArgs ++ [term])))
+    f <- freshVar
+    let g = conj2 (f ==< fVar) (f === funOf (vArgs ++ [term]))
     goalOrder <- getGoalOrder (ann node)
-
-    let label = Label goalOrder (fVar, funOf (vArgs ++ [term])) [] ("Applied") (sl node)
+    let label = Label goalOrder (fVar, funOf (vArgs ++ [term])) [(fVar, f)] ("Applied") (sl node)
     return $ label g : gArgs
   matchTerm term (RecUpdate _ exp []) = return []
   matchTerm term node@(RecUpdate _ exp fieldUpdates) = do
@@ -491,19 +490,21 @@ instance MatchTerm FieldUpdate where
     fName <- varByNameWithScope (Just RecordFieldScope) name
     vExp <- freshVar
     gExp <- matchTerm vExp exp
-    let g = callFresh (\f -> conj2 (f ==< fName) (f === funOf [term, vExp]))
+    f <- freshVar
+    let g = conj2 (f ==< fName) (f === funOf [term, vExp])
     goalOrder <- getGoalOrder (ann node)
 
-    let label = Label goalOrder (fName, funOf [term, vExp]) [] ("Applied") (sl node)
+    let label = Label goalOrder (fName, funOf [term, vExp]) [(fName, f)] ("Applied") (sl node)
     return $ label g : gExp
   matchTerm term node@(FieldPun l name) = do
     fName <- varByNameWithScope (Just RecordFieldScope) name
     vExp <- freshVar
     gExp <- matchTerm vExp (Var l name)
-    let g = callFresh (\f -> conj2 (f ==< fName) (f === funOf [term, vExp]))
+    f <- freshVar
+    let g =  conj2 (f ==< fName) (f === funOf [term, vExp])
     goalOrder <- getGoalOrder (ann node)
 
-    let label = Label goalOrder (fName, funOf [term, vExp]) [] ("Applied") (sl node)
+    let label = Label goalOrder (fName, funOf [term, vExp]) [(fName, f)] ("Applied") (sl node)
     return $ label g : gExp
 
 instance MatchTerm Pat where
@@ -558,10 +559,10 @@ instance MatchTerm Pat where
         else varByName qname
     args <- freshVarN (length pats)
     gArgs <- concat <$> zipWithM (matchTerm) args pats
-    let gApp = callFresh (\f -> conj2 (f ==< vFun) (f === funOf (args ++ [term])))
+    f <- freshVar
+    let gApp =  conj2 (f ==< vFun) (f === funOf (args ++ [term]))
     goalOrder <- getGoalOrder (ann node)
-
-    let label = Label goalOrder (vFun, funOf (args ++ [term])) [] "Matched" (sl node)
+    let label = Label goalOrder (vFun, funOf (args ++ [term])) [(vFun, f)] "Matched" (sl node)
     return $ label gApp : gArgs
   matchTerm term (PRec l qname fields) = do
     (_, _, fieldsOrderings) <- get
