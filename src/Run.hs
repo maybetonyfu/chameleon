@@ -25,14 +25,15 @@ import Scope hiding (main, processFile)
 import System.Environment
 import Typing hiding (main, processFile)
 
-data ChContext = ChContext String String String [(Int, String)] deriving (Show, Generic)
+data Affinity = L | R | M deriving (Show, Generic)
+data ChContext = ChContext String String String [((Int, Int), Affinity)] deriving (Show, Generic)
 
 data ChResult
   = ChTypeError
       { contextTable :: [ChContext],
         steps :: [ChStep]
       }
-  | ChLoadError
+  | ChLoadErrornn
       {
       }
   | ChParseError
@@ -91,7 +92,7 @@ processFile text =
                       releventConcrete = filter (\(_, concret, simplified) -> length (nub concret) > 1) altTable
                       relevent = if null releventSimplied then releventConcrete else releventSimplied
                       contextTable =
-                        trace ("Longest Chain: " ++ unlines (map show longestChain)) $
+                        --trace ("Longest Chain: " ++ unlines (map show longestChain)) $
                           map
                             ( \(name, concrete, simplified) ->
                                 trace ("\n" ++ name ++ ":" ++ unlines (map termToType concrete)) $
@@ -99,16 +100,16 @@ processFile text =
                                       rightmost = last (dropWhileEnd (== leftmost) concrete)
                                       sides =
                                         zipWith
-                                          ( \t (Label n _ _ _ _ _) ->
-                                              if t == leftmost
-                                                then (n, "L")
+                                          ( \(t1, t2) (Edge n1 n2 _) ->
+                                              if t1 == leftmost && t2 == leftmost
+                                                then ((n1, n2), L)
                                                 else
-                                                  if t == rightmost
-                                                    then (n, "R")
-                                                    else (n, "M")
+                                                  if t1 == rightmost && t2 == rightmost
+                                                    then ((n1, n2), R)
+                                                    else ((n1, n2), M)
                                           )
-                                          concrete
-                                          longestChain
+                                          (zip (init concrete) (tail concrete))
+                                          longestIndexPairs
                                    in ChContext (showProperName name) (termToType leftmost) (termToType rightmost) sides
                             )
                             relevent

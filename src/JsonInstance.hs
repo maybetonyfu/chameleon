@@ -9,4 +9,5 @@ instance ToJSON Order
 instance ToJSON ChStep
 instance ToJSON SrcSpan
 instance ToJSON ChContext 
-instance ToJSON ChResult 
+instance ToJSON ChResult
+instance ToJSON Affinity
