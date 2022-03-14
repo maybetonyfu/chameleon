@@ -49,6 +49,7 @@ library
     , ghc
     , ghc-paths
     , haskell-src-exts
+    , lens
     , scotty
     , string-qq
     , transformers
@@ -72,6 +73,7 @@ executable chameleon
     , ghc
     , ghc-paths
     , haskell-src-exts
+    , lens
     , scotty
     , string-qq
     , transformers

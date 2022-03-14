@@ -28,6 +28,7 @@ dependencies:
 - Agda
 - scotty
 - string-qq
+- lens
 
 library:
   source-dirs: src

@@ -5,6 +5,7 @@ module Run where
 import Agda.Utils.Graph.AdjacencyMap.Unidirectional hiding (lookup, transpose)
 import Builtin
 import Constraint hiding (main, processFile)
+import Control.Lens
 import Control.Monad.Trans.State.Lazy
 import Data.Aeson
 import qualified Data.ByteString.Lazy.Char8 as BS
@@ -26,7 +27,7 @@ import Typing hiding (main, processFile)
 
 data Affinity = L | R | M deriving (Show, Generic, Eq)
 
-data ChContext = ChContext String String String [((Int, Int), Affinity)] deriving (Show, Generic)
+data ChContext = ChContext String String String [((Int, Int), Affinity, Bool)] deriving (Show, Generic)
 
 data ChResult
   = ChTypeError
@@ -104,11 +105,11 @@ processFile text =
                                         zipWith
                                           ( \(t1, t2) (Edge n1 n2 _) ->
                                               if t1 == leftmost && t2 == leftmost
-                                                then ((n1, n2), L)
+                                                then ((n1, n2), L, False)
                                                 else
                                                   if t1 == rightmost && t2 == rightmost
-                                                    then ((n1, n2), R)
-                                                    else ((n1, n2), M)
+                                                    then ((n1, n2), R, False)
+                                                    else ((n1, n2), M, False)
                                           )
                                           (zip (init concrete) (tail concrete))
                                           longestIndexPairs
@@ -116,7 +117,7 @@ processFile text =
                                    in ChContext (showProperName name) (termToType leftmost) (termToType rightmost) normalizedSides
                           )
                           relevent
-                      contextTableSorted = sortOn (\(ChContext _ _ _ sides) -> fromJust $ findIndex ((== M) . snd) sides) contextTable
+                      contextTableSorted = sortOn (\(ChContext _ _ _ sides) -> fromJust $ findIndex ((== M) . view _2) sides) contextTable
                    in ChTypeError contextTableSorted reasonings
                 else ChSuccess
         ParseFailed srcLoc message ->
@@ -134,18 +135,18 @@ polarEnds types
   | isVar (last types) = polarEnds (init types)
   | otherwise = (head types, last types)
 
-normalize :: [(a, Affinity)] -> [(a, Affinity)]
+normalize :: [(a, Affinity, b)] -> [(a, Affinity, b)]
 normalize sides
-  | Just x <- find ((L ==) . snd) sides,
-    snd (head sides) /= L =
-    let leftHalf = takeWhile ((/= L) . snd) sides
-        rightHalf = dropWhile ((/= L) . snd) sides
-     in normalize (map (\(a, b) -> (a, L)) leftHalf ++ rightHalf)
-  | Just x <- find ((R ==) . snd) sides,
-    snd (last sides) /= R =
-    let rightHalf = takeWhile ((/= R) . snd) (reverse sides)
-        leftHalf = dropWhile ((/= L) . snd) (reverse sides)
-     in normalize (reverse (map (\(a, b) -> (a, R)) rightHalf ++ leftHalf))
+  | Just x <- find ((L ==) . view _2) sides,
+    view _2 (head sides) /= L =
+    let leftHalf = takeWhile ((/= L) . view _2) sides
+        rightHalf = dropWhile ((/= L) . view _2) sides
+     in normalize (map (set _2 L) leftHalf ++ rightHalf)
+  | Just x <- find ((R ==) . view _2) sides,
+    view _2 (last sides) /= R =
+    let rightHalf = takeWhile ((/= R) . view _2) (reverse sides)
+        leftHalf = dropWhile ((/= R) . view _2) (reverse sides)
+     in normalize (reverse (map (set _2 R) rightHalf ++ leftHalf))
   | otherwise = sides
 
 maximalSatisfiableSubset :: KanrenState -> [LabeledGoal] -> [LabeledGoal] -> [LabeledGoal]
@@ -252,13 +253,15 @@ main = do
   let filename = head args
   content <- readFile filename
   let res = processFile content
+  print res
   putStrLn "\nContexts: "
   mapM_
     ( \(ChContext name typel typer steps) -> do
         putStrLn name
         putStrLn typel
         putStrLn typer
-        putStrLn . unwords . map (\(a, b) -> show b) $ steps
+        putStrLn . unwords . map (\(a, b, c) -> show b) $ steps
+        putStrLn . unwords . map (\(a, b, c) -> show c) $ steps
     )
     (contextTable res)
   putStrLn "\nSteps: "
