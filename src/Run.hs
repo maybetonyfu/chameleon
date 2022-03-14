@@ -111,7 +111,7 @@ processFile text =
                                                     then ((n1, n2), R, False)
                                                     else ((n1, n2), M, False)
                                           )
-                                          (zip (init concrete) (tail concrete))
+                                          (zigzag concrete)
                                           longestIndexPairs
                                       normalizedSides = normalize sides
                                    in ChContext (showProperName name) (termToType leftmost) (termToType rightmost) normalizedSides
@@ -137,17 +137,18 @@ polarEnds types
 
 normalize :: [(a, Affinity, b)] -> [(a, Affinity, b)]
 normalize sides
-  | Just x <- find ((L ==) . view _2) sides,
-    view _2 (head sides) /= L =
-    let leftHalf = takeWhile ((/= L) . view _2) sides
-        rightHalf = dropWhile ((/= L) . view _2) sides
-     in normalize (map (set _2 L) leftHalf ++ rightHalf)
-  | Just x <- find ((R ==) . view _2) sides,
-    view _2 (last sides) /= R =
-    let rightHalf = takeWhile ((/= R) . view _2) (reverse sides)
-        leftHalf = dropWhile ((/= R) . view _2) (reverse sides)
-     in normalize (reverse (map (set _2 R) rightHalf ++ leftHalf))
+  | Just x <- elemIndex (M, R) (zigzag (map (view _2) sides)),
+    (any ((/= R) . view _2 . view _1) . filter ((> x) . view _2)) $ zip sides [0 ..] =
+    let mIndex = x
+     in normalize $ zipWith (\side n -> if n > mIndex then set _2 R side else side) sides [0 ..]
+  | Just x <- elemIndex (L, M) (zigzag (map (view _2) sides)),
+    (any ((/= L) . view _2 . view _1) . filter ((< x) . view _2)) $ zip sides [0 ..] =
+    let mIndex = x + 1
+     in normalize $ zipWith (\side n -> if n < mIndex then set _2 L side else side) sides [0 ..]
   | otherwise = sides
+
+-- calculateActiveness :: [ChContext] -> [ChContext]
+-- calculateActiveness contexts =
 
 maximalSatisfiableSubset :: KanrenState -> [LabeledGoal] -> [LabeledGoal] -> [LabeledGoal]
 maximalSatisfiableSubset ks mus [] = mus
@@ -246,6 +247,9 @@ adjs (Label _ (p1, p2) _ _ _ _) (Label _ (p1', p2') _ _ _ _) =
   let source = allVars p1 ++ allVars p2
       target = allVars p1' ++ allVars p2'
    in any (`elem` source) target
+
+zigzag :: [a] -> [(a, a)]
+zigzag a = zip a (tail a)
 
 main :: IO ()
 main = do
