@@ -311,25 +311,20 @@ instance MatchTerm Exp where
     let exps = (unroll e1) ++ [e2]
     ts <- freshVarN (length exps)
     gTerms <- concat <$> zipWithM (matchTerm) ts exps
-
-    -- v1 <- freshVar
-    -- g1 <- matchTerm v1 e1
-    -- v2 <- freshVar
-    -- g2 <- matchTerm v2 e2
     f <- freshVar
     instanciation <-
-      case (head exps) of
+      case head exps of
         (Var _ name) -> do
           varname <- varByName name
           return [(varname, f)]
         _ -> return []
     goalOrder <- getGoalOrder (ann node)
-    let label = Label goalOrder (head ts, funOf (tail ts)) instanciation ("Applied") (sl node)
+    let label = Label goalOrder (head ts, funOf (tail ts)) instanciation "Applied" (sl node)
     let g =
           label
             ( conjN
                 [ f ==< head ts,
-                  f === funOf ((tail ts) ++ [term])
+                  f === funOf (tail ts ++ [term])
                 ]
             )
     return $ gTerms ++ [g]

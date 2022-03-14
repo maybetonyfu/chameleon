@@ -1,6 +1,6 @@
 import React, { createContext, useContext } from 'react';
 import ReactDOM from 'react-dom';
-import { observable, computed, action, makeObservable, autorun, runInAction, flow } from "mobx"
+import { observable, computed, action, makeObservable, autorun, runInAction, flow, toJS } from "mobx"
 import { observer } from 'mobx-react-lite'
 import { initializeEditor, highlight, drawAnnotations, clearDecorations } from "./editor"
 
@@ -13,6 +13,10 @@ function convertLocation({ srcSpanEndLine, srcSpanEndColumn, srcSpanStartColumn,
 
 function locEq(loc1, loc2) {
     return JSON.stringify(loc1) === JSON.stringify(loc2)
+}
+
+function arrEq (array1, array2) {
+    return array1.length === array2.length && array1.every((item,index) => item === array2[index])
 }
 
 function convertStep(step) {
@@ -68,12 +72,14 @@ class EditorData {
         makeObservable(
             this,
             {
-                currentStepNum: observable,
+                currentStepNum: observable.deep,
                 steps: observable,
                 context: observable,
                 editor: false,
                 // methods
-                underConsideration : computed,
+                currentTraverseId: computed,
+                currentContextItem: computed,
+                allTraverseIds: computed,
                 currentStep: computed,
                 numOfSteps: computed,
                 numOfContextRows: computed,
@@ -91,6 +97,20 @@ class EditorData {
         if (this.numOfSteps === 0) return null
         let step = this.steps[this.currentStepNum]
         return convertStep(step)
+    }
+    get currentContextItem () {
+        if (this.numOfSteps === 0) return null
+        return (
+            this.context
+                .find(c => c[3].find(ri => arrEq(this.currentTraverseId, ri[0]))[2]  )
+        )
+    }
+    get currentTraverseId() {
+        if (this.numOfSteps === 0) return null
+        return this.steps[this.currentStepNum][4]
+    }
+    get allTraverseIds() {
+        return this.steps.map(s => s[4])
     }
     get prevLocs() {
         return this.steps
@@ -120,6 +140,8 @@ class EditorData {
         return this.context.length
     }
     * updateText(text) {
+        this.context = []
+        this.steps = []
         let response = yield fetch('http://localhost:3000/typecheck', {
             method: "POST",
             body: text
@@ -132,21 +154,6 @@ class EditorData {
             this.steps = data.steps;
             this.context = data.contextTable;
         }
-    }
-    get underConsideration () {
-        if (this.numOfSteps === 0) return []
-        let lhs = this.steps[this.currentStepNum][4][0]
-        let rhs = this.steps[this.currentStepNum][4][1]
-
-        return this.context.filter(([n, type1, type2, affis]) => {
-            let currents = affis.filter(([num, aff], i) => {
-                return num===  this.steps[this.currentStepNum][4][0] || num === this.steps[this.currentStepNum][4][1]
-            })
-            if (currents.some(([num, aff]) => aff === "M")) return true
-            if (currents.length > 1 && currents[0] != currents[1]) return true
-            return false
-        })
-
     }
     nextStep() {
         if (this.isLastStep) {
@@ -226,11 +233,18 @@ const Debuger = observer(() => {
 const Message = observer(() => {
     let data = useContext(DataContext)
 
-    return <div className="mb-5 italic">
-        Chameleon cannot assign types to the following
-        <span className="ml-2 px-1 rounded-md not-italic">expressions</span>
+    return data.currentContextItem === <></> ? '':
+    
+    </> <div className="mb-5 italic">
+         Chameleon cannot infer a type for the expression
+        <span className="ml-2 px-1 rounded-md not-italic">
+            
+            {data.currentContextItem === null ? '': data.currentContextItem[0]}</span>
         <div>
-            {/* { data.underConsideration.map(u => u[0]) } */}
+            Expect: 
+        </div>
+        <div>
+            Actual: 
         </div>
     </div>
 })
@@ -238,14 +252,13 @@ const Message = observer(() => {
 const TypingTable = observer(() => {
     let data = useContext(DataContext)
     return (
-        <div className={'grid gap-1 grid-cols-3 text-xs'} style={{ fontFamily: 'JetBrains Mono' }}>
-            <div>Type</div>
-            <div>Expression</div>
-            <div>Type</div>
+        <div className={'grid gap-1 context-grid text-xs'} style={{ fontFamily: 'JetBrains Mono' }}>
+            <div></div>
+            <div className='text-center'>TYPE</div>
+            <div className='text-center'>EXPRESSION</div>
+            <div className='text-center'>TYPE</div>
             {
-                data.context.map((row, i) => {
-                    return <ContextRow row={row} key={i}></ContextRow>
-                })
+                data.context.map((row, i) => <ContextRow row={row} key={row[0]}></ContextRow>)
             }
         </div>
     )
@@ -255,16 +268,34 @@ const TypingTable = observer(() => {
 
 const ContextRow = observer(({ row }) => {
     let data = useContext(DataContext)
-
-    let [exp, typeL, typeR, affinities] = row
-    let affinity =
-        affinities
-            .find(([id, _]) => data.steps[data.currentStepNum][4][1] === id)[1]
+    let [exp, typeL, typeR, info] = row;
+    let [a, b] = data.currentTraverseId
+    let affinity = info.find(([[x, y], u, v]) => x === a && y === b)[1]
     let affinityClass = affinity === "R" ? "sideA" : affinity === "L" ? "sideB" : "sideAB"
     return <>
-        <div className="rounded-sm p-1 groupMarkerB">{typeL}</div>
-        <div className={"rounded-sm p-1 text-center " + affinityClass}>{exp}</div>
-        <div className="rounded-sm p-1 groupMarkerA">{typeR}</div>
+        <Stepper rowInfo={info}></Stepper>
+        <div className="rounded-sm p-1 groupMarkerB flex justify-center items-center">{typeL}</div>
+        <div className={"rounded-sm p-1 flex justify-center items-center " + affinityClass}>{exp}</div>
+        <div className="rounded-sm p-1 groupMarkerA flex justify-center items-center">{typeR}</div>
+    </>
+})
+
+const Stepper = observer(({ rowInfo }) => {
+    let data = useContext(DataContext)
+    let allTraverseIds = data.allTraverseIds
+    let [a, b] = data.currentTraverseId
+    let effectiveRowInfo = rowInfo.filter(([[x, y], _z1, _z2]) => allTraverseIds.some(([a, b]) => a === x && b === y))
+    let steps = effectiveRowInfo.filter(ri => ri[2])
+    return <>
+        <div className="flex flex-col justify-center">
+            {steps.map(([[x, y], _z1, _z2]) => (
+                <div 
+                    key={x.toString() + y.toString()}
+                    className={
+                    'rounded-md w-3 h-3 my-0.5 ' + (a === x && b === y ? 'bg-red-400' : 'bg-gray-400')
+                }></div>))}
+
+        </div>
     </>
 })
 

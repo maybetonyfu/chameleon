@@ -1,50 +1,17 @@
 module Task where 
-data Period
-  = DayPeriod Day
-  | WeekPeriod Day
-  | MonthPeriod Year Month
-  | QuarterPeriod Year Quarter
-  | YearPeriod Year
-  | PeriodBetween Day Day
-  | PeriodFrom Day
-  | PeriodTo Day
-  | PeriodAll
+    
+data Expr = C Int |
+            Comb Expr Expr| 
+            V [Char] |
+            Let [Char] Expr Expr
 
--- synonyms for various date-related scalars
-type Year = Integer
+data Env = Env [([Char], Int)]
 
-type Month = Integer -- 1-12
+eval :: Expr -> Env -> (Env, Int)
+eval (Let v e1 e2) env = let (env1, v1) = eval e1 env
+                             env2       = extend v v1  
+                             ans = eval e2 env2
+                         in  ans
 
-type Quarter = Integer -- 1-4
-
-type YearWeek = Integer -- 1-52
-
-type MonthWeek = Integer -- 1-5
-
-type YearDay = Integer -- 1-366
-
-type MonthDay = Integer -- 1-31
-
-type WeekDay = Integer -- 1-7
-
-data Day = Day Year Month Integer
-
-type DateSpan  = ((Maybe Day), (Maybe Day))
-
-addDays :: Integer -> Day -> Day
-addDays n day = day
-
-quarterAsMonth :: Quarter -> Month
-quarterAsMonth q = (q - 1) * 3 + 1
-
--- fromGregorian :: Year -> Month -> Integer -> Maybe Day
-fromGregorian y m d = Just (Day y m d)
-
-periodAsDateSpan :: Period -> DateSpan
-periodAsDateSpan (DayPeriod d) = ((Just d), (Just (addDays 1 d)))
-periodAsDateSpan (WeekPeriod b) =  ((Just b), (Just (addDays 7 b)))
-periodAsDateSpan (MonthPeriod y m) = (Just (fromGregorian y m 1), Just (fromGregorian y' m' 1))
-  where
-    (y', m')
-      | m == 12 = (y + 1, 1)
-      | otherwise = (y, m + 1)
+extend :: [Char] -> Int -> Env -> Env
+extend v e (Env env)  = Env ([(v,e)] ++ env)

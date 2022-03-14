@@ -121,3 +121,7 @@
     background: linear-gradient(90deg, var(--colorB), var(--colorB) 49%, var(--colorA) 50%);
 }
 
+
+.context-grid {
+    grid-template-columns: auto 1fr auto 1fr;
+}
