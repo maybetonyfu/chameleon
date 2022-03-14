@@ -5,7 +5,7 @@ import Data.Map (Map)
 import qualified Data.Map as Map
 import Data.Maybe (fromJust, maybe)
 import Debug.Trace
-import GHC (back, runGhc)
+import GHC (back, runGhc, SuccessFlag (Failed))
 
 type VarName = String
 
@@ -485,21 +485,41 @@ funOf (x : xs) = Pair (atom "Function") (Pair x (funOf xs))
 
 termToType :: Term -> String
 termToType term = 
-  go (zip (allVars term) ['a' ..]) term
+  go (zip (allVars term) ['a' ..]) 0 Unit term
     where
-      go :: [(Term, Char)] -> Term -> String
-      go varMap Unit = ""
-      go varMap (Atom ('_':'.':n)) = [['a' ..] !! (read n::Int)]
-      go varMap (Atom x) = x
-      go varMap (Var x) = [fromJust (lookup (Var x) varMap)]
-      go varMap (Pair (Atom "Function") (Pair a b)) = go varMap a ++ " -> " ++ go varMap b
-      go varMap (Pair (Atom "List") t) = "[" ++ go varMap t ++ "]"
-      go varMap (Pair (Atom "Tuple") p) =
-        let listP = toList p
-            content = intercalate "," (map (go varMap) listP)
+      go :: [(Term, Char)] -> Int -> Term -> Term -> String
+      go varMap n parent Unit = ""
+      go varMap n parent (Atom ('_':'.':x)) = [['a' ..] !! (read x::Int)]
+      go varMap n parent (Atom x) = x
+      go varMap n parent (Var x) = [fromJust (lookup (Var x) varMap)]
+      go varMap n parent p@(Pair (Atom "Function") (Pair a b))
+        | isFunction parent && n == 0 = "(" ++ go varMap 0 p a ++ " -> " ++ go varMap 1 p b ++ ")"
+        | otherwise  = go varMap 0 p a ++ " -> " ++ go varMap 1 p b
+      go varMap n parent p@(Pair (Atom "List") t) = "[" ++ go varMap 0 p t ++ "]"
+      go varMap n parent p@(Pair (Atom "Tuple") t) =
+        let listP = toList t
+            content = intercalate "," (zipWith (\t' n' -> go varMap n' p t') listP [0..])
         in "(" ++ content ++ ")"
-      go varMap (Pair x y) = go varMap x ++ " " ++ go varMap y
+      go varMap n parent p@(Pair x y) 
+        | isTypeCon parent =
+            let listP = toList y
+                content = unwords (zipWith (\t' n' -> go varMap n' p t') listP [0..])
+            in "(" ++ content ++ ")"
+        | otherwise = 
+            let listP = toList y
+                content = unwords (zipWith (\t' n' -> go varMap n' p t') listP [0..])
+            in content
 
+isFunction :: Term -> Bool
+isFunction (Pair (Atom "Function") _) = True
+isFunction _ = False
+
+isTypeCon :: Term -> Bool 
+isTypeCon (Pair (Atom "Function") _) = False 
+isTypeCon (Pair (Atom "List") _) = False 
+isTypeCon (Pair (Atom "Tuple") _) = False 
+isTypeCon (Pair  _ _) = True  
+isTypeCon _ = False
 
 prettyTerm :: Term -> String
 prettyTerm Unit = ""
