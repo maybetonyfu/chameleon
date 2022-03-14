@@ -118,7 +118,8 @@ processFile text =
                           )
                           relevent
                       contextTableSorted = sortOn (\(ChContext _ _ _ sides) -> fromJust $ findIndex ((== M) . view _2) sides) contextTable
-                   in ChTypeError contextTableSorted reasonings
+                      contextTableactiveness = calculateActiveness contextTableSorted
+                   in ChTypeError contextTableactiveness reasonings
                 else ChSuccess
         ParseFailed srcLoc message ->
           error $
@@ -150,7 +151,23 @@ normalize sides
 
 
 calculateActiveness :: [ChContext] -> [ChContext]
+-- calculateActiveness ((ChContext a b c sides):(ChContext a' b' c' sides'):contexts) =
+--                      zipWith (\(_, s1, _) (_, s2, _) ->
+--                         ) sides sides'
 calculateActiveness contexts =
+  let affiliations = map (\(ChContext _ _ _ sides) -> map (view _2) sides) contexts
+      affiliationsT = transpose affiliations
+      mapActiveness :: [Affinity] -> [Bool]
+      mapActiveness affs
+        | Just n <- findIndex (==M) affs = zipWith (\aff m -> if m == n then True else False) affs [0..]
+        | Just n <- findIndex (==L) affs = zipWith (\aff m -> if m == n then True else False) affs [0..]
+        | otherwise = take (length affs - 1) (repeat False) ++ [True]
+      activenessT = map mapActiveness affiliationsT
+      activeness = transpose activenessT
+  in zipWith (\(ChContext a b c sides) n ->
+                ChContext a b c $
+                  zipWith (\side act -> set _3 act side) sides (activeness !! n)
+                )  contexts [0..]
 -- # # # 
 -- L M M R R R
 -- L L M L M R
