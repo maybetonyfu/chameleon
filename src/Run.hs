@@ -147,8 +147,14 @@ normalize sides
      in normalize $ zipWith (\side n -> if n < mIndex then set _2 L side else side) sides [0 ..]
   | otherwise = sides
 
--- calculateActiveness :: [ChContext] -> [ChContext]
--- calculateActiveness contexts =
+
+
+calculateActiveness :: [ChContext] -> [ChContext]
+calculateActiveness contexts =
+-- # # # 
+-- L M M R R R
+-- L L M L M R
+--       # # #
 
 maximalSatisfiableSubset :: KanrenState -> [LabeledGoal] -> [LabeledGoal] -> [LabeledGoal]
 maximalSatisfiableSubset ks mus [] = mus
