@@ -233,21 +233,22 @@ const Debuger = observer(() => {
 const Message = observer(() => {
     let data = useContext(DataContext)
 
-    return data.currentContextItem === <></> ? '':
-    
-    </> <div className="mb-5 italic">
-         Chameleon cannot infer a type for the expression
-        <span className="ml-2 px-1 rounded-md not-italic">
-            
-            {data.currentContextItem === null ? '': data.currentContextItem[0]}</span>
+    return (
+        data.currentContextItem === null ? <></> :
+        <div className="mb-5 italic">
+            Chameleon cannot infer a type for the expression
+            <span className="ml-2 px-1 rounded-md not-italic">
+                
+                {data.currentContextItem[0]}
+            </span>
         <div>
-            Expect: 
+                Expect:  {data.currentContextItem[1]}
+            </div>
+            <div>
+                Actual:  {data.currentContextItem[2]}
+            </div>
         </div>
-        <div>
-            Actual: 
-        </div>
-    </div>
-})
+)})
 
 const TypingTable = observer(() => {
     let data = useContext(DataContext)
