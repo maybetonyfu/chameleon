@@ -334,7 +334,7 @@ reifyS term (sub, n, splitting) =
         Var v' ->
           let n = length sub
               rn = reifyName n
-           in (Map.insert v' (Atom rn) sub, n, splitting)
+           in (Map.insert v' (var rn) sub, n, splitting)
         Pair h t ->
           let r = reifyS h (sub, n, splitting)
            in reifyS t r
@@ -489,7 +489,7 @@ termToType term =
     where
       go :: [(Term, Char)] -> Int -> Term -> Term -> String
       go varMap n parent Unit = ""
-      go varMap n parent (Atom ('_':'.':x)) = [['a' ..] !! (read x::Int)]
+      go varMap n parent (Var ('_':'.':x)) = [['a' ..] !! (read x::Int)]
       go varMap n parent (Atom x) = x
       go varMap n parent (Var x) = [fromJust (lookup (Var x) varMap)]
       go varMap n parent p@(Pair (Atom "Function") (Pair a b))

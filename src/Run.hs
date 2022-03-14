@@ -7,7 +7,6 @@ import Builtin
 import Constraint hiding (main, processFile)
 import Control.Monad.Trans.State.Lazy
 import Data.Aeson
-import Data.ByteString (takeWhileEnd)
 import qualified Data.ByteString.Lazy.Char8 as BS
 import Data.List
 import qualified Data.Map as Map
@@ -25,7 +24,8 @@ import Scope hiding (main, processFile)
 import System.Environment
 import Typing hiding (main, processFile)
 
-data Affinity = L | R | M deriving (Show, Generic)
+data Affinity = L | R | M deriving (Show, Generic, Eq)
+
 data ChContext = ChContext String String String [((Int, Int), Affinity)] deriving (Show, Generic)
 
 data ChResult
@@ -86,18 +86,20 @@ processFile text =
 
                       simplifyTypes = map (\g -> typings ks names (longestChain \\ [g])) longestChain
                       altTable =
-                        -- trace ("\nSimplifed: " ++ unlines (map (show . length . nub) simplifyTypes)) $
                         zip3 names (transpose concreteTypes) (transpose simplifyTypes)
                       releventSimplied = filter (\(_, concret, simplified) -> length (nub simplified) > 1) altTable
                       releventConcrete = filter (\(_, concret, simplified) -> length (nub concret) > 1) altTable
-                      relevent = if null releventSimplied then releventConcrete else releventSimplied
+                      relevent =
+                        if null releventSimplied
+                          then releventConcrete
+                          else filter (\(_, concrets, _) -> length (nub concrets) > 1) releventSimplied
                       contextTable =
                         --trace ("Longest Chain: " ++ unlines (map show longestChain)) $
-                          map
-                            ( \(name, concrete, simplified) ->
-                                trace ("\n" ++ name ++ ":" ++ unlines (map termToType concrete)) $
-                                  let leftmost = head concrete
-                                      rightmost = last (dropWhileEnd (== leftmost) concrete)
+                        map
+                          ( \(name, concrete, simplified) ->
+                              trace ("\n" ++ name ++ ":\n" ++ unlines (map termToType simplified)) $
+                                trace ("\n" ++ name ++ ":\n" ++ unlines (map show concrete)) $
+                                  let (leftmost, rightmost) = polarEnds concrete
                                       sides =
                                         zipWith
                                           ( \(t1, t2) (Edge n1 n2 _) ->
@@ -110,10 +112,12 @@ processFile text =
                                           )
                                           (zip (init concrete) (tail concrete))
                                           longestIndexPairs
-                                   in ChContext (showProperName name) (termToType leftmost) (termToType rightmost) sides
-                            )
-                            relevent
-                   in ChTypeError contextTable reasonings
+                                      normalizedSides = normalize sides
+                                   in ChContext (showProperName name) (termToType leftmost) (termToType rightmost) normalizedSides
+                          )
+                          relevent
+                      contextTableSorted = sortOn (\(ChContext _ _ _ sides) -> fromJust $ findIndex ((== M) . snd) sides) contextTable
+                   in ChTypeError contextTableSorted reasonings
                 else ChSuccess
         ParseFailed srcLoc message ->
           error $
@@ -121,6 +125,28 @@ processFile text =
               [ prettyPrint srcLoc,
                 message
               ]
+
+polarEnds :: [Term] -> (Term, Term)
+polarEnds types
+  | head types == last types = polarEnds (init . tail $ types)
+  | length (nub types) == 2 = (head (nub types), last (nub types))
+  | isVar (head types) = polarEnds (tail types)
+  | isVar (last types) = polarEnds (init types)
+  | otherwise = (head types, last types)
+
+normalize :: [(a, Affinity)] -> [(a, Affinity)]
+normalize sides
+  | Just x <- find ((L ==) . snd) sides,
+    snd (head sides) /= L =
+    let leftHalf = takeWhile ((/= L) . snd) sides
+        rightHalf = dropWhile ((/= L) . snd) sides
+     in normalize (map (\(a, b) -> (a, L)) leftHalf ++ rightHalf)
+  | Just x <- find ((R ==) . snd) sides,
+    snd (last sides) /= R =
+    let rightHalf = takeWhile ((/= R) . snd) (reverse sides)
+        leftHalf = dropWhile ((/= L) . snd) (reverse sides)
+     in normalize (reverse (map (\(a, b) -> (a, R)) rightHalf ++ leftHalf))
+  | otherwise = sides
 
 maximalSatisfiableSubset :: KanrenState -> [LabeledGoal] -> [LabeledGoal] -> [LabeledGoal]
 maximalSatisfiableSubset ks mus [] = mus
@@ -227,6 +253,13 @@ main = do
   content <- readFile filename
   let res = processFile content
   putStrLn "\nContexts: "
-  mapM_ print (contextTable res)
+  mapM_
+    ( \(ChContext name typel typer steps) -> do
+        putStrLn name
+        putStrLn typel
+        putStrLn typer
+        putStrLn . unwords . map (\(a, b) -> show b) $ steps
+    )
+    (contextTable res)
   putStrLn "\nSteps: "
   mapM_ print (steps res)
