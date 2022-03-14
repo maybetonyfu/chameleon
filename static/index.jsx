@@ -1,6 +1,6 @@
 import React, { createContext, useContext } from 'react';
 import ReactDOM from 'react-dom';
-import { observable, computed, action, makeObservable, autorun, runInAction, flow, toJS } from "mobx"
+import { observable, computed, action, makeObservable, autorun, runInAction, flow } from "mobx"
 import { observer } from 'mobx-react-lite'
 import { initializeEditor, highlight, drawAnnotations, clearDecorations } from "./editor"
 
@@ -15,8 +15,8 @@ function locEq(loc1, loc2) {
     return JSON.stringify(loc1) === JSON.stringify(loc2)
 }
 
-function arrEq (array1, array2) {
-    return array1.length === array2.length && array1.every((item,index) => item === array2[index])
+function arrEq(array1, array2) {
+    return array1.length === array2.length && array1.every((item, index) => item === array2[index])
 }
 
 function convertStep(step) {
@@ -98,11 +98,11 @@ class EditorData {
         let step = this.steps[this.currentStepNum]
         return convertStep(step)
     }
-    get currentContextItem () {
+    get currentContextItem() {
         if (this.numOfSteps === 0) return null
         return (
             this.context
-                .find(c => c[3].find(ri => arrEq(this.currentTraverseId, ri[0]))[2]  )
+                .find(c => c[3].find(ri => arrEq(this.currentTraverseId, ri[0]))[2])
         )
     }
     get currentTraverseId() {
@@ -171,7 +171,7 @@ class EditorData {
         }
     }
     setStep(n) {
-        if (n < 0 || n > this.currentStepNum - 1) {
+        if (n < 0 || n > this.numOfSteps - 1) {
             return
         } else {
             this.currentStepNum = n
@@ -235,20 +235,20 @@ const Message = observer(() => {
 
     return (
         data.currentContextItem === null ? <></> :
-        <div className="mb-5 italic">
-            Chameleon cannot infer a type for the expression
-            <span className="ml-2 px-1 rounded-md not-italic">
-                
-                {data.currentContextItem[0]}
-            </span>
-        <div>
-                Expect:  {data.currentContextItem[1]}
+            <div className="mb-5 ">
+                Chameleon cannot infer a type for the expression
+                <span className="ml-2 px-1 rounded-md italic bg-gray-700 text-white">
+                    {data.currentContextItem[0]}
+                </span>
+                <div>
+                    Expect: <span className='code'>{data.currentContextItem[1]}</span>
+                </div>
+                <div>
+                    Actual:  <span className='code'>{data.currentContextItem[2]}</span>
+                </div>
             </div>
-            <div>
-                Actual:  {data.currentContextItem[2]}
-            </div>
-        </div>
-)})
+    )
+})
 
 const TypingTable = observer(() => {
     let data = useContext(DataContext)
@@ -290,11 +290,17 @@ const Stepper = observer(({ rowInfo }) => {
     return <>
         <div className="flex flex-col justify-center">
             {steps.map(([[x, y], _z1, _z2]) => (
-                <div 
+                <div
                     key={x.toString() + y.toString()}
+                    onClick={action(_ => {
+                        console.log('hello')
+                        let stepId = data.steps.findIndex(step => arrEq(step[4], [x, y]))
+                        console.log(stepId)
+                        data.setStep(stepId)
+                    })}
                     className={
-                    'rounded-md w-3 h-3 my-0.5 ' + (a === x && b === y ? 'bg-red-400' : 'bg-gray-400')
-                }></div>))}
+                        'rounded-full w-4 h-4 my-0.5 cursor-pointer ' + (a === x && b === y ? 'bg-green-400' : 'bg-gray-400')
+                    }></div>))}
 
         </div>
     </>
