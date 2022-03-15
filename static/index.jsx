@@ -3,7 +3,7 @@ import ReactDOM from 'react-dom';
 import { observable, computed, action, makeObservable, autorun, runInAction, flow } from "mobx"
 import { observer } from 'mobx-react-lite'
 import { initializeEditor, highlight, drawAnnotations, clearDecorations } from "./editor"
-
+import {example1, example2, example3} from './code'
 function convertLocation({ srcSpanEndLine, srcSpanEndColumn, srcSpanStartColumn, srcSpanStartLine }) {
     return {
         from: { line: srcSpanStartLine - 1, ch: srcSpanStartColumn - 1 },
@@ -48,26 +48,14 @@ function convertStep(step) {
 
 
 
-let initailText = `
-module Task where
 
-
-u = x 3
-
-v = x 'c'
-
-x y = y
-z 3 = '4'
-z w = x 2
-
-`
 const DataContext = createContext()
 
 class EditorData {
     currentStepNum = 0
     steps = []
     context = []
-    editor = initializeEditor(initailText)
+    editor = initializeEditor('')
     constructor() {
         makeObservable(
             this,
@@ -203,8 +191,31 @@ document.getElementById('save').addEventListener('click', _ => {
     runInAction(() => {
         editorData.updateText(text)
     })
-
 })
+
+document.getElementById('example1').addEventListener('click', _ => {
+    runInAction(() => {
+        editorData.editor.setValue(example1)
+        editorData.updateText(example1)
+    })
+})
+
+document.getElementById('example2').addEventListener('click', _ => {
+    runInAction(() => {
+        editorData.editor.setValue(example2)
+        editorData.updateText(example2)
+    })
+})
+
+
+document.getElementById('example3').addEventListener('click', _ => {
+    runInAction(() => {
+        editorData.editor.setValue(example3)
+        editorData.updateText(example3)
+    })
+})
+
+
 
 
 autorun(() => {
@@ -244,10 +255,12 @@ const Message = observer(() => {
                     Expression: <span className="  ml-2 px-1 rounded-md bg-gray-700 text-white inline-block"> {data.currentContextItem[0]} </span>
                 </div>
                 <div className="my-1">
-                    Expect: <span className='code groupMarkerB'>{data.currentContextItem[1]}</span>
+                    <span className='w-14 inline-block'>Expect:  </span>
+                    <span className='code groupMarkerB rounded-sm px-0.5 cursor-pointer'>{data.currentContextItem[1]}</span>
                 </div>
                 <div className="my-1">
-                    Actual:  <span className='code groupMarkerA'>{data.currentContextItem[2]}</span>
+                    <span className='w-14 inline-block'>Actual:  </span>
+                    <span className='code groupMarkerA rounded-sm px-0.5 cursor-pointer'>{data.currentContextItem[2]}</span>
                 </div>
             </div>
 
@@ -275,22 +288,32 @@ const ContextRow = observer(({ row }) => {
     let data = useContext(DataContext)
     let [exp, typeL, typeR, info] = row;
     let [a, b] = data.currentTraverseId
-    let affinity = info.find(([[x, y], u, v]) => x === a && y === b)[1]
+    let allTraverseIds = data.allTraverseIds
+    let effectiveRowInfo = info.filter(([[x, y], _z1, _z2]) => allTraverseIds.some(([a, b]) => a === x && b === y))
+
+    let affinity = effectiveRowInfo.find(([[x, y], u, v]) => x === a && y === b)[1]
     let affinityClass = affinity === "R" ? "sideA" : affinity === "L" ? "sideB" : "sideAB"
+    let firstReleventStepTId = effectiveRowInfo.find(i => i[2])[0]
+    let lastReleventStepTId = effectiveRowInfo.slice().reverse().find(i => i[2])[0]
+    let firstReleventStep = data.steps.findIndex(step => arrEq(step[4], firstReleventStepTId))
+    let lastReleventStep = data.steps.findIndex(step => arrEq(step[4], lastReleventStepTId))
     return <>
-        <Stepper rowInfo={info}></Stepper>
-        <div className="rounded-sm p-1 groupMarkerB flex justify-center items-center">{typeL}</div>
+        <Stepper rowInfo={effectiveRowInfo}></Stepper>
+        <div 
+            onClick={action(_ => {data.setStep(firstReleventStep)})}
+            className="rounded-sm p-1 groupMarkerB flex justify-center items-center cursor-pointer">{typeL}</div>
         <div className={"rounded-sm p-1 flex justify-center items-center " + affinityClass}>{exp}</div>
-        <div className="rounded-sm p-1 groupMarkerA flex justify-center items-center">{typeR}</div>
+        <div 
+            onClick={action(_ => {data.setStep(lastReleventStep)})}
+            className="rounded-sm p-1 groupMarkerA flex justify-center items-center cursor-pointer">{typeR}</div>
     </>
 })
 
 const Stepper = observer(({ rowInfo }) => {
     let data = useContext(DataContext)
-    let allTraverseIds = data.allTraverseIds
     let [a, b] = data.currentTraverseId
-    let effectiveRowInfo = rowInfo.filter(([[x, y], _z1, _z2]) => allTraverseIds.some(([a, b]) => a === x && b === y))
-    let steps = effectiveRowInfo.filter(ri => ri[2])
+    // let effectiveRowInfo = rowInfo.filter(([[x, y], _z1, _z2]) => allTraverseIds.some(([a, b]) => a === x && b === y))
+    let steps = rowInfo.filter(ri => ri[2])
     return <>
         <div className="flex flex-col justify-center">
             {steps.map(([[x, y], _z1, _z2]) => {
@@ -302,7 +325,7 @@ const Stepper = observer(({ rowInfo }) => {
                             data.setStep(stepId)
                         })}
                         className={
-                            'rounded-lg w-5 h-3 my-0.5 cursor-pointer text-xs leading-3 text-center '
+                            'rounded-lg w-4 h-4 my-0.5 p-0.5 cursor-pointer text-xs leading-3 text-center '
                             + (a === x && b === y ? 'bg-green-400' : 'bg-gray-400')
                         }>
                         {stepId + 1}
