@@ -29,6 +29,7 @@ dependencies:
 - scotty
 - string-qq
 - lens
+- text
 
 library:
   source-dirs: src

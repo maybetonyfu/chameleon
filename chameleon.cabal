@@ -52,6 +52,7 @@ library
     , lens
     , scotty
     , string-qq
+    , text
     , transformers
   default-language: Haskell2010
 
@@ -76,5 +77,6 @@ executable chameleon
     , lens
     , scotty
     , string-qq
+    , text
     , transformers
   default-language: Haskell2010

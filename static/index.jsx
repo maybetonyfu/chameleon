@@ -130,7 +130,7 @@ class EditorData {
     * updateText(text) {
         this.context = []
         this.steps = []
-        let response = yield fetch('http://localhost:3000/typecheck', {
+        let response = yield fetch('/typecheck', {
             method: "POST",
             body: text
         })
@@ -271,13 +271,25 @@ const TypingTable = observer(() => {
     let data = useContext(DataContext)
     return (
         <div className={'grid gap-1 context-grid text-xs'} style={{ fontFamily: 'JetBrains Mono' }}>
-            <div></div>
+            <div className='text-center'>
+                <ion-icon 
+                onClick={action(_ => data.prevStep())}
+                 style={{fontSize: 20, cursor: "pointer"}} name="arrow-up-circle"></ion-icon> 
+            </div>
             <div className='text-center'>TYPE</div>
             <div className='text-center'>EXPRESSION</div>
             <div className='text-center'>TYPE</div>
             {
                 data.context.map((row, i) => <ContextRow row={row} key={row[0]}></ContextRow>)
             }
+            <div className='text-center'>
+                <ion-icon 
+                    onClick={action(_ => data.nextStep())}
+                     style={{fontSize: 20,  cursor: "pointer"}} name="arrow-down-circle"></ion-icon> 
+            </div>
+            <div className='text-center'></div>
+            <div className='text-center'></div>
+            <div className='text-center'></div>
         </div>
     )
 })
@@ -315,7 +327,7 @@ const Stepper = observer(({ rowInfo }) => {
     // let effectiveRowInfo = rowInfo.filter(([[x, y], _z1, _z2]) => allTraverseIds.some(([a, b]) => a === x && b === y))
     let steps = rowInfo.filter(ri => ri[2])
     return <>
-        <div className="flex flex-col justify-center">
+        <div className="flex flex-col justify-center items-center">
             {steps.map(([[x, y], _z1, _z2]) => {
                 let stepId = data.steps.findIndex(step => arrEq(step[4], [x, y]))
                 return (

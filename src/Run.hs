@@ -61,15 +61,17 @@ processFile text =
                 then
                   let mus = getMus ks goals'
                       instanciationTable = concatMap instanciation mus
-                      names' = trace ("\nInsta Table:\n" ++ show instanciationTable) useFunctionNewNames instanciationTable names
+                      names' = 
+                        -- trace ("\nInsta Table:\n" ++ show instanciationTable) $
+                        useFunctionNewNames instanciationTable names
                       graphG = fromEdges . graphView $ mus
                       reachables = concatMap (map snd . Map.toList . reachableFrom graphG) [0 .. length goals']
                       longestIndexPairs = snd $ maximumBy (\(n, _) (m, _) -> compare n m) reachables -- [(a,b), (b,c), (c,d)]
                       longestIndexChain = (source . head $ longestIndexPairs) : map target longestIndexPairs -- [a,b,c,d]
                       longestChain = map (\n -> fromJust $ find ((== n) . goalNum) goals') longestIndexChain
                       reasonings =
-                        trace ("\n Alll Constraints:\n"++ unlines (map show mus)) $
-                        trace ("\n Constraints:\n"++ unlines (map show longestChain)) $
+                        -- trace ("\n Alll Constraints:\n"++ unlines (map show mus)) $
+                        -- trace ("\n Constraints:\n"++ unlines (map show longestChain)) $
                         concatMap
                           ( \(Edge a b _) ->
                               let goalA = fromJust $ find ((== a) . goalNum) goals'
@@ -78,8 +80,7 @@ processFile text =
                           )
                           longestIndexPairs
                       concreteTypes =
-                        trace
-                          ("\nOriginal Names:\n" ++ show names ++ "\nNewNames: \n" ++ show names')
+                        -- trace ("\nOriginal Names:\n" ++ show names ++ "\nNewNames: \n" ++ show names') $
                           map
                           ( \g ->
                               let mss = maximalSatisfiableSubset ks (longestChain \\ [g]) (goals' \\ [g])
@@ -100,8 +101,8 @@ processFile text =
                         --trace ("Longest Chain: " ++ unlines (map show longestChain)) $
                         map
                           ( \(name, concrete, simplified) ->
-                              trace ("\n" ++ name ++ ":\n" ++ unlines (map termToType simplified)) $
-                                trace ("\n" ++ name ++ ":\n" ++ unlines (map show concrete)) $
+                              -- trace ("\n" ++ name ++ ":\n" ++ unlines (map termToType simplified)) $
+                              --   trace ("\n" ++ name ++ ":\n" ++ unlines (map show concrete)) $
                                   let (leftmost, rightmost) = polarEnds concrete
                                       sides =
                                         zipWith
