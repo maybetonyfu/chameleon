@@ -20,8 +20,20 @@ export function clearDecorations(editor) {
 }
 
 export function highlight(locA, locB, groupA, groupB, editor) {
-    groupA.forEach(hl => editor.markText(hl.from, hl.to, { className: "groupMarkerA"}))
-    groupB.forEach(hl => editor.markText(hl.from, hl.to, { className: "groupMarkerB"}))
+    groupA.forEach(hl => {
+        if (surroundOrIntersect(hl, locA) || surroundOrIntersect(hl, locB))  return 
+
+        editor.markText(
+        hl.from, hl.to, { className: "groupMarkerA"})
+        
+    })
+    groupB.forEach(hl => {
+        if (surroundOrIntersect(hl, locA) || surroundOrIntersect(hl, locB))  return 
+
+        editor.markText(
+        hl.from, hl.to, { className: "groupMarkerB"})
+        
+    })
     editor.markText(locA.from, locA.to, { className: "markerA"})
     editor.markText(locB.from, locB.to, { className: "markerB"})
     if (doesLocSurround(locA, locB)) {
@@ -63,43 +75,50 @@ export function drawAnnotations(locA, locB, text, editor) {
 
 
 function boxStyles(topElem, bottomElem, text, color = false) {
-    const downwardBarHeight = 3;
+    const downwardBarHeight = 5;
     const annotationWidth = 200;
     const annotationHeight = 20;
     const stepAsideDistance = 700;
     const styleTop = [
-        color ? `background: aquamarine;` : '',
+        color ? `background: aquamarine;` : 'background:transparent;',
         `height: ${downwardBarHeight}px;`,
         `margin-left: ${topElem.width / 2}px;`,
         `width: ${stepAsideDistance - topElem.left - (topElem.width / 2)}px;`,
         `border-left: thin solid #0083FF;`,
         `border-bottom: thin solid #0083FF;`,
+        `z-index:2;`,
+
     ].join('')
     const styleBottom = [
-        color ? `background: lightpink;` : '',
+        color ? `background: lightpink;` : 'background:transparent;',
         `height: ${downwardBarHeight}px;`,
         `margin-left: ${bottomElem.width / 2}px;`,
         `width:${stepAsideDistance - bottomElem.left - (bottomElem.width / 2)}px;`,
         `border-left: thin solid #0083FF;`,
         `border-bottom: thin solid #0083FF;`,
         `border-right: thin solid #0083FF;`,
+        `z-index:2;`,
+
     ].join('')
     const styleInbetween = [
-        color ? `background: burlywood;` : '',
+        color ? `background: burlywood;` : 'background:transparent;',
         `width:${stepAsideDistance - topElem.left - (topElem.width / 2)}px;`,
         `height: ${bottomElem.bottom - topElem.bottom - annotationHeight - downwardBarHeight}px;`,
         `margin-top: ${downwardBarHeight}px;`,
         `margin-left: ${topElem.width / 2}px;`,
         `border-right: thin solid #0083FF;`,
+        `z-index:2;`,
+
     ].join('')
     const styleAnnotation = [
-        color ? `background: lightgreen;` : '',
+        color ? `background: lightgreen;` : 'background:transparent;',
         // `background: beige;`,
         `width:${annotationWidth}px;`,
         `height: ${annotationHeight}px;`,
         `font-size: 14px;`,
         `margin-top: -${annotationHeight}px;`,
         `margin-left: ${stepAsideDistance - bottomElem.left - annotationWidth / 2}px;`,
+        `z-index:2;`,
         // `border: thin solid red;`
     ].join('')
     const topBox = html(`<div id="widgetTop" style="${styleTop}"></div>`)
@@ -132,6 +151,10 @@ function isPointAfter (point1, point2) {
 
 function doesLocSurround (locA, locB) {
     return isPointBefore(locA.from, locB.from) && isPointAfter(locA.to, locB.to)
+}
+
+function surroundOrIntersect (a, b) {
+    return doesLocSurround(a, b) || doesLocSurround(b, a) || doesLocIntersect(a, b)
 }
 
 function doesLocIntersect (locA, locB) {

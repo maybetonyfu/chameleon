@@ -68,6 +68,8 @@ processFile text =
                       longestIndexChain = (source . head $ longestIndexPairs) : map target longestIndexPairs -- [a,b,c,d]
                       longestChain = map (\n -> fromJust $ find ((== n) . goalNum) goals') longestIndexChain
                       reasonings =
+                        trace ("\n Alll Constraints:\n"++ unlines (map show mus)) $
+                        trace ("\n Constraints:\n"++ unlines (map show longestChain)) $
                         concatMap
                           ( \(Edge a b _) ->
                               let goalA = fromJust $ find ((== a) . goalNum) goals'

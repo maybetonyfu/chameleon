@@ -235,18 +235,22 @@ const Message = observer(() => {
 
     return (
         data.currentContextItem === null ? <></> :
-            <div className="mb-5 ">
-                Chameleon cannot infer a type for the expression
-                <span className="ml-2 px-1 rounded-md italic bg-gray-700 text-white">
-                    {data.currentContextItem[0]}
-                </span>
-                <div>
-                    Expect: <span className='code'>{data.currentContextItem[1]}</span>
+            <div className="my-5">
+                <div className="text-lg italic my-2">
+                    Chameleon cannot infer a type for the expression below:
                 </div>
-                <div>
-                    Actual:  <span className='code'>{data.currentContextItem[2]}</span>
+
+                <div className="my-1">
+                    Expression: <span className="  ml-2 px-1 rounded-md bg-gray-700 text-white inline-block"> {data.currentContextItem[0]} </span>
+                </div>
+                <div className="my-1">
+                    Expect: <span className='code groupMarkerB'>{data.currentContextItem[1]}</span>
+                </div>
+                <div className="my-1">
+                    Actual:  <span className='code groupMarkerA'>{data.currentContextItem[2]}</span>
                 </div>
             </div>
+
     )
 })
 
@@ -289,18 +293,21 @@ const Stepper = observer(({ rowInfo }) => {
     let steps = effectiveRowInfo.filter(ri => ri[2])
     return <>
         <div className="flex flex-col justify-center">
-            {steps.map(([[x, y], _z1, _z2]) => (
-                <div
-                    key={x.toString() + y.toString()}
-                    onClick={action(_ => {
-                        console.log('hello')
-                        let stepId = data.steps.findIndex(step => arrEq(step[4], [x, y]))
-                        console.log(stepId)
-                        data.setStep(stepId)
-                    })}
-                    className={
-                        'rounded-full w-4 h-4 my-0.5 cursor-pointer ' + (a === x && b === y ? 'bg-green-400' : 'bg-gray-400')
-                    }></div>))}
+            {steps.map(([[x, y], _z1, _z2]) => {
+                let stepId = data.steps.findIndex(step => arrEq(step[4], [x, y]))
+                return (
+                    <div
+                        key={x.toString() + y.toString()}
+                        onClick={action(_ => {
+                            data.setStep(stepId)
+                        })}
+                        className={
+                            'rounded-lg w-5 h-3 my-0.5 cursor-pointer text-xs leading-3 text-center '
+                            + (a === x && b === y ? 'bg-green-400' : 'bg-gray-400')
+                        }>
+                        {stepId + 1}
+                    </div>)
+            })}
 
         </div>
     </>
