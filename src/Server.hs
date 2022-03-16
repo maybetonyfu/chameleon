@@ -17,7 +17,7 @@ import Run hiding (main)
 import Data.Monoid (mconcat)
 import qualified Data.Text.Lazy as T
 
-main = scotty 3000 (typecheck >> home >> js >> css)
+main = scotty 3000 (typecheck >> home >> js >> css >> favicon)
 
 
 typecheck :: ScottyM ()
@@ -44,3 +44,8 @@ css = get (regex  "^.*\\.css") $ do
     let filename = "static/build" `T.append` path
     setHeader "Content-Type" "text/css"
     file (T.unpack filename)
+
+favicon :: ScottyM ()
+favicon = get "/favicon.ico" $ do
+    setHeader "Content-Type" "image/vnd.microsoft.icon"
+    file "static/build/favicon.ico"
