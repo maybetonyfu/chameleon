@@ -1,3 +1,4 @@
+import.meta.hot
 import React, { createContext, useContext } from 'react';
 import ReactDOM from 'react-dom';
 import { observable, computed, action, makeObservable, autorun, runInAction, flow } from "mobx"
@@ -52,6 +53,7 @@ function convertStep(step) {
 const DataContext = createContext()
 
 class EditorData {
+    backendUrl = __SNOWPACK_ENV__.MODE === "development" ? "http://localhost:3000" : ""
     currentStepNum = 0
     steps = []
     context = []
@@ -64,6 +66,7 @@ class EditorData {
                 steps: observable,
                 context: observable,
                 editor: false,
+		backendUrl: false,
                 // methods
                 currentTraverseId: computed,
                 currentContextItem: computed,
@@ -130,7 +133,7 @@ class EditorData {
     * updateText(text) {
         this.context = []
         this.steps = []
-        let response = yield fetch('/typecheck', {
+        let response = yield fetch(this.backendUrl + '/typecheck', {
             method: "POST",
             body: text
         })

@@ -1,3 +1,7 @@
+import * as __SNOWPACK_ENV__ from './_snowpack/env.js';
+import.meta.env = __SNOWPACK_ENV__;
+
+undefined /* [snowpack] import.meta.hot */ ;
 import React, {createContext, useContext} from "./_snowpack/pkg/react.js";
 import ReactDOM from "./_snowpack/pkg/react-dom.js";
 import {observable, computed, action, makeObservable, autorun, runInAction, flow} from "./_snowpack/pkg/mobx.js";
@@ -41,6 +45,7 @@ function convertStep(step) {
 }
 const DataContext = createContext();
 class EditorData {
+  backendUrl = __SNOWPACK_ENV__.MODE === "development" ? "http://localhost:3000" : "";
   currentStepNum = 0;
   steps = [];
   context = [];
@@ -51,6 +56,7 @@ class EditorData {
       steps: observable,
       context: observable,
       editor: false,
+      backendUrl: false,
       currentTraverseId: computed,
       currentContextItem: computed,
       allTraverseIds: computed,
@@ -107,7 +113,7 @@ class EditorData {
   *updateText(text) {
     this.context = [];
     this.steps = [];
-    let response = yield fetch("/typecheck", {
+    let response = yield fetch(this.backendUrl + "/typecheck", {
       method: "POST",
       body: text
     });
