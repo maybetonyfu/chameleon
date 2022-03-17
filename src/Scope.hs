@@ -25,6 +25,7 @@ data ScopeType
   | AdtScope
   | RecordFieldScope
   | TypeScope
+  | TypeAliasScope
   deriving (Show, Eq, Ord)
 
 data ScopeRange = Normal SrcSpan | Global deriving (Show, Eq, Ord)
@@ -46,7 +47,6 @@ instance Eq Scope where
 
 concatUnzip :: [([a1], [a2])] -> ([a1], [a2])
 concatUnzip = bimap concat concat . unzip
-
 
 sl :: Annotated a => a SrcSpanInfo -> SrcSpan
 sl = sp . ann
@@ -84,6 +84,28 @@ instance HasScopes Module where
   getScopes _ _ _ = error "Not a module"
 
 instance HasScopes Decl where
+  getScopes parent parentId (TypeDecl l typehead typedef) = do
+    newScopeId <- getId
+    let getTypeCon :: DeclHead a -> String
+        getTypeCon (DHead _ name) = getName name
+        getTypeCon (DHInfix _ _ name) = getName name
+        getTypeCon (DHParen _ dh) = getTypeCon dh
+        getTypeCon (DHApp _ dh _) = getTypeCon dh
+        typeCon = getTypeCon typehead
+        newScope =
+          Scope
+          {
+              scopeId = newScopeId,
+              scopeType = TypeAliasScope,
+              effectiveIn = parent,
+              definedIn = normal l,
+              generate = [typeCon],
+              use = [],
+              parentScope = parentId,
+              topOrder = 0
+          }
+    return ([], newScope: [])
+    
   getScopes parent parentId p@(PatBind l pat rhs maybeWheres) = do
     newScopeId <- getId
     (names, scopes) <- getScopes (normal l) newScopeId rhs

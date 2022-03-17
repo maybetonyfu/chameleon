@@ -89,6 +89,8 @@ instance MatchTerm Module where
   matchTerm _ _ = undefined
 
 instance MatchTerm Decl where
+  matchTerm _ node@(TypeDecl l typehead typedef) = do
+    error "TypeDecl is not defined"
   matchTerm _ node@(PatBind srcspan pat rhs maybeWheres) = do
     v1 <- freshVar
     g1 <- matchTerm v1 pat
@@ -126,7 +128,7 @@ instance MatchTerm Decl where
 
     return $ gClassDecls
   matchTerm _ (InstDecl l _ _ maybeInstaDecls) = return []
-  matchTerm _ _ = undefined
+  matchTerm _ node = error (show node ++ " is not supported")
 
 instance MatchTerm ClassDecl where
   matchTerm term (ClsDecl _ decl) = matchTerm term decl
