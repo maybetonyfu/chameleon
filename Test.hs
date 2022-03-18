@@ -1,3 +1,7 @@
 module Task where
 
-type X = Y
+type String = [Char]
+type X = String
+
+x :: X
+x = "3"

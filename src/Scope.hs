@@ -561,7 +561,7 @@ smallestDefiningScope allScopes srcspaninfo =
               allContainingScopes
   in smallest
 
-smallestBoundingScope :: [Scope] -> Maybe ScopeType -> String -> SrcSpan -> Scope
+smallestBoundingScope :: [Scope] -> Maybe ScopeType -> String -> SrcSpan -> Maybe Scope
 smallestBoundingScope scopes scpType v sp =
   let isContaining v sp Nothing (Scope scpId _ eff _ gen _ _ _) =
         v `elem` gen && sp `within` eff
@@ -570,21 +570,21 @@ smallestBoundingScope scopes scpType v sp =
       boundingScopes = filter (isContaining v (Normal sp) scpType) scopes
       smallest =
         if null boundingScopes
-          then error $ "Variable in scope: " ++ v
+          then trace ("Variable in scope: " ++ v) Nothing
           else
-            foldr
-              ( \scp1 scp2 ->
-                  if effectiveIn scp1 `within` effectiveIn scp2
-                    then scp1
-                    else scp2
-              )
-              (head boundingScopes)
-              boundingScopes
+            Just $ foldr
+                      ( \scp1 scp2 ->
+                          if effectiveIn scp1 `within` effectiveIn scp2
+                            then scp1
+                            else scp2
+                      )
+                      (head boundingScopes)
+                      boundingScopes
    in smallest
 
 uniqueNameFromBinding :: [Scope] -> Maybe ScopeType -> String -> SrcSpan -> String
 uniqueNameFromBinding scopes scpType v sp =
-  uniqueName (scopeId $ smallestBoundingScope scopes scpType v sp) v
+  uniqueName (scopeId . fromJust $ smallestBoundingScope scopes scpType v sp) v
 
 parentScopesUntil :: Scope -> [Scope] -> Int -> [Scope]
 parentScopesUntil scp scopes n =

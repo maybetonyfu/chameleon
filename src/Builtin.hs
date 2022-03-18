@@ -185,4 +185,6 @@ elem = undefined
 
 show :: a -> [Char]
 show = undefined
+
+type String = [Char]
 |]

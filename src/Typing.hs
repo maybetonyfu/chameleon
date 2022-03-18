@@ -56,21 +56,25 @@ varByNameWithScope :: (Nameable a, Annotated a) => Maybe ScopeType -> a SrcSpanI
 varByNameWithScope scpType namable = do
   (_, scopes, _) <- get
   let scp = smallestBoundingScope scopes scpType (getName namable) (sp (ann namable))
-      uniqueVarName = uniqueName (scopeId scp) (getName namable)
-  return $ var uniqueVarName
+  case scp of
+    Nothing -> error (getName namable ++ " is not in scope")
+    Just scp' -> do 
+      let uniqueVarName = uniqueName (scopeId scp') (getName namable)
+      return $ var uniqueVarName
 
 varsByNamesWithScope :: (Nameable a, Annotated a) => Maybe ScopeType -> [a SrcSpanInfo] -> SolveState [Term]
 varsByNamesWithScope scpType namables = do
-  (_, bindings, _) <- get
-  let sourceSpans = map (sp . ann) namables
-      names = map getName namables
-      scps = zipWith (smallestBoundingScope bindings scpType) names sourceSpans
-      scpIds = map scopeId scps
-      vs = zipWith uniqueName scpIds names
-  return (map var vs)
+  vs <- mapM (varByNameWithScope scpType) namables
+  return vs
 
 varByName :: (Nameable a, Annotated a) => a SrcSpanInfo -> SolveState Term
 varByName = varByNameWithScope Nothing
+
+scopeTypeByName :: (Nameable a, Annotated a) => a SrcSpanInfo -> SolveState (Maybe ScopeType)
+scopeTypeByName namable = do
+  (_, scopes, _) <- get
+  let scp = smallestBoundingScope scopes Nothing (getName namable) (sp (ann namable))
+  return (fmap scopeType scp)
 
 varsByNames :: (Nameable a, Annotated a) => [a SrcSpanInfo] -> SolveState [Term]
 varsByNames = varsByNamesWithScope Nothing
@@ -90,13 +94,15 @@ instance MatchTerm Module where
 
 instance MatchTerm Decl where
   matchTerm _ node@(TypeDecl l typehead typedef) = do
-    error "TypeDecl is not defined"
+    v <- freshVar
+    g1 <- matchTerm v typehead
+    g2 <- matchTerm v typedef
+    return (g1 ++ g2)
   matchTerm _ node@(PatBind srcspan pat rhs maybeWheres) = do
     v1 <- freshVar
     g1 <- matchTerm v1 pat
     v2 <- freshVar
     g2 <- matchTerm v2 rhs
-    
     let label = Label 0 (v1, v2) [] "Defined" (sl pat)
     return (g1 ++ g2 ++ [label $ v1 === v2])
   matchTerm _ (TypeSig (SrcSpanInfo sp _) names typeDef) = do
@@ -136,10 +142,16 @@ instance MatchTerm ClassDecl where
 
 instance MatchTerm DeclHead where
   matchTerm term node@(DHead l name) = do
-    let typeTerm = atom (getName name)
-    
-    let label = Label 0 (term, typeTerm) [] "Annotated" (sl node)
-    return [label (term === typeTerm)]
+    scopeType <- scopeTypeByName name
+    case scopeType of
+      Just TypeAliasScope -> do
+        aliasVar <- varByName name
+        let label = Label 0 (term, aliasVar) [] "Annotated" (sl node)
+        return [label (term === aliasVar)]
+      _ -> do 
+        let typeTerm = atom (getName name)
+        let label = Label 0 (term, typeTerm) [] "Annotated" (sl node)
+        return [label (term === typeTerm)]
   matchTerm term (DHInfix l typeVar name) = matchTerm term (DHApp l (DHead (ann name) name) typeVar)
   matchTerm term (DHParen l declHead) = matchTerm term declHead
   matchTerm term node@(DHApp l declHead typeVar) = do
@@ -175,8 +187,6 @@ instance MatchTerm FieldDecl where
     filedVars <- varsByNames names
     typeVar <- freshVar
     gTypeVar <- matchTerm typeVar typeDef
-    
-
     let label = \t -> Label 0 (funOf [term, typeVar], t) [] "Defined" (sl node)
     let gs = map (\v -> label v (funOf [term, typeVar] === v)) filedVars
     return $ gTypeVar ++ gs
@@ -184,14 +194,18 @@ instance MatchTerm FieldDecl where
 instance MatchTerm Type where
   matchTerm term node@(TyVar (SrcSpanInfo sp _) name) = do
     typeVar <- varByName name
-    
-
     let label = Label 0 (typeVar, term) [] "Annotated" (sl node)
     return [label $ typeVar === term]
   matchTerm term node@(TyCon _ qname) = do
-    
-    let label = Label 0 (term, atom (getName qname)) [] "Annotated" (sl node)
-    return [label $ term === atom (getName qname)]
+    scopeType <- scopeTypeByName qname
+    case scopeType of
+      Just TypeAliasScope -> do
+        aliasVar <- varByName qname
+        let label = Label 0 (term, aliasVar) [] "Annotated" (sl node)
+        return [label $ term === aliasVar]
+      _ -> do
+        let label = Label 0 (term, atom (getName qname)) [] "Annotated" (sl node)
+        return [label $ term === atom (getName qname)]
   matchTerm term (TyParen _ t) = matchTerm term t
   matchTerm term node@(TyApp _ t1 t2) = do
     v1 <- freshVar
@@ -291,11 +305,12 @@ instance MatchTerm Exp where
     let label = Label 0 (Unit, Unit) [] "Bottom" (sl node)
     return [label succeeds]
   matchTerm term node@(Var (SrcSpanInfo sp _) name) = do
-    
-
-    patVar <- varByName name
-    let label = Label 0 (patVar, term) [] "Instanciated" (sl node)
-    return [label (patVar === term)]
+    -- var is method?
+    -- var is type alias?
+    varTerm <- varByName name
+    let label = Label 0 (varTerm, term) [] "Instanciated" (sl node)
+    return [label (varTerm === term)]
+        
   matchTerm term node@(Lambda _ pats exp) = do
     v <- freshVar
     g1 <- matchTerm v exp
@@ -524,9 +539,9 @@ instance MatchTerm Pat where
   matchTerm term node@(PVar (SrcSpanInfo sp _) name) = do
     
 
-    patVar <- varByName name
-    let label = Label 0 (patVar, term) [] "Matched" (sl node)
-    return [label (patVar === term)]
+    varTerm <- varByName name
+    let label = Label 0 (varTerm, term) [] "Matched" (sl node)
+    return [label (varTerm === term)]
   matchTerm term (PLit _ _ literal) = matchTerm term literal
   matchTerm term node@(PNPlusK (SrcSpanInfo sp _) name _) = do
     
