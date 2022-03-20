@@ -180,6 +180,15 @@ foldl = undefined
 head :: [a] -> a
 head = undefined
 
+last :: [a] -> a
+last = undefined
+
+init :: [a] -> [a]
+init = undefined
+
+tail :: [a] -> [a]
+tail = undefined
+
 elem :: a -> [a] -> Bool
 elem = undefined
 
@@ -187,4 +196,17 @@ show :: a -> [Char]
 show = undefined
 
 type String = [Char]
+
+permutations :: [a] -> [[a]]
+permutations = undefined
+
+(.) :: (b -> c) -> (a -> b) -> a -> c
+(.) = undefined
+
+take :: n -> [a] -> [a]
+take = undefined
+
+drop :: n -> [a] -> [a]
+drop = undefined
+
 |]

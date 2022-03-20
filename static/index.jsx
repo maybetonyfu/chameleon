@@ -20,7 +20,7 @@ function arrEq(array1, array2) {
     return array1.length === array2.length && array1.every((item, index) => item === array2[index])
 }
 
-function convertStep(step) {
+function convertStep(step, stepNum) {
     let reason = step[0];
     let text;
     let direction = step[1];
@@ -30,13 +30,20 @@ function convertStep(step) {
         text = `
         <span class="markerA inline-block w-3 h-3 rounded-sm"></span>
         ${reason}
-        <span class="markerB inline-block w-3 h-3 rounded-sm"></span>`
+        <span class="markerB inline-block w-3 h-3 rounded-sm"></span>
+        <span class="font-xs text-gray-400">(step</span> 
+        <span class="bg-green-400 inline-block w-4 h-4 text-xs rounded-full">${stepNum + 1}</span><span class="font-xs text-gray-400">)</span> 
+`
 
     } else {
         text = `
         <span class="markerB inline-block w-3 h-3 rounded-sm"></span>
         ${reason}
-        <span class="markerA inline-block w-3 h-3 rounded-sm"></span>`
+        <span class="markerA inline-block w-3 h-3 rounded-sm"></span>
+        <span class="font-xs text-gray-400">(step</span> 
+        <span class="bg-green-400 inline-block w-4 h-4 text-xs rounded-full">${stepNum + 1}</span><span class="font-xs text-gray-400">)</span> 
+`
+        
 
     }
     return {
@@ -46,7 +53,9 @@ function convertStep(step) {
     }
 }
 
-
+function unAlias (str) {
+    return str.replaceAll('[Char]', 'String')
+}
 
 
 
@@ -87,7 +96,7 @@ class EditorData {
     get currentStep() {
         if (this.numOfSteps === 0) return null
         let step = this.steps[this.currentStepNum]
-        return convertStep(step)
+        return convertStep(step, this.currentStepNum)
     }
     get currentContextItem() {
         if (this.numOfSteps === 0) return null
@@ -246,7 +255,6 @@ const Debuger = observer(() => {
 
 const Message = observer(() => {
     let data = useContext(DataContext)
-
     return (
         data.currentContextItem === null ? <></> :
             <div className="my-5">
@@ -255,15 +263,15 @@ const Message = observer(() => {
                 </div>
 
                 <div className="my-1">
-                    Expression: <span className="  ml-2 px-1 rounded-md bg-gray-700 text-white inline-block"> {data.currentContextItem[0]} </span>
+                    Expression: <span className="code ml-2 px-1 rounded-md bg-gray-700 text-white inline-block"> {data.currentContextItem[0]} </span>
                 </div>
                 <div className="my-1">
-                    <span className='w-14 inline-block'>Expect:  </span>
-                    <span className='code groupMarkerB rounded-sm px-0.5 cursor-pointer'>{data.currentContextItem[1]}</span>
+                    <span className='w-14 inline-block'>Type 1:  </span>
+                    <span className='code groupMarkerB rounded-sm px-0.5 cursor-pointer'>{unAlias(data.currentContextItem[1])}</span>
                 </div>
                 <div className="my-1">
-                    <span className='w-14 inline-block'>Actual:  </span>
-                    <span className='code groupMarkerA rounded-sm px-0.5 cursor-pointer'>{data.currentContextItem[2]}</span>
+                    <span className='w-14 inline-block'>Type 2:  </span>
+                    <span className='code groupMarkerA rounded-sm px-0.5 cursor-pointer'>{unAlias(data.currentContextItem[2])}</span>
                 </div>
             </div>
 
@@ -279,9 +287,9 @@ const TypingTable = observer(() => {
                 onClick={action(_ => data.prevStep())}
                  style={{fontSize: 20, cursor: "pointer"}} name="arrow-up-circle"></ion-icon> 
             </div>
-            <div className='text-center'>TYPE</div>
+            <div className='text-center'>TYPE 1</div>
             <div className='text-center'>EXPRESSION</div>
-            <div className='text-center'>TYPE</div>
+            <div className='text-center'>TYPE 2</div>
             {
                 data.context.map((row, i) => <ContextRow row={row} key={row[0]}></ContextRow>)
             }
@@ -316,11 +324,11 @@ const ContextRow = observer(({ row }) => {
         <Stepper rowInfo={effectiveRowInfo}></Stepper>
         <div 
             onClick={action(_ => {data.setStep(firstReleventStep)})}
-            className="rounded-sm p-1 groupMarkerB flex justify-center items-center cursor-pointer">{typeL}</div>
+            className="rounded-sm p-1 groupMarkerB flex justify-center items-center cursor-pointer">{unAlias(typeL)}</div>
         <div className={"rounded-sm p-1 flex justify-center items-center " + affinityClass}>{exp}</div>
         <div 
             onClick={action(_ => {data.setStep(lastReleventStep)})}
-            className="rounded-sm p-1 groupMarkerA flex justify-center items-center cursor-pointer">{typeR}</div>
+            className="rounded-sm p-1 groupMarkerA flex justify-center items-center cursor-pointer">{unAlias(typeR)}</div>
     </>
 })
 

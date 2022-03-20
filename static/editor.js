@@ -4,7 +4,7 @@ export function initializeEditor(code) {
         mode: null,
         value: code,
     });
-    editor.setSize(null, '100%')
+    editor.setSize(null, '100vh')
     return editor
 }
 
@@ -76,7 +76,7 @@ export function drawAnnotations(locA, locB, text, editor) {
 
 function boxStyles(topElem, bottomElem, text, color = false) {
     const downwardBarHeight = 5;
-    const annotationWidth = 200;
+    const annotationWidth = 300;
     const annotationHeight = 20;
     const stepAsideDistance = 700;
     const styleTop = [
@@ -116,6 +116,7 @@ function boxStyles(topElem, bottomElem, text, color = false) {
         `width:${annotationWidth}px;`,
         `height: ${annotationHeight}px;`,
         `font-size: 14px;`,
+        `text-align: center;`,
         `margin-top: -${annotationHeight}px;`,
         `margin-left: ${stepAsideDistance - bottomElem.left - annotationWidth / 2}px;`,
         `z-index:2;`,

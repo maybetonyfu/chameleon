@@ -80,7 +80,7 @@ processFile text =
                           )
                           longestIndexPairs
                       concreteTypes =
-                        -- trace ("\nOriginal Names:\n" ++ show names ++ "\nNewNames: \n" ++ show names') $
+                          trace ("\nOriginal Names:\n" ++ show names ++ "\nNew Names: \n" ++ show names') $
                           map
                           ( \g ->
                               let mss = maximalSatisfiableSubset ks (longestChain \\ [g]) (goals' \\ [g])
@@ -98,11 +98,11 @@ processFile text =
                           then releventConcrete
                           else filter (\(_, concrets, _) -> length (nub concrets) > 1) releventSimplied
                       contextTable =
-                        --trace ("Longest Chain: " ++ unlines (map show longestChain)) $
+                        trace ("Longest Chain: " ++ unlines (map show longestChain)) $
                         map
                           ( \(name, concrete, simplified) ->
-                              -- trace ("\n" ++ name ++ ":\n" ++ unlines (map termToType simplified)) $
-                              --   trace ("\n" ++ name ++ ":\n" ++ unlines (map show concrete)) $
+                                  trace ("\n" ++ name ++ ":\n" ++ unlines (map termToType simplified)) $
+                                  trace ("\n" ++ name ++ ":\n" ++ unlines (map termToType concrete)) $
                                   let (leftmost, rightmost) = polarEnds concrete
                                       sides =
                                         zipWith

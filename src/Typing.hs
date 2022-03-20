@@ -291,19 +291,17 @@ instance MatchTerm Binds where
 instance MatchTerm Exp where
   matchTerm term (Lit _ lit) = matchTerm term lit
   matchTerm term node@(Con (SrcSpanInfo sp _) (UnQual _ (Ident _ "True"))) = do
-    
-
     let label = Label 0 (term, atom "Bool") [] "Literal" (sl node)
     return [label (term === atom "Bool")]
+
   matchTerm term node@(Con (SrcSpanInfo sp _) (UnQual _ (Ident _ "False"))) = do
-    
-
     let label = Label 0 (term, atom "Bool") [] "Literal" (sl node)
     return [label (term === atom "Bool")]
+
   matchTerm term node@(Var _ (UnQual _ (Ident _ "undefined"))) = do
-    
     let label = Label 0 (Unit, Unit) [] "Bottom" (sl node)
     return [label succeeds]
+
   matchTerm term node@(Var (SrcSpanInfo sp _) name) = do
     -- var is method?
     -- var is type alias?
@@ -321,6 +319,7 @@ instance MatchTerm Exp where
     let label = Label 0 (term, funOf (args ++ [v])) [] "Defined" (sl node)
     let g = label (term === funOf (args ++ [v]))
     return (g : g2 ++ g1)
+
   matchTerm term node@(App _ e1 e2) = do
     (_, _, _) <- get
     let unroll (App _ a b) = unroll a ++ [b]
@@ -334,8 +333,6 @@ instance MatchTerm Exp where
         (Var _ name) -> do
           varname <- varByName name
           return [(varname, f)]
-        _ -> return []
-    
     let label = Label 0 (head ts, funOf (tail ts ++ [term])) instanciation "Applied" (sl node)
     let g =
           label
@@ -461,9 +458,6 @@ instance MatchTerm Exp where
               term === funOf [vLeft, vRes]
               -- conda (map (\(t, g) -> [t === vOp, g f]) cons)
             ]
-
-    
-
     let label = Label 0 (vOp, funOf [vLeft, vRight, vRes]) [(vOp, f)] ("Applied") (sl node)
     return $
       gRight ++ [label g]
@@ -491,14 +485,18 @@ instance MatchTerm Exp where
   matchTerm term node@(Tuple l _ exps) = do
     vars <- freshVarN (length exps)
     gArgs <- concat <$> zipWithM (matchTerm) vars exps
-    
     let label = Label 0 (term, tupOf vars) [] ("Record") (sl node)
     return $ label (term === tupOf vars) : gArgs
   matchTerm term node@(Con l name) = do
     vCon <- varByName name
-    
     let label = Label 0 (term, vCon) [] ("Used") (sl node)
     return [label (term === vCon)]
+  matchTerm term node@(EnumFromTo l exp1 exp2) = do
+    v <- freshVar
+    g1 <- matchTerm v exp1
+    g2 <- matchTerm v exp2
+    let label = Label 0 (term, lstOf v) [] "Srtucture" (sl node)
+    return $ label (term === lstOf v) : (g1 ++ g2)
   matchTerm _ t = error $ "Unsupported exp type: " ++ show t
 
 instance MatchTerm FieldUpdate where

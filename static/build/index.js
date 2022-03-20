@@ -2,10 +2,10 @@ import * as __SNOWPACK_ENV__ from './_snowpack/env.js';
 import.meta.env = __SNOWPACK_ENV__;
 
 undefined /* [snowpack] import.meta.hot */ ;
-import React, {createContext, useContext} from "./_snowpack/pkg/react.js";
-import ReactDOM from "./_snowpack/pkg/react-dom.js";
-import {observable, computed, action, makeObservable, autorun, runInAction, flow} from "./_snowpack/pkg/mobx.js";
-import {observer} from "./_snowpack/pkg/mobx-react-lite.js";
+import React, {createContext, useContext} from "./_snowpack/pkg/react.v17.0.2.js";
+import ReactDOM from "./_snowpack/pkg/react-dom.v17.0.2.js";
+import {observable, computed, action, makeObservable, autorun, runInAction, flow} from "./_snowpack/pkg/mobx.v6.4.2.js";
+import {observer} from "./_snowpack/pkg/mobx-react-lite.v3.3.0.js";
 import {initializeEditor, highlight, drawAnnotations, clearDecorations} from "./editor.js";
 import {example1, example2, example3} from "./code.js";
 function convertLocation({srcSpanEndLine, srcSpanEndColumn, srcSpanStartColumn, srcSpanStartLine}) {
@@ -20,7 +20,7 @@ function locEq(loc1, loc2) {
 function arrEq(array1, array2) {
   return array1.length === array2.length && array1.every((item, index) => item === array2[index]);
 }
-function convertStep(step) {
+function convertStep(step, stepNum) {
   let reason = step[0];
   let text;
   let direction = step[1];
@@ -30,18 +30,27 @@ function convertStep(step) {
     text = `
         <span class="markerA inline-block w-3 h-3 rounded-sm"></span>
         ${reason}
-        <span class="markerB inline-block w-3 h-3 rounded-sm"></span>`;
+        <span class="markerB inline-block w-3 h-3 rounded-sm"></span>
+        <span class="font-xs text-gray-400">(step</span> 
+        <span class="bg-green-400 inline-block w-4 h-4 text-xs rounded-full">${stepNum + 1}</span><span class="font-xs text-gray-400">)</span> 
+`;
   } else {
     text = `
         <span class="markerB inline-block w-3 h-3 rounded-sm"></span>
         ${reason}
-        <span class="markerA inline-block w-3 h-3 rounded-sm"></span>`;
+        <span class="markerA inline-block w-3 h-3 rounded-sm"></span>
+        <span class="font-xs text-gray-400">(step</span> 
+        <span class="bg-green-400 inline-block w-4 h-4 text-xs rounded-full">${stepNum + 1}</span><span class="font-xs text-gray-400">)</span> 
+`;
   }
   return {
     locA,
     locB,
     text
   };
+}
+function unAlias(str) {
+  return str.replaceAll("[Char]", "String");
 }
 const DataContext = createContext();
 class EditorData {
@@ -77,7 +86,7 @@ class EditorData {
     if (this.numOfSteps === 0)
       return null;
     let step = this.steps[this.currentStepNum];
-    return convertStep(step);
+    return convertStep(step, this.currentStepNum);
   }
   get currentContextItem() {
     if (this.numOfSteps === 0)
@@ -214,20 +223,20 @@ const Message = observer(() => {
   }, "Chameleon cannot infer a type for the expression below:"), /* @__PURE__ */ React.createElement("div", {
     className: "my-1"
   }, "Expression: ", /* @__PURE__ */ React.createElement("span", {
-    className: "  ml-2 px-1 rounded-md bg-gray-700 text-white inline-block"
+    className: "code ml-2 px-1 rounded-md bg-gray-700 text-white inline-block"
   }, " ", data.currentContextItem[0], " ")), /* @__PURE__ */ React.createElement("div", {
     className: "my-1"
   }, /* @__PURE__ */ React.createElement("span", {
     className: "w-14 inline-block"
-  }, "Expect:  "), /* @__PURE__ */ React.createElement("span", {
+  }, "Type 1:  "), /* @__PURE__ */ React.createElement("span", {
     className: "code groupMarkerB rounded-sm px-0.5 cursor-pointer"
-  }, data.currentContextItem[1])), /* @__PURE__ */ React.createElement("div", {
+  }, unAlias(data.currentContextItem[1]))), /* @__PURE__ */ React.createElement("div", {
     className: "my-1"
   }, /* @__PURE__ */ React.createElement("span", {
     className: "w-14 inline-block"
-  }, "Actual:  "), /* @__PURE__ */ React.createElement("span", {
+  }, "Type 2:  "), /* @__PURE__ */ React.createElement("span", {
     className: "code groupMarkerA rounded-sm px-0.5 cursor-pointer"
-  }, data.currentContextItem[2])));
+  }, unAlias(data.currentContextItem[2]))));
 });
 const TypingTable = observer(() => {
   let data = useContext(DataContext);
@@ -242,11 +251,11 @@ const TypingTable = observer(() => {
     name: "arrow-up-circle"
   })), /* @__PURE__ */ React.createElement("div", {
     className: "text-center"
-  }, "TYPE"), /* @__PURE__ */ React.createElement("div", {
+  }, "TYPE 1"), /* @__PURE__ */ React.createElement("div", {
     className: "text-center"
   }, "EXPRESSION"), /* @__PURE__ */ React.createElement("div", {
     className: "text-center"
-  }, "TYPE"), data.context.map((row, i) => /* @__PURE__ */ React.createElement(ContextRow, {
+  }, "TYPE 2"), data.context.map((row, i) => /* @__PURE__ */ React.createElement(ContextRow, {
     row,
     key: row[0]
   })), /* @__PURE__ */ React.createElement("div", {
@@ -282,14 +291,14 @@ const ContextRow = observer(({row}) => {
       data.setStep(firstReleventStep);
     }),
     className: "rounded-sm p-1 groupMarkerB flex justify-center items-center cursor-pointer"
-  }, typeL), /* @__PURE__ */ React.createElement("div", {
+  }, unAlias(typeL)), /* @__PURE__ */ React.createElement("div", {
     className: "rounded-sm p-1 flex justify-center items-center " + affinityClass
   }, exp), /* @__PURE__ */ React.createElement("div", {
     onClick: action((_) => {
       data.setStep(lastReleventStep);
     }),
     className: "rounded-sm p-1 groupMarkerA flex justify-center items-center cursor-pointer"
-  }, typeR));
+  }, unAlias(typeR)));
 });
 const Stepper = observer(({rowInfo}) => {
   let data = useContext(DataContext);

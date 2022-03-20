@@ -433,8 +433,8 @@ instance HasScopes Exp where
   getScopes parent parentId (UnboxedSum srcInfo _ _ exp) = undefined
   getScopes parent parentId (TupleSection srcInfo _ maybeExps) = undefined
   getScopes parent parentId (ParArray srcInfo exps) = undefined
-  getScopes parent parentId (LeftSection srcInfo e _) = undefined
-  getScopes parent parentId (RightSection srcInfo _ e) = undefined
+  getScopes parent parentId (LeftSection l e op) = concatUnzip <$> mapM (getScopes (normal l) parentId) [e]
+  getScopes parent parentId (RightSection l op e) = concatUnzip <$> mapM (getScopes (normal l) parentId) [e]
   getScopes parent parentId (RecConstr srcInfo _ fieldUpdates) = undefined
   getScopes parent parentId (RecUpdate srcInfo e fieldUpdates) = undefined
   getScopes parent parentId (ParArrayFromTo srcInfo e1 e2) = undefined
