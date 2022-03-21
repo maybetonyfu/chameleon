@@ -333,6 +333,7 @@ instance MatchTerm Exp where
         (Var _ name) -> do
           varname <- varByName name
           return [(varname, f)]
+        _ -> return []
     let label = Label 0 (head ts, funOf (tail ts ++ [term])) instanciation "Applied" (sl node)
     let g =
           label
@@ -637,6 +638,7 @@ processFile filepath = do
           [ prettyPrint srcLoc,
             message
           ]
+
 
 main :: IO ()
 main = do

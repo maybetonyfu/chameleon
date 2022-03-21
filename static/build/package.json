@@ -4,20 +4,20 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-      "start": "snowpack dev",
-      "build": "snowpack build",
-      "dev": "snowpack build --watch"
+    "start": "snowpack dev",
+    "build": "snowpack build",
+    "dev": "snowpack build --watch"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
-      "mobx": "^6.3.13",
-      "mobx-react-lite": "^3.2.3",
-      "react": "^17.0.2",
-      "react-dom": "^17.0.2"
+    "mobx": "^6.3.13",
+    "mobx-react-lite": "^3.2.3",
+    "react": "^17.0.2",
+    "react-dom": "^17.0.2"
   },
   "devDependencies": {
-      "snowpack": "^3.8.8"
+    "snowpack": "^3.8.8"
   }
 }

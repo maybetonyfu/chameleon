@@ -529,3 +529,10 @@ prettyTerm (Var x)
   | otherwise = takeWhile (/= '.') x
 prettyTerm (Atom x) = x
 prettyTerm (Pair x y) = prettyTerm x ++ ", " ++ prettyTerm y
+
+moreGenerousThan :: Term -> Term -> Bool
+moreGenerousThan (Pair a1 a2) (Pair b1 b2) = a1 `moreGenerousThan` b1 && a2 `moreGenerousThan` b2
+moreGenerousThan (Pair _ _) _ = True
+moreGenerousThan (Atom _) (Var _) = True
+moreGenerousThan _ _ = False
+

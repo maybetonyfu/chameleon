@@ -39,13 +39,13 @@ min = undefined
 (==) :: a -> a -> Bool
 (==) = undefined
 
-(+) :: a -> a -> a
+(+) :: Int -> Int -> Int
 (+) = undefined
 
-(-) :: a -> a -> a
+(-) :: Int -> Int -> Int
 (-) = undefined
 
-(*) :: a -> a -> a
+(*) :: Int -> Int -> Int
 (*) = undefined
 
 negate :: a -> a

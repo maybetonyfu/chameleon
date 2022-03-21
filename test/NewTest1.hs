@@ -13,7 +13,7 @@ count_boards size = length . nqueens
 evaluateBoard [] = True
 evaluateBoard rows =
   evaluateBoard (init rows) &&
-  validate (last rows - 1) (last rows + 1) (init rows) (last rows)
+  validate (init rows) (last (rows - 1)) (last rows + 1) (init rows) (last rows)
 
   
 --Validate that a Queen on a row doesn't have conflicts with earlier rows.

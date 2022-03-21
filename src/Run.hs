@@ -84,26 +84,36 @@ processFile text =
                           map
                           ( \g ->
                               let mss = maximalSatisfiableSubset ks (longestChain \\ [g]) (goals' \\ [g])
+                               in typings ks names mss
+                          )
+                          longestChain
+                      concreteTypesNewNames =
+                          map
+                          ( \g ->
+                              let mss = maximalSatisfiableSubset ks (longestChain \\ [g]) (goals' \\ [g])
                                in typings ks names' mss
                           )
                           longestChain
 
                       simplifyTypes = map (\g -> typings ks names (longestChain \\ [g])) longestChain
                       altTable =
-                        zip3 names (transpose concreteTypes) (transpose simplifyTypes)
-                      releventSimplied = filter (\(_, concret, simplified) -> length (nub simplified) > 1) altTable
-                      releventConcrete = filter (\(_, concret, simplified) -> length (nub concret) > 1) altTable
+                        zip4 names (transpose concreteTypes) (transpose concreteTypesNewNames) (transpose simplifyTypes) 
+                      releventSimplied = filter (\(_, concrete, concrete', simplified) -> length (nub simplified) > 1) altTable
+                      releventConcrete = filter (\(_, concrete, concrete', simplified) -> length (nub concrete) > 1) altTable
+                      
                       relevent =
                         if null releventSimplied
                           then releventConcrete
-                          else filter (\(_, concrets, _) -> length (nub concrets) > 1) releventSimplied
+                          else filter (\(_, concretes, _,  _) -> length (nub concretes) > 1) releventSimplied
                       contextTable =
                         trace ("Longest Chain: " ++ unlines (map show longestChain)) $
+                        trace ("Length of relevent: " ++ show (length relevent)) $
                         map
-                          ( \(name, concrete, simplified) ->
-                                  trace ("\n" ++ name ++ ":\n" ++ unlines (map termToType simplified)) $
-                                  trace ("\n" ++ name ++ ":\n" ++ unlines (map termToType concrete)) $
-                                  let (leftmost, rightmost) = polarEnds concrete
+                          ( \(name, concrete, concrete', simplified) ->
+                                  trace ("\nSimlifed:" ++ name ++ ":\n" ++ unlines (map termToType simplified)) $
+                                  trace ("\nConcrete:" ++ name ++ ":\n" ++ unlines (map termToType concrete)) $
+                                  trace ("\nConcrete (Renamed)" ++ name ++ ":\n" ++ unlines (map termToType concrete')) $
+                                  let (leftmost, rightmost) = polarEnds concrete'
                                       sides =
                                         zipWith
                                           ( \(t1, t2) (Edge n1 n2 _) ->
@@ -114,7 +124,7 @@ processFile text =
                                                     then ((n1, n2), R, False)
                                                     else ((n1, n2), M, False)
                                           )
-                                          (zigzag concrete)
+                                          (zigzag concrete')
                                           longestIndexPairs
                                       normalizedSides = normalize sides
                                    in ChContext (showProperName name) (termToType leftmost) (termToType rightmost) normalizedSides

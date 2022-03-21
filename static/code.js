@@ -36,10 +36,10 @@ renderPairs [p] = renderPair p
 renderPairs (p : ps) = renderPair p ++ "," ++ renderPairs ps
 `
 
-let example3 = `module Example3 where
+let example3 = `module Example1 where
 
 nqueens size =
-  filter (evaluateBoard size) (board_permutations size)
+  filter evaluateBoard (board_permutations size)
 
 --N sized Chess boards are represented as a one-dimension array.
 board_permutations size = permutations [0..size - 1]
@@ -48,22 +48,22 @@ board_permutations size = permutations [0..size - 1]
 count_boards size = length . nqueens
 
 --Recursively check that prior rows are valid.
-evaluateBoard _ [] = True
-evaluateBoard size rows =
-  (evaluateBoard size (init rows)) &&
-  (validate size (init rows) (last_row - 1) (last_row + 1) last_row)
-  where
-    last_row = last rows
+evaluateBoard [] = True
+evaluateBoard rows =
+  evaluateBoard (init rows) &&
+  validate
+    (init rows)
+    (last (rows - 1)) 
+    (last rows + 1) 
+    (last rows)
+
   
 --Validate that a Queen on a row doesn't have conflicts with earlier rows.
-validate _ [] _ _ _ = True
-validate size rows left right position =
-  if check_row == left || check_row == right || check_row == position
+validate [] _ _ _ = True
+validate rows left right position =
+  if last rows == left || last rows == right || last rows == position
   then False
-  else validate size (init rows) (left - 1) (right + 1) position
-  where
-    check_row = last rows
-
+  else validate (init rows) (left - 1) (right + 1) position
 `
 
 export {example1, example2, example3}
