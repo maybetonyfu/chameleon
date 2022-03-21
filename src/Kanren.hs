@@ -514,6 +514,10 @@ isFunction :: Term -> Bool
 isFunction (Pair (Atom "Function") _) = True
 isFunction _ = False
 
+isTuple :: Term -> Bool
+isTuple (Pair (Atom "Tuple") _) = True
+isTuple _ = False
+
 isTypeCon :: Term -> Bool 
 isTypeCon (Pair (Atom "Function") _) = False 
 isTypeCon (Pair (Atom "List") _) = False 

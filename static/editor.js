@@ -47,6 +47,8 @@ export function highlight(locA, locB, groupA, groupB, editor) {
 
 
 export function drawAnnotations(locA, locB, text, editor) {
+    if (document.getElementsByClassName('markerB').length === 0 || 
+    document.getElementsByClassName('markerA').length === 0) return
     if (locB.from.line < locA.from.line) {
         // B
         //   A

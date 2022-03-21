@@ -98,8 +98,11 @@ processFile text =
                       simplifyTypes = map (\g -> typings ks names (longestChain \\ [g])) longestChain
                       altTable =
                         zip4 names (transpose concreteTypes) (transpose concreteTypesNewNames) (transpose simplifyTypes) 
-                      releventSimplied = filter (\(_, concrete, concrete', simplified) -> length (nub simplified) > 1) altTable
-                      releventConcrete = filter (\(_, concrete, concrete', simplified) -> length (nub concrete) > 1) altTable
+                      releventSimplied = 
+                        filter (\(_, concrete, concrete', simplified) -> 
+                          (>1) .length . nub . removeUniversal $ simplified) altTable
+                      releventConcrete = filter (\(_, concrete, concrete', simplified) -> 
+                          (>1) .length . nub . removeUniversal $ concrete) altTable
                       
                       relevent =
                         if null releventSimplied
@@ -161,7 +164,10 @@ normalize sides
      in normalize $ zipWith (\side n -> if n < mIndex then set _2 L side else side) sides [0 ..]
   | otherwise = sides
 
-
+removeUniversal :: [Term] -> [Term]
+removeUniversal  = filter (not . isUniversal)
+  where isUniversal (Var x) = "_." `isPrefixOf` x
+        isUniversal _ = False
 
 calculateActiveness :: [ChContext] -> [ChContext]
 -- calculateActiveness ((ChContext a b c sides):(ChContext a' b' c' sides'):contexts) =

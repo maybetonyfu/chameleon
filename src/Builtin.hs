@@ -6,6 +6,13 @@ import Data.String.QQ
 builtin :: String
 builtin = [s|
 
+mod :: Int -> Int -> Int
+mod = undefined
+
+
+div :: Int -> Int -> Int
+div = undefined
+
 (/=) :: a -> a -> Bool
 (/=)  = undefined
 
@@ -209,4 +216,10 @@ take = undefined
 drop :: n -> [a] -> [a]
 drop = undefined
 
+
+and :: [Bool] -> Bool
+and = undefined 
+
+or :: [Bool] -> Bool
+or = undefined 
 |]

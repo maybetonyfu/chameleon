@@ -7,7 +7,7 @@ import ReactDOM from "./_snowpack/pkg/react-dom.v17.0.2.js";
 import {observable, computed, action, makeObservable, autorun, runInAction, flow} from "./_snowpack/pkg/mobx.v6.4.2.js";
 import {observer} from "./_snowpack/pkg/mobx-react-lite.v3.3.0.js";
 import {initializeEditor, highlight, drawAnnotations, clearDecorations} from "./editor.js";
-import {example1, example2, example3} from "./code.js";
+import {example1, example2, example3, example4, example5, example6, example7, example8} from "./code.js";
 function convertLocation({srcSpanEndLine, srcSpanEndColumn, srcSpanStartColumn, srcSpanStartLine}) {
   return {
     from: {line: srcSpanStartLine - 1, ch: srcSpanStartColumn - 1},
@@ -58,12 +58,16 @@ class EditorData {
   currentStepNum = 0;
   steps = [];
   context = [];
+  showHighlights = true;
   editor = initializeEditor("");
+  mode = Math.random > 0.5 ? ["basic", "full", "basic", "full", "basic", "full", "basic", "full", "basic", "full"] : ["full", "basic", "full", "basic", "full", "basic", "full", "basic", "full", "basic"];
   constructor() {
     makeObservable(this, {
       currentStepNum: observable.deep,
+      mode: observable,
       steps: observable,
       context: observable,
+      showHighlights: observable,
       editor: false,
       backendUrl: false,
       currentTraverseId: computed,
@@ -77,6 +81,8 @@ class EditorData {
       isLastStep: computed,
       isFirstStep: computed,
       updateText: flow,
+      updateTask: flow,
+      toggleHighlight: action,
       nextStep: action,
       prevStep: action,
       setStep: action
@@ -119,6 +125,26 @@ class EditorData {
   get numOfContextRows() {
     return this.context.length;
   }
+  *updateTask(n) {
+    console.log("hello");
+    let text = [example1, example2, example3, example4, example5, example6, example7, example8][n - 1];
+    console.log(text);
+    this.editor.setValue(text);
+    this.context = [];
+    this.steps = [];
+    let response = yield fetch(this.backendUrl + "/typecheck", {
+      method: "POST",
+      body: text
+    });
+    let data = yield response.json();
+    if (data.tag === "ChSuccess") {
+      alert("Congratulations! No type errors found in your code.");
+    } else if (data.tag === "ChTypeError") {
+      this.currentStepNum = 0;
+      this.steps = data.steps;
+      this.context = data.contextTable;
+    }
+  }
   *updateText(text) {
     this.context = [];
     this.steps = [];
@@ -134,6 +160,9 @@ class EditorData {
       this.steps = data.steps;
       this.context = data.contextTable;
     }
+  }
+  toggleHighlight() {
+    this.showHighlights = !this.showHighlights;
   }
   nextStep() {
     if (this.isLastStep) {
@@ -181,29 +210,56 @@ document.getElementById("save").addEventListener("click", (_) => {
     editorData.updateText(text);
   });
 });
+document.getElementById("clear").addEventListener("click", (_) => {
+  runInAction(() => {
+    editorData.toggleHighlight();
+  });
+});
 document.getElementById("example1").addEventListener("click", (_) => {
   runInAction(() => {
-    editorData.editor.setValue(example1);
-    editorData.updateText(example1);
+    editorData.updateTask(1);
   });
 });
 document.getElementById("example2").addEventListener("click", (_) => {
   runInAction(() => {
-    editorData.editor.setValue(example2);
-    editorData.updateText(example2);
+    editorData.updateTask(2);
   });
 });
 document.getElementById("example3").addEventListener("click", (_) => {
   runInAction(() => {
-    editorData.editor.setValue(example3);
-    editorData.updateText(example3);
+    editorData.updateTask(3);
+  });
+});
+document.getElementById("example4").addEventListener("click", (_) => {
+  runInAction(() => {
+    editorData.updateTask(4);
+  });
+});
+document.getElementById("example5").addEventListener("click", (_) => {
+  runInAction(() => {
+    editorData.updateTask(5);
+  });
+});
+document.getElementById("example6").addEventListener("click", (_) => {
+  runInAction(() => {
+    editorData.updateTask(6);
+  });
+});
+document.getElementById("example7").addEventListener("click", (_) => {
+  runInAction(() => {
+    editorData.updateTask(7);
+  });
+});
+document.getElementById("example8").addEventListener("click", (_) => {
+  runInAction(() => {
+    editorData.updateTask(8);
   });
 });
 autorun(() => {
   let editor = editorData.editor;
   let currentStep = editorData.currentStep;
   clearDecorations(editor);
-  if (currentStep !== null) {
+  if (currentStep !== null && editorData.showHighlights) {
     highlight(currentStep.locA, currentStep.locB, editorData.prevLocs, editorData.nextLocs, editor);
     drawAnnotations(currentStep.locA, currentStep.locB, currentStep.text, editor);
   }
@@ -257,7 +313,7 @@ const TypingTable = observer(() => {
     className: "text-center"
   }, "TYPE 2"), data.context.map((row, i) => /* @__PURE__ */ React.createElement(ContextRow, {
     row,
-    key: row[0]
+    key: i
   })), /* @__PURE__ */ React.createElement("div", {
     className: "text-center"
   }, /* @__PURE__ */ React.createElement("ion-icon", {
@@ -278,6 +334,7 @@ const ContextRow = observer(({row}) => {
   let [a, b] = data.currentTraverseId;
   let allTraverseIds = data.allTraverseIds;
   let effectiveRowInfo = info.filter(([[x, y], _z1, _z2]) => allTraverseIds.some(([a2, b2]) => a2 === x && b2 === y));
+  console.log(effectiveRowInfo);
   let affinity = effectiveRowInfo.find(([[x, y], u, v]) => x === a && y === b)[1];
   let affinityClass = affinity === "R" ? "sideA" : affinity === "L" ? "sideB" : "sideAB";
   let firstReleventStepTId = effectiveRowInfo.find((i) => i[2])[0];
