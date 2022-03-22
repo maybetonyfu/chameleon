@@ -4,7 +4,7 @@ export function initializeEditor(code) {
         mode: null,
         value: code,
     });
-    editor.setSize(null, '100vh')
+    editor.setSize(null, 'calc(100vh - 3rem)')
     return editor
 }
 
@@ -27,6 +27,7 @@ export function highlight(locA, locB, groupA, groupB, editor) {
         hl.from, hl.to, { className: "groupMarkerA"})
         
     })
+
     groupB.forEach(hl => {
         if (surroundOrIntersect(hl, locA) || surroundOrIntersect(hl, locB))  return 
 
@@ -80,7 +81,7 @@ function boxStyles(topElem, bottomElem, text, color = false) {
     const downwardBarHeight = 5;
     const annotationWidth = 300;
     const annotationHeight = 20;
-    const stepAsideDistance = 700;
+    const stepAsideDistance = 600;
     const styleTop = [
         color ? `background: aquamarine;` : 'background:transparent;',
         `height: ${downwardBarHeight}px;`,

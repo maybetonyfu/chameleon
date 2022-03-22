@@ -1,4 +1,4 @@
-let example1 = `module Example1 where 
+const example1 = `module Example1 where 
     
 data Expr = C Int |
             Comb Expr Expr| 
@@ -17,7 +17,7 @@ extend :: String -> Int -> Env -> Env
 extend v e (Env env)  = Env ([(v,e)] ++ env)
 `
 
-let example2 = `module Example2 where
+const example2 = `module Example2 where
 
 data JValue
   =   JObject [(String, JValue)]
@@ -36,7 +36,7 @@ renderPairs [p] = renderPair p
 renderPairs (p : ps) = renderPair p ++ "," ++ renderPairs ps
 `
 
-let example3 = `module Example1 where
+const example3 = `module Example1 where
 
 nqueens size =
   filter evaluateBoard (board_permutations size)
@@ -94,27 +94,21 @@ score h1 h2 =
 
 `
 
-let example5 = `module Task where 
+const example5 = `module Task where 
 data Period
   = DayPeriod Day
   | WeekPeriod Day
   | MonthPeriod Year Month
-  | QuarterPeriod Year Quarter
   | YearPeriod Year
 
--- synonyms for various date-related scalars
 type Year = Int
 type Month = Int -- 1-12
-type Quarter = Int -- 1-4
 data Day = Day Year Month Int
 
 data DataSpan = DateSpan (Maybe Day) (Maybe Day) 
 
 addDays :: Int -> Day -> Day
 addDays n day = day
-
-quarterAsMonth :: Quarter -> Month
-quarterAsMonth q = (q - 1) * 3 + 1
 
 fromGregorian :: Year -> Month -> Int -> Maybe Day
 fromGregorian y m d = Just (Day y m d)
@@ -134,8 +128,7 @@ periodAsDateSpan (MonthPeriod y m) =
   
 `
 
-
-let example6 = `module Task where 
+const example6 = `module Task where 
 
 standardTrans z =
   case z of
@@ -172,7 +165,7 @@ transformKey _ _ x = [x]
 
 `
 
-let example7 = `module Example where
+const example7 = `module Example where
 
 -- Takes the first n elements from a list
 take' :: Int -> [Int] -> [Int]
@@ -180,7 +173,7 @@ take' n [] = []
 take' n (x:xs) = x ++ take' (n - 1) xs
 `
 
-let example8 = `module Task where
+const example8 = `module Task where
 
 -- A data type to represent password
 data Password = P String

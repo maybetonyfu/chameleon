@@ -61,7 +61,7 @@ processFile text =
                 then
                   let mus = getMus ks goals'
                       instanciationTable = concatMap instanciation mus
-                      names' = 
+                      names' =
                         -- trace ("\nInsta Table:\n" ++ show instanciationTable) $
                         useFunctionNewNames instanciationTable names
                       graphG = fromEdges . graphView $ mus
@@ -80,15 +80,15 @@ processFile text =
                           )
                           longestIndexPairs
                       concreteTypes =
-                          trace ("\nOriginal Names:\n" ++ show names ++ "\nNew Names: \n" ++ show names') $
-                          map
+                        -- trace ("\nOriginal Names:\n" ++ show names ++ "\nNew Names: \n" ++ show names') $
+                        map
                           ( \g ->
                               let mss = maximalSatisfiableSubset ks (longestChain \\ [g]) (goals' \\ [g])
                                in typings ks names mss
                           )
                           longestChain
                       concreteTypesNewNames =
-                          map
+                        map
                           ( \g ->
                               let mss = maximalSatisfiableSubset ks (longestChain \\ [g]) (goals' \\ [g])
                                in typings ks names' mss
@@ -97,40 +97,47 @@ processFile text =
 
                       simplifyTypes = map (\g -> typings ks names (longestChain \\ [g])) longestChain
                       altTable =
-                        zip4 names (transpose concreteTypes) (transpose concreteTypesNewNames) (transpose simplifyTypes) 
-                      releventSimplied = 
-                        filter (\(_, concrete, concrete', simplified) -> 
-                          (>1) .length . nub . removeUniversal $ simplified) altTable
-                      releventConcrete = filter (\(_, concrete, concrete', simplified) -> 
-                          (>1) .length . nub . removeUniversal $ concrete) altTable
-                      
+                        zip4 names (transpose concreteTypes) (transpose concreteTypesNewNames) (transpose simplifyTypes)
+                      releventSimplied =
+                        filter
+                          ( \(_, concrete, concrete', simplified) ->
+                              (> 1) . length . nub . removeUniversal $ simplified
+                          )
+                          altTable
+                      releventConcrete =
+                        filter
+                          ( \(_, concrete, concrete', simplified) ->
+                              (> 1) . length . nub . removeUniversal $ concrete
+                          )
+                          altTable
+
                       relevent =
                         if null releventSimplied
                           then releventConcrete
-                          else filter (\(_, concretes, _,  _) -> length (nub concretes) > 1) releventSimplied
+                          else filter (\(_, concretes, _, _) -> length (nub concretes) > 1) releventSimplied
                       contextTable =
-                        trace ("Longest Chain: " ++ unlines (map show longestChain)) $
-                        trace ("Length of relevent: " ++ show (length relevent)) $
+                        -- trace ("Longest Chain: " ++ unlines (map show longestChain)) $
+                        -- trace ("Length of relevent: " ++ show (length relevent)) $
                         map
                           ( \(name, concrete, concrete', simplified) ->
-                                  trace ("\nSimlifed:" ++ name ++ ":\n" ++ unlines (map termToType simplified)) $
-                                  trace ("\nConcrete:" ++ name ++ ":\n" ++ unlines (map termToType concrete)) $
-                                  trace ("\nConcrete (Renamed)" ++ name ++ ":\n" ++ unlines (map termToType concrete')) $
-                                  let (leftmost, rightmost) = polarEnds concrete'
-                                      sides =
-                                        zipWith
-                                          ( \(t1, t2) (Edge n1 n2 _) ->
-                                              if t1 == leftmost && t2 == leftmost
-                                                then ((n1, n2), L, False)
-                                                else
-                                                  if t1 == rightmost && t2 == rightmost
-                                                    then ((n1, n2), R, False)
-                                                    else ((n1, n2), M, False)
-                                          )
-                                          (zigzag concrete')
-                                          longestIndexPairs
-                                      normalizedSides = normalize sides
-                                   in ChContext (showProperName name) (termToType leftmost) (termToType rightmost) normalizedSides
+                              -- trace ("\nSimlifed:" ++ name ++ ":\n" ++ unlines (map termToType simplified)) $
+                              -- trace ("\nConcrete:" ++ name ++ ":\n" ++ unlines (map termToType concrete)) $
+                              -- trace ("\nConcrete (Renamed)" ++ name ++ ":\n" ++ unlines (map termToType concrete')) $
+                              let (leftmost, rightmost) = polarEnds concrete'
+                                  sides =
+                                    zipWith
+                                      ( \(t1, t2) (Edge n1 n2 _) ->
+                                          if t1 == leftmost && t2 == leftmost
+                                            then ((n1, n2), L, False)
+                                            else
+                                              if t1 == rightmost && t2 == rightmost
+                                                then ((n1, n2), R, False)
+                                                else ((n1, n2), M, False)
+                                      )
+                                      (zigzag concrete')
+                                      longestIndexPairs
+                                  normalizedSides = normalize sides
+                               in ChContext (showProperName name) (termToType leftmost) (termToType rightmost) normalizedSides
                           )
                           relevent
                       contextTableSorted = sortOn (\(ChContext _ _ _ sides) -> fromJust $ findIndex ((== M) . view _2) sides) contextTable
@@ -165,9 +172,10 @@ normalize sides
   | otherwise = sides
 
 removeUniversal :: [Term] -> [Term]
-removeUniversal  = filter (not . isUniversal)
-  where isUniversal (Var x) = "_." `isPrefixOf` x
-        isUniversal _ = False
+removeUniversal = filter (not . isUniversal)
+  where
+    isUniversal (Var x) = "_." `isPrefixOf` x
+    isUniversal _ = False
 
 calculateActiveness :: [ChContext] -> [ChContext]
 -- calculateActiveness ((ChContext a b c sides):(ChContext a' b' c' sides'):contexts) =
@@ -178,16 +186,20 @@ calculateActiveness contexts =
       affiliationsT = transpose affiliations
       mapActiveness :: [Affinity] -> [Bool]
       mapActiveness affs
-        | Just n <- findIndex (==M) affs = zipWith (\aff m -> if m == n then True else False) affs [0..]
-        | Just n <- findIndex (==L) affs = zipWith (\aff m -> if m == n then True else False) affs [0..]
+        | Just n <- findIndex (== M) affs = zipWith (\aff m -> if m == n then True else False) affs [0 ..]
+        | Just n <- findIndex (== L) affs = zipWith (\aff m -> if m == n then True else False) affs [0 ..]
         | otherwise = take (length affs - 1) (repeat False) ++ [True]
       activenessT = map mapActiveness affiliationsT
       activeness = transpose activenessT
-  in zipWith (\(ChContext a b c sides) n ->
-                ChContext a b c $
-                  zipWith (\side act -> set _3 act side) sides (activeness !! n)
-                )  contexts [0..]
--- # # # 
+   in zipWith
+        ( \(ChContext a b c sides) n ->
+            ChContext a b c $
+              zipWith (\side act -> set _3 act side) sides (activeness !! n)
+        )
+        contexts
+        [0 ..]
+
+-- # # #
 -- L M M R R R
 -- L L M L M R
 --       # # #

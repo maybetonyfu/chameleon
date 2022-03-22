@@ -20,6 +20,8 @@ function locEq(loc1, loc2) {
 function arrEq(array1, array2) {
   return array1.length === array2.length && array1.every((item, index) => item === array2[index]);
 }
+const BASIC_MODE = "basic";
+const FULL_MODE = "full";
 function convertStep(step, stepNum) {
   let reason = step[0];
   let text;
@@ -55,21 +57,24 @@ function unAlias(str) {
 const DataContext = createContext();
 class EditorData {
   backendUrl = __SNOWPACK_ENV__.MODE === "development" ? "http://localhost:3000" : "";
-  currentStepNum = 0;
+  _currentStepNum = 0;
   steps = [];
   context = [];
   showHighlights = true;
   editor = initializeEditor("");
-  mode = Math.random > 0.5 ? ["basic", "full", "basic", "full", "basic", "full", "basic", "full", "basic", "full"] : ["full", "basic", "full", "basic", "full", "basic", "full", "basic", "full", "basic"];
+  currentTaskNum = 1;
+  mode = Math.random() > 0.5 ? ["basic", "full", "basic", "full", "basic", "full", "basic", "full", "basic", "full"] : ["full", "basic", "full", "basic", "full", "basic", "full", "basic", "full", "basic"];
   constructor() {
     makeObservable(this, {
-      currentStepNum: observable.deep,
+      _currentStepNum: observable,
+      currentTaskNum: observable,
       mode: observable,
       steps: observable,
       context: observable,
       showHighlights: observable,
       editor: false,
       backendUrl: false,
+      currentStepNum: computed,
       currentTraverseId: computed,
       currentContextItem: computed,
       allTraverseIds: computed,
@@ -85,8 +90,22 @@ class EditorData {
       toggleHighlight: action,
       nextStep: action,
       prevStep: action,
-      setStep: action
+      setStep: action,
+      disableHighlight: action,
+      enableHighlight: action
     });
+    runInAction(() => {
+      this.updateTask(1);
+    });
+  }
+  get currentStepNum() {
+    if (this.numOfSteps === 0)
+      return null;
+    if (this.mode[this.currentTaskNum - 1] === BASIC_MODE) {
+      return Math.ceil(this.numOfSteps / 2);
+    } else {
+      return this._currentStepNum;
+    }
   }
   get currentStep() {
     if (this.numOfSteps === 0)
@@ -102,6 +121,7 @@ class EditorData {
   get currentTraverseId() {
     if (this.numOfSteps === 0)
       return null;
+    console.log(this.currentStepNum);
     return this.steps[this.currentStepNum][4];
   }
   get allTraverseIds() {
@@ -127,8 +147,8 @@ class EditorData {
   }
   *updateTask(n) {
     console.log("hello");
+    this.currentTaskNum = n;
     let text = [example1, example2, example3, example4, example5, example6, example7, example8][n - 1];
-    console.log(text);
     this.editor.setValue(text);
     this.context = [];
     this.steps = [];
@@ -138,11 +158,16 @@ class EditorData {
     });
     let data = yield response.json();
     if (data.tag === "ChSuccess") {
-      alert("Congratulations! No type errors found in your code.");
+      if (this.currentTaskNum === 8) {
+        alert("Congratulations, you solved all the type errors! Leave us some feedback");
+      }
+      alert("Congratulations, you fixed the error. Head over to the next challenge!");
+      this.updateTask(this.currentTaskNum + 1);
     } else if (data.tag === "ChTypeError") {
-      this.currentStepNum = 0;
+      this._currentStepNum = 0;
       this.steps = data.steps;
       this.context = data.contextTable;
+      this.showHighlights = true;
     }
   }
   *updateText(text) {
@@ -154,28 +179,39 @@ class EditorData {
     });
     let data = yield response.json();
     if (data.tag === "ChSuccess") {
-      alert("Congratulations! No type errors found in your code.");
+      if (this.currentTaskNum === 8) {
+        alert("Congratulations, you solved all the type errors! Leave us some feedback");
+      }
+      alert("Congratulations, you fixed the error. Head over to the next challenge!");
+      this.updateTask(this.currentTaskNum + 1);
     } else if (data.tag === "ChTypeError") {
-      this.currentStepNum = 0;
+      this._currentStepNum = 0;
       this.steps = data.steps;
       this.context = data.contextTable;
+      this.showHighlights = true;
     }
   }
   toggleHighlight() {
     this.showHighlights = !this.showHighlights;
   }
+  disableHighlight() {
+    this.showHighlights = false;
+  }
+  enableHighlight() {
+    this.showHighlights = true;
+  }
   nextStep() {
     if (this.isLastStep) {
       return;
     } else {
-      this.currentStepNum = this.currentStepNum + 1;
+      this._currentStepNum = this.currentStepNum + 1;
     }
   }
   prevStep() {
     if (this.isFirstStep) {
       return;
     } else {
-      this.currentStepNum = this.currentStepNum - 1;
+      this._currentStepNum = this.currentStepNum - 1;
       return;
     }
   }
@@ -183,7 +219,7 @@ class EditorData {
     if (n < 0 || n > this.numOfSteps - 1) {
       return;
     } else {
-      this.currentStepNum = n;
+      this._currentStepNum = n;
       return;
     }
   }
@@ -204,6 +240,9 @@ window.addEventListener("keydown", (e) => {
     });
   }
 });
+editorData.editor.on("focus", function(c) {
+  editorData.disableHighlight();
+});
 document.getElementById("save").addEventListener("click", (_) => {
   let text = editorData.editor.getValue();
   runInAction(() => {
@@ -215,79 +254,57 @@ document.getElementById("clear").addEventListener("click", (_) => {
     editorData.toggleHighlight();
   });
 });
-document.getElementById("example1").addEventListener("click", (_) => {
+document.getElementById("skip").addEventListener("click", (_) => {
   runInAction(() => {
-    editorData.updateTask(1);
-  });
-});
-document.getElementById("example2").addEventListener("click", (_) => {
-  runInAction(() => {
-    editorData.updateTask(2);
-  });
-});
-document.getElementById("example3").addEventListener("click", (_) => {
-  runInAction(() => {
-    editorData.updateTask(3);
-  });
-});
-document.getElementById("example4").addEventListener("click", (_) => {
-  runInAction(() => {
-    editorData.updateTask(4);
-  });
-});
-document.getElementById("example5").addEventListener("click", (_) => {
-  runInAction(() => {
-    editorData.updateTask(5);
-  });
-});
-document.getElementById("example6").addEventListener("click", (_) => {
-  runInAction(() => {
-    editorData.updateTask(6);
-  });
-});
-document.getElementById("example7").addEventListener("click", (_) => {
-  runInAction(() => {
-    editorData.updateTask(7);
-  });
-});
-document.getElementById("example8").addEventListener("click", (_) => {
-  runInAction(() => {
-    editorData.updateTask(8);
+    if (editorData.currentTaskNum === 8) {
+      window.location = "https://docs.google.com/forms/d/e/1FAIpQLSfmXyASOPW2HIK-Oqp5nELBTltKeqZjqQ0G9JFram8eUCx26A/viewform?usp=sf_link";
+    }
+    editorData.updateTask(editorData.currentTaskNum + 1);
   });
 });
 autorun(() => {
+  let nohighligt = {from: {line: 0, ch: 0}, to: {line: 0, ch: 0}};
   let editor = editorData.editor;
   let currentStep = editorData.currentStep;
   clearDecorations(editor);
-  if (currentStep !== null && editorData.showHighlights) {
+  if (!editorData.showHighlights)
+    return;
+  if (editorData.currentStep === null)
+    return;
+  if (editorData.mode[editorData.currentTaskNum - 1] === BASIC_MODE) {
+    highlight(nohighligt, nohighligt, [currentStep.locA, ...editorData.prevLocs], [currentStep.locB, ...editorData.nextLocs], editor);
+  } else {
     highlight(currentStep.locA, currentStep.locB, editorData.prevLocs, editorData.nextLocs, editor);
     drawAnnotations(currentStep.locA, currentStep.locB, currentStep.text, editor);
   }
 });
 const Debuger = observer(() => {
+  let data = useContext(DataContext);
   return /* @__PURE__ */ React.createElement("div", {
-    className: "p-4 flex flex-col",
+    className: "p-2 flex flex-col",
     style: {fontFamily: "IBM Plex Sans"}
-  }, /* @__PURE__ */ React.createElement(Message, null), /* @__PURE__ */ React.createElement(TypingTable, null));
+  }, /* @__PURE__ */ React.createElement("div", {
+    className: "mb-2 bg-gray-200 px-2"
+  }, "Current Mode: ", data.mode[data.currentTaskNum - 1] === BASIC_MODE ? "Basic mode" : "Interactive mode"), /* @__PURE__ */ React.createElement(Message, null), data.mode[data.currentTaskNum - 1] === BASIC_MODE ? null : /* @__PURE__ */ React.createElement(TypingTable, null));
 });
 const Message = observer(() => {
   let data = useContext(DataContext);
-  return data.currentContextItem === null ? /* @__PURE__ */ React.createElement(React.Fragment, null) : /* @__PURE__ */ React.createElement("div", {
-    className: "my-5"
+  return data.currentContextItem === null ? null : /* @__PURE__ */ React.createElement("div", {
+    className: "mb-5"
   }, /* @__PURE__ */ React.createElement("div", {
-    className: "text-lg italic my-2"
+    className: "text-md italic my-2"
   }, "Chameleon cannot infer a type for the expression below:"), /* @__PURE__ */ React.createElement("div", {
-    className: "my-1"
+    className: "my-1 text-sm"
   }, "Expression: ", /* @__PURE__ */ React.createElement("span", {
     className: "code ml-2 px-1 rounded-md bg-gray-700 text-white inline-block"
   }, " ", data.currentContextItem[0], " ")), /* @__PURE__ */ React.createElement("div", {
-    className: "my-1"
+    className: "my-1 text-sm"
   }, /* @__PURE__ */ React.createElement("span", {
     className: "w-14 inline-block"
   }, "Type 1:  "), /* @__PURE__ */ React.createElement("span", {
     className: "code groupMarkerB rounded-sm px-0.5 cursor-pointer"
   }, unAlias(data.currentContextItem[1]))), /* @__PURE__ */ React.createElement("div", {
-    className: "my-1"
+    className: "my-1 text-sm"
   }, /* @__PURE__ */ React.createElement("span", {
     className: "w-14 inline-block"
   }, "Type 2:  "), /* @__PURE__ */ React.createElement("span", {
@@ -334,7 +351,6 @@ const ContextRow = observer(({row}) => {
   let [a, b] = data.currentTraverseId;
   let allTraverseIds = data.allTraverseIds;
   let effectiveRowInfo = info.filter(([[x, y], _z1, _z2]) => allTraverseIds.some(([a2, b2]) => a2 === x && b2 === y));
-  console.log(effectiveRowInfo);
   let affinity = effectiveRowInfo.find(([[x, y], u, v]) => x === a && y === b)[1];
   let affinityClass = affinity === "R" ? "sideA" : affinity === "L" ? "sideB" : "sideAB";
   let firstReleventStepTId = effectiveRowInfo.find((i) => i[2])[0];
