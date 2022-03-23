@@ -484,7 +484,7 @@ funOf [x] = x
 funOf (x : xs) = Pair (atom "Function") (Pair x (funOf xs))
 
 termToType :: Term -> String
-termToType term = 
+termToType term =
   go (zip (allVars term) ['a' ..]) 0 Unit term
     where
       go :: [(Term, Char)] -> Int -> Term -> Term -> String
@@ -500,12 +500,12 @@ termToType term =
         let listP = toList t
             content = intercalate "," (zipWith (\t' n' -> go varMap n' p t') listP [0..])
         in "(" ++ content ++ ")"
-      go varMap n parent p@(Pair x y) 
+      go varMap n parent p@(Pair x y)
         | isTypeCon parent =
             let listP = toList y
                 content = unwords (zipWith (\t' n' -> go varMap n' p t') listP [0..])
             in "(" ++ content ++ ")"
-        | otherwise = 
+        | otherwise =
             let listP = toList y
                 content = unwords (zipWith (\t' n' -> go varMap n' p t') listP [0..])
             in content
@@ -518,11 +518,11 @@ isTuple :: Term -> Bool
 isTuple (Pair (Atom "Tuple") _) = True
 isTuple _ = False
 
-isTypeCon :: Term -> Bool 
-isTypeCon (Pair (Atom "Function") _) = False 
-isTypeCon (Pair (Atom "List") _) = False 
-isTypeCon (Pair (Atom "Tuple") _) = False 
-isTypeCon (Pair  _ _) = True  
+isTypeCon :: Term -> Bool
+isTypeCon (Pair (Atom "Function") _) = False
+isTypeCon (Pair (Atom "List") _) = False
+isTypeCon (Pair (Atom "Tuple") _) = False
+isTypeCon (Pair  _ _) = True
 isTypeCon _ = False
 
 prettyTerm :: Term -> String
@@ -534,9 +534,9 @@ prettyTerm (Var x)
 prettyTerm (Atom x) = x
 prettyTerm (Pair x y) = prettyTerm x ++ ", " ++ prettyTerm y
 
-moreGenerousThan :: Term -> Term -> Bool
-moreGenerousThan (Pair a1 a2) (Pair b1 b2) = a1 `moreGenerousThan` b1 && a2 `moreGenerousThan` b2
-moreGenerousThan (Pair _ _) _ = True
-moreGenerousThan (Atom _) (Var _) = True
-moreGenerousThan _ _ = False
+moreConcreteThan :: Term -> Term -> Bool
+moreConcreteThan (Pair a1 a2) (Pair b1 b2) = a1 `moreConcreteThan` b1 && a2 `moreConcreteThan` b2
+moreConcreteThan (Pair _ _) _ = True
+moreConcreteThan (Atom _) (Var _) = True
+moreConcreteThan _ _ = False
 

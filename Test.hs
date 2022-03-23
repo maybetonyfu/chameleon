@@ -1,8 +1,9 @@
-module ExampleBasicMode where
+module Task where
 
-ident a = (a, a)
+data Maybe a = Just a | Nothing
 
-fun a c = ident c
+x :: Int ->  Maybe Int
+x _ = Just 3
 
-fun a True = ('C', 'D')
-  
+y :: Maybe Int
+y = Just (x 4)

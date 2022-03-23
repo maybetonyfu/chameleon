@@ -8,7 +8,13 @@ import Language.Haskell.Exts.SrcLoc (SrcSpan)
 import Scope
 import Typing
 
-data ChStep = ChStep String Order SrcSpan SrcSpan (Int, Int)  deriving (Show, Eq, Generic)
+data ChStep = ChStep {
+  explanation:: String,
+  order::Order,
+  stepA :: SrcSpan,
+  stepB:: SrcSpan,
+  stepId :: (Int, Int)
+  }  deriving (Show, Eq, Generic)
 data Order = LR | RL deriving (Show, Eq, Generic)
 
 compareConstraints :: LabeledGoal -> LabeledGoal -> [ChStep]

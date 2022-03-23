@@ -4,11 +4,29 @@ import.meta.env = __SNOWPACK_ENV__;
 undefined /* [snowpack] import.meta.hot */ ;
 import React, {createContext, useContext} from "./_snowpack/pkg/react.v17.0.2.js";
 import ReactDOM from "./_snowpack/pkg/react-dom.v17.0.2.js";
-import {observable, computed, action, makeObservable, autorun, runInAction, flow} from "./_snowpack/pkg/mobx.v6.4.2.js";
+import {
+  observable,
+  computed,
+  action,
+  makeObservable,
+  autorun,
+  runInAction,
+  flow
+} from "./_snowpack/pkg/mobx.v6.4.2.js";
 import {observer} from "./_snowpack/pkg/mobx-react-lite.v3.3.0.js";
-import {initializeEditor, highlight, drawAnnotations, clearDecorations} from "./editor.js";
-import {example1, example2, example3, example4, example5, example6, example7, example8} from "./code.js";
-function convertLocation({srcSpanEndLine, srcSpanEndColumn, srcSpanStartColumn, srcSpanStartLine}) {
+import {
+  initializeEditor,
+  highlight,
+  drawAnnotations,
+  clearDecorations
+} from "./editor.js";
+import tasks from "./code.js";
+function convertLocation({
+  srcSpanEndLine,
+  srcSpanEndColumn,
+  srcSpanStartColumn,
+  srcSpanStartLine
+}) {
   return {
     from: {line: srcSpanStartLine - 1, ch: srcSpanStartColumn - 1},
     to: {line: srcSpanEndLine - 1, ch: srcSpanEndColumn - 1}
@@ -23,26 +41,26 @@ function arrEq(array1, array2) {
 const BASIC_MODE = "basic";
 const FULL_MODE = "full";
 function convertStep(step, stepNum) {
-  let reason = step[0];
+  let reason = step["explanation"];
   let text;
-  let direction = step[1];
-  let locA = convertLocation(step[2]);
-  let locB = convertLocation(step[3]);
+  let direction = step["order"];
+  let locA = convertLocation(step["stepA"]);
+  let locB = convertLocation(step["stepB"]);
   if (direction === "LR") {
     text = `
         <span class="markerA inline-block w-3 h-3 rounded-sm"></span>
         ${reason}
         <span class="markerB inline-block w-3 h-3 rounded-sm"></span>
-        <span class="font-xs text-gray-400">(step</span> 
-        <span class="bg-green-400 inline-block w-4 h-4 text-xs rounded-full">${stepNum + 1}</span><span class="font-xs text-gray-400">)</span> 
+        <span class="font-xs text-gray-400">(step</span>
+        <span class="bg-green-400 inline-block w-4 h-4 text-xs rounded-full">${stepNum + 1}</span><span class="font-xs text-gray-400">)</span>
 `;
   } else {
     text = `
         <span class="markerB inline-block w-3 h-3 rounded-sm"></span>
         ${reason}
         <span class="markerA inline-block w-3 h-3 rounded-sm"></span>
-        <span class="font-xs text-gray-400">(step</span> 
-        <span class="bg-green-400 inline-block w-4 h-4 text-xs rounded-full">${stepNum + 1}</span><span class="font-xs text-gray-400">)</span> 
+        <span class="font-xs text-gray-400">(step</span>
+        <span class="bg-green-400 inline-block w-4 h-4 text-xs rounded-full">${stepNum + 1}</span><span class="font-xs text-gray-400">)</span>
 `;
   }
   return {
@@ -62,8 +80,8 @@ class EditorData {
   context = [];
   showHighlights = true;
   editor = initializeEditor("");
-  currentTaskNum = 1;
-  mode = Math.random() > 0.5 ? ["basic", "full", "basic", "full", "basic", "full", "basic", "full", "basic", "full"] : ["full", "basic", "full", "basic", "full", "basic", "full", "basic", "full", "basic"];
+  currentTaskNum = 0;
+  mode = Math.random() > 0.5 ? Array.from({length: 4}).flatMap((_) => [BASIC_MODE, FULL_MODE]) : Array.from({length: 4}).flatMap((_) => [FULL_MODE, BASIC_MODE]);
   constructor() {
     makeObservable(this, {
       _currentStepNum: observable,
@@ -95,13 +113,13 @@ class EditorData {
       enableHighlight: action
     });
     runInAction(() => {
-      this.updateTask(1);
+      this.updateTask(0);
     });
   }
   get currentStepNum() {
     if (this.numOfSteps === 0)
       return null;
-    if (this.mode[this.currentTaskNum - 1] === BASIC_MODE) {
+    if (this.mode[this.currentTaskNum] === BASIC_MODE) {
       return Math.ceil(this.numOfSteps / 2);
     } else {
       return this._currentStepNum;
@@ -116,16 +134,18 @@ class EditorData {
   get currentContextItem() {
     if (this.numOfSteps === 0)
       return null;
-    return this.context.find((c) => c[3].find((ri) => arrEq(this.currentTraverseId, ri[0]))[2]);
+    return this.context.find((c) => {
+      return c["contextSteps"].find((ri) => arrEq(this.currentTraverseId, ri[0]))[2];
+    });
   }
   get currentTraverseId() {
     if (this.numOfSteps === 0)
       return null;
     console.log(this.currentStepNum);
-    return this.steps[this.currentStepNum][4];
+    return this.steps[this.currentStepNum]["stepId"];
   }
   get allTraverseIds() {
-    return this.steps.map((s) => s[4]);
+    return this.steps.map((s) => s["stepId"]);
   }
   get prevLocs() {
     return this.steps.filter((_, i) => i < this.currentStepNum).map(convertStep).flatMap((s) => [s.locA, s.locB]).filter((l) => !(locEq(l, this.currentStep.locA) || locEq(l, this.currentStep.locB)));
@@ -146,9 +166,8 @@ class EditorData {
     return this.context.length;
   }
   *updateTask(n) {
-    console.log("hello");
     this.currentTaskNum = n;
-    let text = [example1, example2, example3, example4, example5, example6, example7, example8][n - 1];
+    let text = tasks[n];
     this.editor.setValue(text);
     this.context = [];
     this.steps = [];
@@ -271,7 +290,7 @@ autorun(() => {
     return;
   if (editorData.currentStep === null)
     return;
-  if (editorData.mode[editorData.currentTaskNum - 1] === BASIC_MODE) {
+  if (editorData.mode[editorData.currentTaskNum] === BASIC_MODE) {
     highlight(nohighligt, nohighligt, [currentStep.locA, ...editorData.prevLocs], [currentStep.locB, ...editorData.nextLocs], editor);
   } else {
     highlight(currentStep.locA, currentStep.locB, editorData.prevLocs, editorData.nextLocs, editor);
@@ -285,7 +304,7 @@ const Debuger = observer(() => {
     style: {fontFamily: "IBM Plex Sans"}
   }, /* @__PURE__ */ React.createElement("div", {
     className: "mb-2 bg-gray-200 px-2"
-  }, "Current Mode: ", data.mode[data.currentTaskNum - 1] === BASIC_MODE ? "Basic mode" : "Interactive mode"), /* @__PURE__ */ React.createElement(Message, null), data.mode[data.currentTaskNum - 1] === BASIC_MODE ? null : /* @__PURE__ */ React.createElement(TypingTable, null));
+  }, "Current Mode:", " ", data.mode[data.currentTaskNum] === BASIC_MODE ? "Basic mode" : "Interactive mode"), /* @__PURE__ */ React.createElement(Message, null), data.mode[data.currentTaskNum] === BASIC_MODE ? null : /* @__PURE__ */ React.createElement(TypingTable, null));
 });
 const Message = observer(() => {
   let data = useContext(DataContext);
@@ -295,21 +314,21 @@ const Message = observer(() => {
     className: "text-md italic my-2"
   }, "Chameleon cannot infer a type for the expression below:"), /* @__PURE__ */ React.createElement("div", {
     className: "my-1 text-sm"
-  }, "Expression: ", /* @__PURE__ */ React.createElement("span", {
+  }, "Expression:", /* @__PURE__ */ React.createElement("span", {
     className: "code ml-2 px-1 rounded-md bg-gray-700 text-white inline-block"
-  }, " ", data.currentContextItem[0], " ")), /* @__PURE__ */ React.createElement("div", {
+  }, data.currentContextItem["contextExp"])), /* @__PURE__ */ React.createElement("div", {
     className: "my-1 text-sm"
   }, /* @__PURE__ */ React.createElement("span", {
     className: "w-14 inline-block"
-  }, "Type 1:  "), /* @__PURE__ */ React.createElement("span", {
+  }, "Type 1: "), /* @__PURE__ */ React.createElement("span", {
     className: "code groupMarkerB rounded-sm px-0.5 cursor-pointer"
-  }, unAlias(data.currentContextItem[1]))), /* @__PURE__ */ React.createElement("div", {
+  }, unAlias(data.currentContextItem["contextType1"]))), /* @__PURE__ */ React.createElement("div", {
     className: "my-1 text-sm"
   }, /* @__PURE__ */ React.createElement("span", {
     className: "w-14 inline-block"
-  }, "Type 2:  "), /* @__PURE__ */ React.createElement("span", {
+  }, "Type 2: "), /* @__PURE__ */ React.createElement("span", {
     className: "code groupMarkerA rounded-sm px-0.5 cursor-pointer"
-  }, unAlias(data.currentContextItem[2]))));
+  }, unAlias(data.currentContextItem["contextType2"]))));
 });
 const TypingTable = observer(() => {
   let data = useContext(DataContext);
@@ -347,31 +366,29 @@ const TypingTable = observer(() => {
 });
 const ContextRow = observer(({row}) => {
   let data = useContext(DataContext);
-  let [exp, typeL, typeR, info] = row;
+  let {contextExp, contextType1, contextType2, contextSteps} = row;
   let [a, b] = data.currentTraverseId;
-  let allTraverseIds = data.allTraverseIds;
-  let effectiveRowInfo = info.filter(([[x, y], _z1, _z2]) => allTraverseIds.some(([a2, b2]) => a2 === x && b2 === y));
-  let affinity = effectiveRowInfo.find(([[x, y], u, v]) => x === a && y === b)[1];
+  let affinity = contextSteps.find(([[x, y], u, v]) => x === a && y === b)[1];
   let affinityClass = affinity === "R" ? "sideA" : affinity === "L" ? "sideB" : "sideAB";
-  let firstReleventStepTId = effectiveRowInfo.find((i) => i[2])[0];
-  let lastReleventStepTId = effectiveRowInfo.slice().reverse().find((i) => i[2])[0];
-  let firstReleventStep = data.steps.findIndex((step) => arrEq(step[4], firstReleventStepTId));
-  let lastReleventStep = data.steps.findIndex((step) => arrEq(step[4], lastReleventStepTId));
+  let firstReleventStepTId = contextSteps.find((i) => i[2])[0];
+  let lastReleventStepTId = contextSteps.slice().reverse().find((i) => i[2])[0];
+  let firstReleventStep = data.steps.findIndex((step) => arrEq(step["stepId"], firstReleventStepTId));
+  let lastReleventStep = data.steps.findIndex((step) => arrEq(step["stepId"], lastReleventStepTId));
   return /* @__PURE__ */ React.createElement(React.Fragment, null, /* @__PURE__ */ React.createElement(Stepper, {
-    rowInfo: effectiveRowInfo
+    rowInfo: contextSteps
   }), /* @__PURE__ */ React.createElement("div", {
     onClick: action((_) => {
       data.setStep(firstReleventStep);
     }),
     className: "rounded-sm p-1 groupMarkerB flex justify-center items-center cursor-pointer"
-  }, unAlias(typeL)), /* @__PURE__ */ React.createElement("div", {
+  }, unAlias(contextType1)), /* @__PURE__ */ React.createElement("div", {
     className: "rounded-sm p-1 flex justify-center items-center " + affinityClass
-  }, exp), /* @__PURE__ */ React.createElement("div", {
+  }, contextExp), /* @__PURE__ */ React.createElement("div", {
     onClick: action((_) => {
       data.setStep(lastReleventStep);
     }),
     className: "rounded-sm p-1 groupMarkerA flex justify-center items-center cursor-pointer"
-  }, unAlias(typeR)));
+  }, unAlias(contextType2)));
 });
 const Stepper = observer(({rowInfo}) => {
   let data = useContext(DataContext);
@@ -380,7 +397,7 @@ const Stepper = observer(({rowInfo}) => {
   return /* @__PURE__ */ React.createElement(React.Fragment, null, /* @__PURE__ */ React.createElement("div", {
     className: "flex flex-col justify-center items-center"
   }, steps.map(([[x, y], _z1, _z2]) => {
-    let stepId = data.steps.findIndex((step) => arrEq(step[4], [x, y]));
+    let stepId = data.steps.findIndex((step) => arrEq(step["stepId"], [x, y]));
     return /* @__PURE__ */ React.createElement("div", {
       key: x.toString() + y.toString(),
       onClick: action((_) => {
