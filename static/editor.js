@@ -21,35 +21,35 @@ export function clearDecorations(editor) {
 
 export function highlight(locA, locB, groupA, groupB, editor) {
     groupA.forEach(hl => {
-        if (surroundOrIntersect(hl, locA) || surroundOrIntersect(hl, locB))  return 
+        if (surroundOrIntersect(hl, locA) || surroundOrIntersect(hl, locB)) return
 
         editor.markText(
-        hl.from, hl.to, { className: "groupMarkerA"})
-        
+            hl.from, hl.to, { className: "groupMarkerA" })
+
     })
 
     groupB.forEach(hl => {
-        if (surroundOrIntersect(hl, locA) || surroundOrIntersect(hl, locB))  return 
+        if (surroundOrIntersect(hl, locA) || surroundOrIntersect(hl, locB)) return
 
         editor.markText(
-        hl.from, hl.to, { className: "groupMarkerB"})
-        
+            hl.from, hl.to, { className: "groupMarkerB" })
+
     })
-    editor.markText(locA.from, locA.to, { className: "markerA"})
-    editor.markText(locB.from, locB.to, { className: "markerB"})
+    editor.markText(locA.from, locA.to, { className: "markerA" })
+    editor.markText(locB.from, locB.to, { className: "markerB" })
     if (doesLocSurround(locA, locB)) {
-     editor.markText(locB.from, locB.to, { className: "markerBSmall"})
+        editor.markText(locB.from, locB.to, { className: "markerBSmall" })
     }
     if (doesLocSurround(locB, locA)) {
-        editor.markText(locB.from, locB.to, { className: "markerASmall"})
+        editor.markText(locB.from, locB.to, { className: "markerASmall" })
     }
 
 }
 
 
 export function drawAnnotations(locA, locB, text, editor) {
-    if (document.getElementsByClassName('markerB').length === 0 || 
-    document.getElementsByClassName('markerA').length === 0) return
+    if (document.getElementsByClassName('markerB').length === 0 ||
+        document.getElementsByClassName('markerA').length === 0) return
     if (locB.from.line < locA.from.line) {
         // B
         //   A
@@ -97,9 +97,9 @@ function boxStyles(topElem, bottomElem, text, color = false) {
         `height: ${downwardBarHeight}px;`,
         `margin-left: ${bottomElem.width / 2}px;`,
         `width:${stepAsideDistance - bottomElem.left - (bottomElem.width / 2)}px;`,
-        `border-left: thin solid #0083FF;`,
-        `border-bottom: thin solid #0083FF;`,
-        `border-right: thin solid #0083FF;`,
+        `border-left: thin solid green;`,
+        `border-bottom: thin solid green;`,
+        `border-right: thin solid green;`,
         `z-index:2;`,
 
     ].join('')
@@ -140,49 +140,49 @@ function html(str) {
     return placeholder.firstElementChild
 }
 
-function isPointBefore (point1, point2) {
+function isPointBefore(point1, point2) {
     if (point1.line < point2.line) return true
     else if (point1.line === point2.line) return point1.ch <= point2.ch
-    else return false 
+    else return false
 }
 
-function isPointAfter (point1, point2) {
+function isPointAfter(point1, point2) {
     if (point1.line > point2.line) return true
     else if (point1.line === point2.line) return point1.ch >= point2.ch
-    else return false 
+    else return false
 }
 
 
-function doesLocSurround (locA, locB) {
+function doesLocSurround(locA, locB) {
     return isPointBefore(locA.from, locB.from) && isPointAfter(locA.to, locB.to)
 }
 
-function surroundOrIntersect (a, b) {
+function surroundOrIntersect(a, b) {
     return doesLocSurround(a, b) || doesLocSurround(b, a) || doesLocIntersect(a, b)
 }
 
-function doesLocIntersect (locA, locB) {
+function doesLocIntersect(locA, locB) {
     return (
-            (isPointBefore(locA.from, locB.from) && 
-            isPointBefore(locB.from, locA.to) && 
+        (isPointBefore(locA.from, locB.from) &&
+            isPointBefore(locB.from, locA.to) &&
             isPointBefore(locA.to, locB.to) &&
             isPointBefore(locB.from, locA.to)
-            
-            )
-            ||
-            (isPointBefore(locB.from, locA.from) && 
-            isPointBefore(locA.from, locB.to) && 
+
+        )
+        ||
+        (isPointBefore(locB.from, locA.from) &&
+            isPointBefore(locA.from, locB.to) &&
             isPointBefore(locB.to, locA.to) &&
-            isPointBefore(locA.from, locB.to) 
-            )
-            )
+            isPointBefore(locA.from, locB.to)
+        )
+    )
 }
 
-function getIntersection (locA, locB) {
+function getIntersection(locA, locB) {
     if (isPointBefore(locA.from, locB.from)) {
-        return {from: locB.from, to: locA.to}
+        return { from: locB.from, to: locA.to }
     } else {
-        return {from: locA.from, to: locB.to}
+        return { from: locA.from, to: locB.to }
 
     }
 }

@@ -189,7 +189,14 @@ validate password =
 `
 const examples =
   [
-    exampleTake, examplePassword, exampleRockPaperScissors, exampleNQueens, exampleDateSpan, exampleBookTrans, exampleJValue, exampeExtend
+      exampleTake,
+      examplePassword,
+      exampleRockPaperScissors,
+      exampleNQueens,
+      exampleDateSpan,
+      exampleBookTrans,
+      exampleJValue,
+      exampeExtend
   ].map((ex, n) => ex(n))
 
 export default examples
