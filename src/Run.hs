@@ -79,14 +79,14 @@ processFile text =
                       reinsert :: [LabeledGoal] -> [LabeledGoal] -> [LabeledGoal]
                       reinsert oldchain [] = oldchain
                       reinsert oldchain gs
-                        | Just g <- find (head oldchain `adjs`) gs = reinsert (g:oldchain) (gs \\ [g])
+                        | Just g <- find (head oldchain `adjs`) gs = reinsert (g : oldchain) (gs \\ [g])
                         | Just g <- find (last oldchain `adjs`) gs = reinsert (oldchain ++ [g]) (gs \\ [g])
                         | otherwise = reinsert oldchain gs
                       longestChain = reinsert longestChain' leftOuts
                       reasonings =
-                        trace ("\n Alll Constraints:\n"++ unlines (map show mus)) $
-                        trace ("\n Constraints:\n"++ unlines (map show longestChain)) $
-                        concatMap (uncurry compareConstraints) (zigzag longestChain)
+                        trace ("\n Alll Constraints:\n" ++ unlines (map show mus)) $
+                          trace ("\n Constraints:\n" ++ unlines (map show longestChain)) $
+                            concatMap (uncurry compareConstraints) (zigzag longestChain)
                       concreteTypes =
                         -- trace ("\nOriginal Names:\n" ++ show names ++ "\nNew Names: \n" ++ show names') $
                         map
@@ -125,16 +125,18 @@ processFile text =
                                       let (leftmost, rightmost) = polarEnds concrete
                                           sides =
                                             zipWith
-                                              ( \(t1, t2) (Edge n1 n2 _) ->
-                                                  if t1 == leftmost && t2 == leftmost
-                                                    then ((n1, n2), L, False)
-                                                    else
-                                                      if t1 == rightmost && t2 == rightmost
-                                                        then ((n1, n2), R, False)
-                                                        else ((n1, n2), M, False)
+                                              ( \(t1, t2) (g1, g2) ->
+                                                  let n1 = goalNum g1
+                                                      n2 = goalNum g2
+                                                   in if t1 == leftmost && t2 == leftmost
+                                                        then ((n1, n2), L, False)
+                                                        else
+                                                          if t1 == rightmost && t2 == rightmost
+                                                            then ((n1, n2), R, False)
+                                                            else ((n1, n2), M, False)
                                               )
                                               (zigzag concrete)
-                                              longestIndexPairs
+                                              (zigzag longestChain)
                                           normalizedSides = normalize sides
                                        in ChContext (showProperName name) (termToType leftmost) (termToType rightmost) normalizedSides
                                   )
@@ -143,7 +145,7 @@ processFile text =
                       contextTableactiveness = calculateActiveness contextTableSorted
                       contextFromReasonings =
                         map (\ctx -> ctx {contextSteps = filter ((`elem` map stepId reasonings) . view _1) (contextSteps ctx)}) contextTableactiveness
-                   in ChTypeError contextTableactiveness reasonings
+                   in ChTypeError contextFromReasonings reasonings
                 else ChSuccess
         ParseFailed srcLoc message ->
           error $
