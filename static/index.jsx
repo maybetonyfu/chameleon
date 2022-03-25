@@ -135,28 +135,26 @@ const Debuger = () => {
       >
         <ModelContent />
       </Modal>
-      {
-        (() => {
-          if (parseError !== null) {
-            return <ParseErrorReport/>
-          } else if (loadError !== null)  {
-            return <LoadErrorReport/>
-          } else if (!wellTyped) {
-            return <TypeErrorReport/>
-          }
-        })()
-      }
+      {(() => {
+        if (parseError !== null) {
+          return <ParseErrorReport />;
+        } else if (loadError !== null) {
+          return <LoadErrorReport />;
+        } else if (!wellTyped) {
+          return <TypeErrorReport />;
+        }
+      })()}
     </>
   );
 };
 
 const ParseErrorReport = () => {
-  return <p>You have parse error</p>
-}
+  return <p>You have parse error</p>;
+};
 
 const LoadErrorReport = () => {
-  return <p>You have missing variable</p>
-}
+  return <p>You have missing variable</p>;
+};
 
 const TypeErrorReport = () => {
   let mode = useSelector(state => state.mode);
