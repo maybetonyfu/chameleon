@@ -29,23 +29,22 @@ const modes =
     : Array.from({ length: 4 }).flatMap(_ => [FULL_MODE, BASIC_MODE]);
 
 const initialState = {
-  test: 42,
   currentStepNum: null,
-  currentTaskNum: null,
+  currentStep: null,
   currentTraverseId: null,
   currentContextItem: null,
-  allTraverseIds: [],
-  currentStep: null,
+  steps: [],
+  context: [],
   numOfSteps: 0,
   numOfContextRows: 0,
   prevLocs: [],
   nextLocs: [],
-  isLastStep: false,
-  isFirstStep: false,
-  steps: [],
-  context: [],
-  mode: null,
   showHighlights: true,
+  wellTyped: false,
+  currentTaskNum: null,
+  mode: null,
+  loadError: null,
+  parseError: null,
 };
 
 export let typeCheckThunk = createAsyncThunk(
@@ -75,28 +74,12 @@ const appReducer = createReducer(initialState, builder => {
       if (action.payload < 0 || action.payload > 7) return state;
       let currentTaskNum = action.payload;
       let mode = modes[currentTaskNum];
-      let steps = [];
-      let context = [];
-      let currentStepNum = 0;
-      let currentStep = null;
-      let currentTraverseId = null;
-      let currentContextItem = null;
-      let prevLocs = [];
-      let nextLocs = [];
       return Object.assign(
         {},
         {
-          ...state,
+          ...initialState,
           mode,
-          steps,
-          context,
           currentTaskNum,
-          currentStepNum,
-          currentStep,
-          currentTraverseId,
-          currentContextItem,
-          prevLocs,
-          nextLocs,
         },
       );
     })
@@ -216,6 +199,7 @@ const appReducer = createReducer(initialState, builder => {
         let numOfContextRows = context.length;
         let prevLocs = getPrevLocs(steps, currentStepNum);
         let nextLocs = getNextLocs(steps, currentStepNum);
+        let showHighlights = true;
         return Object.assign(
           {},
           {
@@ -230,10 +214,45 @@ const appReducer = createReducer(initialState, builder => {
             currentContextItem,
             prevLocs,
             nextLocs,
+            showHighlights,
+            parseError: null,
+            loadError: null,
+          },
+        );
+      } else if (action.payload.tag === 'ChSuccess') {
+        return Object.assign(
+          {},
+          {
+            ...state,
+            wellTyped: true,
+            parseError: null,
+            loadError: null,
+          },
+        );
+      } else if (action.payload.tag === 'ChLoadError') {
+        let loadError = action.payload.missing;
+        return Object.assign(
+          {},
+          {
+            ...state,
+            loadError,
+            parseError: null,
+          },
+        );
+      } else if (action.payload.tag === 'ChParseError') {
+        let parseError = {
+          message: action.payload.message,
+          loc: action.payload.loc,
+        };
+        return Object.assign(
+          {},
+          {
+            ...state,
+            parseError,
+            loadError: null,
           },
         );
       }
-      return state;
     })
     .addCase(typeCheckThunk.rejected, (state, action) => {
       return state;

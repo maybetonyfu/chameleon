@@ -35,6 +35,7 @@ data ChContext = ChContext
   }
   deriving (Show, Generic)
 
+
 data ChResult
   = ChTypeError
       { contextTable :: [ChContext],
@@ -42,9 +43,13 @@ data ChResult
       }
   | ChLoadError
       {
+        missing:: [(String, SrcSpan)]
       }
   | ChParseError
       {
+        message::String,
+        prettyLoc::String,
+        loc::SrcLoc
       }
   | ChSuccess
   deriving (Show, Generic)
@@ -60,99 +65,98 @@ processFile text =
               mergedBindings = builtInScopes ++ scopes
               filedOrderings = builtInFO ++ getFieldOrdering hModule
               names = allNames scopes
-              goals = evalState (matchTerm Unit hModule) (n, mergedBindings, filedOrderings)
+              (goals, solvestate) = runState (matchTerm Unit hModule) (n, mergedBindings, filedOrderings, [])
               goals' = zipWith (\g n -> g {goalNum = n}) goals [0 ..]
               res = runGoalNWithState ks 1 (conjN (map unlabel (goals' ++ goals' ++ goals')))
-           in if null res
+           in if not . null . view _4 $ solvestate
                 then
-                  let mus = getMus ks goals'
-                      instanciationTable = concatMap instanciation mus
-                      names' =
-                        trace ("\nInsta Table:\n" ++ show instanciationTable) $
-                          useFunctionNewNames instanciationTable names
-                      graphG = fromEdges . graphView $ mus
-                      reachables = concatMap (map snd . Map.toList . reachableFrom graphG) [0 .. length goals']
-                      longestIndexPairs = snd $ maximumBy (\(n, _) (m, _) -> compare n m) reachables -- [(a,b), (b,c), (c,d)]
-                      longestIndexChain = (source . head $ longestIndexPairs) : map target longestIndexPairs -- [a,b,c,d]
-                      longestChain' = map (\n -> fromJust $ find ((== n) . goalNum) goals') longestIndexChain
-                      leftOuts = mus \\ longestChain'
-                      reinsert :: [LabeledGoal] -> [LabeledGoal] -> [LabeledGoal]
-                      reinsert oldchain [] = oldchain
-                      reinsert oldchain gs
-                        | Just g <- find (head oldchain `adjs`) gs = reinsert (g : oldchain) (gs \\ [g])
-                        | Just g <- find (last oldchain `adjs`) gs = reinsert (oldchain ++ [g]) (gs \\ [g])
-                        | otherwise = reinsert oldchain gs
-                      longestChain = reinsert longestChain' leftOuts
-                      reasonings =
-                        trace ("\n Alll Constraints:\n" ++ unlines (map show mus)) $
-                          trace ("\n Constraints:\n" ++ unlines (map show longestChain)) $
-                            concatMap (uncurry compareConstraints) (zigzag longestChain)
-                      concreteTypes =
-                        -- trace ("\nOriginal Names:\n" ++ show names ++ "\nNew Names: \n" ++ show names') $
-                        map
-                          ( \g ->
-                              let mss = maximalSatisfiableSubset ks (longestChain \\ [g]) (goals' \\ [g])
-                                  originalNames = typings ks names mss
-                                  newNames = typings ks names' mss
-                                  chooseConcrete a b old new =
-                                    let result = if a `moreConcreteThan` b then a else b
-                                     in trace ("\nComparing: " ++ old ++ " :: " ++ termToType a ++ " and " ++ new ++ " :: " ++ termToType b ++ "\nChoose: " ++ termToType result) result
-                               in zipWith4 chooseConcrete originalNames newNames names names'
-                          )
-                          longestChain
+                  ChLoadError ( nub. view _4 $ solvestate)
+                else
+                  if null res
+                    then
+                      let mus = getMus ks goals'
+                          instanciationTable = concatMap instanciation mus
+                          names' =
+                            trace ("\nInsta Table:\n" ++ show instanciationTable) $
+                              useFunctionNewNames instanciationTable names
+                          graphG = fromEdges . graphView $ mus
+                          reachables = concatMap (map snd . Map.toList . reachableFrom graphG) [0 .. length goals']
+                          longestIndexPairs = snd $ maximumBy (\(n, _) (m, _) -> compare n m) reachables -- [(a,b), (b,c), (c,d)]
+                          longestIndexChain = (source . head $ longestIndexPairs) : map target longestIndexPairs -- [a,b,c,d]
+                          longestChain' = map (\n -> fromJust $ find ((== n) . goalNum) goals') longestIndexChain
+                          leftOuts = mus \\ longestChain'
+                          reinsert :: [LabeledGoal] -> [LabeledGoal] -> [LabeledGoal]
+                          reinsert oldchain [] = oldchain
+                          reinsert oldchain gs
+                            | Just g <- find (head oldchain `adjs`) gs = reinsert (g : oldchain) (gs \\ [g])
+                            | Just g <- find (last oldchain `adjs`) gs = reinsert (oldchain ++ [g]) (gs \\ [g])
+                            | otherwise = reinsert oldchain gs
+                          longestChain = reinsert longestChain' leftOuts
+                          reasonings =
+                            trace ("\n Alll Constraints:\n" ++ unlines (map show mus)) $
+                              trace ("\n Constraints:\n" ++ unlines (map show longestChain)) $
+                                concatMap (uncurry compareConstraints) (zigzag longestChain)
+                          concreteTypes =
+                            -- trace ("\nOriginal Names:\n" ++ show names ++ "\nNew Names: \n" ++ show names') $
+                            map
+                              ( \g ->
+                                  let mss = maximalSatisfiableSubset ks (longestChain \\ [g]) (goals' \\ [g])
+                                      originalNames = typings ks names mss
+                                      newNames = typings ks names' mss
+                                      chooseConcrete a b old new =
+                                        let result = if a `moreConcreteThan` b then a else b
+                                         in trace ("\nComparing: " ++ old ++ " :: " ++ termToType a ++ " and " ++ new ++ " :: " ++ termToType b ++ "\nChoose: " ++ termToType result) result
+                                   in zipWith4 chooseConcrete originalNames newNames names names'
+                              )
+                              longestChain
 
-                      simplifyTypes = map (\g -> typings ks names (longestChain \\ [g])) longestChain
-                      altTable =
-                        zip3
-                          names
-                          (transpose concreteTypes)
-                          (transpose simplifyTypes)
-                      releventSimplied = filter ((> 1) . length . nub . view _3) altTable
-                      releventConcrete = filter ((> 1) . length . nub . view _2) altTable
-                      relevent =
-                        if null releventSimplied
-                          then releventConcrete
-                          else filter ((> 1) . length . nub . view _2) releventSimplied
-                      contextTable =
-                        trace ("\nLongest Chain: \n" ++ unlines (map show longestChain)) $
-                          trace ("\nMus: \n" ++ unlines (map show mus)) $
-                            trace ("\nLength of Longest Chain: " ++ show (length longestChain)) $
-                              trace ("\nLength of Mus: " ++ show (length mus)) $
-                                map
-                                  ( \(name, concrete, simplified) ->
-                                      -- trace ("\nSimlifed:" ++ name ++ ":\n" ++ unlines (map termToType simplified)) $
-                                      --   trace ("\nConcrete:" ++ name ++ ":\n" ++ unlines (map termToType concrete)) $
-                                      let (leftmost, rightmost) = polarEnds concrete
-                                          sides =
-                                            zipWith
-                                              ( \(t1, t2) (g1, g2) ->
-                                                  let n1 = goalNum g1
-                                                      n2 = goalNum g2
-                                                   in if t1 == leftmost && t2 == leftmost
-                                                        then ((n1, n2), L, False)
-                                                        else
-                                                          if t1 == rightmost && t2 == rightmost
-                                                            then ((n1, n2), R, False)
-                                                            else ((n1, n2), M, False)
-                                              )
-                                              (zigzag concrete)
-                                              (zigzag longestChain)
-                                          normalizedSides = normalize sides
-                                       in ChContext (showProperName name) (termToType leftmost) (termToType rightmost) normalizedSides
-                                  )
-                                  relevent
-                      contextTableSorted = sortOn (\(ChContext _ _ _ sides) -> fromJust $ findIndex ((== M) . view _2) sides) contextTable
-                      contextTableactiveness = calculateActiveness contextTableSorted
-                      contextFromReasonings =
-                        map (\ctx -> ctx {contextSteps = filter ((`elem` map stepId reasonings) . view _1) (contextSteps ctx)}) contextTableactiveness
-                   in ChTypeError contextFromReasonings reasonings
-                else ChSuccess
-        ParseFailed srcLoc message ->
-          error $
-            unlines
-              [ prettyPrint srcLoc,
-                message
-              ]
+                          simplifyTypes = map (\g -> typings ks names (longestChain \\ [g])) longestChain
+                          altTable =
+                            zip3
+                              names
+                              (transpose concreteTypes)
+                              (transpose simplifyTypes)
+                          releventSimplied = filter ((> 1) . length . nub . view _3) altTable
+                          releventConcrete = filter ((> 1) . length . nub . view _2) altTable
+                          relevent =
+                            if null releventSimplied
+                              then releventConcrete
+                              else filter ((> 1) . length . nub . view _2) releventSimplied
+                          contextTable =
+                            trace ("\nLongest Chain: \n" ++ unlines (map show longestChain)) $
+                              trace ("\nMus: \n" ++ unlines (map show mus)) $
+                                trace ("\nLength of Longest Chain: " ++ show (length longestChain)) $
+                                  trace ("\nLength of Mus: " ++ show (length mus)) $
+                                    map
+                                      ( \(name, concrete, simplified) ->
+                                          -- trace ("\nSimlifed:" ++ name ++ ":\n" ++ unlines (map termToType simplified)) $
+                                          --   trace ("\nConcrete:" ++ name ++ ":\n" ++ unlines (map termToType concrete)) $
+                                          let (leftmost, rightmost) = polarEnds concrete
+                                              sides =
+                                                zipWith
+                                                  ( \(t1, t2) (g1, g2) ->
+                                                      let n1 = goalNum g1
+                                                          n2 = goalNum g2
+                                                       in if t1 == leftmost && t2 == leftmost
+                                                            then ((n1, n2), L, False)
+                                                            else
+                                                              if t1 == rightmost && t2 == rightmost
+                                                                then ((n1, n2), R, False)
+                                                                else ((n1, n2), M, False)
+                                                  )
+                                                  (zigzag concrete)
+                                                  (zigzag longestChain)
+                                              normalizedSides = normalize sides
+                                           in ChContext (showProperName name) (termToType leftmost) (termToType rightmost) normalizedSides
+                                      )
+                                      relevent
+                          contextTableSorted = sortOn (\(ChContext _ _ _ sides) -> fromJust $ findIndex ((== M) . view _2) sides) contextTable
+                          contextTableactiveness = calculateActiveness contextTableSorted
+                          contextFromReasonings =
+                            map (\ctx -> ctx {contextSteps = filter ((`elem` map stepId reasonings) . view _1) (contextSteps ctx)}) contextTableactiveness
+                       in ChTypeError contextFromReasonings reasonings
+                    else ChSuccess
+        ParseFailed srcLoc message -> ChParseError message (prettyPrint srcLoc) srcLoc
 
 polarEnds :: [Term] -> (Term, Term)
 polarEnds types
@@ -277,7 +281,7 @@ processBuiltIn =
           let ((_, scopes), m) = runState (getScopes Global 0 hModule) 1
               filedOrderings = getFieldOrdering hModule
               names = allNames scopes
-              (goals, (n, bd, fo)) = runState (matchTerm Unit hModule) (0, scopes, filedOrderings)
+              (goals, (n, bd, fo, le)) = runState (matchTerm Unit hModule) (0, scopes, filedOrderings, [])
               res = runGoalN 1 (conjN (map unlabel (goals ++ goals)))
            in if null res
                 then error "Solving prelude failed"
@@ -312,15 +316,15 @@ main = do
   content <- readFile filename
   let res = processFile content
   print res
-  putStrLn "\nContexts: "
-  mapM_
-    ( \(ChContext name typel typer steps) -> do
-        putStrLn name
-        putStrLn typel
-        putStrLn typer
-        putStrLn . unwords . map (\(a, b, c) -> show b) $ steps
-        putStrLn . unwords . map (\(a, b, c) -> show c) $ steps
-    )
-    (contextTable res)
-  putStrLn "\nSteps: "
-  mapM_ print (steps res)
+  -- putStrLn "\nContexts: "
+  -- mapM_
+  --   ( \(ChContext name typel typer steps) -> do
+  --       putStrLn name
+  --       putStrLn typel
+  --       putStrLn typer
+  --       putStrLn . unwords . map (\(a, b, c) -> show b) $ steps
+  --       putStrLn . unwords . map (\(a, b, c) -> show c) $ steps
+  --   )
+  --   (contextTable res)
+  -- putStrLn "\nSteps: "
+  -- mapM_ print (steps res)

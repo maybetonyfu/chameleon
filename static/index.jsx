@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import React from 'react';
 import ReactDOM from 'react-dom';
 import {
   initializeEditor,
@@ -13,18 +13,21 @@ import {
   BASIC_MODE,
   typeCheckThunk,
   switchTaskThunk,
+  disableHighlight,
   prevStep,
   nextStep,
   setStep,
 } from './store';
 import tasks from './code';
+import Modal from 'react-modal';
+Modal.setAppElement('#debugger');
 
 let currentTask = 0;
 let editor = initializeEditor(tasks[currentTask]);
 store.dispatch(switchTaskThunk(currentTask));
 
-editor.on('focus', function(c) {
-  // editorData.disableHighlight();
+editor.on('focus', function() {
+  store.dispatch(disableHighlight());
 });
 
 store.subscribe(() => {
@@ -65,12 +68,6 @@ document.getElementById('save').addEventListener('click', _ => {
   store.dispatch(typeCheckThunk(text));
 });
 
-document.getElementById('clear').addEventListener('click', _ => {
-  // runInAction(() => {
-  //   editorData.toggleHighlight();
-  // });
-});
-
 document.getElementById('skip').addEventListener('click', _ => {
   // runInAction(() => {
   //   if (editorData.currentTaskNum === 8) {
@@ -84,12 +81,84 @@ document.getElementById('skip').addEventListener('click', _ => {
 document.querySelectorAll('.example').forEach(elem => {
   elem.addEventListener('click', e => {
     let taskId = parseInt(e.target.dataset['taskId'], 10);
-    editor.setValue(tasks[taskId]);
+    editor.setValue(tasks.at(taskId));
     store.dispatch(switchTaskThunk(taskId));
   });
 });
 
+const ModelContent = () => {
+  let dispatch = useDispatch();
+  let currentTaskNum = useSelector(state => state.currentTaskNum);
+  return (
+    <div className='flex flex-col justify-around items-center h-full'>
+      <div>
+        <p className='text-center'>
+          Congratulations. You fixed the type error!
+        </p>
+        {currentTaskNum == 7 ? (
+          <p className='text-center'>Click next to leave us some feedback.</p>
+        ) : (
+          <p className='text-center'>
+            Click next to head over to the next challenge.
+          </p>
+        )}
+      </div>
+      <button
+        className='px-5 py-1 bg-green-400 rounded-md'
+        onClick={() => {
+          if (currentTaskNum == 7) {
+            window.location =
+              'https://docs.google.com/forms/d/e/1FAIpQLSfmXyASOPW2HIK-Oqp5nELBTltKeqZjqQ0G9JFram8eUCx26A/viewform?usp=sf_link';
+            return;
+          }
+          let nextTask = currentTaskNum + 1;
+          editor.setValue(tasks.at(nextTask));
+          dispatch(switchTaskThunk(nextTask));
+        }}
+      >
+        Next
+      </button>
+    </div>
+  );
+};
+
 const Debuger = () => {
+  let mode = useSelector(state => state.mode);
+  let wellTyped = useSelector(state => state.wellTyped);
+  let loadError = useSelector(state => state.loadError);
+  let parseError = useSelector(state => state.parseError);
+  return (
+    <>
+      <Modal
+        isOpen={wellTyped}
+        className='max-w-2xl bg-gray-100 h-80 min-w-max left-1/2 top-1/2 -translate-y-1/2 -translate-x-1/2 absolute p-6 rounded-md'
+      >
+        <ModelContent />
+      </Modal>
+      {
+        (() => {
+          if (parseError !== null) {
+            return <ParseErrorReport/>
+          } else if (loadError !== null)  {
+            return <LoadErrorReport/>
+          } else if (!wellTyped) {
+            return <TypeErrorReport/>
+          }
+        })()
+      }
+    </>
+  );
+};
+
+const ParseErrorReport = () => {
+  return <p>You have parse error</p>
+}
+
+const LoadErrorReport = () => {
+  return <p>You have missing variable</p>
+}
+
+const TypeErrorReport = () => {
   let mode = useSelector(state => state.mode);
   return (
     <div className='p-2 flex flex-col' style={{ fontFamily: 'IBM Plex Sans' }}>

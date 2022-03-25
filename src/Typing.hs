@@ -1,6 +1,7 @@
 module Typing where
 
 import Constraint hiding (main, processFile)
+import Control.Lens hiding (List)
 import Control.Monad
 import Control.Monad.Trans.State.Lazy
 import Data.List
@@ -38,50 +39,50 @@ instance Eq LabeledGoal where
 unlabel :: LabeledGoal -> Goal
 unlabel (Label _ _ _ _ _ g) = g
 
-type SolveState = State (Int, [Scope], [FieldOrdering])
+type SolveState = State (Int, [Scope], [FieldOrdering], [(String, SrcSpan)])
 
 freshVar :: SolveState Term
 freshVar = do
-  (n, bindings, fieldOrdering) <- get
-  put (n + 1, bindings, fieldOrdering)
+  (n, bindings, fieldOrdering, loadE) <- get
+  put (n + 1, bindings, fieldOrdering, loadE)
   return . var $ "fresh." ++ show n
 
 freshVarN :: Int -> SolveState [Term]
 freshVarN m = do
-  (n, bindings, fieldOrdering) <- get
-  put (n + m, bindings, fieldOrdering)
+  (n, bindings, fieldOrdering, loadE) <- get
+  put (n + m, bindings, fieldOrdering, loadE)
   return . map (var . ("fresh." ++) . show) . take m $ [n ..]
 
-varByNameWithScope :: (Nameable a, Annotated a) => Maybe ScopeType -> a SrcSpanInfo -> SolveState Term
+varByNameWithScope :: (Nameable a, Annotated a) => Maybe ScopeType -> a SrcSpanInfo -> SolveState (Maybe Term)
 varByNameWithScope scpType namable = do
-  (_, scopes, _) <- get
+  (n, scopes, fo, loadE) <- get
   let scp = smallestBoundingScope scopes scpType (getName namable) (sp (ann namable))
   case scp of
-    Nothing -> error (getName namable ++ " is not in scope")
+    Nothing -> do
+      put (n, scopes, fo, (getName namable, sp (ann namable)) : loadE)
+      return Nothing
     Just scp' -> do
       let uniqueVarName = uniqueName (scopeId scp') (getName namable)
-      return $ var uniqueVarName
+      return $ Just (var uniqueVarName)
 
-varsByNamesWithScope :: (Nameable a, Annotated a) => Maybe ScopeType -> [a SrcSpanInfo] -> SolveState [Term]
-varsByNamesWithScope scpType namables = do
-  vs <- mapM (varByNameWithScope scpType) namables
-  return vs
+varsByNamesWithScope :: (Nameable a, Annotated a) => Maybe ScopeType -> [a SrcSpanInfo] -> SolveState [Maybe Term]
+varsByNamesWithScope scpType namables = mapM (varByNameWithScope scpType) namables
 
-varByName :: (Nameable a, Annotated a) => a SrcSpanInfo -> SolveState Term
+varByName :: (Nameable a, Annotated a) => a SrcSpanInfo -> SolveState (Maybe Term)
 varByName = varByNameWithScope Nothing
 
 scopeTypeByName :: (Nameable a, Annotated a) => a SrcSpanInfo -> SolveState (Maybe ScopeType)
 scopeTypeByName namable = do
-  (_, scopes, _) <- get
+  scopes <- view _2 <$> get
   let scp = smallestBoundingScope scopes Nothing (getName namable) (sp (ann namable))
   return (fmap scopeType scp)
 
-varsByNames :: (Nameable a, Annotated a) => [a SrcSpanInfo] -> SolveState [Term]
+varsByNames :: (Nameable a, Annotated a) => [a SrcSpanInfo] -> SolveState [Maybe Term]
 varsByNames = varsByNamesWithScope Nothing
 
 getGoalOrder :: SrcSpanInfo -> SolveState Int
 getGoalOrder ssi = do
-  (_, scopes, _) <- get
+  scopes <- view _2 <$> get
   let scp = smallestDefiningScope scopes ssi
   return (topOrder scp)
 
@@ -106,8 +107,10 @@ instance MatchTerm Decl where
     let label = Label 0 (v1, v2) [] "Defined" (sl pat)
     return (g1 ++ g2 ++ [label $ v1 === v2])
   matchTerm _ (TypeSig (SrcSpanInfo sp _) names typeDef) = do
-    termVars <- varsByNames names
-    concat <$> mapM (\t -> matchTerm t typeDef) termVars
+    mbTermVars <- varsByNames names
+    if all isJust mbTermVars
+      then concat <$> mapM (\t -> matchTerm t typeDef) (catMaybes mbTermVars)
+      else return []
   matchTerm _ (DataDecl l dataOrNew maybeContext declHead conDecls derivings) = do
     typeName <- freshVar
     gHead <- matchTerm typeName declHead
@@ -117,7 +120,6 @@ instance MatchTerm Decl where
   matchTerm _ (ClassDecl (SrcSpanInfo sp _) maybectx dhead _ maybeclassdecls) = do
     -- "class X' a => X a where x :: a -> a"  will generate
     -- 1. var x === funOf [a, a] where
-    (_, _, _) <- get
     gClassDecls <- fmap concat . mapM (matchTerm Unit) . concat . maybeToList $ maybeclassdecls
     -- 2. a has X
     let getTypeClassName :: DeclHead a -> String
@@ -145,9 +147,12 @@ instance MatchTerm DeclHead where
     scopeType <- scopeTypeByName name
     case scopeType of
       Just TypeAliasScope -> do
-        aliasVar <- varByName name
-        let label = Label 0 (term, aliasVar) [] "Annotated" (sl node)
-        return [label (term === aliasVar)]
+        maybeAliasVar <- varByName name
+        case maybeAliasVar of
+          Nothing -> return []
+          Just aliasVar -> do
+            let label = Label 0 (term, aliasVar) [] "Annotated" (sl node)
+            return [label (term === aliasVar)]
       _ -> do
         let typeTerm = atom (getName name)
         let label = Label 0 (term, typeTerm) [] "Annotated" (sl node)
@@ -156,25 +161,30 @@ instance MatchTerm DeclHead where
   matchTerm term (DHParen l declHead) = matchTerm term declHead
   matchTerm term node@(DHApp l declHead typeVar) = do
     vHead <- freshVar
-    vTypeVar <- varByName typeVar
     gHead <- matchTerm vHead declHead
-
-    let label = Label 0 (term, Pair vHead vTypeVar) [] "Annotated" (sl node)
-    return (label (term === Pair vHead vTypeVar) : gHead)
+    mbTypeVar <- varByName typeVar
+    case mbTypeVar of
+      Nothing -> return []
+      Just vTypeVar -> do
+        let label = Label 0 (term, Pair vHead vTypeVar) [] "Annotated" (sl node)
+        return (label (term === Pair vHead vTypeVar) : gHead)
 
 instance MatchTerm QualConDecl where
   matchTerm term (QualConDecl _ _ _ conDecl) = matchTerm term conDecl
 
 instance MatchTerm ConDecl where
   matchTerm term node@(ConDecl l name types) = do
-    dataCon <- varByName name
-    args <- freshVarN (length types)
-    gArgs <- concat <$> zipWithM matchTerm args types
+    mbDataCon <- varByName name
+    case mbDataCon of
+      Nothing -> return []
+      Just dataCon -> do
+        args <- freshVarN (length types)
+        gArgs <- concat <$> zipWithM matchTerm args types
 
-    let label = Label 0 (dataCon, funOf (args ++ [term])) [] "Defined" (sl node)
-    return $ gArgs ++ [label $ dataCon === funOf (args ++ [term])]
+        let label = Label 0 (dataCon, funOf (args ++ [term])) [] "Defined" (sl node)
+        return $ gArgs ++ [label $ dataCon === funOf (args ++ [term])]
   matchTerm term (RecDecl l name fields) = do
-    (_, _, fieldsOrderings) <- get
+    fieldsOrderings <- view _3 <$> get
     let flatFileds = concatMap (\(FieldDecl _ names typeDef) -> map (\n -> (getName n, typeDef)) names) fields
         orderedFields = sortOn (\(n, _) -> fromJust . lookup n $ fieldsOrderings) flatFileds
     g1 <- concat <$> mapM (matchTerm term) fields
@@ -184,25 +194,35 @@ instance MatchTerm ConDecl where
 
 instance MatchTerm FieldDecl where
   matchTerm term node@(FieldDecl _ names typeDef) = do
-    filedVars <- varsByNames names
-    typeVar <- freshVar
-    gTypeVar <- matchTerm typeVar typeDef
-    let label = \t -> Label 0 (funOf [term, typeVar], t) [] "Defined" (sl node)
-    let gs = map (\v -> label v (funOf [term, typeVar] === v)) filedVars
-    return $ gTypeVar ++ gs
+    mbFiledVars <- varsByNames names
+    if all isJust mbFiledVars
+      then do
+        let filedVars = catMaybes mbFiledVars
+        typeVar <- freshVar
+        gTypeVar <- matchTerm typeVar typeDef
+        let label = \t -> Label 0 (funOf [term, typeVar], t) [] "Defined" (sl node)
+        let gs = map (\v -> label v (funOf [term, typeVar] === v)) filedVars
+        return $ gTypeVar ++ gs
+      else return []
 
 instance MatchTerm Type where
   matchTerm term node@(TyVar (SrcSpanInfo sp _) name) = do
-    typeVar <- varByName name
-    let label = Label 0 (typeVar, term) [] "Annotated" (sl node)
-    return [label $ typeVar === term]
+    mbTypeVar <- varByName name
+    case mbTypeVar of
+      Nothing -> return []
+      Just typeVar -> do
+        let label = Label 0 (typeVar, term) [] "Annotated" (sl node)
+        return [label $ typeVar === term]
   matchTerm term node@(TyCon _ qname) = do
     scopeType <- scopeTypeByName qname
     case scopeType of
       Just TypeAliasScope -> do
-        aliasVar <- varByName qname
-        let label = Label 0 (term, aliasVar) [] "Annotated" (sl node)
-        return [label $ term === aliasVar]
+        mbAliasVar <- varByName qname
+        case mbAliasVar of
+          Nothing -> return []
+          Just aliasVar -> do
+            let label = Label 0 (term, aliasVar) [] "Annotated" (sl node)
+            return [label $ term === aliasVar]
       _ -> do
         let label = Label 0 (term, atom (getName qname)) [] "Annotated" (sl node)
         return [label $ term === atom (getName qname)]
@@ -251,16 +271,19 @@ instance MatchTerm GuardedRhs where
 
 instance MatchTerm Match where
   matchTerm term node@(Match (SrcSpanInfo sp _) name pats rhs maybeWheres) = do
-    funVar <- varByName name
-    gWheres <- concat <$> mapM (matchTerm Unit) (maybeToList maybeWheres)
-    args <- freshVarN (length pats)
-    ret <- freshVar
-    gArgs <- concat <$> zipWithM matchTerm args pats
-    gReturn <- matchTerm ret rhs
+    mbFunVar <- varByName name
+    case mbFunVar of
+      Nothing -> return []
+      Just funVar -> do
+        gWheres <- concat <$> mapM (matchTerm Unit) (maybeToList maybeWheres)
+        args <- freshVarN (length pats)
+        ret <- freshVar
+        gArgs <- concat <$> zipWithM matchTerm args pats
+        gReturn <- matchTerm ret rhs
 
-    let label = Label 0 (funVar, funOf (args ++ [ret])) [] ("Defined") (sl name)
-    let gApp = [label (funVar === funOf (args ++ [ret]))]
-    return $ gArgs ++ gReturn ++ gApp
+        let label = Label 0 (funVar, funOf (args ++ [ret])) [] ("Defined") (sl name)
+        let gApp = [label (funVar === funOf (args ++ [ret]))]
+        return $ gArgs ++ gReturn ++ gApp
   matchTerm term (InfixMatch l pat name pats rhs maybeWheres) = matchTerm term (Match l name (pat : pats) rhs maybeWheres)
 
 instance MatchTerm Stmt where
@@ -296,9 +319,12 @@ instance MatchTerm Exp where
   matchTerm term node@(Var (SrcSpanInfo sp _) name) = do
     -- var is method?
     -- var is type alias?
-    varTerm <- varByName name
-    let label = Label 0 (varTerm, term) [] "Instanciated" (sl node)
-    return [label (varTerm === term)]
+    mbVarTerm <- varByName name
+    case mbVarTerm of
+      Nothing -> return []
+      Just varTerm -> do
+        let label = Label 0 (varTerm, term) [] "Instanciated" (sl node)
+        return [label (varTerm === term)]
   matchTerm term node@(Lambda _ pats exp) = do
     v <- freshVar
     g1 <- matchTerm v exp
@@ -309,7 +335,6 @@ instance MatchTerm Exp where
     let g = label (term === funOf (args ++ [v]))
     return (g : g2 ++ g1)
   matchTerm term node@(App _ e1 e2) = do
-    (_, _, _) <- get
     let unroll (App _ a b) = unroll a ++ [b]
         unroll x = [x]
     let exps = unroll e1 ++ [e2]
@@ -319,10 +344,10 @@ instance MatchTerm Exp where
     instanciation <-
       case head exps of
         (Var _ name) -> do
-          varname <- varByName name
+          varname <- fromJust <$> varByName name
           return [(varname, f)]
         (Con _ qname) -> do
-          varname <- varByName qname
+          varname <- fromJust <$> varByName qname
           return [(varname, f)]
         _ -> return []
     let label = Label 0 (head ts, funOf (tail ts ++ [term])) instanciation "Applied" (sl node)
@@ -335,33 +360,35 @@ instance MatchTerm Exp where
             )
     return $ gTerms ++ [g]
   matchTerm term node@(InfixApp l e1 op e2) = do
-    (_, _, _) <- get
     v1 <- freshVar
     v2 <- freshVar
-    vOp <-
+    mbOp <-
       if getName op == ":"
         then do
           v <- freshVar
-          return $ funOf [v, lstOf v, lstOf v]
+          return $ Just (funOf [v, lstOf v, lstOf v])
         else varByName op
-    g1 <- matchTerm v1 e1
-    g2 <- matchTerm v2 e2
-    -- let matchedMethd = if isVar vOp then find (\(t, _) -> varToString t == varToString vOp) cons else Nothing
-    --     instanceConstraint = case matchedMethd of
-    --       Nothing -> const succeeds
-    --       Just (_, consFun) -> consFun
+    case mbOp of
+      Nothing -> return []
+      Just vOp -> do
+        g1 <- matchTerm v1 e1
+        g2 <- matchTerm v2 e2
+        -- let matchedMethd = if isVar vOp then find (\(t, _) -> varToString t == varToString vOp) cons else Nothing
+        --     instanceConstraint = case matchedMethd of
+        --       Nothing -> const succeeds
+        --       Just (_, consFun) -> consFun
 
-    f <- freshVar
-    let label = Label 0 (vOp, funOf [v1, v2, term]) [(vOp, f)] ("Applied") (sl e2)
-    let g =
-          label
-            ( conjN
-                [ f ==< vOp,
-                  f === funOf [v1, v2, term]
-                  -- instanceConstraint f
-                ]
-            )
-    return $ g1 ++ g2 ++ [g]
+        f <- freshVar
+        let label = Label 0 (vOp, funOf [v1, v2, term]) [(vOp, f)] ("Applied") (sl e2)
+        let g =
+              label
+                ( conjN
+                    [ f ==< vOp,
+                      f === funOf [v1, v2, term]
+                      -- instanceConstraint f
+                    ]
+                )
+        return $ g1 ++ g2 ++ [g]
   matchTerm term node@(Let _ binds exp) = do
     gBinds <- matchTerm Unit binds
     v <- freshVar
@@ -402,67 +429,74 @@ instance MatchTerm Exp where
   matchTerm term (ParArray l exps) = matchTerm term (List l exps)
   matchTerm term (Paren l exp) = matchTerm term exp
   matchTerm term node@(LeftSection l exp op) = do
-    (_, _, _) <- get
-    vOp <-
+    mbOp <-
       if getName op == ":"
         then do
           v <- freshVar
-          return $ funOf [v, lstOf v, lstOf v]
+          return $ Just (funOf [v, lstOf v, lstOf v])
         else varByName op
-    vLeft <- freshVar
-    vRight <- freshVar
-    vRes <- freshVar
-    gLeft <- matchTerm vLeft exp
-    f <- freshVar
-    let g =
-          conjN
-            [ f ==< vOp,
-              f === funOf [vLeft, vRight, vRes],
-              term === funOf [vRight, vRes]
-              -- conda (map (\(t, g) -> [t === vOp, g f]) cons)
-            ]
-    let label = Label 0 (vOp, funOf [vLeft, vRight, vRes]) [(vOp, f)] ("Applied") (sl node)
-    return $
-      gLeft ++ [label g]
+    case mbOp of
+      Nothing -> return []
+      Just vOp -> do
+        vLeft <- freshVar
+        vRight <- freshVar
+        vRes <- freshVar
+        gLeft <- matchTerm vLeft exp
+        f <- freshVar
+        let g =
+              conjN
+                [ f ==< vOp,
+                  f === funOf [vLeft, vRight, vRes],
+                  term === funOf [vRight, vRes]
+                  -- conda (map (\(t, g) -> [t === vOp, g f]) cons)
+                ]
+        let label = Label 0 (vOp, funOf [vLeft, vRight, vRes]) [(vOp, f)] ("Applied") (sl node)
+        return $
+          gLeft ++ [label g]
   matchTerm term node@(RightSection l op exp) = do
-    (_, _, _) <- get
-    vOp <-
+    mbOp <-
       if getName op == ":"
         then do
           v <- freshVar
-          return $ funOf [v, lstOf v, lstOf v]
+          return $ Just (funOf [v, lstOf v, lstOf v])
         else varByName op
-    vLeft <- freshVar
-    vRight <- freshVar
-    vRes <- freshVar
-    gRight <- matchTerm vRight exp
-    f <- freshVar
-    let g =
-          conjN
-            [ f ==< vOp,
-              f === funOf [vLeft, vRight, vRes],
-              term === funOf [vLeft, vRes]
-              -- conda (map (\(t, g) -> [t === vOp, g f]) cons)
-            ]
-    let label = Label 0 (vOp, funOf [vLeft, vRight, vRes]) [(vOp, f)] ("Applied") (sl node)
-    return $
-      gRight ++ [label g]
+    case mbOp of
+      Nothing -> return []
+      Just vOp -> do
+        vLeft <- freshVar
+        vRight <- freshVar
+        vRes <- freshVar
+        gRight <- matchTerm vRight exp
+        f <- freshVar
+        let g =
+              conjN
+                [ f ==< vOp,
+                  f === funOf [vLeft, vRight, vRes],
+                  term === funOf [vLeft, vRes]
+                  -- conda (map (\(t, g) -> [t === vOp, g f]) cons)
+                ]
+        let label = Label 0 (vOp, funOf [vLeft, vRight, vRes]) [(vOp, f)] ("Applied") (sl node)
+        return $
+          gRight ++ [label g]
   matchTerm term node@(RecConstr _ qname fieldUpdates) = do
-    (_, _, fieldsOrderings) <- get
+    fieldsOrderings <- view _3 <$> get
     let fieldToExps :: FieldUpdate a -> [(String, Exp a)]
         fieldToExps (FieldWildcard _) = []
         fieldToExps (FieldUpdate _ name exp) = [(getName name, exp)]
         fieldToExps (FieldPun l' name) = [(getName name, Var l' name)]
         fields = concatMap fieldToExps fieldUpdates
         orderedFields = map snd . sortOn (\(n, _) -> fromJust . lookup n $ fieldsOrderings) $ fields
-    fVar <- varByName qname
-    vArgs <- freshVarN (length orderedFields)
-    gArgs <- concat <$> zipWithM matchTerm vArgs orderedFields
-    f <- freshVar
-    let g = conj2 (f ==< fVar) (f === funOf (vArgs ++ [term]))
+    mbFVar <- varByName qname
+    case mbFVar of
+      Nothing -> return []
+      Just fVar -> do
+        vArgs <- freshVarN (length orderedFields)
+        gArgs <- concat <$> zipWithM matchTerm vArgs orderedFields
+        f <- freshVar
+        let g = conj2 (f ==< fVar) (f === funOf (vArgs ++ [term]))
 
-    let label = Label 0 (fVar, funOf (vArgs ++ [term])) [(fVar, f)] ("Applied") (sl node)
-    return $ label g : gArgs
+        let label = Label 0 (fVar, funOf (vArgs ++ [term])) [(fVar, f)] ("Applied") (sl node)
+        return $ label g : gArgs
   matchTerm term (RecUpdate _ exp []) = return []
   matchTerm term node@(RecUpdate _ exp fieldUpdates) = do
     gExp <- matchTerm term exp
@@ -474,9 +508,12 @@ instance MatchTerm Exp where
     let label = Label 0 (term, tupOf vars) [] ("Record") (sl node)
     return $ label (term === tupOf vars) : gArgs
   matchTerm term node@(Con l name) = do
-    vCon <- varByName name
-    let label = Label 0 (term, vCon) [] ("Used") (sl node)
-    return [label (term === vCon)]
+    mbVCon <- varByName name
+    case mbVCon of
+      Nothing -> return []
+      Just vCon -> do
+        let label = Label 0 (term, vCon) [] ("Used") (sl node)
+        return [label (term === vCon)]
   matchTerm term node@(EnumFromTo l exp1 exp2) = do
     v <- freshVar
     g1 <- matchTerm v exp1
@@ -488,21 +525,27 @@ instance MatchTerm Exp where
 instance MatchTerm FieldUpdate where
   matchTerm term (FieldWildcard _) = return []
   matchTerm term node@(FieldUpdate _ name exp) = do
-    fName <- varByNameWithScope (Just RecordFieldScope) name
-    vExp <- freshVar
-    gExp <- matchTerm vExp exp
-    f <- freshVar
-    let g = conj2 (f ==< fName) (f === funOf [term, vExp])
-    let label = Label 0 (fName, funOf [term, vExp]) [(fName, f)] ("Applied") (sl node)
-    return $ label g : gExp
+    mbFName <- varByNameWithScope (Just RecordFieldScope) name
+    case mbFName of
+      Nothing -> return []
+      Just fName -> do
+        vExp <- freshVar
+        gExp <- matchTerm vExp exp
+        f <- freshVar
+        let g = conj2 (f ==< fName) (f === funOf [term, vExp])
+        let label = Label 0 (fName, funOf [term, vExp]) [(fName, f)] ("Applied") (sl node)
+        return $ label g : gExp
   matchTerm term node@(FieldPun l name) = do
-    fName <- varByNameWithScope (Just RecordFieldScope) name
-    vExp <- freshVar
-    gExp <- matchTerm vExp (Var l name)
-    f <- freshVar
-    let g = conj2 (f ==< fName) (f === funOf [term, vExp])
-    let label = Label 0 (fName, funOf [term, vExp]) [(fName, f)] ("Applied") (sl node)
-    return $ label g : gExp
+    mbFName <- varByNameWithScope (Just RecordFieldScope) name
+    case mbFName of
+      Nothing -> return []
+      Just fName -> do
+        vExp <- freshVar
+        gExp <- matchTerm vExp (Var l name)
+        f <- freshVar
+        let g = conj2 (f ==< fName) (f === funOf [term, vExp])
+        let label = Label 0 (fName, funOf [term, vExp]) [(fName, f)] ("Applied") (sl node)
+        return $ label g : gExp
 
 instance MatchTerm Pat where
   matchTerm term (PApp _ node@(UnQual _ (Ident _ "True")) []) = do
@@ -513,14 +556,20 @@ instance MatchTerm Pat where
     return [label (term === atom "Bool")]
   matchTerm term (PInfixApp l pat1 name pat2) = matchTerm term (PApp l name [pat1, pat2])
   matchTerm term node@(PVar (SrcSpanInfo sp _) name) = do
-    varTerm <- varByName name
-    let label = Label 0 (varTerm, term) [] "Matched" (sl node)
-    return [label (varTerm === term)]
+    maybeVarTerm <- varByName name
+    case maybeVarTerm of
+      Nothing -> return []
+      Just varTerm -> do
+        let label = Label 0 (varTerm, term) [] "Matched" (sl node)
+        return [label (varTerm === term)]
   matchTerm term (PLit _ _ literal) = matchTerm term literal
   matchTerm term node@(PNPlusK (SrcSpanInfo sp _) name _) = do
-    v <- varByName name
-    let label = Label 0 (term, v) [] "Matched" (sl node)
-    return [label (v === term)]
+    mbV <- varByName name
+    case mbV of
+      Nothing -> return []
+      Just v -> do
+        let label = Label 0 (term, v) [] "Matched" (sl node)
+        return [label (v === term)]
   matchTerm term node@(PTuple _ _ pats) = do
     args <- freshVarN (length pats)
     tArgs <- concat <$> zipWithM matchTerm args pats
@@ -529,26 +578,29 @@ instance MatchTerm Pat where
     return $ label (term === tupOf args) : tArgs
   matchTerm term node@(PList l pats) = do
     elem <- freshVar
-    gs <-  concat <$> mapM (matchTerm elem) pats
+    gs <- concat <$> mapM (matchTerm elem) pats
     let label = Label 0 (term, lstOf elem) [] "Matched" (sl node)
     return $ gs ++ [label (term === lstOf elem)]
   matchTerm term (PParen l p) = matchTerm term p
   matchTerm term (PWildCard _) = return []
   matchTerm term node@(PApp _ qname pats) = do
-    vFun <-
+    mbVFun <-
       if getName qname == ":"
         then do
           v <- freshVar
-          return $ funOf [v, lstOf v, lstOf v]
+          return $ Just (funOf [v, lstOf v, lstOf v])
         else varByName qname
-    args <- freshVarN (length pats)
-    gArgs <- concat <$> zipWithM matchTerm args pats
-    f <- freshVar
-    let gApp = conj2 (f ==< vFun) (f === funOf (args ++ [term]))
-    let label = Label 0 (vFun, funOf (args ++ [term])) [(vFun, f)] "Matched" (sl node)
-    return $ label gApp : gArgs
+    case mbVFun of
+      Nothing -> return []
+      Just vFun -> do
+        args <- freshVarN (length pats)
+        gArgs <- concat <$> zipWithM matchTerm args pats
+        f <- freshVar
+        let gApp = conj2 (f ==< vFun) (f === funOf (args ++ [term]))
+        let label = Label 0 (vFun, funOf (args ++ [term])) [(vFun, f)] "Matched" (sl node)
+        return $ label gApp : gArgs
   matchTerm term (PRec l qname fields) = do
-    (_, _, fieldsOrderings) <- get
+    fieldsOrderings <- view _3 <$> get
     let patternFieldToNamedPatterns :: PatField a -> [(String, Pat a)]
         patternFieldToNamedPatterns (PFieldWildcard _) = []
         patternFieldToNamedPatterns (PFieldPat _ name pat) = [(getName name, pat)]
@@ -586,7 +638,7 @@ processFile filepath = do
       let (_, scopes) = evalState (getScopes Global 0 hModule) 1
           filedOrderings = getFieldOrdering hModule
           names = allNames scopes
-          goals = sortOn goalNum $ evalState (matchTerm Unit hModule) (0, scopes, filedOrderings)
+          goals = sortOn goalNum $ evalState (matchTerm Unit hModule) (0, scopes, filedOrderings, [])
           res = run1 names (conjN (map unlabel goals))
       mapM_ print scopes
       mapM_ print goals
