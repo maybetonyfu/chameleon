@@ -24,6 +24,7 @@ import Modal from 'react-modal';
 Modal.setAppElement('#debugger');
 
 let currentTask = 0;
+let currentRound = 1;
 let editor = initializeEditor(tasks[currentTask]);
 store.dispatch(switchTaskThunk(currentTask));
 
@@ -38,10 +39,17 @@ store.subscribe(() => {
     showHighlights,
     prevLocs,
     nextLocs,
+    round
   } = store.getState();
   let nohighligt = { from: { line: 0, ch: 0 }, to: { line: 0, ch: 0 } };
 
   clearDecorations(editor);
+  if (round !== currentRound) {
+    currentRound = round;
+    document.getElementById('skip').classList.toggle('hidden')
+    document.getElementById('giveup').classList.toggle('hidden')
+
+  }
   if (!showHighlights) return;
   if (currentStep === null) return;
 
@@ -130,8 +138,7 @@ const ModelContent = () => {
         className='px-5 py-1 bg-green-400 rounded-md'
         onClick={() => {
           if (pending.length === 0) {
-            window.location =
-              'https://docs.google.com/forms/d/e/1FAIpQLSfmXyASOPW2HIK-Oqp5nELBTltKeqZjqQ0G9JFram8eUCx26A/viewform?usp=sf_link';
+
             return;
           }
           if (round === 1 && currentTaskNum < 7) {
@@ -144,9 +151,15 @@ const ModelContent = () => {
             dispatch(switchTaskNextRoundThunk(nextTask));
             editor.setValue(tasks.at(nextTask));
           } else if (round === 2) {
-            let nextTask = pending.at(0)
-            dispatch(switchTaskThunk(nextTask));
-            editor.setValue(tasks.at(nextTask));
+            let nextPendingIndex = pending.findIndex(n => n > currentTaskNum)
+            if (nextPendingIndex === -1) {
+              window.location =
+              'https://docs.google.com/forms/d/e/1FAIpQLSfmXyASOPW2HIK-Oqp5nELBTltKeqZjqQ0G9JFram8eUCx26A/viewform?usp=sf_link';
+            } else {
+              let nextTask = pending.at(nextPendingIndex)
+              dispatch(switchTaskThunk(nextTask));
+              editor.setValue(tasks.at(nextTask));
+            }
           }
         }}
       >
