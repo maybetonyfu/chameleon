@@ -13,6 +13,7 @@ import {
   BASIC_MODE,
   typeCheckThunk,
   switchTaskThunk,
+  switchTaskNextRoundThunk,
   disableHighlight,
   prevStep,
   nextStep,
@@ -69,13 +70,32 @@ document.getElementById('save').addEventListener('click', _ => {
 });
 
 document.getElementById('skip').addEventListener('click', _ => {
-  // runInAction(() => {
-  //   if (editorData.currentTaskNum === 8) {
-  //     window.location =
-  //       'https://docs.google.com/forms/d/e/1FAIpQLSfmXyASOPW2HIK-Oqp5nELBTltKeqZjqQ0G9JFram8eUCx26A/viewform?usp=sf_link';
-  //   }
-  //   editorData.updateTask(editorData.currentTaskNum + 1);
-  // });
+  let state = store.getState()
+  if (state.round === 2) return
+  if (state.currentTaskNum < 7) {
+    let nextTask = state.currentTaskNum + 1
+    store.dispatch(switchTaskThunk(nextTask))
+    editor.setValue(tasks.at(nextTask))
+  } else if (state.currentTaskNum === 7) {
+    let nextTask = state.pending.at(0)
+    store.dispatch(switchTaskNextRoundThunk(nextTask))
+    editor.setValue(tasks.at(nextTask))
+
+  }
+});
+
+document.getElementById('giveup').addEventListener('click', _ => {
+  let state = store.getState()
+  let currentPendingIndex = state.pending.findIndex(v => v === state.currentTaskNum)
+  if (state.round === 1) return
+  if (state.currentTaskNum < 7) {
+    let nextTask = state.pending.at(currentPendingIndex + 1)
+    store.dispatch(switchTaskThunk(nextTask))
+    editor.setValue(tasks.at(nextTask))
+  } else if (state.currentTaskNum === 7) {
+    window.location =
+      'https://docs.google.com/forms/d/e/1FAIpQLSfmXyASOPW2HIK-Oqp5nELBTltKeqZjqQ0G9JFram8eUCx26A/viewform?usp=sf_link';
+  }
 });
 
 document.querySelectorAll('.example').forEach(elem => {
@@ -89,13 +109,16 @@ document.querySelectorAll('.example').forEach(elem => {
 const ModelContent = () => {
   let dispatch = useDispatch();
   let currentTaskNum = useSelector(state => state.currentTaskNum);
+  let pending = useSelector(state => state.pending)
+  let round = useSelector(state => state.round)
+
   return (
     <div className='flex flex-col justify-around items-center h-full'>
       <div>
         <p className='text-center'>
           Congratulations. You fixed the type error!
         </p>
-        {currentTaskNum == 7 ? (
+        {pending.length === 0 ? (
           <p className='text-center'>Click next to leave us some feedback.</p>
         ) : (
           <p className='text-center'>
@@ -106,14 +129,25 @@ const ModelContent = () => {
       <button
         className='px-5 py-1 bg-green-400 rounded-md'
         onClick={() => {
-          if (currentTaskNum == 7) {
+          if (pending.length === 0) {
             window.location =
               'https://docs.google.com/forms/d/e/1FAIpQLSfmXyASOPW2HIK-Oqp5nELBTltKeqZjqQ0G9JFram8eUCx26A/viewform?usp=sf_link';
             return;
           }
-          let nextTask = currentTaskNum + 1;
-          editor.setValue(tasks.at(nextTask));
-          dispatch(switchTaskThunk(nextTask));
+          if (round === 1 && currentTaskNum < 7) {
+            let nextTask = currentTaskNum + 1
+            dispatch(switchTaskThunk(nextTask));
+            editor.setValue(tasks.at(nextTask));
+
+          } else if (round === 1 && currentTaskNum === 7) {
+            let nextTask = pending.at(0)
+            dispatch(switchTaskNextRoundThunk(nextTask));
+            editor.setValue(tasks.at(nextTask));
+          } else if (round === 2) {
+            let nextTask = pending.at(0)
+            dispatch(switchTaskThunk(nextTask));
+            editor.setValue(tasks.at(nextTask));
+          }
         }}
       >
         Next
@@ -166,15 +200,15 @@ const LoadErrorReport = () => {
     {loadError.map(m => {
       return <div className='bg-gray-100 py-2 px-4 rounded-md'>
         <p>Variable: {m.at(0)} </p>
-        <p>Location:{" "} 
-          {" "+ m.at(1).srcSpanStartLine}:{m.at(1).srcSpanStartColumn} - 
+        <p>Location:{" "}
+          {" " + m.at(1).srcSpanStartLine}:{m.at(1).srcSpanStartColumn} -
           {" " + m.at(1).srcSpanEndLine}:{m.at(1).srcSpanEndColumn}
         </p>
 
       </div>
     })}
-  </div > ;
-  }
+  </div >;
+}
 
 const TypeErrorReport = () => {
   let mode = useSelector(state => state.mode);
