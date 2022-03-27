@@ -24,7 +24,7 @@ export const FULL_MODE = 'full';
 const backendUrl =
   __SNOWPACK_ENV__.MODE === 'development' ? 'http://localhost:3000' : '';
 const modes =
-  0 > 0.5
+  Math.random() > 0.5
     ? Array.from({ length: 4 }).flatMap(_ => [BASIC_MODE, FULL_MODE])
     : Array.from({ length: 4 }).flatMap(_ => [FULL_MODE, BASIC_MODE]);
 

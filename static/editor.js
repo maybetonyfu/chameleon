@@ -1,6 +1,6 @@
 export function initializeEditor(code) {
     let editor = CodeMirror(document.getElementById('editor'), {
-        lineNumbers: false,
+        lineNumbers: true,
         mode: null,
         value: code,
     });

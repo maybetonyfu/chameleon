@@ -87,10 +87,11 @@ processFile text =
                             | Just g <- find (head oldchain `adjs`) gs = reinsert (g : oldchain) (gs \\ [g])
                             | Just g <- find (last oldchain `adjs`) gs = reinsert (oldchain ++ [g]) (gs \\ [g])
                             | otherwise = reinsert oldchain gs
-                          longestChain = reinsert longestChain' leftOuts
+                          -- longestChain = reinsert longestChain' leftOuts
+                          longestChain = const longestChain' leftOuts
                           reasonings =
-                            trace ("\n Alll Constraints:\n" ++ unlines (map show mus)) $
-                              trace ("\n Constraints:\n" ++ unlines (map show longestChain)) $
+                            -- trace ("\n Alll Constraints:\n" ++ unlines (map show mus)) $
+                            --   trace ("\n Constraints:\n" ++ unlines (map show longestChain)) $
                                 concatMap (uncurry compareConstraints) (zigzag longestChain)
                           concreteTypes =
                             -- trace ("\nOriginal Names:\n" ++ show names ++ "\nNew Names: \n" ++ show names') $
@@ -101,28 +102,27 @@ processFile text =
                                       newNames = typings ks names' mss
                                       chooseConcrete a b old new =
                                         let result = if a `moreConcreteThan` b then a else b
-                                         in trace ("\nComparing: " ++ old ++ " :: " ++ toSig a ++ " and " ++ new ++ " :: " ++ toSig b ++ "\nChoose: " ++ toSig result) result
+                                         in result
                                    in zipWith4 chooseConcrete originalNames newNames names names'
                               )
                               longestChain
-
                           simplifyTypes = map (\g -> typings ks names (longestChain \\ [g])) longestChain
                           altTable =
                             zip3
                               names
                               (transpose concreteTypes)
                               (transpose simplifyTypes)
-                          releventSimplied = filter ((> 1) . length . nub . view _3) altTable
-                          releventConcrete = filter ((> 1) . length . nub . view _2) altTable
+                          relevantSimplied = filter ((> 1) . length . nub . view _3) altTable
+                          relevantConcrete = filter ((> 1) . length . nub . filter (not . isVar) . view _2) altTable
                           relevent =
-                            if null releventSimplied
-                              then releventConcrete
-                              else filter ((> 1) . length . nub . view _2) releventSimplied
+                            if null relevantSimplied
+                              then relevantConcrete
+                              else filter ((> 1) . length . nub . view _2) relevantSimplied
                           contextTable =
-                            trace ("\nLongest Chain: \n" ++ unlines (map show longestChain)) $
-                              trace ("\nMus: \n" ++ unlines (map show mus)) $
-                                trace ("\nLength of Longest Chain: " ++ show (length longestChain)) $
-                                  trace ("\nLength of Mus: " ++ show (length mus)) $
+                            -- trace ("\nLongest Chain: \n" ++ unlines (map show longestChain)) $
+                            --   trace ("\nMus: \n" ++ unlines (map show mus)) $
+                            --     trace ("\nLength of Longest Chain: " ++ show (length longestChain)) $
+                            --       trace ("\nLength of Mus: " ++ show (length mus)) $
                                     map
                                       ( \(name, concrete, simplified) ->
                                           -- trace ("\nSimlifed:" ++ name ++ ":\n" ++ unlines (map toSig simplified)) $

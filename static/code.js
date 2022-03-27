@@ -170,7 +170,7 @@ transformKey _ _ x = [x]
 const exampleTake = n =>`module Example${n} where
 
 -- Takes the first n elements from a list
-take' :: Int -> [Int] -> [Int]
+take' :: Int -> [Int] -> [Int
 take' n [] = []
 take' n (x:xs) = x ++ take' (n - 1) xs
 `
@@ -197,6 +197,6 @@ const examples =
       exampleBookTrans,
       exampleJValue,
       exampeExtend
-  ].map((ex, n) => ex(n))
+  ].map((ex, n) => ex(n + 1))
 
 export default examples

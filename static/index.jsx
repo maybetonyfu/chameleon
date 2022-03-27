@@ -26,7 +26,7 @@ let currentTask = 0;
 let editor = initializeEditor(tasks[currentTask]);
 store.dispatch(switchTaskThunk(currentTask));
 
-editor.on('focus', function() {
+editor.on('focus', function () {
   store.dispatch(disableHighlight());
 });
 
@@ -149,12 +149,32 @@ const Debuger = () => {
 };
 
 const ParseErrorReport = () => {
-  return <p>You have parse error</p>;
+  let parseError = useSelector(state => state.parseError);
+  return <div class="p-4">
+    <p className='py-2 px-4'>A syntax error was found in the code</p>
+    <div className='bg-gray-100 py-2 px-4 rounded-md'>
+      <p> {parseError.message} </p>
+      <p>Location: {parseError.loc.srcLine}:{parseError.loc.srcColumn}</p>
+    </div>
+  </div>;
 };
 
 const LoadErrorReport = () => {
-  return <p>You have missing variable</p>;
-};
+  let loadError = useSelector(state => state.loadError);
+  return <div class="p-4">
+    <p className='py-2 px-4'>A variable is used without being declared.</p>
+    {loadError.map(m => {
+      return <div className='bg-gray-100 py-2 px-4 rounded-md'>
+        <p>Variable: {m.at(0)} </p>
+        <p>Location:{" "} 
+          {" "+ m.at(1).srcSpanStartLine}:{m.at(1).srcSpanStartColumn} - 
+          {" " + m.at(1).srcSpanEndLine}:{m.at(1).srcSpanEndColumn}
+        </p>
+
+      </div>
+    })}
+  </div > ;
+  }
 
 const TypeErrorReport = () => {
   let mode = useSelector(state => state.mode);
