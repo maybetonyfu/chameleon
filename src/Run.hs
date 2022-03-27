@@ -73,7 +73,7 @@ processFile text =
                       let mus = getMus ks goals'
                           instanciationTable = concatMap instanciation mus
                           names' =
-                            trace ("\nInsta Table:\n" ++ show instanciationTable) $
+                            -- trace ("\nInsta Table:\n" ++ show instanciationTable) $
                               useFunctionNewNames instanciationTable names
                           graphG = fromEdges . graphView $ mus
                           reachables = concatMap (map snd . Map.toList . reachableFrom graphG) [0 .. length goals']
