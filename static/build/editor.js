@@ -87,8 +87,8 @@ function boxStyles(topElem, bottomElem, text, color = false) {
         `height: ${downwardBarHeight}px;`,
         `margin-left: ${topElem.width / 2}px;`,
         `width: ${stepAsideDistance - topElem.left - (topElem.width / 2)}px;`,
-        `border-left: thin solid #0083FF;`,
-        `border-bottom: thin solid #0083FF;`,
+        `border-left: thin solid #4ade80;`,
+        `border-bottom: thin solid #4ade80;`,
         `z-index:2;`,
 
     ].join('')
@@ -97,9 +97,9 @@ function boxStyles(topElem, bottomElem, text, color = false) {
         `height: ${downwardBarHeight}px;`,
         `margin-left: ${bottomElem.width / 2}px;`,
         `width:${stepAsideDistance - bottomElem.left - (bottomElem.width / 2)}px;`,
-        `border-left: thin solid green;`,
-        `border-bottom: thin solid green;`,
-        `border-right: thin solid green;`,
+        `border-left: thin solid #4ade80;`,
+        `border-bottom: thin solid #4ade80;`,
+        `border-right: thin solid #4ade80;`,
         `z-index:2;`,
 
     ].join('')
@@ -109,7 +109,7 @@ function boxStyles(topElem, bottomElem, text, color = false) {
         `height: ${bottomElem.bottom - topElem.bottom - annotationHeight - downwardBarHeight}px;`,
         `margin-top: ${downwardBarHeight}px;`,
         `margin-left: ${topElem.width / 2}px;`,
-        `border-right: thin solid #0083FF;`,
+        `border-right: thin solid #4ade80;`,
         `z-index:2;`,
 
     ].join('')

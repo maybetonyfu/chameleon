@@ -35,21 +35,18 @@ data ChContext = ChContext
   }
   deriving (Show, Generic)
 
-
 data ChResult
   = ChTypeError
       { contextTable :: [ChContext],
         steps :: [ChStep]
       }
   | ChLoadError
-      {
-        missing:: [(String, SrcSpan)]
+      { missing :: [(String, SrcSpan)]
       }
   | ChParseError
-      {
-        message::String,
-        prettyLoc::String,
-        loc::SrcLoc
+      { message :: String,
+        prettyLoc :: String,
+        loc :: SrcLoc
       }
   | ChSuccess
   deriving (Show, Generic)
@@ -69,8 +66,7 @@ processFile text =
               goals' = zipWith (\g n -> g {goalNum = n}) goals [0 ..]
               res = runGoalNWithState ks 1 (conjN (map unlabel (goals' ++ goals' ++ goals')))
            in if not . null . view _4 $ solvestate
-                then
-                  ChLoadError ( nub. view _4 $ solvestate)
+                then ChLoadError (nub . view _4 $ solvestate)
                 else
                   if null res
                     then
@@ -105,7 +101,7 @@ processFile text =
                                       newNames = typings ks names' mss
                                       chooseConcrete a b old new =
                                         let result = if a `moreConcreteThan` b then a else b
-                                         in trace ("\nComparing: " ++ old ++ " :: " ++ termToType a ++ " and " ++ new ++ " :: " ++ termToType b ++ "\nChoose: " ++ termToType result) result
+                                         in trace ("\nComparing: " ++ old ++ " :: " ++ toSig a ++ " and " ++ new ++ " :: " ++ toSig b ++ "\nChoose: " ++ toSig result) result
                                    in zipWith4 chooseConcrete originalNames newNames names names'
                               )
                               longestChain
@@ -129,8 +125,8 @@ processFile text =
                                   trace ("\nLength of Mus: " ++ show (length mus)) $
                                     map
                                       ( \(name, concrete, simplified) ->
-                                          -- trace ("\nSimlifed:" ++ name ++ ":\n" ++ unlines (map termToType simplified)) $
-                                          --   trace ("\nConcrete:" ++ name ++ ":\n" ++ unlines (map termToType concrete)) $
+                                          -- trace ("\nSimlifed:" ++ name ++ ":\n" ++ unlines (map toSig simplified)) $
+                                          --   trace ("\nConcrete:" ++ name ++ ":\n" ++ unlines (map toSig concrete)) $
                                           let (leftmost, rightmost) = polarEnds concrete
                                               sides =
                                                 zipWith
@@ -147,7 +143,7 @@ processFile text =
                                                   (zigzag concrete)
                                                   (zigzag longestChain)
                                               normalizedSides = normalize sides
-                                           in ChContext (showProperName name) (termToType leftmost) (termToType rightmost) normalizedSides
+                                           in ChContext (showProperName name) (toSig leftmost) (toSig rightmost) normalizedSides
                                       )
                                       relevent
                           contextTableSorted = sortOn (\(ChContext _ _ _ sides) -> fromJust $ findIndex ((== M) . view _2) sides) contextTable
@@ -226,7 +222,7 @@ typings ks names goals =
 
 showTyping :: (String, Term) -> String
 showTyping (name, term) =
-  showProperName name ++ " : " ++ termToType term
+  showProperName name ++ " : " ++ toSig term
 
 showProperName :: String -> String
 showProperName = reverse . drop 1 . dropWhile (/= '.') . reverse
@@ -316,15 +312,16 @@ main = do
   content <- readFile filename
   let res = processFile content
   print res
-  -- putStrLn "\nContexts: "
-  -- mapM_
-  --   ( \(ChContext name typel typer steps) -> do
-  --       putStrLn name
-  --       putStrLn typel
-  --       putStrLn typer
-  --       putStrLn . unwords . map (\(a, b, c) -> show b) $ steps
-  --       putStrLn . unwords . map (\(a, b, c) -> show c) $ steps
-  --   )
-  --   (contextTable res)
-  -- putStrLn "\nSteps: "
-  -- mapM_ print (steps res)
+
+-- putStrLn "\nContexts: "
+-- mapM_
+--   ( \(ChContext name typel typer steps) -> do
+--       putStrLn name
+--       putStrLn typel
+--       putStrLn typer
+--       putStrLn . unwords . map (\(a, b, c) -> show b) $ steps
+--       putStrLn . unwords . map (\(a, b, c) -> show c) $ steps
+--   )
+--   (contextTable res)
+-- putStrLn "\nSteps: "
+-- mapM_ print (steps res)

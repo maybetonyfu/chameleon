@@ -472,7 +472,9 @@ testPoly =
         ]
 
 tupOf :: [Term] -> Term
-tupOf xs = Pair (atom "Tuple") (fromList xs)
+tupOf [] = Unit
+tupOf [x] = x
+tupOf (x:xs) = Pair (atom "Tuple") (Pair x (tupOf xs))
 
 lstOf :: Term -> Term
 lstOf = Pair (atom "List")
@@ -490,7 +492,7 @@ termToType term =
     go varMap n parent Unit = ""
     go varMap n parent (Var ('_' : '.' : x)) = [['a' ..] !! (read x :: Int)]
     go varMap n parent (Atom x) = x
-    go varMap n parent (Var x) = [fromJust (lookup (Var x) varMap)]
+    -- go varMap n parent (Var x) = [fromJust (lookup (Var x) varMap)]
     go varMap n parent p@(Pair (Atom "Function") (Pair a b))
       | isFunction parent && n == 0 = "(" ++ go varMap 0 p a ++ " -> " ++ go varMap 1 p b ++ ")"
       | otherwise = go varMap 0 p a ++ " -> " ++ go varMap 1 p b
@@ -499,8 +501,9 @@ termToType term =
       -- let listP = toList t
       --     content = intercalate "," (zipWith (\t' n' -> go varMap n' p t') listP [0 ..])
       --  in "(" ++ content ++ ")"
-      "(" +  go varMap
+      "(" ++  go varMap 0 p t ++ ")" 
     go varMap n parent p@(Pair x y)
+      -- | isTuple parent = 
       | isTypeCon parent =
         let listP = toList y
             content = unwords (zipWith (\t' n' -> go varMap n' p t') listP [0 ..])
@@ -509,6 +512,33 @@ termToType term =
         let listP = toList y
             content = unwords (zipWith (\t' n' -> go varMap n' p t') listP [0 ..])
          in content
+    go _ _ _ _ = error ""
+
+
+toSig t = fromTerm t Unit Empty
+ 
+fromTerm :: Term -> Term -> Flag -> String 
+-- fromTerm varMap term parentTerm level index 
+fromTerm Unit parent flag = ""
+fromTerm (Atom x) parent flag  = x
+
+fromTerm (Var ('_' : '.' : x)) parent flag = [['a' ..] !! (read x :: Int)]
+  
+fromTerm (Var _) parent index = error "Variable is not fresh"
+
+fromTerm p@(Pair (Atom "Function") (Pair a b)) parent flag
+      | isFunction parent && flag == FunctionFirst = mconcat ["(", fromTerm a p FunctionFirst, "->" , fromTerm b p Empty, ")"]
+      | otherwise = mconcat [fromTerm a p FunctionFirst,  "->", fromTerm b p Empty]
+
+fromTerm p@(Pair (Atom "List") t) parent flag = mconcat ["[", fromTerm t p Empty, "]"]
+
+fromTerm p@(Pair (Atom "Tuple") (Pair a b)) parent flag   = mconcat ["(" , fromTerm a p TupleFirst , ",", fromTerm b p TupleBody,  ")"]
+
+fromTerm p@(Pair x y) parent flag 
+      | isTypeCon parent = mconcat ["(" , fromTerm x parent Empty , " ", fromTerm y parent Empty,  ")"]
+      | otherwise = mconcat [fromTerm x p Empty , " ", fromTerm y p Empty]
+
+data Flag = TupleRoot | TupleFirst | TupleBody | FunctionFirst | Empty deriving(Eq)
 
 isFunction :: Term -> Bool
 isFunction (Pair (Atom "Function") _) = True
@@ -539,3 +569,12 @@ moreConcreteThan (Pair a1 a2) (Pair b1 b2) = a1 `moreConcreteThan` b1 && a2 `mor
 moreConcreteThan (Pair _ _) _ = True
 moreConcreteThan (Atom _) (Var _) = True
 moreConcreteThan _ _ = False
+
+
+-- examples
+kstring = Pair (atom "List") (atom "Char")
+kmaybeInt = Pair (atom "Maybe") (atom "Int")
+kmaybeString = Pair (atom "Maybe") kstring
+kmaybemaybeInt = Pair (atom "Maybe") kmaybeInt
+
+kflip = funOf [funOf [atom "a", atom "b" , atom "c"] , atom "b", atom "a", atom "c"]
