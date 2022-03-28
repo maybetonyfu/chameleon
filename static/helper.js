@@ -1,6 +1,6 @@
-export const unAlias = (str) => {
-    return str.replaceAll('[Char]', 'String')
-}
+// export const unAlias = (str) => {
+//     return str.replaceAll('[Char]', 'String')
+// }
 
 export function arrEq(array1, array2) {
     return (

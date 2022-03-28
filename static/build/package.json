@@ -16,7 +16,8 @@
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
     "react-modal": "^3.14.4",
-    "react-redux": "7.2.5"
+    "react-redux": "7.2.5",
+    "split-grid": "^1.0.11"
   },
   "devDependencies": {
     "snowpack": "^3.8.8"

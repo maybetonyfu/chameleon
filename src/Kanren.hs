@@ -1,3 +1,4 @@
+{-# LANGUAGE  DeriveGeneric  #-}
 module Kanren where
 
 import Data.List
@@ -6,6 +7,7 @@ import qualified Data.Map as Map
 import Data.Maybe (fromJust, maybe)
 import Debug.Trace
 import GHC (SuccessFlag (Failed), back, runGhc)
+import GHC.Generics (Generic)
 
 type VarName = String
 
@@ -516,7 +518,64 @@ termToType term =
 
 
 toSig t = fromTerm t Unit Empty
- 
+
+data TypeForm = TypeFormPart String | TypeForm [TypeForm] deriving (Show, Eq, Generic)
+
+-- instance Semigroup TypeForm where
+--   (<>) = mappend
+
+-- instance Monoid  TypeForm where
+--   mappend (TypeFormPart a)  (TypeFormPart b) = TypeForm [TypeFormPart a, TypeFormPart b]
+--   mappend (TypeForm a) (TypeForm b) = TypeForm (a ++ b)
+--   mappend (TypeFormPart a) (TypeForm b) = TypeForm (TypeFormPart a:b)
+--   mappend (TypeForm b) (TypeFormPart a)  = TypeForm (b ++ [TypeFormPart a ])
+--   mempty = TypeForm []
+
+toTypeForm :: Term -> Term -> Flag -> TypeForm 
+-- fromTerm varMap term parentTerm level index 
+toTypeForm Unit parent flag = TypeForm []
+
+toTypeForm (Atom x) parent flag  = TypeFormPart x
+
+toTypeForm (Var ('_' : '.' : x)) parent flag = TypeFormPart  [['a' ..] !! (read x :: Int)]
+  
+toTypeForm (Var _) parent index = error "Variable is not fresh"
+
+toTypeForm p@(Pair (Atom "Function") (Pair a b)) parent flag
+      | isFunction parent && flag == FunctionFirst = 
+          TypeForm [
+            TypeFormPart"(",
+             toTypeForm a p FunctionFirst,
+             TypeFormPart"->" ,
+              toTypeForm b p Empty, 
+              TypeFormPart")"]
+      | otherwise = 
+        TypeForm [toTypeForm a p FunctionFirst,TypeFormPart  "->", toTypeForm b p Empty]
+
+toTypeForm p@(Pair (Atom "List") t) parent flag = 
+  TypeForm [TypeFormPart"[", toTypeForm t p Empty, TypeFormPart"]"]
+
+toTypeForm p@(Pair (Atom "Tuple") (Pair a b)) parent flag = 
+  TypeForm [
+    TypeFormPart"(" , 
+    toTypeForm a p TupleFirst ,
+    TypeFormPart ",", 
+    toTypeForm b p TupleBody, 
+    TypeFormPart ")"]
+
+toTypeForm p@(Pair x y) parent flag 
+      | isTypeCon parent = 
+          TypeForm [
+            TypeFormPart"(" , 
+            toTypeForm x parent Empty , 
+            TypeFormPart" ", 
+            toTypeForm y parent Empty, 
+             TypeFormPart")"]
+      | otherwise = 
+          TypeForm [toTypeForm x p Empty , TypeFormPart" ", toTypeForm y p Empty]
+
+typeForm t = toTypeForm t Unit Empty
+
 fromTerm :: Term -> Term -> Flag -> String 
 -- fromTerm varMap term parentTerm level index 
 fromTerm Unit parent flag = ""

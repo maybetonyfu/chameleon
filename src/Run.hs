@@ -29,8 +29,8 @@ data Affinity = L | R | M deriving (Show, Generic, Eq)
 
 data ChContext = ChContext
   { contextExp :: String,
-    contextType1 :: String,
-    contextType2 :: String,
+    contextType1 :: TypeForm,
+    contextType2 :: TypeForm,
     contextSteps :: [((Int, Int), Affinity, Bool)]
   }
   deriving (Show, Generic)
@@ -74,7 +74,7 @@ processFile text =
                           instanciationTable = concatMap instanciation mus
                           names' =
                             -- trace ("\nInsta Table:\n" ++ show instanciationTable) $
-                              useFunctionNewNames instanciationTable names
+                            useFunctionNewNames instanciationTable names
                           graphG = fromEdges . graphView $ mus
                           reachables = concatMap (map snd . Map.toList . reachableFrom graphG) [0 .. length goals']
                           longestIndexPairs = snd $ maximumBy (\(n, _) (m, _) -> compare n m) reachables -- [(a,b), (b,c), (c,d)]
@@ -92,7 +92,7 @@ processFile text =
                           reasonings =
                             -- trace ("\n Alll Constraints:\n" ++ unlines (map show mus)) $
                             --   trace ("\n Constraints:\n" ++ unlines (map show longestChain)) $
-                                concatMap (uncurry compareConstraints) (zigzag longestChain)
+                            concatMap (uncurry compareConstraints) (zigzag longestChain)
                           concreteTypes =
                             -- trace ("\nOriginal Names:\n" ++ show names ++ "\nNew Names: \n" ++ show names') $
                             map
@@ -123,29 +123,29 @@ processFile text =
                             --   trace ("\nMus: \n" ++ unlines (map show mus)) $
                             --     trace ("\nLength of Longest Chain: " ++ show (length longestChain)) $
                             --       trace ("\nLength of Mus: " ++ show (length mus)) $
-                                    map
-                                      ( \(name, concrete, simplified) ->
-                                          -- trace ("\nSimlifed:" ++ name ++ ":\n" ++ unlines (map toSig simplified)) $
-                                          --   trace ("\nConcrete:" ++ name ++ ":\n" ++ unlines (map toSig concrete)) $
-                                          let (leftmost, rightmost) = polarEnds concrete
-                                              sides =
-                                                zipWith
-                                                  ( \(t1, t2) (g1, g2) ->
-                                                      let n1 = goalNum g1
-                                                          n2 = goalNum g2
-                                                       in if t1 == leftmost && t2 == leftmost
-                                                            then ((n1, n2), L, False)
-                                                            else
-                                                              if t1 == rightmost && t2 == rightmost
-                                                                then ((n1, n2), R, False)
-                                                                else ((n1, n2), M, False)
-                                                  )
-                                                  (zigzag concrete)
-                                                  (zigzag longestChain)
-                                              normalizedSides = normalize sides
-                                           in ChContext (showProperName name) (toSig leftmost) (toSig rightmost) normalizedSides
-                                      )
-                                      relevent
+                            map
+                              ( \(name, concrete, simplified) ->
+                                  -- trace ("\nSimlifed:" ++ name ++ ":\n" ++ unlines (map toSig simplified)) $
+                                  --   trace ("\nConcrete:" ++ name ++ ":\n" ++ unlines (map toSig concrete)) $
+                                  let (leftmost, rightmost) = polarEnds concrete
+                                      sides =
+                                        zipWith
+                                          ( \(t1, t2) (g1, g2) ->
+                                              let n1 = goalNum g1
+                                                  n2 = goalNum g2
+                                               in if t1 == leftmost && t2 == leftmost
+                                                    then ((n1, n2), L, False)
+                                                    else
+                                                      if t1 == rightmost && t2 == rightmost
+                                                        then ((n1, n2), R, False)
+                                                        else ((n1, n2), M, False)
+                                          )
+                                          (zigzag concrete)
+                                          (zigzag longestChain)
+                                      normalizedSides = normalize sides
+                                   in ChContext (showProperName name) (typeForm leftmost) (typeForm rightmost) normalizedSides
+                              )
+                              relevent
                           contextTableSorted = sortOn (\(ChContext _ _ _ sides) -> fromJust $ findIndex ((== M) . view _2) sides) contextTable
                           contextTableactiveness = calculateActiveness contextTableSorted
                           contextFromReasonings =

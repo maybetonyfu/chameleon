@@ -8,11 +8,12 @@ import {
 } from "./editor.js";
 import {Provider, useSelector, useDispatch} from "./_snowpack/pkg/react-redux.v7.2.5.js";
 import store from "./store.js";
-import {unAlias, arrEq} from "./helper.js";
+import {arrEq} from "./helper.js";
 import {
   BASIC_MODE,
   typeCheckThunk,
   switchTaskThunk,
+  switchTaskNextRoundThunk,
   disableHighlight,
   prevStep,
   nextStep,
@@ -20,8 +21,16 @@ import {
 } from "./store.js";
 import tasks from "./code.js";
 import Modal from "./_snowpack/pkg/react-modal.v3.14.4.js";
+import Split from "./_snowpack/pkg/split-grid.v1.0.11.js";
+Split({
+  columnGutters: [{
+    track: 1,
+    element: document.querySelector("#gutter")
+  }]
+});
 Modal.setAppElement("#debugger");
 let currentTask = 0;
+let currentRound = 1;
 let editor = initializeEditor(tasks[currentTask]);
 store.dispatch(switchTaskThunk(currentTask));
 editor.on("focus", function() {
@@ -33,10 +42,16 @@ store.subscribe(() => {
     mode,
     showHighlights,
     prevLocs,
-    nextLocs
+    nextLocs,
+    round
   } = store.getState();
   let nohighligt = {from: {line: 0, ch: 0}, to: {line: 0, ch: 0}};
   clearDecorations(editor);
+  if (round !== currentRound) {
+    currentRound = round;
+    document.getElementById("skip").classList.toggle("hidden");
+    document.getElementById("giveup").classList.toggle("hidden");
+  }
   if (!showHighlights)
     return;
   if (currentStep === null)
@@ -53,6 +68,31 @@ document.getElementById("save").addEventListener("click", (_) => {
   store.dispatch(typeCheckThunk(text));
 });
 document.getElementById("skip").addEventListener("click", (_) => {
+  let state = store.getState();
+  if (state.round === 2)
+    return;
+  if (state.currentTaskNum < 7) {
+    let nextTask = state.currentTaskNum + 1;
+    store.dispatch(switchTaskThunk(nextTask));
+    editor.setValue(tasks.at(nextTask));
+  } else if (state.currentTaskNum === 7) {
+    let nextTask = state.pending.at(0);
+    store.dispatch(switchTaskNextRoundThunk(nextTask));
+    editor.setValue(tasks.at(nextTask));
+  }
+});
+document.getElementById("giveup").addEventListener("click", (_) => {
+  let state = store.getState();
+  let currentPendingIndex = state.pending.findIndex((v) => v === state.currentTaskNum);
+  if (state.round === 1)
+    return;
+  if (state.currentTaskNum < 7) {
+    let nextTask = state.pending.at(currentPendingIndex + 1);
+    store.dispatch(switchTaskThunk(nextTask));
+    editor.setValue(tasks.at(nextTask));
+  } else if (state.currentTaskNum === 7) {
+    window.location = "https://docs.google.com/forms/d/e/1FAIpQLSfmXyASOPW2HIK-Oqp5nELBTltKeqZjqQ0G9JFram8eUCx26A/viewform?usp=sf_link";
+  }
 });
 document.querySelectorAll(".example").forEach((elem) => {
   elem.addEventListener("click", (e) => {
@@ -61,27 +101,64 @@ document.querySelectorAll(".example").forEach((elem) => {
     store.dispatch(switchTaskThunk(taskId));
   });
 });
+const TypeSig = ({type}) => {
+  if (type.tag === "TypeForm" && type.contents.length === 3 && type.contents.at(0).contents === "[" && type.contents.at(1).contents === "Char" && type.contents.at(2).contents === "]") {
+    return /* @__PURE__ */ React.createElement("span", {
+      className: "inline-block"
+    }, "String");
+  } else if (type.tag === "TypeForm") {
+    return /* @__PURE__ */ React.createElement("span", {
+      className: "inline-block"
+    }, type.contents.map((t) => /* @__PURE__ */ React.createElement(TypeSig, {
+      type: t
+    })));
+  } else if (type.tag === "TypeFormPart" && type.contents === " ") {
+    return /* @__PURE__ */ React.createElement("span", {
+      className: "inline-block w-1"
+    });
+  } else if (type.tag === "TypeFormPart") {
+    return /* @__PURE__ */ React.createElement("span", {
+      className: "inline-block"
+    }, type.contents);
+  }
+};
 const ModelContent = () => {
   let dispatch = useDispatch();
   let currentTaskNum = useSelector((state) => state.currentTaskNum);
+  let pending = useSelector((state) => state.pending);
+  let round = useSelector((state) => state.round);
   return /* @__PURE__ */ React.createElement("div", {
     className: "flex flex-col justify-around items-center h-full"
   }, /* @__PURE__ */ React.createElement("div", null, /* @__PURE__ */ React.createElement("p", {
     className: "text-center"
-  }, "Congratulations. You fixed the type error!"), currentTaskNum == 7 ? /* @__PURE__ */ React.createElement("p", {
+  }, "Congratulations. You fixed the type error!"), pending.length === 0 ? /* @__PURE__ */ React.createElement("p", {
     className: "text-center"
   }, "Click next to leave us some feedback.") : /* @__PURE__ */ React.createElement("p", {
     className: "text-center"
   }, "Click next to head over to the next challenge.")), /* @__PURE__ */ React.createElement("button", {
     className: "px-5 py-1 bg-green-400 rounded-md",
     onClick: () => {
-      if (currentTaskNum == 7) {
-        window.location = "https://docs.google.com/forms/d/e/1FAIpQLSfmXyASOPW2HIK-Oqp5nELBTltKeqZjqQ0G9JFram8eUCx26A/viewform?usp=sf_link";
+      if (pending.length === 0) {
         return;
       }
-      let nextTask = currentTaskNum + 1;
-      editor.setValue(tasks.at(nextTask));
-      dispatch(switchTaskThunk(nextTask));
+      if (round === 1 && currentTaskNum < 7) {
+        let nextTask = currentTaskNum + 1;
+        dispatch(switchTaskThunk(nextTask));
+        editor.setValue(tasks.at(nextTask));
+      } else if (round === 1 && currentTaskNum === 7) {
+        let nextTask = pending.at(0);
+        dispatch(switchTaskNextRoundThunk(nextTask));
+        editor.setValue(tasks.at(nextTask));
+      } else if (round === 2) {
+        let nextPendingIndex = pending.findIndex((n) => n > currentTaskNum);
+        if (nextPendingIndex === -1) {
+          window.location = "https://docs.google.com/forms/d/e/1FAIpQLSfmXyASOPW2HIK-Oqp5nELBTltKeqZjqQ0G9JFram8eUCx26A/viewform?usp=sf_link";
+        } else {
+          let nextTask = pending.at(nextPendingIndex);
+          dispatch(switchTaskThunk(nextTask));
+          editor.setValue(tasks.at(nextTask));
+        }
+      }
     }
   }, "Next"));
 };
@@ -104,19 +181,35 @@ const Debuger = () => {
   })());
 };
 const ParseErrorReport = () => {
-  return /* @__PURE__ */ React.createElement("p", null, "You have parse error");
+  let parseError = useSelector((state) => state.parseError);
+  return /* @__PURE__ */ React.createElement("div", {
+    class: "p-4"
+  }, /* @__PURE__ */ React.createElement("p", {
+    className: "py-2 px-4"
+  }, "A syntax error was found in the code"), /* @__PURE__ */ React.createElement("div", {
+    className: "bg-gray-100 py-2 px-4 rounded-md"
+  }, /* @__PURE__ */ React.createElement("p", null, " ", parseError.message, " "), /* @__PURE__ */ React.createElement("p", null, "Location: ", parseError.loc.srcLine, ":", parseError.loc.srcColumn)));
 };
 const LoadErrorReport = () => {
-  return /* @__PURE__ */ React.createElement("p", null, "You have missing variable");
+  let loadError = useSelector((state) => state.loadError);
+  return /* @__PURE__ */ React.createElement("div", {
+    class: "p-4"
+  }, /* @__PURE__ */ React.createElement("p", {
+    className: "py-2 px-4"
+  }, "A variable is used without being declared."), loadError.map((m) => {
+    return /* @__PURE__ */ React.createElement("div", {
+      className: "bg-gray-100 py-2 px-4 rounded-md"
+    }, /* @__PURE__ */ React.createElement("p", null, "Variable: ", m.at(0), " "), /* @__PURE__ */ React.createElement("p", null, "Location:", " ", " " + m.at(1).srcSpanStartLine, ":", m.at(1).srcSpanStartColumn, " -", " " + m.at(1).srcSpanEndLine, ":", m.at(1).srcSpanEndColumn));
+  }));
 };
 const TypeErrorReport = () => {
   let mode = useSelector((state) => state.mode);
   return /* @__PURE__ */ React.createElement("div", {
-    className: "p-2 flex flex-col",
+    className: "p-2 flex flex-col items-start",
     style: {fontFamily: "IBM Plex Sans"}
   }, /* @__PURE__ */ React.createElement("div", {
-    className: "mb-2 bg-gray-200 px-2"
-  }, "Current Mode:", mode === BASIC_MODE ? "Basic mode" : "Interactive mode"), /* @__PURE__ */ React.createElement(Message, null), mode === BASIC_MODE ? null : /* @__PURE__ */ React.createElement(TypingTable, null));
+    className: "mb-2 bg-gray-100 px-4 py-2 rounded-md w-auto"
+  }, "Current Mode:", mode === BASIC_MODE ? " Basic mode" : " Interactive mode"), /* @__PURE__ */ React.createElement(Message, null), mode === BASIC_MODE ? null : /* @__PURE__ */ React.createElement(TypingTable, null));
 };
 const Message = () => {
   let contextItem = useSelector((state) => state.currentContextItem);
@@ -134,19 +227,23 @@ const Message = () => {
     className: "w-14 inline-block"
   }, "Type 1: "), /* @__PURE__ */ React.createElement("span", {
     className: "code groupMarkerB rounded-sm px-0.5 cursor-pointer"
-  }, unAlias(contextItem["contextType1"]))), /* @__PURE__ */ React.createElement("div", {
+  }, /* @__PURE__ */ React.createElement(TypeSig, {
+    type: contextItem.contextType1
+  }))), /* @__PURE__ */ React.createElement("div", {
     className: "my-1 text-sm"
   }, /* @__PURE__ */ React.createElement("span", {
     className: "w-14 inline-block"
   }, "Type 2: "), /* @__PURE__ */ React.createElement("span", {
     className: "code groupMarkerA rounded-sm px-0.5 cursor-pointer"
-  }, unAlias(contextItem["contextType2"]))));
+  }, /* @__PURE__ */ React.createElement(TypeSig, {
+    type: contextItem.contextType2
+  }))));
 };
 const TypingTable = () => {
   let dispatch = useDispatch();
   let context = useSelector((state) => state.context);
   return /* @__PURE__ */ React.createElement("div", {
-    className: "grid gap-1 context-grid text-xs",
+    className: "grid gap-1 context-grid text-xs w-full",
     style: {fontFamily: "JetBrains Mono"}
   }, /* @__PURE__ */ React.createElement("div", {
     className: "text-center"
@@ -193,12 +290,16 @@ const ContextRow = ({row}) => {
   }), /* @__PURE__ */ React.createElement("div", {
     onClick: () => dispatch(setStep(firstReleventStep)),
     className: "rounded-sm p-1 groupMarkerB flex justify-center items-center cursor-pointer"
-  }, unAlias(contextType1)), /* @__PURE__ */ React.createElement("div", {
+  }, /* @__PURE__ */ React.createElement(TypeSig, {
+    type: contextType1
+  })), /* @__PURE__ */ React.createElement("div", {
     className: "rounded-sm p-1 flex justify-center items-center " + affinityClass
   }, contextExp), /* @__PURE__ */ React.createElement("div", {
     onClick: () => dispatch(setStep(lastReleventStep)),
     className: "rounded-sm p-1 groupMarkerA flex justify-center items-center cursor-pointer"
-  }, unAlias(contextType2)));
+  }, /* @__PURE__ */ React.createElement(TypeSig, {
+    type: contextType2
+  })));
 };
 const Stepper = ({rowInfo}) => {
   let steps = useSelector((state) => state.steps);

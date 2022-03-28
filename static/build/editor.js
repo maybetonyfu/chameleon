@@ -1,10 +1,10 @@
 export function initializeEditor(code) {
     let editor = CodeMirror(document.getElementById('editor'), {
-        lineNumbers: false,
+        lineNumbers: true,
         mode: null,
         value: code,
     });
-    editor.setSize(null, 'calc(100vh - 3rem)')
+    editor.setSize("100%", 'calc(100vh - 3rem)')
     return editor
 }
 
@@ -86,9 +86,12 @@ function boxStyles(topElem, bottomElem, text, color = false) {
         color ? `background: aquamarine;` : 'background:transparent;',
         `height: ${downwardBarHeight}px;`,
         `margin-left: ${topElem.width / 2}px;`,
+        `margin-top: -${topElem.height + downwardBarHeight}px;`,
         `width: ${stepAsideDistance - topElem.left - (topElem.width / 2)}px;`,
         `border-left: thin solid #4ade80;`,
-        `border-bottom: thin solid #4ade80;`,
+        `border-top: thin solid #4ade80;`,
+        `border-right: thin solid #4ade80;`,
+
         `z-index:2;`,
 
     ].join('')
@@ -106,8 +109,8 @@ function boxStyles(topElem, bottomElem, text, color = false) {
     const styleInbetween = [
         color ? `background: burlywood;` : 'background:transparent;',
         `width:${stepAsideDistance - topElem.left - (topElem.width / 2)}px;`,
-        `height: ${bottomElem.bottom - topElem.bottom - annotationHeight - downwardBarHeight}px;`,
-        `margin-top: ${downwardBarHeight}px;`,
+        `height: ${bottomElem.top - topElem.top}px;`,
+        `margin-top: -${topElem.height}px;`,
         `margin-left: ${topElem.width / 2}px;`,
         `border-right: thin solid #4ade80;`,
         `z-index:2;`,

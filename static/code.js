@@ -1,4 +1,4 @@
-const exampeExtend = (n) => `module Example${n} where
+const exampeExtend = (n) => `module Task${n} where
 
 data Expr = C Int |
             Comb Expr Expr|
@@ -8,35 +8,54 @@ data Expr = C Int |
 data Env = Env [(String, Int)]
 
 eval :: Expr -> Env -> (Env, Int)
+eval (C x)  env       = (env, x)
 eval (Let v e1 e2) env = let (env1, v1) = eval e1 env
                              env2       = extend v v1
                              ans = eval e2 env2
                          in  ans
+eval (V v)  env       = (env, find v env)
 
 extend :: String -> Int -> Env -> Env
 extend v e (Env env)  = Env ([(v,e)] ++ env)
+
+find v  (Env [])          = error "Unbound variable"
+find v1 (Env ((v2,e):es)) = if v1 == v2 then e else find v1 es
+
 `
 
-const exampleJValue = n => `module Example${n} where
+const exampleJValue = n => `module Task${n} where
 
-data JValue
-  =   JObject [(String, JValue)]
-    | JArray  [JValue]
+data JValue = JString String
+  | JNumber Double
+  | JBool Bool
+  | JNull
+  | JObject [(String, JValue)]
+  | JArray  [JValue]
 
 renderJValue :: JValue -> String
-renderJValue (JObject o) = renderPairs o
-renderJValue (JArray a) =  renderPairs a
+renderJValue (JString s)   = show s
+renderJValue (JNumber n)   = show n
+renderJValue (JBool True)  = "true"
+renderJValue (JBool False) = "false"
+renderJValue JNull         = "null"
+
+renderJValue (JObject o) = "{" ++ renderPairs o ++ "}"
+renderJValue (JArray a) = "[" ++ renderPairs a ++ "]"
 
 renderPair :: (String, JValue) -> String
-renderPair (k, v) = k ++ ": " ++ renderJValue v
+renderPair (k,v)   = show k ++ ": " ++ renderJValue v
 
-renderPairs :: [(String, JValue)] -> String
+renderPairs :: [(String,JValue)] -> String
 renderPairs [] = ""
 renderPairs [p] = renderPair p
-renderPairs (p : ps) = renderPair p ++ "," ++ renderPairs ps
+renderPairs (p:ps) = renderPair p ++ "," ++ renderPairs ps
+
+renderArrayValues [] = ""
+renderArrayValues [v] = renderJValue v
+renderArrayValues (v:vs) = renderJValue v ++ "," ++ renderArrayValues
 `
 
-const exampleNQueens = n => `module Example${n} where
+const exampleNQueens = n => `module Task${n} where
 
 nqueens size =
   filter evaluateBoard (board_permutations size)
@@ -66,7 +85,7 @@ validate rows left right position =
   else validate (init rows) (left - 1) (right + 1) position
 `
 
-const exampleRockPaperScissors = n => `module Example${n} where
+const exampleRockPaperScissors = n => `module Task${n} where
 
 data Hand = Rock | Paper | Scissors
 type Score = (Int, Int)
@@ -96,7 +115,7 @@ score h1 h2 =
 
 `
 
-const exampleDateSpan = n => `module Example${n} where
+const exampleDateSpan = n => `module Task${n} where
 data Period
   = DayPeriod Day
   | WeekPeriod Day
@@ -167,7 +186,7 @@ transformKey _ _ x = [x]
 
 `
 
-const exampleTake = n =>`module Example${n} where
+const exampleTake = n =>`module Task${n} where
 
 -- Takes the first n elements from a list
 take' :: Int -> [Int] -> [Int]
@@ -175,7 +194,7 @@ take' n [] = []
 take' n (x:xs) = x ++ take' (n - 1) xs
 `
 
-const examplePassword = n => `module Example${n} where
+const examplePassword = n => `module Task${n} where
 
 -- A data type to represent password
 data Password = P String

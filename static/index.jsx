@@ -8,7 +8,7 @@ import {
 } from './editor';
 import { Provider, useSelector, useDispatch } from 'react-redux';
 import store from './store';
-import { unAlias, arrEq } from './helper';
+import { arrEq } from './helper';
 import {
   BASIC_MODE,
   typeCheckThunk,
@@ -21,6 +21,15 @@ import {
 } from './store';
 import tasks from './code';
 import Modal from 'react-modal';
+import Split from 'split-grid'
+
+Split({
+  columnGutters: [{
+    track: 1,
+    element: document.querySelector('#gutter'),
+  }],
+})
+
 Modal.setAppElement('#debugger');
 
 let currentTask = 0;
@@ -114,6 +123,25 @@ document.querySelectorAll('.example').forEach(elem => {
   });
 });
 
+const TypeSig = ({ type }) => {
+  if (type.tag === "TypeForm"
+    && type.contents.length === 3
+    && type.contents.at(0).contents === '['
+    && type.contents.at(1).contents === 'Char'
+    && type.contents.at(2).contents === ']'
+  ) {
+    return <span className="inline-block">String</span>
+  } else if (type.tag === "TypeForm") {
+    return <span className="inline-block">{type.contents.map(t => <TypeSig type={t}></TypeSig>)}</span>
+  } else if (type.tag === "TypeFormPart" && type.contents === ' ') {
+    return <span className="inline-block w-1"></span>
+  }
+
+  else if (type.tag === "TypeFormPart") {
+    return <span className="inline-block">{type.contents}</span>
+  }
+}
+
 const ModelContent = () => {
   let dispatch = useDispatch();
   let currentTaskNum = useSelector(state => state.currentTaskNum);
@@ -154,7 +182,7 @@ const ModelContent = () => {
             let nextPendingIndex = pending.findIndex(n => n > currentTaskNum)
             if (nextPendingIndex === -1) {
               window.location =
-              'https://docs.google.com/forms/d/e/1FAIpQLSfmXyASOPW2HIK-Oqp5nELBTltKeqZjqQ0G9JFram8eUCx26A/viewform?usp=sf_link';
+                'https://docs.google.com/forms/d/e/1FAIpQLSfmXyASOPW2HIK-Oqp5nELBTltKeqZjqQ0G9JFram8eUCx26A/viewform?usp=sf_link';
             } else {
               let nextTask = pending.at(nextPendingIndex)
               dispatch(switchTaskThunk(nextTask));
@@ -226,10 +254,10 @@ const LoadErrorReport = () => {
 const TypeErrorReport = () => {
   let mode = useSelector(state => state.mode);
   return (
-    <div className='p-2 flex flex-col' style={{ fontFamily: 'IBM Plex Sans' }}>
-      <div className='mb-2 bg-gray-200 px-2'>
+    <div className='p-2 flex flex-col items-start' style={{ fontFamily: 'IBM Plex Sans' }}>
+      <div className='mb-2 bg-gray-100 px-4 py-2 rounded-md w-auto'>
         Current Mode:
-        {mode === BASIC_MODE ? 'Basic mode' : 'Interactive mode'}
+        {mode === BASIC_MODE ? ' Basic mode' : ' Interactive mode'}
       </div>
       <Message></Message>
       {mode === BASIC_MODE ? null : <TypingTable></TypingTable>}
@@ -254,13 +282,16 @@ const Message = () => {
       <div className='my-1 text-sm'>
         <span className='w-14 inline-block'>Type 1: </span>
         <span className='code groupMarkerB rounded-sm px-0.5 cursor-pointer'>
-          {unAlias(contextItem['contextType1'])}
+          {/* {unAlias(contextItem['contextType1'])} */}
+          <TypeSig type={contextItem.contextType1}></TypeSig>
         </span>
       </div>
       <div className='my-1 text-sm'>
         <span className='w-14 inline-block'>Type 2: </span>
         <span className='code groupMarkerA rounded-sm px-0.5 cursor-pointer'>
-          {unAlias(contextItem['contextType2'])}
+          {/* {unAlias(contextItem['contextType2'])} */}
+          <TypeSig type={contextItem.contextType2}></TypeSig>
+
         </span>
       </div>
     </div>
@@ -272,7 +303,7 @@ const TypingTable = () => {
   let context = useSelector(state => state.context);
   return (
     <div
-      className={'grid gap-1 context-grid text-xs'}
+      className={'grid gap-1 context-grid text-xs w-full'}
       style={{ fontFamily: 'JetBrains Mono' }}
     >
       <div className='text-center'>
@@ -333,7 +364,7 @@ const ContextRow = ({ row }) => {
         onClick={() => dispatch(setStep(firstReleventStep))}
         className='rounded-sm p-1 groupMarkerB flex justify-center items-center cursor-pointer'
       >
-        {unAlias(contextType1)}
+        <TypeSig type={contextType1}></TypeSig>
       </div>
       <div
         className={
@@ -346,7 +377,7 @@ const ContextRow = ({ row }) => {
         onClick={() => dispatch(setStep(lastReleventStep))}
         className='rounded-sm p-1 groupMarkerA flex justify-center items-center cursor-pointer'
       >
-        {unAlias(contextType2)}
+        <TypeSig type={contextType2}></TypeSig>
       </div>
     </>
   );

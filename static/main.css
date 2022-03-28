@@ -125,3 +125,17 @@
 .context-grid {
     grid-template-columns: auto 1fr auto 1fr;
 }
+
+.split-container {
+    display: grid;
+    grid-template-columns: 900px 10px 1fr;
+}
+
+.split-gutter-col{
+    grid-row: 1/-1;
+    cursor: col-resize;
+}
+
+.split-gutter-col-1 {
+    grid-column: 2;
+}
