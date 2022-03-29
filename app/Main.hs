@@ -17,7 +17,7 @@ import Run hiding (main)
 import Data.Monoid (mconcat)
 import qualified Data.Text.Lazy as T
 
-main = scotty 3000 (typecheck >> home >> js >> css >> intro >> consent >> favicon)
+main = scotty 5000 (typecheck >> home >> js >> css >> intro >> consent >> favicon)
 
 
 typecheck :: ScottyM ()
