@@ -7,7 +7,7 @@ import {
     configureStore,
     createAsyncThunk,
     createReducer,
-} from './_snowpack/pkg/@reduxjs.toolkit.v1.8.0.js';
+} from './_snowpack/pkg/@reduxjs/toolkit.js';
 import tasks from './code.js';
 import { arrEq } from './helper.js';
 
