@@ -17,7 +17,7 @@ import Run hiding (main)
 import Data.Monoid (mconcat)
 import qualified Data.Text.Lazy as T
 
-main = scotty 3000 (typecheck >> home >> js >> css >> intro >> favicon)
+main = scotty 3000 (typecheck >> home >> js >> css >> intro >> consent >> favicon)
 
 
 typecheck :: ScottyM ()
@@ -35,6 +35,10 @@ home = get "/" $ do
 intro :: ScottyM ()
 intro = get "/intro" $ do
     file "static/build/introduction.html"
+
+consent :: ScottyM ()
+consent = get "/consent" $ do
+    file "static/build/consent.html"
 
 js :: ScottyM ()
 js = get (regex  "^.*\\.js") $ do

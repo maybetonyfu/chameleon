@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Chameleon Code Editor</title>
+    <title>Chameleon Type Debugger</title>
     <script defer src="lib/codemirror.js"></script>
     <script type="module" src="https://unpkg.com/ionicons@5.0.0/dist/ionicons/ionicons.esm.js"></script>
     <script nomodule="" src="https://unpkg.com/ionicons@5.0.0/dist/ionicons/ionicons.js"></script>
@@ -40,7 +40,9 @@
         <main class="grow h-full overflow-y-auto">
             <div id="editor" class=""></div>
         </main>
-        <div id="gutter" class="bg-gray-200 split-gutter-col split-gutter-col-1"></div>
+        <div id="gutter" class="bg-gray-200 split-gutter-col split-gutter-col-1 flex items-center">
+            <p class="text-lg font-bold text-center w-full text-gray-600">⋮</p>
+        </div>
         <aside id="debugger" class="w-max">
         </aside>
     </section>

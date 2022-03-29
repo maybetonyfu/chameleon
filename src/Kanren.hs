@@ -603,6 +603,14 @@ isFunction :: Term -> Bool
 isFunction (Pair (Atom "Function") _) = True
 isFunction _ = False
 
+funHead :: Term -> Term 
+funHead (Pair (Atom "Function") (Pair a b)) = a
+funHead _ = error "Function head applied to non functional term"
+
+funBody :: Term -> Term 
+funBody (Pair (Atom "Function") (Pair a b)) = b
+funBody _ = error "Function body applied to non functional term"
+
 isTuple :: Term -> Bool
 isTuple (Pair (Atom "Tuple") _) = True
 isTuple _ = False

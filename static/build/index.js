@@ -209,7 +209,7 @@ const TypeErrorReport = () => {
     style: {fontFamily: "IBM Plex Sans"}
   }, /* @__PURE__ */ React.createElement("div", {
     className: "mb-2 bg-gray-100 px-4 py-2 rounded-md w-auto"
-  }, "Current Mode:", mode === BASIC_MODE ? " Basic mode" : " Interactive mode"), /* @__PURE__ */ React.createElement(Message, null), mode === BASIC_MODE ? null : /* @__PURE__ */ React.createElement(TypingTable, null));
+  }, "Current mode:", mode === BASIC_MODE ? " Basic Mode" : " Interactive Mode"), /* @__PURE__ */ React.createElement(Message, null), mode === BASIC_MODE ? null : /* @__PURE__ */ React.createElement(TypingTable, null));
 };
 const Message = () => {
   let contextItem = useSelector((state) => state.currentContextItem);

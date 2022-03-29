@@ -256,8 +256,8 @@ const TypeErrorReport = () => {
   return (
     <div className='p-2 flex flex-col items-start' style={{ fontFamily: 'IBM Plex Sans' }}>
       <div className='mb-2 bg-gray-100 px-4 py-2 rounded-md w-auto'>
-        Current Mode:
-        {mode === BASIC_MODE ? ' Basic mode' : ' Interactive mode'}
+        Current mode:
+        {mode === BASIC_MODE ? ' Basic Mode' : ' Interactive Mode'}
       </div>
       <Message></Message>
       {mode === BASIC_MODE ? null : <TypingTable></TypingTable>}

@@ -570,7 +570,7 @@ smallestBoundingScope scopes scpType v sp =
       boundingScopes = filter (isContaining v (Normal sp) scpType) scopes
       smallest =
         if null boundingScopes
-          then trace ("Variable in scope: " ++ v) Nothing
+          then Nothing
           else
             Just $ foldr
                       ( \scp1 scp2 ->
