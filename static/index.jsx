@@ -166,7 +166,8 @@ const ModelContent = () => {
         className='px-5 py-1 bg-green-400 rounded-md'
         onClick={() => {
           if (pending.length === 0) {
-
+            window.location =
+                'https://docs.google.com/forms/d/e/1FAIpQLSfmXyASOPW2HIK-Oqp5nELBTltKeqZjqQ0G9JFram8eUCx26A/viewform?usp=sf_link';
             return;
           }
           if (round === 1 && currentTaskNum < 7) {
