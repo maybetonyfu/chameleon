@@ -19,9 +19,10 @@ extend :: String -> Int -> Env -> Env
 extend v e (Env env)  = Env ([(v,e)] ++ env)
 
 find v  (Env [])          = error "Unbound variable"
-find v1 (Env ((v2,e):es)) = if v1 == v2 then e else find v1 es
+find v1 (Env ((v2,e):es)) = if v1 == v2 then e else find v1 (Env es)
 
 `
+
 
 const exampleJValue = n => `module Task${n} where
 
@@ -52,7 +53,7 @@ renderPairs (p:ps) = renderPair p ++ "," ++ renderPairs ps
 
 renderArrayValues [] = ""
 renderArrayValues [v] = renderJValue v
-renderArrayValues (v:vs) = renderJValue v ++ "," ++ renderArrayValues
+renderArrayValues (v:vs) = renderJValue v ++ "," ++ renderArrayValues vs
 `
 
 const exampleNQueens = n => `module Task${n} where
