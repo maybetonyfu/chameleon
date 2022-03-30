@@ -4,11 +4,12 @@
     /* Set height, width, borders, and global font properties here */
     font-family: monospace;
     height: 100%;
-    font-size: 12px;
+    font-size: 13px;
     font-family: 'JetBrains Mono', monospace;
     color: black;
     direction: ltr;
     overflow-x: auto;
+    line-height: 22px;
   }
   
   /* PADDING */

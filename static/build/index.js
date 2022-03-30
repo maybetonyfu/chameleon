@@ -1,12 +1,12 @@
-import React from "./_snowpack/pkg/react.js";
-import ReactDOM from "./_snowpack/pkg/react-dom.js";
+import React from "./_snowpack/pkg/react.v17.0.2.js";
+import ReactDOM from "./_snowpack/pkg/react-dom.v17.0.2.js";
 import {
   initializeEditor,
   highlight,
   drawAnnotations,
   clearDecorations
 } from "./editor.js";
-import {Provider, useSelector, useDispatch} from "./_snowpack/pkg/react-redux.js";
+import {Provider, useSelector, useDispatch} from "./_snowpack/pkg/react-redux.v7.2.5.js";
 import store from "./store.js";
 import {arrEq} from "./helper.js";
 import {
@@ -20,8 +20,8 @@ import {
   setStep
 } from "./store.js";
 import tasks from "./code.js";
-import Modal from "./_snowpack/pkg/react-modal.js";
-import Split from "./_snowpack/pkg/split-grid.js";
+import Modal from "./_snowpack/pkg/react-modal.v3.14.4.js";
+import Split from "./_snowpack/pkg/split-grid.v1.0.11.js";
 Split({
   columnGutters: [{
     track: 1,
