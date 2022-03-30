@@ -379,7 +379,7 @@ instance MatchTerm Exp where
         --       Just (_, consFun) -> consFun
 
         f <- freshVar
-        let label = Label 0 (vOp, funOf [v1, v2, term]) [(vOp, f)] ("Applied") (sl e2)
+        let label = Label 0 (vOp, funOf [v1, v2, term]) [(vOp, f)] ("Applied") (sl node)
         let g =
               label
                 ( conjN

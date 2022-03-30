@@ -354,19 +354,19 @@ function convertStep(step, stepNum) {
     let locB = convertLocation(step['stepB']);
     if (direction === 'LR') {
         text = `
-          <span class="markerA inline-block w-3 h-3 rounded-sm"></span>
+          <span class="markerA inline-block w-2 h-2 rounded-sm"></span>
           ${reason}
-          <span class="markerB inline-block w-3 h-3 rounded-sm"></span>
-          <span class="font-xs text-gray-400">(step</span>
+          <span class="markerB inline-block w-2 h-2 rounded-sm"></span>
+          <span class="text-xs text-gray-400">(step</span>
           <span class="bg-green-400 inline-block w-4 h-4 text-xs rounded-full">${stepNum +
             1}</span><span class="font-xs text-gray-400">)</span>
   `;
     } else {
         text = `
-          <span class="markerB inline-block w-3 h-3 rounded-sm"></span>
+          <span class="markerB inline-block w-2 h-2 rounded-sm"></span>
           ${reason}
-          <span class="markerA inline-block w-3 h-3 rounded-sm"></span>
-          <span class="font-xs text-gray-400">(step</span>
+          <span class="markerA inline-block w-2 h-2 rounded-sm"></span>
+          <span class="text-xs text-gray-400">(step</span>
           <span class="bg-green-400 inline-block w-4 h-4 text-xs rounded-full">${stepNum +
             1}</span><span class="font-xs text-gray-400">)</span>
   `;
