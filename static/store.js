@@ -294,7 +294,7 @@ const appReducer = createReducer(initialState, builder => {
 
 const store = configureStore({
     reducer: appReducer,
-    // devTools: true,
+    devTools: false,
 });
 
 export default store;
