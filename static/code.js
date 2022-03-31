@@ -74,9 +74,9 @@ init' (a:as) = a : init' as
 --Recursively check that prior rows are valid.
 evaluateBoard [] = True
 evaluateBoard rows =
-  evaluateBoard (init rows) &&
+  evaluateBoard (init' rows) &&
   validate
-    (init rows)
+    (init' rows)
     (last (rows - 1))
     (last rows + 1)
     (last rows)
@@ -87,7 +87,7 @@ validate [] _ _ _ = True
 validate rows left right position =
   if last rows == left || last rows == right || last rows == position
   then False
-  else validate (init rows) (left - 1) (right + 1) position
+  else validate (init' rows) (left - 1) (right + 1) position
 `
 
 const exampleRockPaperScissors = n => `module Task${n} where
