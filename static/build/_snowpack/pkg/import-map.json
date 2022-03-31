@@ -1,6 +1,6 @@
 {
   "imports": {
-    "@analytics/google-analytics": "./@analytics/google-analytics.js",
+    "@analytics/mixpanel": "./@analytics/mixpanel.js",
     "@reduxjs/toolkit": "./@reduxjs/toolkit.js",
     "analytics": "./analytics.js",
     "react": "./react.js",

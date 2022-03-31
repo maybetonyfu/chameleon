@@ -13,6 +13,7 @@
   "license": "ISC",
   "dependencies": {
     "@analytics/google-analytics": "^0.5.3",
+    "@analytics/mixpanel": "^0.4.0",
     "@reduxjs/toolkit": "^1.8.0",
     "analytics": "^0.8.1",
     "react": "^17.0.2",

@@ -23,13 +23,13 @@ import tasks from "./code.js";
 import Modal from "./_snowpack/pkg/react-modal.js";
 import Split from "./_snowpack/pkg/split-grid.js";
 import Analytics from "./_snowpack/pkg/analytics.js";
-import googleAnalytics from "./_snowpack/pkg/@analytics/google-analytics.js";
+import mixpanelPlugin from "./_snowpack/pkg/@analytics/mixpanel.js";
 const analytics = Analytics({
   app: "chameleon-user-study",
   version: 1,
   plugins: [
-    googleAnalytics({
-      trackingId: "G-H8271W5VPL"
+    mixpanelPlugin({
+      token: "6be6077e1d5b8de6978c65490e1666ea"
     })
   ]
 });

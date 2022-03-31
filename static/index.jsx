@@ -23,14 +23,14 @@ import tasks from './code';
 import Modal from 'react-modal';
 import Split from 'split-grid'
 import Analytics from 'analytics'
-import googleAnalytics from '@analytics/google-analytics'
+import mixpanelPlugin from '@analytics/mixpanel'
 
 const analytics = Analytics({
   app: 'chameleon-user-study',
   version: 1,
   plugins: [
-    googleAnalytics({
-      trackingId: 'G-H8271W5VPL',
+    mixpanelPlugin({
+      token: '6be6077e1d5b8de6978c65490e1666ea'
     })
   ]
 })
