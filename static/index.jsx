@@ -8,7 +8,7 @@ import {
 } from './editor';
 import { Provider, useSelector, useDispatch } from 'react-redux';
 import store from './store';
-import { arrEq } from './helper';
+import { arrEq, unAlias } from './helper';
 import {
   BASIC_MODE,
   typeCheckThunk,
@@ -132,13 +132,24 @@ const TypeSig = ({ type }) => {
   ) {
     return <span className="inline-block">String</span>
   } else if (type.tag === "TypeForm") {
-    return <span className="inline-block">{type.contents.map(t => <TypeSig type={t}></TypeSig>)}</span>
+    return <span className="inline-block">{type.contents.map((t, i) => <TypeSig type={t} key={i}></TypeSig>)}</span>
   } else if (type.tag === "TypeFormPart" && type.contents === ' ') {
     return <span className="inline-block w-1"></span>
   }
 
   else if (type.tag === "TypeFormPart") {
     return <span className="inline-block">{type.contents}</span>
+  }
+}
+
+const StringTypeSig = ({ simple, full }) => {
+  let unlaliasedFull = unAlias(full) 
+  if (unlaliasedFull.length > 50) {
+    return <span>{unAlias(simple)}</span>
+
+  } else {
+    return <span>{unlaliasedFull}</span>
+    
   }
 }
 
@@ -167,7 +178,7 @@ const ModelContent = () => {
         onClick={() => {
           if (pending.length === 0) {
             window.location =
-                'https://docs.google.com/forms/d/e/1FAIpQLSfmXyASOPW2HIK-Oqp5nELBTltKeqZjqQ0G9JFram8eUCx26A/viewform?usp=sf_link';
+              'https://docs.google.com/forms/d/e/1FAIpQLSfmXyASOPW2HIK-Oqp5nELBTltKeqZjqQ0G9JFram8eUCx26A/viewform?usp=sf_link';
             return;
           }
           if (round === 1 && currentTaskNum < 7) {
@@ -284,14 +295,19 @@ const Message = () => {
         <span className='w-14 inline-block'>Type 1: </span>
         <span className='code groupMarkerB rounded-sm px-0.5 cursor-pointer'>
           {/* {unAlias(contextItem['contextType1'])} */}
-          <TypeSig type={contextItem.contextType1}></TypeSig>
+          <StringTypeSig
+            simple={contextItem.contextType1SimpleString}
+            full={contextItem.contextType1String}></StringTypeSig>
         </span>
       </div>
       <div className='my-1 text-sm'>
         <span className='w-14 inline-block'>Type 2: </span>
         <span className='code groupMarkerA rounded-sm px-0.5 cursor-pointer'>
           {/* {unAlias(contextItem['contextType2'])} */}
-          <TypeSig type={contextItem.contextType2}></TypeSig>
+          <StringTypeSig
+            simple={contextItem.contextType2SimpleString}
+            full={contextItem.contextType2String}
+          ></StringTypeSig>
 
         </span>
       </div>
@@ -338,14 +354,13 @@ const ContextRow = ({ row }) => {
   let currentTraverseId = useSelector(state => state.currentTraverseId);
   let steps = useSelector(state => state.steps);
   let dispatch = useDispatch();
-  let { contextExp, contextType1, contextType2, contextSteps } = row;
+  let { contextExp, contextType1String, contextType1SimpleString, contextType2String, contextType2SimpleString, contextSteps } = row;
   let affinity = contextSteps
     .find(step => arrEq(step.at(0), currentTraverseId))
     .at(1);
   let affinityClass =
     affinity === 'R' ? 'sideA' : affinity === 'L' ? 'sideB' : 'sideAB';
   let firstReleventStepTId = contextSteps.find(i => i.at(2)).at(0);
-
   let lastReleventStepTId = contextSteps
     .slice()
     .reverse()
@@ -365,8 +380,10 @@ const ContextRow = ({ row }) => {
         onClick={() => dispatch(setStep(firstReleventStep))}
         className='rounded-sm p-1 groupMarkerB flex justify-center items-center cursor-pointer'
       >
-        <TypeSig type={contextType1}></TypeSig>
-      </div>
+        <StringTypeSig
+          simple={contextType1SimpleString}
+          full={contextType1String}
+        ></StringTypeSig>      </div>
       <div
         className={
           'rounded-sm p-1 flex justify-center items-center ' + affinityClass
@@ -378,8 +395,10 @@ const ContextRow = ({ row }) => {
         onClick={() => dispatch(setStep(lastReleventStep))}
         className='rounded-sm p-1 groupMarkerA flex justify-center items-center cursor-pointer'
       >
-        <TypeSig type={contextType2}></TypeSig>
-      </div>
+        <StringTypeSig
+          simple={contextType2SimpleString}
+          full={contextType2String}
+        ></StringTypeSig>      </div>
     </>
   );
 };

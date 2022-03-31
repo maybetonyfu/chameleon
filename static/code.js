@@ -107,12 +107,15 @@ combine a b = (fst a + fst b, snd a + snd b)
 
 zip' (a:as) (b:bs) = (a,b) : zip' as bs
 
+foldl1 :: (b -> a -> b) -> b -> [a] -> b
+foldl1  _ b [] = b
+foldl1  f b (a:as) = foldl1 f (f b a) as
 
 pairScore (h1, h2) = computeScore h1 h2
 
 score :: [Hand] -> [Hand] -> Score
 score h1 h2 =
-    foldl combine (0, 0) (pairScore (zip' h1 h2))
+    foldl1 combine (0, 0) (pairScore (zip' h1 h2))
 
 `
 

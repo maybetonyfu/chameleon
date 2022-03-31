@@ -8,7 +8,7 @@ import {
 } from "./editor.js";
 import {Provider, useSelector, useDispatch} from "./_snowpack/pkg/react-redux.js";
 import store from "./store.js";
-import {arrEq} from "./helper.js";
+import {arrEq, unAlias} from "./helper.js";
 import {
   BASIC_MODE,
   typeCheckThunk,
@@ -109,8 +109,9 @@ const TypeSig = ({type}) => {
   } else if (type.tag === "TypeForm") {
     return /* @__PURE__ */ React.createElement("span", {
       className: "inline-block"
-    }, type.contents.map((t) => /* @__PURE__ */ React.createElement(TypeSig, {
-      type: t
+    }, type.contents.map((t, i) => /* @__PURE__ */ React.createElement(TypeSig, {
+      type: t,
+      key: i
     })));
   } else if (type.tag === "TypeFormPart" && type.contents === " ") {
     return /* @__PURE__ */ React.createElement("span", {
@@ -120,6 +121,14 @@ const TypeSig = ({type}) => {
     return /* @__PURE__ */ React.createElement("span", {
       className: "inline-block"
     }, type.contents);
+  }
+};
+const StringTypeSig = ({simple, full}) => {
+  let unlaliasedFull = unAlias(full);
+  if (unlaliasedFull.length > 50) {
+    return /* @__PURE__ */ React.createElement("span", null, unAlias(simple));
+  } else {
+    return /* @__PURE__ */ React.createElement("span", null, unlaliasedFull);
   }
 };
 const ModelContent = () => {
@@ -228,16 +237,18 @@ const Message = () => {
     className: "w-14 inline-block"
   }, "Type 1: "), /* @__PURE__ */ React.createElement("span", {
     className: "code groupMarkerB rounded-sm px-0.5 cursor-pointer"
-  }, /* @__PURE__ */ React.createElement(TypeSig, {
-    type: contextItem.contextType1
+  }, /* @__PURE__ */ React.createElement(StringTypeSig, {
+    simple: contextItem.contextType1SimpleString,
+    full: contextItem.contextType1String
   }))), /* @__PURE__ */ React.createElement("div", {
     className: "my-1 text-sm"
   }, /* @__PURE__ */ React.createElement("span", {
     className: "w-14 inline-block"
   }, "Type 2: "), /* @__PURE__ */ React.createElement("span", {
     className: "code groupMarkerA rounded-sm px-0.5 cursor-pointer"
-  }, /* @__PURE__ */ React.createElement(TypeSig, {
-    type: contextItem.contextType2
+  }, /* @__PURE__ */ React.createElement(StringTypeSig, {
+    simple: contextItem.contextType2SimpleString,
+    full: contextItem.contextType2String
   }))));
 };
 const TypingTable = () => {
@@ -279,7 +290,7 @@ const ContextRow = ({row}) => {
   let currentTraverseId = useSelector((state) => state.currentTraverseId);
   let steps = useSelector((state) => state.steps);
   let dispatch = useDispatch();
-  let {contextExp, contextType1, contextType2, contextSteps} = row;
+  let {contextExp, contextType1String, contextType1SimpleString, contextType2String, contextType2SimpleString, contextSteps} = row;
   let affinity = contextSteps.find((step) => arrEq(step.at(0), currentTraverseId)).at(1);
   let affinityClass = affinity === "R" ? "sideA" : affinity === "L" ? "sideB" : "sideAB";
   let firstReleventStepTId = contextSteps.find((i) => i.at(2)).at(0);
@@ -291,16 +302,18 @@ const ContextRow = ({row}) => {
   }), /* @__PURE__ */ React.createElement("div", {
     onClick: () => dispatch(setStep(firstReleventStep)),
     className: "rounded-sm p-1 groupMarkerB flex justify-center items-center cursor-pointer"
-  }, /* @__PURE__ */ React.createElement(TypeSig, {
-    type: contextType1
-  })), /* @__PURE__ */ React.createElement("div", {
+  }, /* @__PURE__ */ React.createElement(StringTypeSig, {
+    simple: contextType1SimpleString,
+    full: contextType1String
+  }), "      "), /* @__PURE__ */ React.createElement("div", {
     className: "rounded-sm p-1 flex justify-center items-center " + affinityClass
   }, contextExp), /* @__PURE__ */ React.createElement("div", {
     onClick: () => dispatch(setStep(lastReleventStep)),
     className: "rounded-sm p-1 groupMarkerA flex justify-center items-center cursor-pointer"
-  }, /* @__PURE__ */ React.createElement(TypeSig, {
-    type: contextType2
-  })));
+  }, /* @__PURE__ */ React.createElement(StringTypeSig, {
+    simple: contextType2SimpleString,
+    full: contextType2String
+  }), "      "));
 };
 const Stepper = ({rowInfo}) => {
   let steps = useSelector((state) => state.steps);

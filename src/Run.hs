@@ -30,7 +30,13 @@ data Affinity = L | R | M deriving (Show, Generic, Eq)
 data ChContext = ChContext
   { contextExp :: String,
     contextType1 :: TypeForm,
+    contextType1Simple :: TypeForm,
+    contextType1String :: String,
+    contextType1SimpleString :: String,
     contextType2 :: TypeForm,
+    contextType2Simple :: TypeForm,
+    contextType2String :: String,
+    contextType2SimpleString :: String,
     contextSteps :: [((Int, Int), Affinity, Bool)]
   }
   deriving (Show, Generic)
@@ -128,6 +134,7 @@ processFile text =
                                   -- trace ("\nSimlifed:" ++ name ++ ":\n" ++ unlines (map toSig simplified)) $
                                   --   trace ("\nConcrete:" ++ name ++ ":\n" ++ unlines (map toSig concrete)) $
                                   let (leftmost, rightmost) = polarEnds concrete
+                                      (leftmostSimp, rightmostSimp) = polarEnds simplified
                                       sides =
                                         zipWith
                                           ( \(t1, t2) (g1, g2) ->
@@ -143,11 +150,21 @@ processFile text =
                                           (zigzag concrete)
                                           (zigzag longestChain)
                                       normalizedSides = normalize sides
-                                   in ChContext (showProperName name) (typeForm leftmost) (typeForm rightmost) normalizedSides
+                                   in ChContext 
+                                        (showProperName name) 
+                                        (typeForm leftmost)
+                                        (typeForm leftmostSimp)
+                                        (toSig leftmost)
+                                        (toSig leftmostSimp)
+                                        (typeForm rightmost) 
+                                        (typeForm rightmostSimp)
+                                        (toSig rightmost)
+                                        (toSig rightmostSimp)
+                                        normalizedSides
                               )
                               relevent
-                          contextTableSorted = sortOn (\(ChContext _ _ _ sides) -> fromJust $ findIndex ((== M) . view _2) sides) contextTable
-                          contextTableactiveness = calculateActiveness contextTableSorted
+                          contextTableSorted = sortOn (fromJust . findIndex ((== M) . view _2) . contextSteps) contextTable
+                          contextTableactiveness = filter (any (view _3) . contextSteps) $ calculateActiveness contextTableSorted
                           contextFromReasonings =
                             map (\ctx -> ctx {contextSteps = filter ((`elem` map stepId reasonings) . view _1) (contextSteps ctx)}) contextTableactiveness
                        in ChTypeError contextFromReasonings reasonings
@@ -182,7 +199,7 @@ calculateActiveness :: [ChContext] -> [ChContext]
 --                      zipWith (\(_, s1, _) (_, s2, _) ->
 --                         ) sides sides'
 calculateActiveness contexts =
-  let affiliations = map (\(ChContext _ _ _ sides) -> map (view _2) sides) contexts
+  let affiliations = map (map (view _2) . contextSteps) contexts
       affiliationsT = transpose affiliations
       mapActiveness :: [Affinity] -> [Bool]
       mapActiveness affs
@@ -192,9 +209,8 @@ calculateActiveness contexts =
       activenessT = map mapActiveness affiliationsT
       activeness = transpose activenessT
    in zipWith
-        ( \(ChContext a b c sides) n ->
-            ChContext a b c $
-              zipWith (\side act -> set _3 act side) sides (activeness !! n)
+        ( \c n ->
+            c {contextSteps = zipWith (flip (set _3)) (contextSteps c) (activeness !! n)}
         )
         contexts
         [0 ..]
