@@ -580,11 +580,8 @@ fromTerm :: Term -> Term -> Flag -> String
 -- fromTerm varMap term parentTerm level index 
 fromTerm Unit parent flag = ""
 fromTerm (Atom x) parent flag  = x
-
 fromTerm (Var ('_' : '.' : x)) parent flag = [['a' ..] !! (read x :: Int)]
-  
 fromTerm (Var _) parent index = error "Variable is not fresh"
-
 fromTerm p@(Pair (Atom "Function") (Pair a b)) parent flag
       | isFunction parent && flag == FunctionFirst = mconcat ["(", fromTerm a p FunctionFirst, "->" , fromTerm b p Empty, ")"]
       | otherwise = mconcat [fromTerm a p FunctionFirst,  "->", fromTerm b p Empty]

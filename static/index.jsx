@@ -143,13 +143,13 @@ const TypeSig = ({ type }) => {
 }
 
 const StringTypeSig = ({ simple, full }) => {
-  let unlaliasedFull = unAlias(full) 
+  let unlaliasedFull = unAlias(full)
   if (unlaliasedFull.length > 50) {
     return <span>{unAlias(simple)}</span>
 
   } else {
     return <span>{unlaliasedFull}</span>
-    
+
   }
 }
 
@@ -210,7 +210,6 @@ const ModelContent = () => {
 };
 
 const Debuger = () => {
-  let mode = useSelector(state => state.mode);
   let wellTyped = useSelector(state => state.wellTyped);
   let loadError = useSelector(state => state.loadError);
   let parseError = useSelector(state => state.parseError);
@@ -333,9 +332,19 @@ const TypingTable = () => {
       <div className='text-center'>TYPE 1</div>
       <div className='text-center'>EXPRESSION</div>
       <div className='text-center'>TYPE 2</div>
-      {context.map((row, i) => (
-        <ContextRow row={row} key={i}></ContextRow>
-      ))}
+
+      {
+        (() => {
+          if (context.length === 0) {
+            return <EmptyContextTable></EmptyContextTable>
+          } else {
+            return context.map((row, i) => (
+              <ContextRow row={row} key={i}></ContextRow>
+            ))
+          }
+        })()
+
+      }
       <div className='text-center'>
         <ion-icon
           onClick={() => dispatch(nextStep())}
@@ -349,6 +358,36 @@ const TypingTable = () => {
     </div>
   );
 };
+
+const EmptyContextTable = () => {
+  let steps = useSelector(state => state.steps);
+  let currentTraverseId = useSelector(state => state.currentTraverseId)
+  let dispatch = useDispatch()
+  return <>
+    <div className='flex flex-col justify-center items-center'>
+      {steps.map(({ stepId }, i) => {
+        return (
+          <div
+            key={i}
+            onClick={() => dispatch(setStep(i))}
+            className={
+              'rounded-lg w-4 h-4 my-0.5 p-0.5 cursor-pointer text-xs leading-3 text-center ' +
+              (arrEq(stepId, currentTraverseId)
+                ? 'bg-green-400'
+                : 'bg-gray-400')
+            }
+          >
+            {i + 1}
+          </div>
+        );
+      })
+      }
+    </div>
+    <div></div>
+    <div></div>
+    <div></div>
+  </>
+}
 
 const ContextRow = ({ row }) => {
   let currentTraverseId = useSelector(state => state.currentTraverseId);

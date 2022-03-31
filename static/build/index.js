@@ -173,7 +173,6 @@ const ModelContent = () => {
   }, "Next"));
 };
 const Debuger = () => {
-  let mode = useSelector((state) => state.mode);
   let wellTyped = useSelector((state) => state.wellTyped);
   let loadError = useSelector((state) => state.loadError);
   let parseError = useSelector((state) => state.parseError);
@@ -269,10 +268,16 @@ const TypingTable = () => {
     className: "text-center"
   }, "EXPRESSION"), /* @__PURE__ */ React.createElement("div", {
     className: "text-center"
-  }, "TYPE 2"), context.map((row, i) => /* @__PURE__ */ React.createElement(ContextRow, {
-    row,
-    key: i
-  })), /* @__PURE__ */ React.createElement("div", {
+  }, "TYPE 2"), (() => {
+    if (context.length === 0) {
+      return /* @__PURE__ */ React.createElement(EmptyContextTable, null);
+    } else {
+      return context.map((row, i) => /* @__PURE__ */ React.createElement(ContextRow, {
+        row,
+        key: i
+      }));
+    }
+  })(), /* @__PURE__ */ React.createElement("div", {
     className: "text-center"
   }, /* @__PURE__ */ React.createElement("ion-icon", {
     onClick: () => dispatch(nextStep()),
@@ -285,6 +290,20 @@ const TypingTable = () => {
   }), /* @__PURE__ */ React.createElement("div", {
     className: "text-center"
   }));
+};
+const EmptyContextTable = () => {
+  let steps = useSelector((state) => state.steps);
+  let currentTraverseId = useSelector((state) => state.currentTraverseId);
+  let dispatch = useDispatch();
+  return /* @__PURE__ */ React.createElement(React.Fragment, null, /* @__PURE__ */ React.createElement("div", {
+    className: "flex flex-col justify-center items-center"
+  }, steps.map(({stepId}, i) => {
+    return /* @__PURE__ */ React.createElement("div", {
+      key: i,
+      onClick: () => dispatch(setStep(i)),
+      className: "rounded-lg w-4 h-4 my-0.5 p-0.5 cursor-pointer text-xs leading-3 text-center " + (arrEq(stepId, currentTraverseId) ? "bg-green-400" : "bg-gray-400")
+    }, i + 1);
+  })), /* @__PURE__ */ React.createElement("div", null), /* @__PURE__ */ React.createElement("div", null), /* @__PURE__ */ React.createElement("div", null));
 };
 const ContextRow = ({row}) => {
   let currentTraverseId = useSelector((state) => state.currentTraverseId);

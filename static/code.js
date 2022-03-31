@@ -67,6 +67,10 @@ board_permutations size = permutations [0..size - 1]
 --Count the number of valid boards for a specified Chess board size.
 count_boards size = length . nqueens
 
+init' [] = error "init' applied at empty list"
+init' [a, b] = [a]
+init' (a:as) = a : init' as
+
 --Recursively check that prior rows are valid.
 evaluateBoard [] = True
 evaluateBoard rows =
@@ -190,7 +194,7 @@ transformKey _ _ x = [x]
 
 `
 
-const exampleTake = n =>`module Task${n} where
+const exampleTake = n => `module Task${n} where
 
 -- Takes the first n elements from a list
 take' :: Int -> [Int] -> [Int]
@@ -212,14 +216,14 @@ validate password =
 `
 const examples =
   [
-      exampleTake,
-      examplePassword,
-      exampleRockPaperScissors,
-      exampleNQueens,
-      exampleDateSpan,
-      exampleBookTrans,
-      exampleJValue,
-      exampeExtend
+    exampleTake,
+    examplePassword,
+    exampleRockPaperScissors,
+    exampleNQueens,
+    exampleDateSpan,
+    exampleBookTrans,
+    exampleJValue,
+    exampeExtend
   ].map((ex, n) => ex(n + 1))
 
 export default examples

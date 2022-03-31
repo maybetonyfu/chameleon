@@ -31,7 +31,7 @@ export const BASIC_MODE = 'basic';
 export const FULL_MODE = 'full';
 const backendUrl =
     __SNOWPACK_ENV__.MODE === 'development' ? 'http://localhost:5000' : '';
-const devTools =  __SNOWPACK_ENV__.MODE === 'development' ;
+const devTools = __SNOWPACK_ENV__.MODE === 'development';
 const modes =
     Math.random() > 0.5
         ? Array.from({ length: 4 }).flatMap(_ => [BASIC_MODE, FULL_MODE])
@@ -211,7 +211,7 @@ const appReducer = createReducer(initialState, builder => {
                 let steps = action.payload.steps;
                 let context = action.payload.contextTable;
                 let currentStepNum =
-                    state.mode === BASIC_MODE ? Math.ceil(steps.length / 2) : 0;
+                    state.mode === BASIC_MODE ? Math.floor(steps.length / 2) : 0;
                 let currentStep = convertStep(steps[currentStepNum], currentStepNum);
                 let currentTraverseId = steps[currentStepNum].stepId;
 
@@ -325,9 +325,10 @@ function locEq(loc1, loc2) {
 }
 
 function getCurrentActiveContext(contexts, currentTraverseId) {
-    return contexts.find(c => {
+    let item = contexts.find(c => {
         return c.contextSteps.find(x => arrEq(x.at(0), currentTraverseId)).at(2);
-    });
+    })
+    return item === undefined ? null : item
 }
 
 function getPrevLocs(steps, currentNum) {
