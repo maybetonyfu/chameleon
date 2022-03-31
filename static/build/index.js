@@ -34,9 +34,10 @@ const analytics = Analytics({
   ]
 });
 const events = {
-  typecheck: "type check",
-  skip: "",
-  giveup: ""
+  typecheck: "typeCheck",
+  skip: "skipTask",
+  giveup: "giveUpTask",
+  interact: "interactTools"
 };
 Split({
   columnGutters: [{
@@ -81,8 +82,9 @@ store.subscribe(() => {
 });
 document.getElementById("save").addEventListener("click", (_) => {
   let text = editor.getValue();
+  let taskNumer = store.getState().currentTaskNum;
   store.dispatch(typeCheckThunk(text));
-  analytics.track(events.typecheck, {});
+  analytics.track(events.typecheck, {taskNumer});
 });
 document.getElementById("skip").addEventListener("click", (_) => {
   let state = store.getState();
