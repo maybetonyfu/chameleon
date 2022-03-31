@@ -39,7 +39,9 @@ const events = {
   typecheck: 'typeCheck',
   skip: 'skipTask',
   giveup: 'giveUpTask',
-  interact: 'interactTools'
+  interact: 'interactTools',
+  succeed: 'succeedTask',
+  open: 'openTask'
 }
 
 Split({
@@ -55,6 +57,7 @@ let currentTask = 0;
 let currentRound = 1;
 let editor = initializeEditor(tasks[currentTask]);
 store.dispatch(switchTaskThunk(currentTask));
+analytics.track(events.open, { taskNumber: currentTask })
 
 editor.on('focus', function () {
   store.dispatch(disableHighlight());
@@ -104,7 +107,7 @@ document.getElementById('save').addEventListener('click', _ => {
   let text = editor.getValue();
   let taskNumer = store.getState().currentTaskNum;
   store.dispatch(typeCheckThunk(text));
-  analytics.track(events.typecheck, {taskNumer})
+  analytics.track(events.typecheck, { taskNumer })
 });
 
 document.getElementById('skip').addEventListener('click', _ => {
@@ -113,10 +116,13 @@ document.getElementById('skip').addEventListener('click', _ => {
   if (state.round === 2) return
   if (state.currentTaskNum < 7) {
     let nextTask = state.currentTaskNum + 1
+    analytics.track(events.open, { taskNumber: nextTask })
     store.dispatch(switchTaskThunk(nextTask))
+
     editor.setValue(tasks.at(nextTask))
   } else if (state.currentTaskNum === 7) {
     let nextTask = state.pending.at(0)
+    analytics.track(events.open, { taskNumber: nextTask })
     store.dispatch(switchTaskNextRoundThunk(nextTask))
     editor.setValue(tasks.at(nextTask))
   }
@@ -130,6 +136,7 @@ document.getElementById('giveup').addEventListener('click', _ => {
   if (state.round === 1) return
   if (state.currentTaskNum < 7) {
     let nextTask = state.pending.at(currentPendingIndex + 1)
+    analytics.track(events.open, { taskNumber: nextTask })
     store.dispatch(switchTaskThunk(nextTask))
     editor.setValue(tasks.at(nextTask))
   } else if (state.currentTaskNum === 7) {
@@ -206,11 +213,13 @@ const ModelContent = () => {
           }
           if (round === 1 && currentTaskNum < 7) {
             let nextTask = currentTaskNum + 1
+            analytics.track(events.open, { taskNumber: nextTask })
             dispatch(switchTaskThunk(nextTask));
             editor.setValue(tasks.at(nextTask));
 
           } else if (round === 1 && currentTaskNum === 7) {
             let nextTask = pending.at(0)
+            analytics.track(events.open, { taskNumber: nextTask })
             dispatch(switchTaskNextRoundThunk(nextTask));
             editor.setValue(tasks.at(nextTask));
           } else if (round === 2) {
@@ -220,6 +229,7 @@ const ModelContent = () => {
                 'https://docs.google.com/forms/d/e/1FAIpQLSfmXyASOPW2HIK-Oqp5nELBTltKeqZjqQ0G9JFram8eUCx26A/viewform?usp=sf_link';
             } else {
               let nextTask = pending.at(nextPendingIndex)
+              analytics.track(events.open, { taskNumber: nextTask })
               dispatch(switchTaskThunk(nextTask));
               editor.setValue(tasks.at(nextTask));
             }
