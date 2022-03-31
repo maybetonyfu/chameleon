@@ -1,6 +1,8 @@
 {
   "imports": {
+    "@analytics/google-analytics": "./@analytics/google-analytics.js",
     "@reduxjs/toolkit": "./@reduxjs/toolkit.js",
+    "analytics": "./analytics.js",
     "react": "./react.js",
     "react-dom": "./react-dom.js",
     "react-modal": "./react-modal.js",

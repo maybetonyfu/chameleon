@@ -22,6 +22,24 @@ import {
 import tasks from './code';
 import Modal from 'react-modal';
 import Split from 'split-grid'
+import Analytics from 'analytics'
+import googleAnalytics from '@analytics/google-analytics'
+
+const analytics = Analytics({
+  app: 'chameleon-user-study',
+  version: 1,
+  plugins: [
+    googleAnalytics({
+      trackingId: 'G-H8271W5VPL',
+    })
+  ]
+})
+
+const events = {
+  typecheck: 'type check',
+  skip: '',
+  giveup: ''
+}
 
 Split({
   columnGutters: [{
@@ -84,10 +102,12 @@ store.subscribe(() => {
 document.getElementById('save').addEventListener('click', _ => {
   let text = editor.getValue();
   store.dispatch(typeCheckThunk(text));
+  analytics.track(events.typecheck, {})
 });
 
 document.getElementById('skip').addEventListener('click', _ => {
   let state = store.getState()
+  analytics.track(events.skip, { taskNumber: state.currentTaskNum })
   if (state.round === 2) return
   if (state.currentTaskNum < 7) {
     let nextTask = state.currentTaskNum + 1
@@ -97,13 +117,14 @@ document.getElementById('skip').addEventListener('click', _ => {
     let nextTask = state.pending.at(0)
     store.dispatch(switchTaskNextRoundThunk(nextTask))
     editor.setValue(tasks.at(nextTask))
-
   }
+
 });
 
 document.getElementById('giveup').addEventListener('click', _ => {
   let state = store.getState()
   let currentPendingIndex = state.pending.findIndex(v => v === state.currentTaskNum)
+  analytics.track(events.giveup, { taskNumber: state.currentTaskNum })
   if (state.round === 1) return
   if (state.currentTaskNum < 7) {
     let nextTask = state.pending.at(currentPendingIndex + 1)
@@ -158,7 +179,7 @@ const ModelContent = () => {
   let currentTaskNum = useSelector(state => state.currentTaskNum);
   let pending = useSelector(state => state.pending)
   let round = useSelector(state => state.round)
-
+  analytics.track(events.succeed, { taskNumber: currentTaskNum })
   return (
     <div className='flex flex-col justify-around items-center h-full'>
       <div>
@@ -317,6 +338,7 @@ const Message = () => {
 const TypingTable = () => {
   let dispatch = useDispatch();
   let context = useSelector(state => state.context);
+  let currentTaskNum = useSelector(state => state.currentTaskNum)
   return (
     <div
       className={'grid gap-1 context-grid text-xs w-full'}
@@ -324,7 +346,10 @@ const TypingTable = () => {
     >
       <div className='text-center'>
         <ion-icon
-          onClick={() => dispatch(prevStep())}
+          onClick={() => {
+            analytics.track(events.interact, { type: 'deduction step', taskNumber: currentTaskNum })
+            dispatch(prevStep())
+          }}
           style={{ fontSize: 20, cursor: 'pointer' }}
           name='arrow-up-circle'
         ></ion-icon>
@@ -347,7 +372,10 @@ const TypingTable = () => {
       }
       <div className='text-center'>
         <ion-icon
-          onClick={() => dispatch(nextStep())}
+          onClick={() => {
+            analytics.track(events.interact, { type: 'deduction step', taskNumber: currentTaskNum })
+            dispatch(nextStep())
+          }}
           style={{ fontSize: 20, cursor: 'pointer' }}
           name='arrow-down-circle'
         ></ion-icon>
@@ -362,6 +390,7 @@ const TypingTable = () => {
 const EmptyContextTable = () => {
   let steps = useSelector(state => state.steps);
   let currentTraverseId = useSelector(state => state.currentTraverseId)
+  let currentTaskNum = useSelector(state => state.currentTaskNum)
   let dispatch = useDispatch()
   return <>
     <div className='flex flex-col justify-center items-center'>
@@ -369,7 +398,10 @@ const EmptyContextTable = () => {
         return (
           <div
             key={i}
-            onClick={() => dispatch(setStep(i))}
+            onClick={() => {
+              analytics.track(events.interact, { type: 'deduction step', taskNumber: currentTaskNum })
+              dispatch(setStep(i))
+            }}
             className={
               'rounded-lg w-4 h-4 my-0.5 p-0.5 cursor-pointer text-xs leading-3 text-center ' +
               (arrEq(stepId, currentTraverseId)
@@ -391,6 +423,7 @@ const EmptyContextTable = () => {
 
 const ContextRow = ({ row }) => {
   let currentTraverseId = useSelector(state => state.currentTraverseId);
+  let currentTaskNum = useSelector(state => state.currentTaskNum)
   let steps = useSelector(state => state.steps);
   let dispatch = useDispatch();
   let { contextExp, contextType1String, contextType1SimpleString, contextType2String, contextType2SimpleString, contextSteps } = row;
@@ -416,7 +449,10 @@ const ContextRow = ({ row }) => {
     <>
       <Stepper rowInfo={contextSteps}></Stepper>
       <div
-        onClick={() => dispatch(setStep(firstReleventStep))}
+        onClick={() => {
+          analytics.track(events.interact, { type: 'deduction step', taskNumber: currentTaskNum })
+          dispatch(setStep(firstReleventStep))
+        }}
         className='rounded-sm p-1 groupMarkerB flex justify-center items-center cursor-pointer'
       >
         <StringTypeSig
@@ -431,7 +467,10 @@ const ContextRow = ({ row }) => {
         {contextExp}
       </div>
       <div
-        onClick={() => dispatch(setStep(lastReleventStep))}
+        onClick={() => {
+          analytics.track(events.interact, { type: 'deduction step', taskNumber: currentTaskNum })
+          dispatch(setStep(lastReleventStep))
+        }}
         className='rounded-sm p-1 groupMarkerA flex justify-center items-center cursor-pointer'
       >
         <StringTypeSig
@@ -444,6 +483,7 @@ const ContextRow = ({ row }) => {
 
 const Stepper = ({ rowInfo }) => {
   let steps = useSelector(state => state.steps);
+  let currentTaskNum = useSelector(state => state.currentTaskNum)
   let currentTraverseId = useSelector(state => state.currentTraverseId);
   let stepsInRow = rowInfo.filter(ri => ri[2]);
   let dispatch = useDispatch();
@@ -457,7 +497,11 @@ const Stepper = ({ rowInfo }) => {
           return (
             <div
               key={stepId}
-              onClick={() => dispatch(setStep(stepId))}
+              onClick={() => {
+                analytics.track(events.interact, { type: 'deduction step', taskNumber: currentTaskNum })
+                dispatch(setStep(stepId))
+
+              }}
               className={
                 'rounded-lg w-4 h-4 my-0.5 p-0.5 cursor-pointer text-xs leading-3 text-center ' +
                 (arrEq(traverseId, currentTraverseId)

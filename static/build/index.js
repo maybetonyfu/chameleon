@@ -22,6 +22,22 @@ import {
 import tasks from "./code.js";
 import Modal from "./_snowpack/pkg/react-modal.js";
 import Split from "./_snowpack/pkg/split-grid.js";
+import Analytics from "./_snowpack/pkg/analytics.js";
+import googleAnalytics from "./_snowpack/pkg/@analytics/google-analytics.js";
+const analytics = Analytics({
+  app: "chameleon-user-study",
+  version: 1,
+  plugins: [
+    googleAnalytics({
+      trackingId: "G-H8271W5VPL"
+    })
+  ]
+});
+const events = {
+  typecheck: "type check",
+  skip: "",
+  giveup: ""
+};
 Split({
   columnGutters: [{
     track: 1,
@@ -66,9 +82,11 @@ store.subscribe(() => {
 document.getElementById("save").addEventListener("click", (_) => {
   let text = editor.getValue();
   store.dispatch(typeCheckThunk(text));
+  analytics.track(events.typecheck, {});
 });
 document.getElementById("skip").addEventListener("click", (_) => {
   let state = store.getState();
+  analytics.track(events.skip, {taskNumber: state.currentTaskNum});
   if (state.round === 2)
     return;
   if (state.currentTaskNum < 7) {
@@ -84,6 +102,7 @@ document.getElementById("skip").addEventListener("click", (_) => {
 document.getElementById("giveup").addEventListener("click", (_) => {
   let state = store.getState();
   let currentPendingIndex = state.pending.findIndex((v) => v === state.currentTaskNum);
+  analytics.track(events.giveup, {taskNumber: state.currentTaskNum});
   if (state.round === 1)
     return;
   if (state.currentTaskNum < 7) {
@@ -136,6 +155,7 @@ const ModelContent = () => {
   let currentTaskNum = useSelector((state) => state.currentTaskNum);
   let pending = useSelector((state) => state.pending);
   let round = useSelector((state) => state.round);
+  analytics.track(events.succeed, {taskNumber: currentTaskNum});
   return /* @__PURE__ */ React.createElement("div", {
     className: "flex flex-col justify-around items-center h-full"
   }, /* @__PURE__ */ React.createElement("div", null, /* @__PURE__ */ React.createElement("p", {
@@ -253,13 +273,17 @@ const Message = () => {
 const TypingTable = () => {
   let dispatch = useDispatch();
   let context = useSelector((state) => state.context);
+  let currentTaskNum = useSelector((state) => state.currentTaskNum);
   return /* @__PURE__ */ React.createElement("div", {
     className: "grid gap-1 context-grid text-xs w-full",
     style: {fontFamily: "JetBrains Mono"}
   }, /* @__PURE__ */ React.createElement("div", {
     className: "text-center"
   }, /* @__PURE__ */ React.createElement("ion-icon", {
-    onClick: () => dispatch(prevStep()),
+    onClick: () => {
+      analytics.track(events.interact, {type: "deduction step", taskNumber: currentTaskNum});
+      dispatch(prevStep());
+    },
     style: {fontSize: 20, cursor: "pointer"},
     name: "arrow-up-circle"
   })), /* @__PURE__ */ React.createElement("div", {
@@ -280,7 +304,10 @@ const TypingTable = () => {
   })(), /* @__PURE__ */ React.createElement("div", {
     className: "text-center"
   }, /* @__PURE__ */ React.createElement("ion-icon", {
-    onClick: () => dispatch(nextStep()),
+    onClick: () => {
+      analytics.track(events.interact, {type: "deduction step", taskNumber: currentTaskNum});
+      dispatch(nextStep());
+    },
     style: {fontSize: 20, cursor: "pointer"},
     name: "arrow-down-circle"
   })), /* @__PURE__ */ React.createElement("div", {
@@ -294,19 +321,24 @@ const TypingTable = () => {
 const EmptyContextTable = () => {
   let steps = useSelector((state) => state.steps);
   let currentTraverseId = useSelector((state) => state.currentTraverseId);
+  let currentTaskNum = useSelector((state) => state.currentTaskNum);
   let dispatch = useDispatch();
   return /* @__PURE__ */ React.createElement(React.Fragment, null, /* @__PURE__ */ React.createElement("div", {
     className: "flex flex-col justify-center items-center"
   }, steps.map(({stepId}, i) => {
     return /* @__PURE__ */ React.createElement("div", {
       key: i,
-      onClick: () => dispatch(setStep(i)),
+      onClick: () => {
+        analytics.track(events.interact, {type: "deduction step", taskNumber: currentTaskNum});
+        dispatch(setStep(i));
+      },
       className: "rounded-lg w-4 h-4 my-0.5 p-0.5 cursor-pointer text-xs leading-3 text-center " + (arrEq(stepId, currentTraverseId) ? "bg-green-400" : "bg-gray-400")
     }, i + 1);
   })), /* @__PURE__ */ React.createElement("div", null), /* @__PURE__ */ React.createElement("div", null), /* @__PURE__ */ React.createElement("div", null));
 };
 const ContextRow = ({row}) => {
   let currentTraverseId = useSelector((state) => state.currentTraverseId);
+  let currentTaskNum = useSelector((state) => state.currentTaskNum);
   let steps = useSelector((state) => state.steps);
   let dispatch = useDispatch();
   let {contextExp, contextType1String, contextType1SimpleString, contextType2String, contextType2SimpleString, contextSteps} = row;
@@ -319,7 +351,10 @@ const ContextRow = ({row}) => {
   return /* @__PURE__ */ React.createElement(React.Fragment, null, /* @__PURE__ */ React.createElement(Stepper, {
     rowInfo: contextSteps
   }), /* @__PURE__ */ React.createElement("div", {
-    onClick: () => dispatch(setStep(firstReleventStep)),
+    onClick: () => {
+      analytics.track(events.interact, {type: "deduction step", taskNumber: currentTaskNum});
+      dispatch(setStep(firstReleventStep));
+    },
     className: "rounded-sm p-1 groupMarkerB flex justify-center items-center cursor-pointer"
   }, /* @__PURE__ */ React.createElement(StringTypeSig, {
     simple: contextType1SimpleString,
@@ -327,7 +362,10 @@ const ContextRow = ({row}) => {
   }), "      "), /* @__PURE__ */ React.createElement("div", {
     className: "rounded-sm p-1 flex justify-center items-center " + affinityClass
   }, contextExp), /* @__PURE__ */ React.createElement("div", {
-    onClick: () => dispatch(setStep(lastReleventStep)),
+    onClick: () => {
+      analytics.track(events.interact, {type: "deduction step", taskNumber: currentTaskNum});
+      dispatch(setStep(lastReleventStep));
+    },
     className: "rounded-sm p-1 groupMarkerA flex justify-center items-center cursor-pointer"
   }, /* @__PURE__ */ React.createElement(StringTypeSig, {
     simple: contextType2SimpleString,
@@ -336,6 +374,7 @@ const ContextRow = ({row}) => {
 };
 const Stepper = ({rowInfo}) => {
   let steps = useSelector((state) => state.steps);
+  let currentTaskNum = useSelector((state) => state.currentTaskNum);
   let currentTraverseId = useSelector((state) => state.currentTraverseId);
   let stepsInRow = rowInfo.filter((ri) => ri[2]);
   let dispatch = useDispatch();
@@ -345,7 +384,10 @@ const Stepper = ({rowInfo}) => {
     let stepId = steps.findIndex((step) => arrEq(step["stepId"], traverseId));
     return /* @__PURE__ */ React.createElement("div", {
       key: stepId,
-      onClick: () => dispatch(setStep(stepId)),
+      onClick: () => {
+        analytics.track(events.interact, {type: "deduction step", taskNumber: currentTaskNum});
+        dispatch(setStep(stepId));
+      },
       className: "rounded-lg w-4 h-4 my-0.5 p-0.5 cursor-pointer text-xs leading-3 text-center " + (arrEq(traverseId, currentTraverseId) ? "bg-green-400" : "bg-gray-400")
     }, stepId + 1);
   })));
