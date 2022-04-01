@@ -27388,7 +27388,8 @@ validate password =
         token: "6be6077e1d5b8de6978c65490e1666ea",
         customScriptSrc: "/mxp.js",
         options: {
-          api_host: "https://collect.ercu.be"
+          api_host: "https://collect.ercu.be",
+          debug: true
         }
       })
     ]
