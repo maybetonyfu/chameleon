@@ -4,14 +4,15 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "build": "esbuild index.jsx --bundle --outfile=build/out.js",
-    "dev": "esbuild index.jsx --bundle --outfile=build/out.js --watch"
+    "build": "esbuild index.jsx --bundle --minify --outfile=build/out.js",
+    "dev": "esbuild index.jsx --bundle --minify --outfile=build/out.js --watch"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
     "@analytics/mixpanel": "^0.4.0",
+    "@openreplay/tracker": "^3.5.4",
     "@reduxjs/toolkit": "^1.8.0",
     "analytics": "^0.8.1",
     "esbuild": "^0.14.29",

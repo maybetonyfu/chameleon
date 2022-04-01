@@ -25,6 +25,14 @@ import Split from 'split-grid';
 import Analytics from 'analytics';
 import mixpanelPlugin from '@analytics/mixpanel';
 import { nanoid } from 'nanoid';
+import Tracker from '@openreplay/tracker';
+
+const tracker = new Tracker({
+  projectKey: "VzGISOLFpFFv1yHRdHHJ",
+  ingestPoint: "https://data.ercu.be/ingest",
+});
+
+tracker.start();
 
 const analytics = Analytics({
   app: 'chameleon-user-study',

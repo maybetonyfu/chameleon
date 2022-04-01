@@ -1,4 +1,4 @@
-const exampeExtend = (n) => `module Task${n} where
+const exampeExtend = n => `module Task${n} where
 
 data Expr = C Int |
             Comb Expr Expr|
@@ -21,8 +21,7 @@ extend v e (Env env)  = Env ([(v,e)] ++ env)
 find v  (Env [])          = error "Unbound variable"
 find v1 (Env ((v2,e):es)) = if v1 == v2 then e else find v1 (Env es)
 
-`
-
+`;
 
 const exampleJValue = n => `module Task${n} where
 
@@ -54,7 +53,7 @@ renderPairs (p:ps) = renderPair p ++ "," ++ renderPairs ps
 renderArrayValues [] = ""
 renderArrayValues [v] = renderJValue v
 renderArrayValues (v:vs) = renderJValue v ++ "," ++ renderArrayValues vs
-`
+`;
 
 const exampleNQueens = n => `module Task${n} where
 
@@ -88,7 +87,7 @@ validate rows left right position =
   if last rows == left || last rows == right || last rows == position
   then False
   else validate (init' rows) (left - 1) (right + 1) position
-`
+`;
 
 const exampleRockPaperScissors = n => `module Task${n} where
 
@@ -121,7 +120,7 @@ score :: [Hand] -> [Hand] -> Score
 score h1 h2 =
     foldl1 combine (0, 0) (pairScore (zip' h1 h2))
 
-`
+`;
 
 const exampleDateSpan = n => `module Task${n} where
 data Period
@@ -155,7 +154,7 @@ periodAsDateSpan (MonthPeriod y m) =
 
 
 
-`
+`;
 
 const exampleBookTrans = n => `module Task${n} where
 
@@ -192,7 +191,7 @@ transformKey "mvbook" y z
     standardTrans z
 transformKey _ _ x = [x]
 
-`
+`;
 
 const exampleTake = n => `module Task${n} where
 
@@ -200,7 +199,7 @@ const exampleTake = n => `module Task${n} where
 take' :: Int -> [Int] -> [Int]
 take' n [] = []
 take' n (x:xs) = x ++ take' (n - 1) xs
-`
+`;
 
 const examplePassword = n => `module Task${n} where
 
@@ -213,17 +212,16 @@ validate password =
     if length password > 10
         then "Great password"
         else "Password too short"
-`
-const examples =
-  [
-    exampleTake,
-    examplePassword,
-    exampleRockPaperScissors,
-    exampleNQueens,
-    exampleDateSpan,
-    exampleBookTrans,
-    exampleJValue,
-    exampeExtend
-  ].map((ex, n) => ex(n + 1))
+`;
+const examples = [
+  exampleTake,
+  examplePassword,
+  exampleRockPaperScissors,
+  exampleNQueens,
+  exampleDateSpan,
+  exampleBookTrans,
+  exampleJValue,
+  exampeExtend,
+].map((ex, n) => ex(n + 1));
 
-export default examples
+export default examples;
