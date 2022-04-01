@@ -17,12 +17,9 @@ description:         Please see the README on GitHub
 
 dependencies:
 - aeson
-- array
 - base
 - bytestring
 - containers
-- ghc
-- ghc-paths
 - haskell-src-exts
 - transformers
 - Agda

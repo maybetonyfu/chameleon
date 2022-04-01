@@ -28,7 +28,6 @@ library
       Instance
       JsonInstance
       Kanren
-      Lib
       Nameable
       Reasoning
       Run
@@ -41,12 +40,9 @@ library
   build-depends:
       Agda
     , aeson
-    , array
     , base
     , bytestring
     , containers
-    , ghc
-    , ghc-paths
     , haskell-src-exts
     , lens
     , scotty
@@ -65,13 +61,10 @@ executable chameleon
   build-depends:
       Agda
     , aeson
-    , array
     , base
     , bytestring
     , chameleon
     , containers
-    , ghc
-    , ghc-paths
     , haskell-src-exts
     , lens
     , scotty

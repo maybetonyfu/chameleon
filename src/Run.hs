@@ -8,7 +8,6 @@ import Constraint hiding (main, processFile)
 import Control.Lens
 import Control.Monad.Trans.State.Lazy
 import Data.Aeson
-import qualified Data.ByteString.Lazy.Char8 as BS
 import Data.List
 import qualified Data.Map as Map
 import Data.Maybe

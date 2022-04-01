@@ -6,7 +6,6 @@ import Data.Map (Map)
 import qualified Data.Map as Map
 import Data.Maybe (fromJust, maybe)
 import Debug.Trace
-import GHC (SuccessFlag (Failed), back, runGhc)
 import GHC.Generics (Generic)
 
 type VarName = String
