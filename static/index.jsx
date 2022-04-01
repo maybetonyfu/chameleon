@@ -34,7 +34,8 @@ const analytics = Analytics({
       customScriptSrc: '/mxp.js',
       options: {
         api_host: 'https://collect.ercu.be',
-        debug: true
+        debug: true,
+        ignore_dnt: true
       }
     }),
   ],
