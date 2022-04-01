@@ -11,6 +11,7 @@ import store from './store';
 import { arrEq, unAlias } from './helper';
 import {
   BASIC_MODE,
+  FULL_MODE,
   typeCheckThunk,
   switchTaskThunk,
   switchTaskNextRoundThunk,
@@ -78,7 +79,7 @@ let currentTask = 0;
 let currentRound = 1;
 let editor = initializeEditor(tasks[currentTask]);
 store.dispatch(switchTaskThunk(currentTask));
-analytics.track(events.open, { taskNumber: currentTask });
+analytics.track(events.open, { taskNumber: currentTask, mode: store.getState().mode });
 
 editor.on('focus', function() {
   store.dispatch(disableHighlight());
@@ -126,23 +127,25 @@ store.subscribe(() => {
 document.getElementById('save').addEventListener('click', _ => {
   let text = editor.getValue();
   let taskNumer = store.getState().currentTaskNum;
+  let mode = store.getState().mode
   store.dispatch(typeCheckThunk(text));
-  analytics.track(events.typecheck, { taskNumer });
+  analytics.track(events.typecheck, { taskNumer, mode });
 });
 
 document.getElementById('skip').addEventListener('click', _ => {
   let state = store.getState();
-  analytics.track(events.skip, { taskNumber: state.currentTaskNum });
+  let mode = state.mode
+  analytics.track(events.skip, { taskNumber: state.currentTaskNum ,mode});
   if (state.round === 2) return;
   if (state.currentTaskNum < 7) {
     let nextTask = state.currentTaskNum + 1;
-    analytics.track(events.open, { taskNumber: nextTask });
+    analytics.track(events.open, { taskNumber: nextTask , mode : mode === BASIC_MODE ? FULL_MODE : BASIC_MODE });
     store.dispatch(switchTaskThunk(nextTask));
 
     editor.setValue(tasks.at(nextTask));
   } else if (state.currentTaskNum === 7) {
     let nextTask = state.pending.at(0);
-    analytics.track(events.open, { taskNumber: nextTask });
+    analytics.track(events.open, { taskNumber: nextTask, mode : mode === BASIC_MODE ? FULL_MODE : BASIC_MODE  });
     store.dispatch(switchTaskNextRoundThunk(nextTask));
     editor.setValue(tasks.at(nextTask));
   }
@@ -150,14 +153,15 @@ document.getElementById('skip').addEventListener('click', _ => {
 
 document.getElementById('giveup').addEventListener('click', _ => {
   let state = store.getState();
+  let mode = state.mode;
   let currentPendingIndex = state.pending.findIndex(
     v => v === state.currentTaskNum,
   );
-  analytics.track(events.giveup, { taskNumber: state.currentTaskNum });
+  analytics.track(events.giveup, { taskNumber: state.currentTaskNum, mode });
   if (state.round === 1) return;
   if (state.currentTaskNum < 7) {
     let nextTask = state.pending.at(currentPendingIndex + 1);
-    analytics.track(events.open, { taskNumber: nextTask });
+    analytics.track(events.open, { taskNumber: nextTask, mode : mode === BASIC_MODE ? FULL_MODE : BASIC_MODE });
     store.dispatch(switchTaskThunk(nextTask));
     editor.setValue(tasks.at(nextTask));
   } else if (state.currentTaskNum === 7) {
@@ -212,7 +216,9 @@ const ModelContent = () => {
   let currentTaskNum = useSelector(state => state.currentTaskNum);
   let pending = useSelector(state => state.pending);
   let round = useSelector(state => state.round);
-  analytics.track(events.succeed, { taskNumber: currentTaskNum });
+  let mode = useSelector(state => state.mode)
+
+  analytics.track(events.succeed, { taskNumber: currentTaskNum, mode });
   return (
     <div className='flex flex-col justify-around items-center h-full'>
       <div>
@@ -237,12 +243,12 @@ const ModelContent = () => {
           }
           if (round === 1 && currentTaskNum < 7) {
             let nextTask = currentTaskNum + 1;
-            analytics.track(events.open, { taskNumber: nextTask });
+            analytics.track(events.open, { taskNumber: nextTask, mode });
             dispatch(switchTaskThunk(nextTask));
             editor.setValue(tasks.at(nextTask));
           } else if (round === 1 && currentTaskNum === 7) {
             let nextTask = pending.at(0);
-            analytics.track(events.open, { taskNumber: nextTask });
+            analytics.track(events.open, { taskNumber: nextTask, mode });
             dispatch(switchTaskNextRoundThunk(nextTask));
             editor.setValue(tasks.at(nextTask));
           } else if (round === 2) {
@@ -252,7 +258,7 @@ const ModelContent = () => {
                 'https://docs.google.com/forms/d/e/1FAIpQLSfmXyASOPW2HIK-Oqp5nELBTltKeqZjqQ0G9JFram8eUCx26A/viewform?usp=sf_link';
             } else {
               let nextTask = pending.at(nextPendingIndex);
-              analytics.track(events.open, { taskNumber: nextTask });
+              analytics.track(events.open, { taskNumber: nextTask, mode});
               dispatch(switchTaskThunk(nextTask));
               editor.setValue(tasks.at(nextTask));
             }
@@ -385,6 +391,7 @@ const TypingTable = () => {
   let dispatch = useDispatch();
   let context = useSelector(state => state.context);
   let currentTaskNum = useSelector(state => state.currentTaskNum);
+  let mode = useSelector(state => state.mode)
   return (
     <div
       className={'grid gap-1 context-grid text-xs w-full'}
@@ -396,6 +403,7 @@ const TypingTable = () => {
             analytics.track(events.interact, {
               type: 'deduction step',
               taskNumber: currentTaskNum,
+              mode
             });
             dispatch(prevStep());
           }}
@@ -422,6 +430,7 @@ const TypingTable = () => {
             analytics.track(events.interact, {
               type: 'deduction step',
               taskNumber: currentTaskNum,
+              mode
             });
             dispatch(nextStep());
           }}
@@ -440,6 +449,7 @@ const EmptyContextTable = () => {
   let steps = useSelector(state => state.steps);
   let currentTraverseId = useSelector(state => state.currentTraverseId);
   let currentTaskNum = useSelector(state => state.currentTaskNum);
+  let mode = useSelector(state => state.mode)
   let dispatch = useDispatch();
   return (
     <>
@@ -452,6 +462,7 @@ const EmptyContextTable = () => {
                 analytics.track(events.interact, {
                   type: 'deduction step',
                   taskNumber: currentTaskNum,
+                  mode
                 });
                 dispatch(setStep(i));
               }}
@@ -478,6 +489,7 @@ const ContextRow = ({ row }) => {
   let currentTraverseId = useSelector(state => state.currentTraverseId);
   let currentTaskNum = useSelector(state => state.currentTaskNum);
   let steps = useSelector(state => state.steps);
+  let mode = useSelector(state => state.mode)
   let dispatch = useDispatch();
   let {
     contextExp,
@@ -513,6 +525,7 @@ const ContextRow = ({ row }) => {
           analytics.track(events.interact, {
             type: 'deduction step',
             taskNumber: currentTaskNum,
+            mode
           });
           dispatch(setStep(firstReleventStep));
         }}
@@ -535,6 +548,7 @@ const ContextRow = ({ row }) => {
           analytics.track(events.interact, {
             type: 'deduction step',
             taskNumber: currentTaskNum,
+            mode
           });
           dispatch(setStep(lastReleventStep));
         }}
@@ -554,6 +568,7 @@ const Stepper = ({ rowInfo }) => {
   let currentTaskNum = useSelector(state => state.currentTaskNum);
   let currentTraverseId = useSelector(state => state.currentTraverseId);
   let stepsInRow = rowInfo.filter(ri => ri[2]);
+  let mode = useSelector(state => state.mode)
   let dispatch = useDispatch();
   return (
     <>
@@ -569,6 +584,7 @@ const Stepper = ({ rowInfo }) => {
                 analytics.track(events.interact, {
                   type: 'deduction step',
                   taskNumber: currentTaskNum,
+                  mode
                 });
                 dispatch(setStep(stepId));
               }}
