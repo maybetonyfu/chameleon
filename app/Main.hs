@@ -17,7 +17,7 @@ import Run hiding (main)
 import Data.Monoid (mconcat)
 import qualified Data.Text.Lazy as T
 
-main = scotty 5000 (typecheck >> home >> js >> css >> intro >> consent >> favicon)
+main = scotty 5000 (typecheck >> home >> js >> css >> intro >> consent >> explanatory >> svg >> favicon)
 
 
 typecheck :: ScottyM ()
@@ -40,6 +40,10 @@ consent :: ScottyM ()
 consent = get "/consent" $ do
     file "static/build/consent.html"
 
+explanatory :: ScottyM ()
+explanatory = get "/explanatory" $ do
+    file "static/build/explanatory.html"
+
 js :: ScottyM ()
 js = get (regex  "^.*\\.js") $ do
     path <- param "0"
@@ -52,6 +56,13 @@ css = get (regex  "^.*\\.css") $ do
     path <- param "0"
     let filename = "static/build" `T.append` path
     setHeader "Content-Type" "text/css"
+    file (T.unpack filename)
+
+svg :: ScottyM ()
+svg = get (regex  "^.*\\.svg") $ do
+    path <- param "0"
+    let filename = "static/build" `T.append` path
+    setHeader "Content-Type" "image/svg+xml"
     file (T.unpack filename)
 
 favicon :: ScottyM ()
