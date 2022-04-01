@@ -26,7 +26,7 @@ export const BASIC_MODE = 'basic';
 export const FULL_MODE = 'full';
 const backendUrl = '';
 const devTools = false;
-const modes =
+export const modes =
   Math.random() > 0.5
     ? Array.from({ length: 4 }).flatMap(_ => [BASIC_MODE, FULL_MODE])
     : Array.from({ length: 4 }).flatMap(_ => [FULL_MODE, BASIC_MODE]);

@@ -10,6 +10,7 @@ import { Provider, useSelector, useDispatch } from 'react-redux';
 import store from './store';
 import { arrEq, unAlias } from './helper';
 import {
+  modes,
   BASIC_MODE,
   FULL_MODE,
   typeCheckThunk,
@@ -139,13 +140,13 @@ document.getElementById('skip').addEventListener('click', _ => {
   if (state.round === 2) return;
   if (state.currentTaskNum < 7) {
     let nextTask = state.currentTaskNum + 1;
-    analytics.track(events.open, { taskNumber: nextTask , mode : mode === BASIC_MODE ? FULL_MODE : BASIC_MODE });
+    analytics.track(events.open, { taskNumber: nextTask , mode : modes[nextTask] });
     store.dispatch(switchTaskThunk(nextTask));
 
     editor.setValue(tasks.at(nextTask));
   } else if (state.currentTaskNum === 7) {
     let nextTask = state.pending.at(0);
-    analytics.track(events.open, { taskNumber: nextTask, mode : mode === BASIC_MODE ? FULL_MODE : BASIC_MODE  });
+    analytics.track(events.open, { taskNumber: nextTask,  mode : modes[nextTask]  });
     store.dispatch(switchTaskNextRoundThunk(nextTask));
     editor.setValue(tasks.at(nextTask));
   }
@@ -161,7 +162,7 @@ document.getElementById('giveup').addEventListener('click', _ => {
   if (state.round === 1) return;
   if (state.currentTaskNum < 7) {
     let nextTask = state.pending.at(currentPendingIndex + 1);
-    analytics.track(events.open, { taskNumber: nextTask, mode : mode === BASIC_MODE ? FULL_MODE : BASIC_MODE });
+    analytics.track(events.open, { taskNumber: nextTask,  mode : modes[nextTask] });
     store.dispatch(switchTaskThunk(nextTask));
     editor.setValue(tasks.at(nextTask));
   } else if (state.currentTaskNum === 7) {
@@ -243,12 +244,12 @@ const ModelContent = () => {
           }
           if (round === 1 && currentTaskNum < 7) {
             let nextTask = currentTaskNum + 1;
-            analytics.track(events.open, { taskNumber: nextTask, mode });
+            analytics.track(events.open, { taskNumber: nextTask, mode : modes[nextTask] });
             dispatch(switchTaskThunk(nextTask));
             editor.setValue(tasks.at(nextTask));
           } else if (round === 1 && currentTaskNum === 7) {
             let nextTask = pending.at(0);
-            analytics.track(events.open, { taskNumber: nextTask, mode });
+            analytics.track(events.open, { taskNumber: nextTask,  mode : modes[nextTask]  });
             dispatch(switchTaskNextRoundThunk(nextTask));
             editor.setValue(tasks.at(nextTask));
           } else if (round === 2) {
@@ -258,7 +259,7 @@ const ModelContent = () => {
                 'https://docs.google.com/forms/d/e/1FAIpQLSfmXyASOPW2HIK-Oqp5nELBTltKeqZjqQ0G9JFram8eUCx26A/viewform?usp=sf_link';
             } else {
               let nextTask = pending.at(nextPendingIndex);
-              analytics.track(events.open, { taskNumber: nextTask, mode});
+              analytics.track(events.open, { taskNumber: nextTask,  mode : modes[nextTask] });
               dispatch(switchTaskThunk(nextTask));
               editor.setValue(tasks.at(nextTask));
             }
