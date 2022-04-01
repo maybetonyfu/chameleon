@@ -1,4 +1,4 @@
-import.meta.hot;
+// import.meta.hot;
 import {
     createAction,
     configureStore,
@@ -26,9 +26,8 @@ export const disableHighlight = createAction('disableHighlight');
 
 export const BASIC_MODE = 'basic';
 export const FULL_MODE = 'full';
-const backendUrl =
-    __SNOWPACK_ENV__.MODE === 'development' ? 'http://localhost:5000' : '';
-const devTools = __SNOWPACK_ENV__.MODE === 'development';
+const backendUrl = '';
+const devTools = false
 const modes =
     Math.random() > 0.5
         ? Array.from({ length: 4 }).flatMap(_ => [BASIC_MODE, FULL_MODE])

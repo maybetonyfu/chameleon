@@ -21,19 +21,23 @@ import {
 } from './store';
 import tasks from './code';
 import Modal from 'react-modal';
-import Split from 'split-grid'
-import Analytics from 'analytics'
-import mixpanelPlugin from '@analytics/mixpanel'
+import Split from 'split-grid';
+import Analytics from 'analytics';
+import mixpanelPlugin from '@analytics/mixpanel';
 
 const analytics = Analytics({
   app: 'chameleon-user-study',
   version: 1,
   plugins: [
     mixpanelPlugin({
-      token: '6be6077e1d5b8de6978c65490e1666ea'
-    })
-  ]
-})
+      token: '6be6077e1d5b8de6978c65490e1666ea',
+      customScriptSrc: '/mxp.js',
+      options: {
+        api_host: 'https://collect.ercu.be'
+      }
+    }),
+  ],
+});
 
 const events = {
   typecheck: 'typeCheck',
@@ -41,15 +45,17 @@ const events = {
   giveup: 'giveUpTask',
   interact: 'interactTools',
   succeed: 'succeedTask',
-  open: 'openTask'
-}
+  open: 'openTask',
+};
 
 Split({
-  columnGutters: [{
-    track: 1,
-    element: document.querySelector('#gutter'),
-  }],
-})
+  columnGutters: [
+    {
+      track: 1,
+      element: document.querySelector('#gutter'),
+    },
+  ],
+});
 
 Modal.setAppElement('#debugger');
 
@@ -57,9 +63,9 @@ let currentTask = 0;
 let currentRound = 1;
 let editor = initializeEditor(tasks[currentTask]);
 store.dispatch(switchTaskThunk(currentTask));
-analytics.track(events.open, { taskNumber: currentTask })
+analytics.track(events.open, { taskNumber: currentTask });
 
-editor.on('focus', function () {
+editor.on('focus', function() {
   store.dispatch(disableHighlight());
 });
 
@@ -70,16 +76,15 @@ store.subscribe(() => {
     showHighlights,
     prevLocs,
     nextLocs,
-    round
+    round,
   } = store.getState();
   let nohighligt = { from: { line: 0, ch: 0 }, to: { line: 0, ch: 0 } };
 
   clearDecorations(editor);
   if (round !== currentRound) {
     currentRound = round;
-    document.getElementById('skip').classList.toggle('hidden')
-    document.getElementById('giveup').classList.toggle('hidden')
-
+    document.getElementById('skip').classList.toggle('hidden');
+    document.getElementById('giveup').classList.toggle('hidden');
   }
   if (!showHighlights) return;
   if (currentStep === null) return;
@@ -107,38 +112,39 @@ document.getElementById('save').addEventListener('click', _ => {
   let text = editor.getValue();
   let taskNumer = store.getState().currentTaskNum;
   store.dispatch(typeCheckThunk(text));
-  analytics.track(events.typecheck, { taskNumer })
+  analytics.track(events.typecheck, { taskNumer });
 });
 
 document.getElementById('skip').addEventListener('click', _ => {
-  let state = store.getState()
-  analytics.track(events.skip, { taskNumber: state.currentTaskNum })
-  if (state.round === 2) return
+  let state = store.getState();
+  analytics.track(events.skip, { taskNumber: state.currentTaskNum });
+  if (state.round === 2) return;
   if (state.currentTaskNum < 7) {
-    let nextTask = state.currentTaskNum + 1
-    analytics.track(events.open, { taskNumber: nextTask })
-    store.dispatch(switchTaskThunk(nextTask))
+    let nextTask = state.currentTaskNum + 1;
+    analytics.track(events.open, { taskNumber: nextTask });
+    store.dispatch(switchTaskThunk(nextTask));
 
-    editor.setValue(tasks.at(nextTask))
+    editor.setValue(tasks.at(nextTask));
   } else if (state.currentTaskNum === 7) {
-    let nextTask = state.pending.at(0)
-    analytics.track(events.open, { taskNumber: nextTask })
-    store.dispatch(switchTaskNextRoundThunk(nextTask))
-    editor.setValue(tasks.at(nextTask))
+    let nextTask = state.pending.at(0);
+    analytics.track(events.open, { taskNumber: nextTask });
+    store.dispatch(switchTaskNextRoundThunk(nextTask));
+    editor.setValue(tasks.at(nextTask));
   }
-
 });
 
 document.getElementById('giveup').addEventListener('click', _ => {
-  let state = store.getState()
-  let currentPendingIndex = state.pending.findIndex(v => v === state.currentTaskNum)
-  analytics.track(events.giveup, { taskNumber: state.currentTaskNum })
-  if (state.round === 1) return
+  let state = store.getState();
+  let currentPendingIndex = state.pending.findIndex(
+    v => v === state.currentTaskNum,
+  );
+  analytics.track(events.giveup, { taskNumber: state.currentTaskNum });
+  if (state.round === 1) return;
   if (state.currentTaskNum < 7) {
-    let nextTask = state.pending.at(currentPendingIndex + 1)
-    analytics.track(events.open, { taskNumber: nextTask })
-    store.dispatch(switchTaskThunk(nextTask))
-    editor.setValue(tasks.at(nextTask))
+    let nextTask = state.pending.at(currentPendingIndex + 1);
+    analytics.track(events.open, { taskNumber: nextTask });
+    store.dispatch(switchTaskThunk(nextTask));
+    editor.setValue(tasks.at(nextTask));
   } else if (state.currentTaskNum === 7) {
     window.location =
       'https://docs.google.com/forms/d/e/1FAIpQLSfmXyASOPW2HIK-Oqp5nELBTltKeqZjqQ0G9JFram8eUCx26A/viewform?usp=sf_link';
@@ -154,41 +160,44 @@ document.querySelectorAll('.example').forEach(elem => {
 });
 
 const TypeSig = ({ type }) => {
-  if (type.tag === "TypeForm"
-    && type.contents.length === 3
-    && type.contents.at(0).contents === '['
-    && type.contents.at(1).contents === 'Char'
-    && type.contents.at(2).contents === ']'
+  if (
+    type.tag === 'TypeForm' &&
+    type.contents.length === 3 &&
+    type.contents.at(0).contents === '[' &&
+    type.contents.at(1).contents === 'Char' &&
+    type.contents.at(2).contents === ']'
   ) {
-    return <span className="inline-block">String</span>
-  } else if (type.tag === "TypeForm") {
-    return <span className="inline-block">{type.contents.map((t, i) => <TypeSig type={t} key={i}></TypeSig>)}</span>
-  } else if (type.tag === "TypeFormPart" && type.contents === ' ') {
-    return <span className="inline-block w-1"></span>
+    return <span className='inline-block'>String</span>;
+  } else if (type.tag === 'TypeForm') {
+    return (
+      <span className='inline-block'>
+        {type.contents.map((t, i) => (
+          <TypeSig type={t} key={i}></TypeSig>
+        ))}
+      </span>
+    );
+  } else if (type.tag === 'TypeFormPart' && type.contents === ' ') {
+    return <span className='inline-block w-1'></span>;
+  } else if (type.tag === 'TypeFormPart') {
+    return <span className='inline-block'>{type.contents}</span>;
   }
-
-  else if (type.tag === "TypeFormPart") {
-    return <span className="inline-block">{type.contents}</span>
-  }
-}
+};
 
 const StringTypeSig = ({ simple, full }) => {
-  let unlaliasedFull = unAlias(full)
+  let unlaliasedFull = unAlias(full);
   if (unlaliasedFull.length > 50) {
-    return <span>{unAlias(simple)}</span>
-
+    return <span>{unAlias(simple)}</span>;
   } else {
-    return <span>{unlaliasedFull}</span>
-
+    return <span>{unlaliasedFull}</span>;
   }
-}
+};
 
 const ModelContent = () => {
   let dispatch = useDispatch();
   let currentTaskNum = useSelector(state => state.currentTaskNum);
-  let pending = useSelector(state => state.pending)
-  let round = useSelector(state => state.round)
-  analytics.track(events.succeed, { taskNumber: currentTaskNum })
+  let pending = useSelector(state => state.pending);
+  let round = useSelector(state => state.round);
+  analytics.track(events.succeed, { taskNumber: currentTaskNum });
   return (
     <div className='flex flex-col justify-around items-center h-full'>
       <div>
@@ -212,24 +221,23 @@ const ModelContent = () => {
             return;
           }
           if (round === 1 && currentTaskNum < 7) {
-            let nextTask = currentTaskNum + 1
-            analytics.track(events.open, { taskNumber: nextTask })
+            let nextTask = currentTaskNum + 1;
+            analytics.track(events.open, { taskNumber: nextTask });
             dispatch(switchTaskThunk(nextTask));
             editor.setValue(tasks.at(nextTask));
-
           } else if (round === 1 && currentTaskNum === 7) {
-            let nextTask = pending.at(0)
-            analytics.track(events.open, { taskNumber: nextTask })
+            let nextTask = pending.at(0);
+            analytics.track(events.open, { taskNumber: nextTask });
             dispatch(switchTaskNextRoundThunk(nextTask));
             editor.setValue(tasks.at(nextTask));
           } else if (round === 2) {
-            let nextPendingIndex = pending.findIndex(n => n > currentTaskNum)
+            let nextPendingIndex = pending.findIndex(n => n > currentTaskNum);
             if (nextPendingIndex === -1) {
               window.location =
                 'https://docs.google.com/forms/d/e/1FAIpQLSfmXyASOPW2HIK-Oqp5nELBTltKeqZjqQ0G9JFram8eUCx26A/viewform?usp=sf_link';
             } else {
-              let nextTask = pending.at(nextPendingIndex)
-              analytics.track(events.open, { taskNumber: nextTask })
+              let nextTask = pending.at(nextPendingIndex);
+              analytics.track(events.open, { taskNumber: nextTask });
               dispatch(switchTaskThunk(nextTask));
               editor.setValue(tasks.at(nextTask));
             }
@@ -269,36 +277,47 @@ const Debuger = () => {
 
 const ParseErrorReport = () => {
   let parseError = useSelector(state => state.parseError);
-  return <div class="p-4">
-    <p className='py-2 px-4'>A syntax error was found in the code</p>
-    <div className='bg-gray-100 py-2 px-4 rounded-md'>
-      <p> {parseError.message} </p>
-      <p>Location: {parseError.loc.srcLine}:{parseError.loc.srcColumn}</p>
+  return (
+    <div class='p-4'>
+      <p className='py-2 px-4'>A syntax error was found in the code</p>
+      <div className='bg-gray-100 py-2 px-4 rounded-md'>
+        <p> {parseError.message} </p>
+        <p>
+          Location: {parseError.loc.srcLine}:{parseError.loc.srcColumn}
+        </p>
+      </div>
     </div>
-  </div>;
+  );
 };
 
 const LoadErrorReport = () => {
   let loadError = useSelector(state => state.loadError);
-  return <div class="p-4">
-    <p className='py-2 px-4'>A variable is used without being declared.</p>
-    {loadError.map(m => {
-      return <div className='bg-gray-100 py-2 px-4 rounded-md'>
-        <p>Variable: {m.at(0)} </p>
-        <p>Location:{" "}
-          {" " + m.at(1).srcSpanStartLine}:{m.at(1).srcSpanStartColumn} -
-          {" " + m.at(1).srcSpanEndLine}:{m.at(1).srcSpanEndColumn}
-        </p>
-
-      </div>
-    })}
-  </div >;
-}
+  return (
+    <div class='p-4'>
+      <p className='py-2 px-4'>A variable is used without being declared.</p>
+      {loadError.map(m => {
+        return (
+          <div className='bg-gray-100 py-2 px-4 rounded-md'>
+            <p>Variable: {m.at(0)} </p>
+            <p>
+              Location: {' ' + m.at(1).srcSpanStartLine}:
+              {m.at(1).srcSpanStartColumn} -{' ' + m.at(1).srcSpanEndLine}:
+              {m.at(1).srcSpanEndColumn}
+            </p>
+          </div>
+        );
+      })}
+    </div>
+  );
+};
 
 const TypeErrorReport = () => {
   let mode = useSelector(state => state.mode);
   return (
-    <div className='p-2 flex flex-col items-start' style={{ fontFamily: 'IBM Plex Sans' }}>
+    <div
+      className='p-2 flex flex-col items-start'
+      style={{ fontFamily: 'IBM Plex Sans' }}
+    >
       <div className='mb-2 bg-gray-300 px-4 py-2 rounded-md w-auto'>
         Current mode:
         {mode === BASIC_MODE ? ' Basic Mode' : ' Interactive Mode'}
@@ -329,7 +348,8 @@ const Message = () => {
           {/* {unAlias(contextItem['contextType1'])} */}
           <StringTypeSig
             simple={contextItem.contextType1SimpleString}
-            full={contextItem.contextType1String}></StringTypeSig>
+            full={contextItem.contextType1String}
+          ></StringTypeSig>
         </span>
       </div>
       <div className='my-1 text-sm'>
@@ -340,7 +360,6 @@ const Message = () => {
             simple={contextItem.contextType2SimpleString}
             full={contextItem.contextType2String}
           ></StringTypeSig>
-
         </span>
       </div>
     </div>
@@ -350,7 +369,7 @@ const Message = () => {
 const TypingTable = () => {
   let dispatch = useDispatch();
   let context = useSelector(state => state.context);
-  let currentTaskNum = useSelector(state => state.currentTaskNum)
+  let currentTaskNum = useSelector(state => state.currentTaskNum);
   return (
     <div
       className={'grid gap-1 context-grid text-xs w-full'}
@@ -359,8 +378,11 @@ const TypingTable = () => {
       <div className='text-center'>
         <ion-icon
           onClick={() => {
-            analytics.track(events.interact, { type: 'deduction step', taskNumber: currentTaskNum })
-            dispatch(prevStep())
+            analytics.track(events.interact, {
+              type: 'deduction step',
+              taskNumber: currentTaskNum,
+            });
+            dispatch(prevStep());
           }}
           style={{ fontSize: 20, cursor: 'pointer' }}
           name='arrow-up-circle'
@@ -370,23 +392,23 @@ const TypingTable = () => {
       <div className='text-center'>EXPRESSION</div>
       <div className='text-center'>TYPE 2</div>
 
-      {
-        (() => {
-          if (context.length === 0) {
-            return <EmptyContextTable></EmptyContextTable>
-          } else {
-            return context.map((row, i) => (
-              <ContextRow row={row} key={i}></ContextRow>
-            ))
-          }
-        })()
-
-      }
+      {(() => {
+        if (context.length === 0) {
+          return <EmptyContextTable></EmptyContextTable>;
+        } else {
+          return context.map((row, i) => (
+            <ContextRow row={row} key={i}></ContextRow>
+          ));
+        }
+      })()}
       <div className='text-center'>
         <ion-icon
           onClick={() => {
-            analytics.track(events.interact, { type: 'deduction step', taskNumber: currentTaskNum })
-            dispatch(nextStep())
+            analytics.track(events.interact, {
+              type: 'deduction step',
+              taskNumber: currentTaskNum,
+            });
+            dispatch(nextStep());
           }}
           style={{ fontSize: 20, cursor: 'pointer' }}
           name='arrow-down-circle'
@@ -401,44 +423,55 @@ const TypingTable = () => {
 
 const EmptyContextTable = () => {
   let steps = useSelector(state => state.steps);
-  let currentTraverseId = useSelector(state => state.currentTraverseId)
-  let currentTaskNum = useSelector(state => state.currentTaskNum)
-  let dispatch = useDispatch()
-  return <>
-    <div className='flex flex-col justify-center items-center'>
-      {steps.map(({ stepId }, i) => {
-        return (
-          <div
-            key={i}
-            onClick={() => {
-              analytics.track(events.interact, { type: 'deduction step', taskNumber: currentTaskNum })
-              dispatch(setStep(i))
-            }}
-            className={
-              'rounded-lg w-4 h-4 my-0.5 p-0.5 cursor-pointer text-xs leading-3 text-center ' +
-              (arrEq(stepId, currentTraverseId)
-                ? 'bg-green-400'
-                : 'bg-gray-400')
-            }
-          >
-            {i + 1}
-          </div>
-        );
-      })
-      }
-    </div>
-    <div></div>
-    <div></div>
-    <div></div>
-  </>
-}
+  let currentTraverseId = useSelector(state => state.currentTraverseId);
+  let currentTaskNum = useSelector(state => state.currentTaskNum);
+  let dispatch = useDispatch();
+  return (
+    <>
+      <div className='flex flex-col justify-center items-center'>
+        {steps.map(({ stepId }, i) => {
+          return (
+            <div
+              key={i}
+              onClick={() => {
+                analytics.track(events.interact, {
+                  type: 'deduction step',
+                  taskNumber: currentTaskNum,
+                });
+                dispatch(setStep(i));
+              }}
+              className={
+                'rounded-lg w-4 h-4 my-0.5 p-0.5 cursor-pointer text-xs leading-3 text-center ' +
+                (arrEq(stepId, currentTraverseId)
+                  ? 'bg-green-400'
+                  : 'bg-gray-400')
+              }
+            >
+              {i + 1}
+            </div>
+          );
+        })}
+      </div>
+      <div></div>
+      <div></div>
+      <div></div>
+    </>
+  );
+};
 
 const ContextRow = ({ row }) => {
   let currentTraverseId = useSelector(state => state.currentTraverseId);
-  let currentTaskNum = useSelector(state => state.currentTaskNum)
+  let currentTaskNum = useSelector(state => state.currentTaskNum);
   let steps = useSelector(state => state.steps);
   let dispatch = useDispatch();
-  let { contextExp, contextType1String, contextType1SimpleString, contextType2String, contextType2SimpleString, contextSteps } = row;
+  let {
+    contextExp,
+    contextType1String,
+    contextType1SimpleString,
+    contextType2String,
+    contextType2SimpleString,
+    contextSteps,
+  } = row;
   let affinity = contextSteps
     .find(step => arrEq(step.at(0), currentTraverseId))
     .at(1);
@@ -462,15 +495,19 @@ const ContextRow = ({ row }) => {
       <Stepper rowInfo={contextSteps}></Stepper>
       <div
         onClick={() => {
-          analytics.track(events.interact, { type: 'deduction step', taskNumber: currentTaskNum })
-          dispatch(setStep(firstReleventStep))
+          analytics.track(events.interact, {
+            type: 'deduction step',
+            taskNumber: currentTaskNum,
+          });
+          dispatch(setStep(firstReleventStep));
         }}
         className='rounded-sm p-1 groupMarkerB flex justify-center items-center cursor-pointer'
       >
         <StringTypeSig
           simple={contextType1SimpleString}
           full={contextType1String}
-        ></StringTypeSig>      </div>
+        ></StringTypeSig>{' '}
+      </div>
       <div
         className={
           'rounded-sm p-1 flex justify-center items-center ' + affinityClass
@@ -480,22 +517,26 @@ const ContextRow = ({ row }) => {
       </div>
       <div
         onClick={() => {
-          analytics.track(events.interact, { type: 'deduction step', taskNumber: currentTaskNum })
-          dispatch(setStep(lastReleventStep))
+          analytics.track(events.interact, {
+            type: 'deduction step',
+            taskNumber: currentTaskNum,
+          });
+          dispatch(setStep(lastReleventStep));
         }}
         className='rounded-sm p-1 groupMarkerA flex justify-center items-center cursor-pointer'
       >
         <StringTypeSig
           simple={contextType2SimpleString}
           full={contextType2String}
-        ></StringTypeSig>      </div>
+        ></StringTypeSig>{' '}
+      </div>
     </>
   );
 };
 
 const Stepper = ({ rowInfo }) => {
   let steps = useSelector(state => state.steps);
-  let currentTaskNum = useSelector(state => state.currentTaskNum)
+  let currentTaskNum = useSelector(state => state.currentTaskNum);
   let currentTraverseId = useSelector(state => state.currentTraverseId);
   let stepsInRow = rowInfo.filter(ri => ri[2]);
   let dispatch = useDispatch();
@@ -510,9 +551,11 @@ const Stepper = ({ rowInfo }) => {
             <div
               key={stepId}
               onClick={() => {
-                analytics.track(events.interact, { type: 'deduction step', taskNumber: currentTaskNum })
-                dispatch(setStep(stepId))
-
+                analytics.track(events.interact, {
+                  type: 'deduction step',
+                  taskNumber: currentTaskNum,
+                });
+                dispatch(setStep(stepId));
               }}
               className={
                 'rounded-lg w-4 h-4 my-0.5 p-0.5 cursor-pointer text-xs leading-3 text-center ' +
