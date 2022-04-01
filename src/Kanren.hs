@@ -503,9 +503,9 @@ termToType term =
       -- let listP = toList t
       --     content = intercalate "," (zipWith (\t' n' -> go varMap n' p t') listP [0 ..])
       --  in "(" ++ content ++ ")"
-      "(" ++  go varMap 0 p t ++ ")" 
+      "(" ++  go varMap 0 p t ++ ")"
     go varMap n parent p@(Pair x y)
-      -- | isTuple parent = 
+      -- | isTuple parent =
       | isTypeCon parent =
         let listP = toList y
             content = unwords (zipWith (\t' n' -> go varMap n' p t') listP [0 ..])
@@ -531,53 +531,53 @@ data TypeForm = TypeFormPart String | TypeForm [TypeForm] deriving (Show, Eq, Ge
 --   mappend (TypeForm b) (TypeFormPart a)  = TypeForm (b ++ [TypeFormPart a ])
 --   mempty = TypeForm []
 
-toTypeForm :: Term -> Term -> Flag -> TypeForm 
--- fromTerm varMap term parentTerm level index 
+toTypeForm :: Term -> Term -> Flag -> TypeForm
+-- fromTerm varMap term parentTerm level index
 toTypeForm Unit parent flag = TypeForm []
 
 toTypeForm (Atom x) parent flag  = TypeFormPart x
 
 toTypeForm (Var ('_' : '.' : x)) parent flag = TypeFormPart  [['a' ..] !! (read x :: Int)]
-  
+
 toTypeForm (Var _) parent index = error "Variable is not fresh"
 
 toTypeForm p@(Pair (Atom "Function") (Pair a b)) parent flag
-      | isFunction parent && flag == FunctionFirst = 
+      | isFunction parent && flag == FunctionFirst =
           TypeForm [
             TypeFormPart"(",
              toTypeForm a p FunctionFirst,
              TypeFormPart"->" ,
-              toTypeForm b p Empty, 
+              toTypeForm b p Empty,
               TypeFormPart")"]
-      | otherwise = 
+      | otherwise =
         TypeForm [toTypeForm a p FunctionFirst,TypeFormPart  "->", toTypeForm b p Empty]
 
-toTypeForm p@(Pair (Atom "List") t) parent flag = 
+toTypeForm p@(Pair (Atom "List") t) parent flag =
   TypeForm [TypeFormPart"[", toTypeForm t p Empty, TypeFormPart"]"]
 
-toTypeForm p@(Pair (Atom "Tuple") (Pair a b)) parent flag = 
+toTypeForm p@(Pair (Atom "Tuple") (Pair a b)) parent flag =
   TypeForm [
-    TypeFormPart"(" , 
+    TypeFormPart"(" ,
     toTypeForm a p TupleFirst ,
-    TypeFormPart ",", 
-    toTypeForm b p TupleBody, 
+    TypeFormPart ",",
+    toTypeForm b p TupleBody,
     TypeFormPart ")"]
 
-toTypeForm p@(Pair x y) parent flag 
-      | isTypeCon parent = 
+toTypeForm p@(Pair x y) parent flag
+      | isTypeCon parent =
           TypeForm [
-            TypeFormPart"(" , 
-            toTypeForm x parent Empty , 
-            TypeFormPart" ", 
-            toTypeForm y parent Empty, 
+            TypeFormPart"(" ,
+            toTypeForm x parent Empty ,
+            TypeFormPart" ",
+            toTypeForm y parent Empty,
              TypeFormPart")"]
-      | otherwise = 
+      | otherwise =
           TypeForm [toTypeForm x p Empty , TypeFormPart" ", toTypeForm y p Empty]
 
 typeForm t = toTypeForm t Unit Empty
 
-fromTerm :: Term -> Term -> Flag -> String 
--- fromTerm varMap term parentTerm level index 
+fromTerm :: Term -> Term -> Flag -> String
+-- fromTerm varMap term parentTerm level index
 fromTerm Unit parent flag = ""
 fromTerm (Atom x) parent flag  = x
 fromTerm (Var ('_' : '.' : x)) parent flag = [['a' ..] !! (read x :: Int)]
@@ -590,7 +590,7 @@ fromTerm p@(Pair (Atom "List") t) parent flag = mconcat ["[", fromTerm t p Empty
 
 fromTerm p@(Pair (Atom "Tuple") (Pair a b)) parent flag   = mconcat ["(" , fromTerm a p TupleFirst , ",", fromTerm b p TupleBody,  ")"]
 
-fromTerm p@(Pair x y) parent flag 
+fromTerm p@(Pair x y) parent flag
       | isTypeCon parent = mconcat ["(" , fromTerm x parent Empty , " ", fromTerm y parent Empty,  ")"]
       | otherwise = mconcat [fromTerm x p Empty , " ", fromTerm y p Empty]
 
@@ -600,11 +600,11 @@ isFunction :: Term -> Bool
 isFunction (Pair (Atom "Function") _) = True
 isFunction _ = False
 
-funHead :: Term -> Term 
+funHead :: Term -> Term
 funHead (Pair (Atom "Function") (Pair a b)) = a
 funHead _ = error "Function head applied to non functional term"
 
-funBody :: Term -> Term 
+funBody :: Term -> Term
 funBody (Pair (Atom "Function") (Pair a b)) = b
 funBody _ = error "Function body applied to non functional term"
 

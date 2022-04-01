@@ -50,6 +50,7 @@ renderPairs [] = ""
 renderPairs [p] = renderPair p
 renderPairs (p:ps) = renderPair p ++ "," ++ renderPairs ps
 
+-- renderArrayValues is not used anywhere, I wonder why
 renderArrayValues [] = ""
 renderArrayValues [v] = renderJValue v
 renderArrayValues (v:vs) = renderJValue v ++ "," ++ renderArrayValues vs
@@ -160,10 +161,10 @@ const exampleBookTrans = n => `module Task${n} where
 
 standardTrans z =
   case z of
-    "shorttitle" -> []
-    "sorttitle" -> []
-    "indextitle" -> []
-    "indexsorttitle" -> []
+    "shorttitle" -> ["short"]
+    "sorttitle" -> ["sorted"]
+    "indextitle" -> ["index"]
+    "indexsorttitle" -> ["index", "sorted"]
     _ -> z
 
 

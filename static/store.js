@@ -1,4 +1,3 @@
-// import.meta.hot;
 import {
   createAction,
   configureStore,

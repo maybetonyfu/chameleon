@@ -27,6 +27,8 @@ import mixpanelPlugin from '@analytics/mixpanel';
 import { nanoid } from 'nanoid';
 import Tracker from '@openreplay/tracker';
 
+const withdrawId = nanoid(10)
+
 const tracker = new Tracker({
   projectKey: "VzGISOLFpFFv1yHRdHHJ",
   ingestPoint: "https://data.ercu.be/ingest",
@@ -49,7 +51,8 @@ const analytics = Analytics({
   ],
 });
 
-analytics.identify(nanoid());
+analytics.identify(withdrawId);
+document.getElementById('withdraw').innerText = withdrawId
 
 const events = {
   typecheck: 'typeCheck',
