@@ -1,10 +1,12 @@
 {-# LANGUAGE QuasiQuotes #-}
+
 module Builtin where
 
 import Data.String.QQ
 
 builtin :: String
-builtin = [s|
+builtin =
+  [s|
 
 mod :: Int -> Int -> Int
 mod = undefined
@@ -218,8 +220,8 @@ drop = undefined
 
 
 and :: [Bool] -> Bool
-and = undefined 
+and = undefined
 
 or :: [Bool] -> Bool
-or = undefined 
+or = undefined
 |]

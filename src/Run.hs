@@ -150,13 +150,13 @@ processFile text =
                                           (zigzag concrete)
                                           (zigzag longestChain)
                                       normalizedSides = normalize sides
-                                   in ChContext 
-                                        (showProperName name) 
+                                   in ChContext
+                                        (showProperName name)
                                         (typeForm leftmost)
                                         (typeForm leftmostSimp)
                                         (toSig leftmost)
                                         (toSig leftmostSimp)
-                                        (typeForm rightmost) 
+                                        (typeForm rightmost)
                                         (typeForm rightmostSimp)
                                         (toSig rightmost)
                                         (toSig rightmostSimp)

@@ -9,4 +9,4 @@ stack build
 ```
 stack run
 ```
-and the server will be available at http://localhost:3000
+and the server will be available at http://localhost:5000

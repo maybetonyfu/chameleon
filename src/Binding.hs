@@ -100,9 +100,9 @@ instance HasBindings Decl where
     Set.union (setConcatMap (getBindings parent) conDecls) (getBindings (Normal sp) declHead)
   getBindings parent (TypeSig (SrcSpanInfo ss _) names typeDef) =
     let typeVars = getBindings (Normal ss) typeDef
-        -- fName = Set.fromList $ map (Binding parent TypeSigScope . getName) names
-     in typeVars
-  getBindings parent (InstDecl  (SrcSpanInfo sp _) _ instRule maybeInstDecal) =
+     in -- fName = Set.fromList $ map (Binding parent TypeSigScope . getName) names
+        typeVars
+  getBindings parent (InstDecl (SrcSpanInfo sp _) _ instRule maybeInstDecal) =
     getBindings (Normal sp) instRule
   getBindings parent (ClassDecl (SrcSpanInfo sp _) _ head fundeps maybeclassdecls) =
     let headBindings = getBindings (Normal sp) head
@@ -111,18 +111,17 @@ instance HasBindings Decl where
           Nothing -> Set.empty
           Just decls -> setConcatMap (getBindings Global) decls
 
-     -- It is important to exclude the type vars in function declaration here
+        -- It is important to exclude the type vars in function declaration here
         filteredDeclBindings =
-            Set.filter (\(Binding sc ty sy) -> sy `Set.notMember` headBindingSymbols) declBindings
-     -- For exampel class X a where x :: a -> b
-     -- We will want the scope of b to remain  (a -> b) but the scope of a to be the whole decl (class X ... a -> b)
-     in headBindings `Set.union` filteredDeclBindings
+          Set.filter (\(Binding sc ty sy) -> sy `Set.notMember` headBindingSymbols) declBindings
+     in -- For exampel class X a where x :: a -> b
+        -- We will want the scope of b to remain  (a -> b) but the scope of a to be the whole decl (class X ... a -> b)
+        headBindings `Set.union` filteredDeclBindings
   getBindings parent _ = Set.empty
-
 
 instance HasBindings InstRule where
   getBindings parent (IRule _ _ _ instHead) = getBindings parent instHead
-  getBindings parent (IParen  _ iRule) = getBindings parent iRule
+  getBindings parent (IParen _ iRule) = getBindings parent iRule
 
 instance HasBindings InstHead where
   getBindings parent (IHCon _ _) = Set.empty
@@ -130,7 +129,6 @@ instance HasBindings InstHead where
   getBindings parent (IHParen _ h) = getBindings parent h
   getBindings parent (IHApp _ h t) =
     getBindings parent h `Set.union` getBindings parent t
-
 
 instance HasBindings ClassDecl where
   getBindings parent (ClsDecl _ (TypeSig (SrcSpanInfo ss _) names typeDef)) =
@@ -344,24 +342,27 @@ smallestContainingBinding bindings scope symbol sp =
   let isContaining symbol sp Nothing (Binding sp' _ symbol') = symbol == symbol' && (sp `isWithin` sp')
       isContaining symbol sp (Just scope) (Binding sp' sc' symbol') = symbol == symbol' && (sp `isWithin` sp') && scope == sc'
       bindings' = filter (isContaining symbol (Normal sp) scope . fst) bindings
-      binding = if null bindings'
-                    then error $ "Variable in scope: " ++ symbol
-                    else
-                      foldr (\(a, n) (b, m) ->
-                        if scopeRange a `isWithin` scopeRange b
-                          then (a, n)
-                          else (b, m)
-                        ) (head bindings') bindings'
+      binding =
+        if null bindings'
+          then error $ "Variable in scope: " ++ symbol
+          else
+            foldr
+              ( \(a, n) (b, m) ->
+                  if scopeRange a `isWithin` scopeRange b
+                    then (a, n)
+                    else (b, m)
+              )
+              (head bindings')
+              bindings'
    in binding
 
-uniqueNameFromBinding :: [(Binding, Int)] -> Maybe ScopeType  -> String -> SrcSpan -> String
+uniqueNameFromBinding :: [(Binding, Int)] -> Maybe ScopeType -> String -> SrcSpan -> String
 uniqueNameFromBinding bindings scope symbol sp = uniqueName (smallestContainingBinding bindings scope symbol sp)
-
 
 moduleBindings :: HasBindings a => a SrcSpanInfo -> [(Binding, Int)]
 moduleBindings hModule =
   let b = getBindings Global hModule
-      in zip (Set.toAscList b) (take (Set.size b) [0 ..])
+   in zip (Set.toAscList b) (take (Set.size b) [0 ..])
 
 main :: IO ()
 main = do

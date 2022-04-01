@@ -104,7 +104,7 @@ hasInstance ins typeclass t =
             ),
           succeeds
         ]
-      condaLines = map (\i -> generateCondaLine t  (tcVar i) (tcAdditional i)) instances
+      condaLines = map (\i -> generateCondaLine t (tcVar i) (tcAdditional i)) instances
    in conda $ condaLines ++ [[succeeds, fails]]
 
 main :: IO ()

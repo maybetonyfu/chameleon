@@ -6,13 +6,13 @@ import Data.Bifunctor
 import Data.List
 import Data.Maybe
 import Debug.Trace
+import GHC.Read (paren)
 import Language.Haskell.Exts.Parser
 import Language.Haskell.Exts.Pretty
 import Language.Haskell.Exts.SrcLoc
 import Language.Haskell.Exts.Syntax
 import Nameable
 import System.Environment
-import GHC.Read (paren)
 
 data ScopeType
   = VarScope
@@ -80,7 +80,6 @@ instance HasScopes Module where
     (_, scopes) <- concatUnzip <$> mapM (getScopes Global parentId) decls
     -- return ([], sortScopes parentId scopes)
     return ([], scopes)
-
   getScopes _ _ _ = error "Not a module"
 
 instance HasScopes Decl where
@@ -94,8 +93,7 @@ instance HasScopes Decl where
         typeCon = getTypeCon typehead
         newScope =
           Scope
-          {
-              scopeId = newScopeId,
+            { scopeId = newScopeId,
               scopeType = TypeAliasScope,
               effectiveIn = parent,
               definedIn = normal l,
@@ -103,9 +101,8 @@ instance HasScopes Decl where
               use = [],
               parentScope = parentId,
               topOrder = 0
-          }
-    return ([], newScope: [])
-    
+            }
+    return ([], newScope : [])
   getScopes parent parentId p@(PatBind l pat rhs maybeWheres) = do
     newScopeId <- getId
     (names, scopes) <- getScopes (normal l) newScopeId rhs
@@ -177,16 +174,16 @@ instance HasScopes Decl where
     newScopeId <- getId
     let names = getTypeVars typeDef
         newScope =
-              Scope
-                { scopeId = newScopeId,
-                  scopeType = TypeScope,
-                  effectiveIn = normal l,
-                  definedIn = normal l,
-                  generate = names,
-                  use = [],
-                  parentScope = parentId,
-                  topOrder = 0
-                }
+          Scope
+            { scopeId = newScopeId,
+              scopeType = TypeScope,
+              effectiveIn = normal l,
+              definedIn = normal l,
+              generate = names,
+              use = [],
+              parentScope = parentId,
+              topOrder = 0
+            }
     return ([], [newScope])
   getScopes parent parentId (InstDecl l _ instRule maybeInstDcls) = do
     newScopeId <- getId
@@ -204,7 +201,7 @@ instance HasScopes Decl where
               topOrder = 0
             }
     (names, declScopes) <- concatUnzip <$> mapM (getScopes (normal l) newScopeId) instDecls
-    return ([], newScope:declScopes)
+    return ([], newScope : declScopes)
   getScopes parent parentId (ClassDecl l _ declHead fundeps maybeclassdecls) = do
     newScopeId <- getId
     let classdecls = concat maybeclassdecls
@@ -222,7 +219,7 @@ instance HasScopes Decl where
             }
     (names, methodScopes) <- concatUnzip <$> mapM (getScopes (normal l) newScopeId) classdecls
     let methodScopes' = map (\s -> if scopeType s == TypeScope then s {generate = generate s \\ typeVars} else s) methodScopes
-    return (names, newScope:methodScopes')
+    return (names, newScope : methodScopes')
   getScopes parent parentId _ = undefined
 
 instance HasScopes InstRule where
@@ -268,7 +265,7 @@ instance HasScopes ClassDecl where
               topOrder = 0
             }
 
-    return ([], [methodScope, typeVarScope])        
+    return ([], [methodScope, typeVarScope])
   getScopes _ _ _ = error "Unsupported types of method declaration"
 
 instance HasScopes DeclHead where
@@ -528,7 +525,7 @@ instance RangeLike SrcSpan where
             | endL1 < endL2 = True
             | endL1 == endL2 && endC1 <= endC2 = True
             | otherwise = False
-      in sameFile && startAfter && endBefore
+       in sameFile && startAfter && endBefore
 
 instance RangeLike ScopeRange where
   within _ Global = True
@@ -546,7 +543,7 @@ allNames = concatMap (\scp -> map (uniqueName (scopeId scp)) (generate scp))
 smallestDefiningScope :: [Scope] -> SrcSpanInfo -> Scope
 smallestDefiningScope allScopes srcspaninfo =
   let scrrange = normal srcspaninfo
-      allContainingScopes = filter (\s -> scrrange `within` definedIn s ) allScopes
+      allContainingScopes = filter (\s -> scrrange `within` definedIn s) allScopes
       smallest =
         if null allContainingScopes
           then error $ "No bounding scope for : " ++ show srcspaninfo
@@ -559,7 +556,7 @@ smallestDefiningScope allScopes srcspaninfo =
               )
               (head allContainingScopes)
               allContainingScopes
-  in smallest
+   in smallest
 
 smallestBoundingScope :: [Scope] -> Maybe ScopeType -> String -> SrcSpan -> Maybe Scope
 smallestBoundingScope scopes scpType v sp =
@@ -572,14 +569,15 @@ smallestBoundingScope scopes scpType v sp =
         if null boundingScopes
           then Nothing
           else
-            Just $ foldr
-                      ( \scp1 scp2 ->
-                          if effectiveIn scp1 `within` effectiveIn scp2
-                            then scp1
-                            else scp2
-                      )
-                      (head boundingScopes)
-                      boundingScopes
+            Just $
+              foldr
+                ( \scp1 scp2 ->
+                    if effectiveIn scp1 `within` effectiveIn scp2
+                      then scp1
+                      else scp2
+                )
+                (head boundingScopes)
+                boundingScopes
    in smallest
 
 uniqueNameFromBinding :: [Scope] -> Maybe ScopeType -> String -> SrcSpan -> String
@@ -591,18 +589,17 @@ parentScopesUntil scp scopes n =
   let go :: [Scope] -> [Scope] -> Int -> [Scope]
       go allScopes [] _ = error "No initial scope"
       go allScopes (s : ss) m
-        | parentScope s <= m =  s : ss
-        | Just s' <- find ((== parentScope s) . scopeId) allScopes =  go allScopes ([s', s] ++ ss)  m
+        | parentScope s <= m = s : ss
+        | Just s' <- find ((== parentScope s) . scopeId) allScopes = go allScopes ([s', s] ++ ss) m
         | otherwise = error ("No parent scope: " ++ show s)
    in reverse (go scopes [scp] n)
 
-sortScopes :: Int ->  [Scope] -> [Scope]
+sortScopes :: Int -> [Scope] -> [Scope]
 sortScopes start scopes =
   let top = topSort (scopesToNodes scopes) (scopesToEdges start scopes)
-  in case top of
-      Nothing -> error "Scope ordering failed"
-      Just sorted -> map (\s  -> s {topOrder = fromJust (elemIndex (scopeId s) sorted) } ) scopes
-
+   in case top of
+        Nothing -> error "Scope ordering failed"
+        Just sorted -> map (\s -> s {topOrder = fromJust (elemIndex (scopeId s) sorted)}) scopes
 
 scopesToNodes :: [Scope] -> [Int]
 scopesToNodes = map scopeId
@@ -620,8 +617,7 @@ scopesToEdges start scopes =
             searchables = nub (siblings ++ global)
             dependencyScopes = mapMaybe (\dep -> find ((dep `elem`) . generate) searchables) dependencies
             dependencyEdges = map (\scp -> (scopeId s, scopeId scp)) dependencyScopes
-         in
-            -- trace (
+         in -- trace (
             --     "\nFor scope: " ++ show s ++
             --     "\nParents" ++ show (scopesIds parents) ++
             --     "\nSearchables" ++ show (scopesIds searchables) ++

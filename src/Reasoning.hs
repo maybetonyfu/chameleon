@@ -32,11 +32,11 @@ compareConstraints (Label n1 (term1, term1') _ reason1 loc1 _) (Label n2 (term2,
       && reason2 == "Annotated" =
     [ChStep "is in the context of" RL loc1 loc2 (n1, n2)]
 
-  | loc1 `within` loc2 
+  | loc1 `within` loc2
      && reason2 == "Applied"
-    = 
+    =
       -- application expression: x = y z
-      case (isFunction term2, isFunction term2') of 
+      case (isFunction term2, isFunction term2') of
         (True, False) -> if term1 == term2' || term1' == term2'
                             then [ChStep "is applied at" LR loc1 loc2 (n1, n2)]
                             else [ChStep "is an argument in" LR loc1 loc2 (n1, n2)]
@@ -44,12 +44,12 @@ compareConstraints (Label n1 (term1, term1') _ reason1 loc1 _) (Label n2 (term2,
                             then [ChStep "is applied at" LR loc1 loc2 (n1, n2)]
                             else [ChStep "is an argument in" LR loc1 loc2 (n1, n2)]
         (_ , _) -> [ChStep "is part of" LR loc1 loc2 (n1, n2)]
-      
-  | loc2 `within` loc1  
-    && reason1 == "Applied"
-    = 
 
-      case (isFunction term1, isFunction term1') of 
+  | loc2 `within` loc1
+    && reason1 == "Applied"
+    =
+
+      case (isFunction term1, isFunction term1') of
           (True, False) -> if term2 == term1' || term2' == term1'
                               then [ChStep "is applied at" RL loc1 loc2 (n1, n2)]
                               else [ChStep "is an argument in" RL loc1 loc2 (n1, n2)]
@@ -57,12 +57,12 @@ compareConstraints (Label n1 (term1, term1') _ reason1 loc1 _) (Label n2 (term2,
                               then [ChStep "is applied at" RL loc1 loc2 (n1, n2)]
                               else [ChStep "is an argument in" RL loc1 loc2 (n1, n2)]
           (_ , _) -> [ChStep "is part of" RL loc1 loc2 (n1, n2)]
-  | loc1 `within` loc2 
+  | loc1 `within` loc2
      && reason1 == "Matched"
      && reason2 == "Matched"
-    = 
+    =
       -- application expression in pattern matching:x (Y z) = u
-      case (isFunction term2, isFunction term2') of 
+      case (isFunction term2, isFunction term2') of
         (True, False) -> if term1 == term2' || term1' == term2'
                             then [ChStep "is applied at" LR loc1 loc2 (n1, n2)]
                             else [ChStep "is an argument in" LR loc1 loc2 (n1, n2)]
@@ -70,13 +70,13 @@ compareConstraints (Label n1 (term1, term1') _ reason1 loc1 _) (Label n2 (term2,
                             then [ChStep "is applied at" LR loc1 loc2 (n1, n2)]
                             else [ChStep "is an argument in" LR loc1 loc2 (n1, n2)]
         (_ , _) -> [ChStep "is part of" LR loc1 loc2 (n1, n2)]
-      
-  | loc2 `within` loc1  
+
+  | loc2 `within` loc1
      && reason1 == "Matched"
-     && reason2 == "Matched"    
-     = 
+     && reason2 == "Matched"
+     =
       -- application expression in pattern matching:x (Y z) = u
-      case (isFunction term1, isFunction term1') of 
+      case (isFunction term1, isFunction term1') of
           (True, False) -> if term2 == term1' || term2' == term1'
                               then [ChStep "is applied at" RL loc1 loc2 (n1, n2)]
                               else [ChStep "is an argument in" RL loc1 loc2 (n1, n2)]
@@ -105,9 +105,9 @@ compareConstraints (Label n1 (term1, term1') _ reason1 loc1 _) (Label n2 (term2,
   | reason1 == "Applied" && reason2 == "Applied" && loc1 > loc2 = [ChStep "is applied at" RL loc1 loc2 (n1, n2)]
   | reason1 == "Applied" && reason2 /= "Applied" = [ChStep "is applied at" RL loc1 loc2 (n1, n2)]
   | reason1 /= "Applied" && reason2 == "Applied" = [ChStep "is applied at" LR loc1 loc2 (n1, n2)]
-  |  reason2 == "Instanciated" 
+  |  reason2 == "Instanciated"
     || reason1 == "Instanciated" = [ChStep "has same type as" LR loc1 loc2 (n1, n2)]
-  | otherwise = 
+  | otherwise =
       -- trace
       -- ( "\nreason1: "
       --     ++ reason1
