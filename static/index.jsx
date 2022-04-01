@@ -24,7 +24,7 @@ import Modal from 'react-modal';
 import Split from 'split-grid';
 import Analytics from 'analytics';
 import mixpanelPlugin from '@analytics/mixpanel';
-import { nanoid } from 'nanoid'
+import { nanoid } from 'nanoid';
 
 const analytics = Analytics({
   app: 'chameleon-user-study',
@@ -35,14 +35,13 @@ const analytics = Analytics({
       customScriptSrc: '/mxp.js',
       options: {
         api_host: 'https://collect.ercu.be',
-        debug: true,
-        ignore_dnt: true
-      }
+        ignore_dnt: true,
+      },
     }),
   ],
 });
 
-analytics.identify(nanoid())
+analytics.identify(nanoid());
 
 const events = {
   typecheck: 'typeCheck',
