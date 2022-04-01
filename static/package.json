@@ -15,6 +15,7 @@
     "@reduxjs/toolkit": "^1.8.0",
     "analytics": "^0.8.1",
     "esbuild": "^0.14.29",
+    "nanoid": "^3.3.2",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
     "react-modal": "^3.14.4",
