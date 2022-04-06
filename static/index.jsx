@@ -24,36 +24,36 @@ import {
 import tasks from './code';
 import Modal from 'react-modal';
 import Split from 'split-grid';
-import Analytics from 'analytics';
-import mixpanelPlugin from '@analytics/mixpanel';
-import { nanoid } from 'nanoid';
-import Tracker from '@openreplay/tracker';
+// import Analytics from 'analytics';
+// import mixpanelPlugin from '@analytics/mixpanel';
+// import { nanoid } from 'nanoid';
+// import Tracker from '@openreplay/tracker';
 
-const withdrawId = nanoid(10)
+// const withdrawId = nanoid(10)
 
-const tracker = new Tracker({
-  projectKey: "VzGISOLFpFFv1yHRdHHJ",
-  ingestPoint: "https://data.ercu.be/ingest",
-});
+// const tracker = new Tracker({
+//   projectKey: "VzGISOLFpFFv1yHRdHHJ",
+//   ingestPoint: "https://data.ercu.be/ingest",
+// });
 
-tracker.start();
+// tracker.start();
 
-const analytics = Analytics({
-  app: 'chameleon-user-study',
-  version: 1,
-  plugins: [
-    mixpanelPlugin({
-      token: '6be6077e1d5b8de6978c65490e1666ea',
-      customScriptSrc: '/mxp.js',
-      options: {
-        api_host: 'https://collect.ercu.be',
-        ignore_dnt: true,
-      },
-    }),
-  ],
-});
+// const analytics = Analytics({
+//   app: 'chameleon-user-study',
+//   version: 1,
+//   plugins: [
+//     mixpanelPlugin({
+//       token: '6be6077e1d5b8de6978c65490e1666ea',
+//       customScriptSrc: '/mxp.js',
+//       options: {
+//         api_host: 'https://collect.ercu.be',
+//         ignore_dnt: true,
+//       },
+//     }),
+//   ],
+// });
 
-analytics.identify(withdrawId);
+// analytics.identify(withdrawId);
 document.getElementById('withdraw').innerText = withdrawId
 
 const events = {
@@ -80,7 +80,7 @@ let currentTask = 0;
 let currentRound = 1;
 let editor = initializeEditor(tasks[currentTask]);
 store.dispatch(switchTaskThunk(currentTask));
-analytics.track(events.open, { taskNumber: currentTask, mode: store.getState().mode });
+// analytics.track(events.open, { taskNumber: currentTask, mode: store.getState().mode });
 
 editor.on('focus', function() {
   store.dispatch(disableHighlight());
@@ -130,23 +130,23 @@ document.getElementById('save').addEventListener('click', _ => {
   let taskNumer = store.getState().currentTaskNum;
   let mode = store.getState().mode
   store.dispatch(typeCheckThunk(text));
-  analytics.track(events.typecheck, { taskNumer, mode });
+  // analytics.track(events.typecheck, { taskNumer, mode });
 });
 
 document.getElementById('skip').addEventListener('click', _ => {
   let state = store.getState();
   let mode = state.mode
-  analytics.track(events.skip, { taskNumber: state.currentTaskNum ,mode});
+  // analytics.track(events.skip, { taskNumber: state.currentTaskNum ,mode});
   if (state.round === 2) return;
   if (state.currentTaskNum < 7) {
     let nextTask = state.currentTaskNum + 1;
-    analytics.track(events.open, { taskNumber: nextTask , mode : modes[nextTask] });
+    // analytics.track(events.open, { taskNumber: nextTask , mode : modes[nextTask] });
     store.dispatch(switchTaskThunk(nextTask));
 
     editor.setValue(tasks.at(nextTask));
   } else if (state.currentTaskNum === 7) {
     let nextTask = state.pending.at(0);
-    analytics.track(events.open, { taskNumber: nextTask,  mode : modes[nextTask]  });
+    // analytics.track(events.open, { taskNumber: nextTask,  mode : modes[nextTask]  });
     store.dispatch(switchTaskNextRoundThunk(nextTask));
     editor.setValue(tasks.at(nextTask));
   }
@@ -158,11 +158,11 @@ document.getElementById('giveup').addEventListener('click', _ => {
   let currentPendingIndex = state.pending.findIndex(
     v => v === state.currentTaskNum,
   );
-  analytics.track(events.giveup, { taskNumber: state.currentTaskNum, mode });
+  // analytics.track(events.giveup, { taskNumber: state.currentTaskNum, mode });
   if (state.round === 1) return;
   if (state.currentTaskNum < 7) {
     let nextTask = state.pending.at(currentPendingIndex + 1);
-    analytics.track(events.open, { taskNumber: nextTask,  mode : modes[nextTask] });
+    // analytics.track(events.open, { taskNumber: nextTask,  mode : modes[nextTask] });
     store.dispatch(switchTaskThunk(nextTask));
     editor.setValue(tasks.at(nextTask));
   } else if (state.currentTaskNum === 7) {
@@ -219,7 +219,7 @@ const ModelContent = () => {
   let round = useSelector(state => state.round);
   let mode = useSelector(state => state.mode)
 
-  analytics.track(events.succeed, { taskNumber: currentTaskNum, mode });
+  // analytics.track(events.succeed, { taskNumber: currentTaskNum, mode });
   return (
     <div className='flex flex-col justify-around items-center h-full'>
       <div>
@@ -244,12 +244,12 @@ const ModelContent = () => {
           }
           if (round === 1 && currentTaskNum < 7) {
             let nextTask = currentTaskNum + 1;
-            analytics.track(events.open, { taskNumber: nextTask, mode : modes[nextTask] });
+            // analytics.track(events.open, { taskNumber: nextTask, mode : modes[nextTask] });
             dispatch(switchTaskThunk(nextTask));
             editor.setValue(tasks.at(nextTask));
           } else if (round === 1 && currentTaskNum === 7) {
             let nextTask = pending.at(0);
-            analytics.track(events.open, { taskNumber: nextTask,  mode : modes[nextTask]  });
+            // analytics.track(events.open, { taskNumber: nextTask,  mode : modes[nextTask]  });
             dispatch(switchTaskNextRoundThunk(nextTask));
             editor.setValue(tasks.at(nextTask));
           } else if (round === 2) {
@@ -259,7 +259,7 @@ const ModelContent = () => {
                 'https://docs.google.com/forms/d/e/1FAIpQLSfmXyASOPW2HIK-Oqp5nELBTltKeqZjqQ0G9JFram8eUCx26A/viewform?usp=sf_link';
             } else {
               let nextTask = pending.at(nextPendingIndex);
-              analytics.track(events.open, { taskNumber: nextTask,  mode : modes[nextTask] });
+              // analytics.track(events.open, { taskNumber: nextTask,  mode : modes[nextTask] });
               dispatch(switchTaskThunk(nextTask));
               editor.setValue(tasks.at(nextTask));
             }
@@ -401,11 +401,11 @@ const TypingTable = () => {
       <div className='text-center'>
         <ion-icon
           onClick={() => {
-            analytics.track(events.interact, {
-              type: 'deduction step',
-              taskNumber: currentTaskNum,
-              mode
-            });
+            // analytics.track(events.interact, {
+            //   type: 'deduction step',
+            //   taskNumber: currentTaskNum,
+            //   mode
+            // });
             dispatch(prevStep());
           }}
           style={{ fontSize: 20, cursor: 'pointer' }}
@@ -428,11 +428,11 @@ const TypingTable = () => {
       <div className='text-center'>
         <ion-icon
           onClick={() => {
-            analytics.track(events.interact, {
-              type: 'deduction step',
-              taskNumber: currentTaskNum,
-              mode
-            });
+            // analytics.track(events.interact, {
+            //   type: 'deduction step',
+            //   taskNumber: currentTaskNum,
+            //   mode
+            // });
             dispatch(nextStep());
           }}
           style={{ fontSize: 20, cursor: 'pointer' }}
@@ -460,11 +460,11 @@ const EmptyContextTable = () => {
             <div
               key={i}
               onClick={() => {
-                analytics.track(events.interact, {
-                  type: 'deduction step',
-                  taskNumber: currentTaskNum,
-                  mode
-                });
+                // analytics.track(events.interact, {
+                //   type: 'deduction step',
+                //   taskNumber: currentTaskNum,
+                //   mode
+                // });
                 dispatch(setStep(i));
               }}
               className={
@@ -523,11 +523,11 @@ const ContextRow = ({ row }) => {
       <Stepper rowInfo={contextSteps}></Stepper>
       <div
         onClick={() => {
-          analytics.track(events.interact, {
-            type: 'deduction step',
-            taskNumber: currentTaskNum,
-            mode
-          });
+          // analytics.track(events.interact, {
+          //   type: 'deduction step',
+          //   taskNumber: currentTaskNum,
+          //   mode
+          // });
           dispatch(setStep(firstReleventStep));
         }}
         className='rounded-sm p-1 groupMarkerB flex justify-center items-center cursor-pointer'
@@ -546,11 +546,11 @@ const ContextRow = ({ row }) => {
       </div>
       <div
         onClick={() => {
-          analytics.track(events.interact, {
-            type: 'deduction step',
-            taskNumber: currentTaskNum,
-            mode
-          });
+          // analytics.track(events.interact, {
+          //   type: 'deduction step',
+          //   taskNumber: currentTaskNum,
+          //   mode
+          // });
           dispatch(setStep(lastReleventStep));
         }}
         className='rounded-sm p-1 groupMarkerA flex justify-center items-center cursor-pointer'
@@ -582,11 +582,11 @@ const Stepper = ({ rowInfo }) => {
             <div
               key={stepId}
               onClick={() => {
-                analytics.track(events.interact, {
-                  type: 'deduction step',
-                  taskNumber: currentTaskNum,
-                  mode
-                });
+                // analytics.track(events.interact, {
+                //   type: 'deduction step',
+                //   taskNumber: currentTaskNum,
+                //   mode
+                // });
                 dispatch(setStep(stepId));
               }}
               className={
