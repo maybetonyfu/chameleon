@@ -54,7 +54,7 @@ import Split from 'split-grid';
 // });
 
 // analytics.identify(withdrawId);
-document.getElementById('withdraw').innerText = withdrawId
+// document.getElementById('withdraw').innerText = withdrawId
 
 const events = {
   typecheck: 'typeCheck',
