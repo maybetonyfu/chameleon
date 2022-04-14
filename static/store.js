@@ -26,10 +26,6 @@ export const BASIC_MODE = 'basic';
 export const FULL_MODE = 'full';
 const backendUrl = '';
 const devTools = false;
-export const modes =
-  Math.random() > 0.5
-    ? Array.from({ length: 4 }).flatMap(_ => [BASIC_MODE, FULL_MODE])
-    : Array.from({ length: 4 }).flatMap(_ => [FULL_MODE, BASIC_MODE]);
 
 const initialState = {
   currentStepNum: null,
@@ -45,11 +41,9 @@ const initialState = {
   showHighlights: true,
   wellTyped: false,
   currentTaskNum: null,
-  mode: null,
+  mode: FULL_MODE,
   loadError: null,
   parseError: null,
-  pending: [0, 1, 2, 3, 4, 5, 6, 7],
-  round: 1,
 };
 
 export let typeCheckThunk = createAsyncThunk(
@@ -73,31 +67,17 @@ export let switchTaskThunk = createAsyncThunk(
   },
 );
 
-export let switchTaskNextRoundThunk = createAsyncThunk(
-  'switchTaskNextRound',
-  async (n, { dispatch }) => {
-    dispatch(nextRound());
-    dispatch(setTask(n));
-    let text = tasks[n];
-    dispatch(typeCheckThunk(text));
-  },
-);
 
 const appReducer = createReducer(initialState, builder => {
   builder
     .addCase(setTask, (state, action) => {
       if (action.payload < 0 || action.payload > 7) return state;
       let currentTaskNum = action.payload;
-      let mode = modes[currentTaskNum];
-      let pending = state.pending;
       return Object.assign(
         {},
         {
           ...initialState,
-          mode,
           currentTaskNum,
-          pending,
-          round: state.round,
         },
       );
     })
@@ -238,7 +218,6 @@ const appReducer = createReducer(initialState, builder => {
           },
         );
       } else if (action.payload.tag === 'ChSuccess') {
-        let pending = state.pending.filter(n => n !== state.currentTaskNum);
         return Object.assign(
           {},
           {
@@ -246,7 +225,6 @@ const appReducer = createReducer(initialState, builder => {
             wellTyped: true,
             parseError: null,
             loadError: null,
-            pending,
           },
         );
       } else if (action.payload.tag === 'ChLoadError') {
@@ -274,15 +252,7 @@ const appReducer = createReducer(initialState, builder => {
         );
       }
     })
-    .addCase(nextRound, (state, action) => {
-      return Object.assign(
-        {},
-        {
-          ...state,
-          round: 2,
-        },
-      );
-    })
+
     .addCase(typeCheckThunk.rejected, (state, action) => {
       return state;
     });
@@ -356,7 +326,7 @@ function convertStep(step, stepNum) {
           <span class="markerB inline-block w-2 h-2 rounded-sm"></span>
           <span class="text-xs text-gray-400">(step</span>
           <span class="bg-green-400 inline-block w-4 h-4 text-xs rounded-full">${stepNum +
-            1}</span><span class="font-xs text-gray-400">)</span>
+      1}</span><span class="font-xs text-gray-400">)</span>
   `;
   } else {
     text = `
@@ -365,7 +335,7 @@ function convertStep(step, stepNum) {
           <span class="markerA inline-block w-2 h-2 rounded-sm"></span>
           <span class="text-xs text-gray-400">(step</span>
           <span class="bg-green-400 inline-block w-4 h-4 text-xs rounded-full">${stepNum +
-            1}</span><span class="font-xs text-gray-400">)</span>
+      1}</span><span class="font-xs text-gray-400">)</span>
   `;
   }
   return {

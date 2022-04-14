@@ -504,7 +504,6 @@ termToType term =
       --  in "(" ++ content ++ ")"
       "(" ++  go varMap 0 p t ++ ")"
     go varMap n parent p@(Pair x y)
-      -- | isTuple parent =
       | isTypeCon parent =
         let listP = toList y
             content = unwords (zipWith (\t' n' -> go varMap n' p t') listP [0 ..])

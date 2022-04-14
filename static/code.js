@@ -214,15 +214,52 @@ validate password =
         then "Great password"
         else "Password too short"
 `;
+
+
+const constAndTuple = n => `module Task${n} where
+
+x :: (Int, Bool)
+x = (3, y)
+
+const :: a -> b -> a 
+const a b = a
+
+y = const 0 True
+`
+
+const inc = n => `module Task${n} where
+
+incr n = n + 1
+fun True c = incr c
+fun a x = a
+`
+
+const mostBasic = n => `module Task${n} where
+
+x 0 = 3
+x "1" = 0
+`
+
+const ifelse = n => `module Task${n} where
+u = 0
+v = 0.1
+z = True
+y = if z then u else v
+`
+
+
+
+
 const examples = [
+  mostBasic,
+  ifelse,
+  constAndTuple,
+  inc,
   exampleTake,
   examplePassword,
   exampleRockPaperScissors,
-  exampleNQueens,
   exampleDateSpan,
-  exampleBookTrans,
   exampleJValue,
-  exampeExtend,
 ].map((ex, n) => ex(n + 1));
 
 export default examples;

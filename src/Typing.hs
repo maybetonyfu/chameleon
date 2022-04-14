@@ -624,8 +624,8 @@ instance MatchTerm Literal where
     let label = Label 0 (term, atom "Int") [] "Literal" (sl node)
     return [label (term === atom "Int")]
   matchTerm term node@Frac {} = do
-    let label = Label 0 (term, atom "Frac") [] "Literal" (sl node)
-    return [label (term === atom "Frac")]
+    let label = Label 0 (term, atom "Fraction") [] "Literal" (sl node)
+    return [label (term === atom "Fraction")]
   matchTerm _ _ = undefined
 
 processFile :: String -> IO ()

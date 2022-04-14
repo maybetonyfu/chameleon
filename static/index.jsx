@@ -15,7 +15,6 @@ import {
   FULL_MODE,
   typeCheckThunk,
   switchTaskThunk,
-  switchTaskNextRoundThunk,
   disableHighlight,
   prevStep,
   nextStep,
@@ -24,37 +23,7 @@ import {
 import tasks from './code';
 import Modal from 'react-modal';
 import Split from 'split-grid';
-// import Analytics from 'analytics';
-// import mixpanelPlugin from '@analytics/mixpanel';
-// import { nanoid } from 'nanoid';
-// import Tracker from '@openreplay/tracker';
 
-// const withdrawId = nanoid(10)
-
-// const tracker = new Tracker({
-//   projectKey: "VzGISOLFpFFv1yHRdHHJ",
-//   ingestPoint: "https://data.ercu.be/ingest",
-// });
-
-// tracker.start();
-
-// const analytics = Analytics({
-//   app: 'chameleon-user-study',
-//   version: 1,
-//   plugins: [
-//     mixpanelPlugin({
-//       token: '6be6077e1d5b8de6978c65490e1666ea',
-//       customScriptSrc: '/mxp.js',
-//       options: {
-//         api_host: 'https://collect.ercu.be',
-//         ignore_dnt: true,
-//       },
-//     }),
-//   ],
-// });
-
-// analytics.identify(withdrawId);
-// document.getElementById('withdraw').innerText = withdrawId
 
 const events = {
   typecheck: 'typeCheck',
@@ -77,12 +46,10 @@ Split({
 Modal.setAppElement('#debugger');
 
 let currentTask = 0;
-let currentRound = 1;
 let editor = initializeEditor(tasks[currentTask]);
 store.dispatch(switchTaskThunk(currentTask));
-// analytics.track(events.open, { taskNumber: currentTask, mode: store.getState().mode });
 
-editor.on('focus', function() {
+editor.on('focus', function () {
   store.dispatch(disableHighlight());
 });
 
@@ -93,16 +60,10 @@ store.subscribe(() => {
     showHighlights,
     prevLocs,
     nextLocs,
-    round,
   } = store.getState();
   let nohighligt = { from: { line: 0, ch: 0 }, to: { line: 0, ch: 0 } };
 
   clearDecorations(editor);
-  if (round !== currentRound) {
-    currentRound = round;
-    document.getElementById('skip').classList.toggle('hidden');
-    document.getElementById('giveup').classList.toggle('hidden');
-  }
   if (!showHighlights) return;
   if (currentStep === null) return;
 
@@ -127,48 +88,7 @@ store.subscribe(() => {
 
 document.getElementById('save').addEventListener('click', _ => {
   let text = editor.getValue();
-  let taskNumer = store.getState().currentTaskNum;
-  let mode = store.getState().mode
   store.dispatch(typeCheckThunk(text));
-  // analytics.track(events.typecheck, { taskNumer, mode });
-});
-
-document.getElementById('skip').addEventListener('click', _ => {
-  let state = store.getState();
-  let mode = state.mode
-  // analytics.track(events.skip, { taskNumber: state.currentTaskNum ,mode});
-  if (state.round === 2) return;
-  if (state.currentTaskNum < 7) {
-    let nextTask = state.currentTaskNum + 1;
-    // analytics.track(events.open, { taskNumber: nextTask , mode : modes[nextTask] });
-    store.dispatch(switchTaskThunk(nextTask));
-
-    editor.setValue(tasks.at(nextTask));
-  } else if (state.currentTaskNum === 7) {
-    let nextTask = state.pending.at(0);
-    // analytics.track(events.open, { taskNumber: nextTask,  mode : modes[nextTask]  });
-    store.dispatch(switchTaskNextRoundThunk(nextTask));
-    editor.setValue(tasks.at(nextTask));
-  }
-});
-
-document.getElementById('giveup').addEventListener('click', _ => {
-  let state = store.getState();
-  let mode = state.mode;
-  let currentPendingIndex = state.pending.findIndex(
-    v => v === state.currentTaskNum,
-  );
-  // analytics.track(events.giveup, { taskNumber: state.currentTaskNum, mode });
-  if (state.round === 1) return;
-  if (state.currentTaskNum < 7) {
-    let nextTask = state.pending.at(currentPendingIndex + 1);
-    // analytics.track(events.open, { taskNumber: nextTask,  mode : modes[nextTask] });
-    store.dispatch(switchTaskThunk(nextTask));
-    editor.setValue(tasks.at(nextTask));
-  } else if (state.currentTaskNum === 7) {
-    window.location =
-      'https://docs.google.com/forms/d/e/1FAIpQLSfmXyASOPW2HIK-Oqp5nELBTltKeqZjqQ0G9JFram8eUCx26A/viewform?usp=sf_link';
-  }
 });
 
 document.querySelectorAll('.example').forEach(elem => {
@@ -212,65 +132,6 @@ const StringTypeSig = ({ simple, full }) => {
   }
 };
 
-const ModelContent = () => {
-  let dispatch = useDispatch();
-  let currentTaskNum = useSelector(state => state.currentTaskNum);
-  let pending = useSelector(state => state.pending);
-  let round = useSelector(state => state.round);
-  let mode = useSelector(state => state.mode)
-
-  // analytics.track(events.succeed, { taskNumber: currentTaskNum, mode });
-  return (
-    <div className='flex flex-col justify-around items-center h-full'>
-      <div>
-        <p className='text-center'>
-          Congratulations. You fixed the type error!
-        </p>
-        {pending.length === 0 ? (
-          <p className='text-center'>Click next to leave us some feedback.</p>
-        ) : (
-          <p className='text-center'>
-            Click next to head over to the next challenge.
-          </p>
-        )}
-      </div>
-      <button
-        className='px-5 py-1 bg-green-400 rounded-md'
-        onClick={() => {
-          if (pending.length === 0) {
-            window.location =
-              'https://docs.google.com/forms/d/e/1FAIpQLSfmXyASOPW2HIK-Oqp5nELBTltKeqZjqQ0G9JFram8eUCx26A/viewform?usp=sf_link';
-            return;
-          }
-          if (round === 1 && currentTaskNum < 7) {
-            let nextTask = currentTaskNum + 1;
-            // analytics.track(events.open, { taskNumber: nextTask, mode : modes[nextTask] });
-            dispatch(switchTaskThunk(nextTask));
-            editor.setValue(tasks.at(nextTask));
-          } else if (round === 1 && currentTaskNum === 7) {
-            let nextTask = pending.at(0);
-            // analytics.track(events.open, { taskNumber: nextTask,  mode : modes[nextTask]  });
-            dispatch(switchTaskNextRoundThunk(nextTask));
-            editor.setValue(tasks.at(nextTask));
-          } else if (round === 2) {
-            let nextPendingIndex = pending.findIndex(n => n > currentTaskNum);
-            if (nextPendingIndex === -1) {
-              window.location =
-                'https://docs.google.com/forms/d/e/1FAIpQLSfmXyASOPW2HIK-Oqp5nELBTltKeqZjqQ0G9JFram8eUCx26A/viewform?usp=sf_link';
-            } else {
-              let nextTask = pending.at(nextPendingIndex);
-              // analytics.track(events.open, { taskNumber: nextTask,  mode : modes[nextTask] });
-              dispatch(switchTaskThunk(nextTask));
-              editor.setValue(tasks.at(nextTask));
-            }
-          }
-        }}
-      >
-        Next
-      </button>
-    </div>
-  );
-};
 
 const Debuger = () => {
   let wellTyped = useSelector(state => state.wellTyped);
@@ -278,14 +139,13 @@ const Debuger = () => {
   let parseError = useSelector(state => state.parseError);
   return (
     <>
-      <Modal
-        isOpen={wellTyped}
-        className='max-w-2xl bg-gray-100 h-80 min-w-max left-1/2 top-1/2 -translate-y-1/2 -translate-x-1/2 absolute p-6 rounded-md'
-      >
-        <ModelContent />
-      </Modal>
       {(() => {
-        if (parseError !== null) {
+        if (wellTyped) {
+          return <div className="p-4 flex items-center">
+            <ion-icon size="large" style={{ color: 'rgb(74, 222, 128)' }} name="checkmark-circle"></ion-icon>
+            <span class="p-2">Congratulations! Your code is well typed.</span>
+          </div>
+        } else if (parseError !== null) {
           return <ParseErrorReport />;
         } else if (loadError !== null) {
           return <LoadErrorReport />;
@@ -340,10 +200,6 @@ const TypeErrorReport = () => {
       className='p-2 flex flex-col items-start'
       style={{ fontFamily: 'IBM Plex Sans' }}
     >
-      <div className='mb-2 bg-gray-300 px-4 py-2 rounded-md w-auto'>
-        Current mode:
-        {mode === BASIC_MODE ? ' Basic Mode' : ' Interactive Mode'}
-      </div>
       <Message></Message>
       {mode === BASIC_MODE ? null : <TypingTable></TypingTable>}
     </div>
@@ -354,8 +210,10 @@ const Message = () => {
   let contextItem = useSelector(state => state.currentContextItem);
   return contextItem === null ? null : (
     <div className='mb-5'>
-      <div className='text-md italic my-2'>
-        Chameleon cannot infer a type for the expression below:
+      <div className='text-md italic my-2 w-full'>
+        <div>Chameleon cannot infer a type for the expression below. </div>
+        <div>It is possible to infer two conflicting types: </div>
+        <div>Type 1 from the orange evidence and Type 2 from the blue evidence</div>
       </div>
 
       <div className='my-1 text-sm'>
@@ -367,7 +225,6 @@ const Message = () => {
       <div className='my-1 text-sm'>
         <span className='w-14 inline-block'>Type 1: </span>
         <span className='code groupMarkerB rounded-sm px-0.5 cursor-pointer'>
-          {/* {unAlias(contextItem['contextType1'])} */}
           <StringTypeSig
             simple={contextItem.contextType1SimpleString}
             full={contextItem.contextType1String}
@@ -377,7 +234,6 @@ const Message = () => {
       <div className='my-1 text-sm'>
         <span className='w-14 inline-block'>Type 2: </span>
         <span className='code groupMarkerA rounded-sm px-0.5 cursor-pointer'>
-          {/* {unAlias(contextItem['contextType2'])} */}
           <StringTypeSig
             simple={contextItem.contextType2SimpleString}
             full={contextItem.contextType2String}
@@ -401,11 +257,7 @@ const TypingTable = () => {
       <div className='text-center'>
         <ion-icon
           onClick={() => {
-            // analytics.track(events.interact, {
-            //   type: 'deduction step',
-            //   taskNumber: currentTaskNum,
-            //   mode
-            // });
+
             dispatch(prevStep());
           }}
           style={{ fontSize: 20, cursor: 'pointer' }}
@@ -428,11 +280,6 @@ const TypingTable = () => {
       <div className='text-center'>
         <ion-icon
           onClick={() => {
-            // analytics.track(events.interact, {
-            //   type: 'deduction step',
-            //   taskNumber: currentTaskNum,
-            //   mode
-            // });
             dispatch(nextStep());
           }}
           style={{ fontSize: 20, cursor: 'pointer' }}
@@ -460,11 +307,6 @@ const EmptyContextTable = () => {
             <div
               key={i}
               onClick={() => {
-                // analytics.track(events.interact, {
-                //   type: 'deduction step',
-                //   taskNumber: currentTaskNum,
-                //   mode
-                // });
                 dispatch(setStep(i));
               }}
               className={
@@ -523,11 +365,6 @@ const ContextRow = ({ row }) => {
       <Stepper rowInfo={contextSteps}></Stepper>
       <div
         onClick={() => {
-          // analytics.track(events.interact, {
-          //   type: 'deduction step',
-          //   taskNumber: currentTaskNum,
-          //   mode
-          // });
           dispatch(setStep(firstReleventStep));
         }}
         className='rounded-sm p-1 groupMarkerB flex justify-center items-center cursor-pointer'
@@ -546,11 +383,6 @@ const ContextRow = ({ row }) => {
       </div>
       <div
         onClick={() => {
-          // analytics.track(events.interact, {
-          //   type: 'deduction step',
-          //   taskNumber: currentTaskNum,
-          //   mode
-          // });
           dispatch(setStep(lastReleventStep));
         }}
         className='rounded-sm p-1 groupMarkerA flex justify-center items-center cursor-pointer'
@@ -582,11 +414,6 @@ const Stepper = ({ rowInfo }) => {
             <div
               key={stepId}
               onClick={() => {
-                // analytics.track(events.interact, {
-                //   type: 'deduction step',
-                //   taskNumber: currentTaskNum,
-                //   mode
-                // });
                 dispatch(setStep(stepId));
               }}
               className={

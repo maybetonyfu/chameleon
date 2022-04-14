@@ -87,8 +87,6 @@ compareConstraints (Label n1 (term1, term1') _ reason1 loc1 _) (Label n2 (term2,
 
   | loc2 `within` loc1 && reason1 == "Literal" = [ChStep "is defined in" RL loc1 loc2 (n1, n2)]
   | loc1 `within` loc2 && reason2 == "Literal" = [ChStep "is defined in" LR loc1 loc2 (n1, n2)]
-
-
   | reason1 == "Annotated" && reason2 == "Annotated" = []
   | reason1 == "Annotated" && reason2 /= "Annotated" = [ChStep "is annotated at" RL loc1 loc2 (n1, n2)]
   | reason1 /= "Annotated" && reason2 == "Annotated" = [ChStep "is annotated at" LR loc1 loc2 (n1, n2)]
@@ -98,13 +96,20 @@ compareConstraints (Label n1 (term1, term1') _ reason1 loc1 _) (Label n2 (term2,
   | term1' == term2' && not (isFresh term1') && not (isFresh term2') = [ChStep "is identical to" LR loc1 loc2 (n1, n2)]
   | reason1 == "Defined" && reason2 == "Match" = [ChStep "is argument of" RL loc1 loc2 (n1, n2)]
   | reason1 == "Match" && reason2 == "Defined" = [ChStep "is argument of" RL loc1 loc2 (n1, n2)]
-  | reason1 /= "Defined" && reason2 == "Defined" = [ChStep "is defined as" RL loc1 loc2 (n1, n2)]
-  | reason1 == "Defined" && reason2 /= "Defined" = [ChStep "is defined as" LR loc1 loc2 (n1, n2)]
-  | reason1 /= "Defined" && reason2 == "Defined" = [ChStep "is defined as" RL loc1 loc2 (n1, n2)]
+  | 
+
+    reason1 /= "Defined" && reason2 == "Defined" = [ChStep "is defined as" RL loc1 loc2 (n1, n2)]
+  | 
+
+    reason1 == "Defined" && reason2 /= "Defined" = [ChStep "is defined as" LR loc1 loc2 (n1, n2)]
+  | 
+
+    reason1 /= "Defined" && reason2 == "Defined" = [ChStep "is defined as" RL loc1 loc2 (n1, n2)]
   | reason1 == "Applied" && reason2 == "Applied" && loc1 <= loc2 = [ChStep "is applied at" LR loc1 loc2 (n1, n2)]
   | reason1 == "Applied" && reason2 == "Applied" && loc1 > loc2 = [ChStep "is applied at" RL loc1 loc2 (n1, n2)]
   | reason1 == "Applied" && reason2 /= "Applied" = [ChStep "is applied at" RL loc1 loc2 (n1, n2)]
   | reason1 /= "Applied" && reason2 == "Applied" = [ChStep "is applied at" LR loc1 loc2 (n1, n2)]
+  -- | 
   |  reason2 == "Instanciated"
     || reason1 == "Instanciated" = [ChStep "has same type as" LR loc1 loc2 (n1, n2)]
   | otherwise =
@@ -123,4 +128,4 @@ compareConstraints (Label n1 (term1, term1') _ reason1 loc1 _) (Label n2 (term2,
       --     ++ show term2'
       --     ++ ")\n"
       -- ) $
-    [ChStep "is related to" LR loc1 loc2 (n1, n2)]
+    [ChStep "has same type as" LR loc1 loc2 (n1, n2)]
