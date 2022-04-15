@@ -201,6 +201,12 @@ const TypeErrorReport = () => {
       style={{ fontFamily: 'IBM Plex Sans' }}
     >
       <Message></Message>
+      <div className='pt-4 text-xs italic'>
+        Below are all the expressions (in the middle column) 
+        that can cause the type error. 
+      </div>
+      <div className='pb-2 italic text-xs'>(Use the up and down buttons to verify each fact)</div>
+
       {mode === BASIC_MODE ? null : <TypingTable></TypingTable>}
     </div>
   );
@@ -210,18 +216,14 @@ const Message = () => {
   let contextItem = useSelector(state => state.currentContextItem);
   return contextItem === null ? null : (
     <div className='mb-5'>
-      <div className='text-md italic my-2 w-full'>
-        <div>Chameleon cannot infer a type for the expression below. </div>
-        <div>It is possible to infer two conflicting types: </div>
-        <div>Type 1 from the orange evidence and Type 2 from the blue evidence</div>
+      <div className='text-md my-2 w-full'>
+        <div>It is possible to infer two conflicting types for the expression
+          <span className='code ml-2 px-1 rounded-md bg-gray-700 text-white inline-block not-italic'>
+            {contextItem['contextExp']}
+          </span>:
+           </div>
       </div>
 
-      <div className='my-1 text-sm'>
-        Expression:
-        <span className='code ml-2 px-1 rounded-md bg-gray-700 text-white inline-block'>
-          {contextItem['contextExp']}
-        </span>
-      </div>
       <div className='my-1 text-sm'>
         <span className='w-14 inline-block'>Type 1: </span>
         <span className='code groupMarkerB rounded-sm px-0.5 cursor-pointer'>
@@ -231,7 +233,9 @@ const Message = () => {
           ></StringTypeSig>
         </span>
       </div>
-      <div className='my-1 text-sm'>
+      <div className='text-xs italic'>Type 1 can be infered from the orange highlights on the left side</div>
+
+      <div className='mb-1 mt-2 text-sm'>
         <span className='w-14 inline-block'>Type 2: </span>
         <span className='code groupMarkerA rounded-sm px-0.5 cursor-pointer'>
           <StringTypeSig
@@ -240,6 +244,8 @@ const Message = () => {
           ></StringTypeSig>
         </span>
       </div>
+      <div className='text-xs italic'>Type 2 can be infered from the blue highlights on the left side</div>
+
     </div>
   );
 };
@@ -296,8 +302,6 @@ const TypingTable = () => {
 const EmptyContextTable = () => {
   let steps = useSelector(state => state.steps);
   let currentTraverseId = useSelector(state => state.currentTraverseId);
-  let currentTaskNum = useSelector(state => state.currentTaskNum);
-  let mode = useSelector(state => state.mode)
   let dispatch = useDispatch();
   return (
     <>

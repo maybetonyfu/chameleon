@@ -281,7 +281,7 @@ instance MatchTerm Match where
         gArgs <- concat <$> zipWithM matchTerm args pats
         gReturn <- matchTerm ret rhs
 
-        let label = Label 0 (funVar, funOf (args ++ [ret])) [] ("Defined") (sl name)
+        let label = Label 0 (funVar, funOf (args ++ [ret])) [] "Defined" (sl name)
         let gApp = [label (funVar === funOf (args ++ [ret]))]
         return $ gArgs ++ gReturn ++ gApp
   matchTerm term (InfixMatch l pat name pats rhs maybeWheres) = matchTerm term (Match l name (pat : pats) rhs maybeWheres)
@@ -549,10 +549,10 @@ instance MatchTerm FieldUpdate where
 
 instance MatchTerm Pat where
   matchTerm term (PApp _ node@(UnQual _ (Ident _ "True")) []) = do
-    let label = Label 0 (term, atom "Bool") [] "Literal" (sl node)
+    let label = Label 0 (term, atom "Bool") [] "Matched" (sl node)
     return [label (term === atom "Bool")]
   matchTerm term (PApp _ node@(UnQual _ (Ident _ "False")) []) = do
-    let label = Label 0 (term, atom "Bool") [] "Literal" (sl node)
+    let label = Label 0 (term, atom "Bool") [] "Matched" (sl node)
     return [label (term === atom "Bool")]
   matchTerm term (PInfixApp l pat1 name pat2) = matchTerm term (PApp l name [pat1, pat2])
   matchTerm term node@(PVar (SrcSpanInfo sp _) name) = do
@@ -562,7 +562,9 @@ instance MatchTerm Pat where
       Just varTerm -> do
         let label = Label 0 (varTerm, term) [] "Matched" (sl node)
         return [label (varTerm === term)]
-  matchTerm term (PLit _ _ literal) = matchTerm term literal
+  matchTerm term (PLit _ _ literal) = do 
+    goals <- matchTerm term literal
+    return $ map (\g -> g{reason="Matched"}) goals
   matchTerm term node@(PNPlusK (SrcSpanInfo sp _) name _) = do
     mbV <- varByName name
     case mbV of
@@ -573,7 +575,6 @@ instance MatchTerm Pat where
   matchTerm term node@(PTuple _ _ pats) = do
     args <- freshVarN (length pats)
     tArgs <- concat <$> zipWithM matchTerm args pats
-
     let label = Label 0 (term, tupOf args) [] "Matched" (sl node)
     return $ label (term === tupOf args) : tArgs
   matchTerm term node@(PList l pats) = do
