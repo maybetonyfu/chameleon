@@ -23,7 +23,7 @@ import {
 import tasks from './code';
 import Modal from 'react-modal';
 import Split from 'split-grid';
-
+import "./polyfill"
 
 const events = {
   typecheck: 'typeCheck',
