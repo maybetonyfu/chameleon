@@ -4,8 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "build": "esbuild index.jsx --bundle --minify --outfile=build/out.js",
-    "dev": "esbuild index.jsx --bundle --minify --outfile=build/out.js --watch"
+    "build": "esbuild index.jsx --bundle --minify --sourcemap --outfile=build/out.js",
+    "dev": "esbuild index.jsx --bundle --sourcemap --outfile=build/out.js --watch"
   },
   "keywords": [],
   "author": "",

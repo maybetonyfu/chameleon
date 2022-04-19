@@ -6,26 +6,82 @@
 }
 
 .markerA {
-    background-color: var(--colorA);
-    border: solid 2px var(--colorA);
+    /* background-color: var(--colorA); */
+    /* border: solid 2px var(--colorA); */
+}
+
+
+.markerA::before {
+    content: " ";
+    position: relative;
+    width: 2px;
+    display: inline-block;
+    background: var(--colorA);
+    margin-left: -3px;
+}
+
+
+.markerA::after {
+    content: " ";
+    position: relative;
+    width: 2px;
+    display: inline-block;
+    background: var(--colorA);
+    margin-right: -3px;
+}
+
+.markerB::before {
+    content: " ";
+    position: relative;
+    width: 2px;
+    display: inline-block;
+    background: var(--colorB);
+    margin-left: -3px;
+}
+
+.markerB::after {
+    content: " ";
+    position: relative;
+    width: 2px;
+    display: inline-block;
+    background: var(--colorB);
+    margin-right: -3px;
+}
+
+.markerA.markerB::before  {
+    content: " ";
+    position: relative;
+    width: 3px;
+    display: inline-block;
+    background:  linear-gradient(90deg, var(--colorB), var(--colorB) 49%, var(--colorA) 50%);;
+    margin-left: -3px;
+}
+
+.markerA.markerB::after  {
+    content: " ";
+    position: relative;
+    width: 3px;
+    display: inline-block;
+    background:  linear-gradient(90deg, var(--colorB), var(--colorB) 49%, var(--colorA) 50%);;
+    margin-left: -3px;
 }
 
 
 .markerB {
-    background-color: var(--colorB);
-    border: solid 2px var(--colorB);
+    /* background-color: var(--colorB); */
+    /* border: solid 2px var(--colorB); */
 }
 
 
 .markerASmall.markerA.markerB  {
-    background-color: var(--colorA);
-    border: solid 2px var(--colorB);
+    /* background-color: var(--colorA); */
+    /* border: solid 2px var(--colorB); */
 }
 
 
 .markerBSmall.markerA.markerB {
-    background-color: var(--colorB);
-    border: solid 2px var(--colorA);
+    /* background-color: var(--colorB); */
+    /* border: solid 2px var(--colorA); */
 }
 
 .groupMarkerA {

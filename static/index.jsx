@@ -1,127 +1,21 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import {
-  initializeEditor,
-  highlight,
-  drawAnnotations,
-  clearDecorations,
-} from './editor';
 import { Provider, useSelector, useDispatch } from 'react-redux';
 import store from './store';
 import { arrEq, unAlias } from './helper';
 import {
-  modes,
-  BASIC_MODE,
-  FULL_MODE,
-  typeCheckThunk,
-  switchTaskThunk,
-  disableHighlight,
   prevStep,
   nextStep,
   setStep,
-} from './store';
-import tasks from './code';
-import Modal from 'react-modal';
-import Split from 'split-grid';
+  switchTaskThunk,
+} from './debuggerSlice';
+
+import Editor from "./Editor"
 import "./polyfill"
 
-const events = {
-  typecheck: 'typeCheck',
-  skip: 'skipTask',
-  giveup: 'giveUpTask',
-  interact: 'interactTools',
-  succeed: 'succeedTask',
-  open: 'openTask',
-};
-
-Split({
-  columnGutters: [
-    {
-      track: 1,
-      element: document.querySelector('#gutter'),
-    },
-  ],
-});
-
-Modal.setAppElement('#debugger');
-
 let currentTask = 0;
-let editor = initializeEditor(tasks[currentTask]);
 store.dispatch(switchTaskThunk(currentTask));
 
-editor.on('focus', function () {
-  store.dispatch(disableHighlight());
-});
-
-store.subscribe(() => {
-  let {
-    currentStep,
-    mode,
-    showHighlights,
-    prevLocs,
-    nextLocs,
-  } = store.getState();
-  let nohighligt = { from: { line: 0, ch: 0 }, to: { line: 0, ch: 0 } };
-
-  clearDecorations(editor);
-  if (!showHighlights) return;
-  if (currentStep === null) return;
-
-  if (mode === BASIC_MODE) {
-    highlight(
-      nohighligt,
-      nohighligt,
-      [currentStep.locA, ...prevLocs],
-      [currentStep.locB, ...nextLocs],
-      editor,
-    );
-  } else {
-    highlight(currentStep.locA, currentStep.locB, prevLocs, nextLocs, editor);
-    drawAnnotations(
-      currentStep.locA,
-      currentStep.locB,
-      currentStep.text,
-      editor,
-    );
-  }
-});
-
-document.getElementById('save').addEventListener('click', _ => {
-  let text = editor.getValue();
-  store.dispatch(typeCheckThunk(text));
-});
-
-document.querySelectorAll('.example').forEach(elem => {
-  elem.addEventListener('click', e => {
-    let taskId = parseInt(e.target.dataset['taskId'], 10);
-    editor.setValue(tasks.at(taskId));
-    store.dispatch(switchTaskThunk(taskId));
-  });
-});
-
-const TypeSig = ({ type }) => {
-  if (
-    type.tag === 'TypeForm' &&
-    type.contents.length === 3 &&
-    type.contents.at(0).contents === '[' &&
-    type.contents.at(1).contents === 'Char' &&
-    type.contents.at(2).contents === ']'
-  ) {
-    return <span className='inline-block'>String</span>;
-  } else if (type.tag === 'TypeForm') {
-    return (
-      <span className='inline-block'>
-        {type.contents.map((t, i) => (
-          <TypeSig type={t} key={i}></TypeSig>
-        ))}
-      </span>
-    );
-  } else if (type.tag === 'TypeFormPart' && type.contents === ' ') {
-    return <span className='inline-block w-1'></span>;
-  } else if (type.tag === 'TypeFormPart') {
-    return <span className='inline-block'>{type.contents}</span>;
-  }
-};
 
 const StringTypeSig = ({ simple, full }) => {
   let unlaliasedFull = unAlias(full);
@@ -133,12 +27,20 @@ const StringTypeSig = ({ simple, full }) => {
 };
 
 
+const App = () => {
+  return <div className='flex w-full'>
+    <Editor text="hello"></Editor>
+    <Debuger></Debuger>
+  </div>
+}
+
+
 const Debuger = () => {
-  let wellTyped = useSelector(state => state.wellTyped);
-  let loadError = useSelector(state => state.loadError);
-  let parseError = useSelector(state => state.parseError);
+  let wellTyped = useSelector(state => state.debugger.wellTyped);
+  let loadError = useSelector(state => state.debugger.loadError);
+  let parseError = useSelector(state => state.debugger.parseError);
   return (
-    <>
+    <div>
       {(() => {
         if (wellTyped) {
           return <div className="p-4 flex items-center">
@@ -153,12 +55,12 @@ const Debuger = () => {
           return <TypeErrorReport />;
         }
       })()}
-    </>
+    </div>
   );
 };
 
 const ParseErrorReport = () => {
-  let parseError = useSelector(state => state.parseError);
+  let parseError = useSelector(state => state.debugger.parseError);
   return (
     <div class='p-4'>
       <p className='py-2 px-4'>A syntax error was found in the code</p>
@@ -173,7 +75,7 @@ const ParseErrorReport = () => {
 };
 
 const LoadErrorReport = () => {
-  let loadError = useSelector(state => state.loadError);
+  let loadError = useSelector(state => state.debugger.loadError);
   return (
     <div class='p-4'>
       <p className='py-2 px-4'>A variable is used without being declared.</p>
@@ -194,7 +96,6 @@ const LoadErrorReport = () => {
 };
 
 const TypeErrorReport = () => {
-  let mode = useSelector(state => state.mode);
   return (
     <div
       className='p-2 flex flex-col items-start'
@@ -202,18 +103,18 @@ const TypeErrorReport = () => {
     >
       <Message></Message>
       <div className='pt-4 text-xs italic'>
-        Below are all the expressions (in the middle column) 
-        that can cause the type error. 
+        Below are all the expressions (in the middle column)
+        that can cause the type error.
       </div>
       <div className='pb-2 italic text-xs'>(Use the up and down buttons to verify each fact)</div>
 
-      {mode === BASIC_MODE ? null : <TypingTable></TypingTable>}
+       <TypingTable></TypingTable>
     </div>
   );
 };
 
 const Message = () => {
-  let contextItem = useSelector(state => state.currentContextItem);
+  let contextItem = useSelector(state => state.debugger.currentContextItem);
   return contextItem === null ? null : (
     <div className='mb-5'>
       <div className='text-md my-2 w-full'>
@@ -221,7 +122,7 @@ const Message = () => {
           <span className='code ml-2 px-1 rounded-md bg-gray-700 text-white inline-block not-italic'>
             {contextItem['contextExp']}
           </span>:
-           </div>
+        </div>
       </div>
 
       <div className='my-1 text-sm'>
@@ -252,9 +153,7 @@ const Message = () => {
 
 const TypingTable = () => {
   let dispatch = useDispatch();
-  let context = useSelector(state => state.context);
-  let currentTaskNum = useSelector(state => state.currentTaskNum);
-  let mode = useSelector(state => state.mode)
+  let context = useSelector(state => state.debugger.context);
   return (
     <div
       className={'grid gap-1 context-grid text-xs w-full'}
@@ -300,8 +199,8 @@ const TypingTable = () => {
 };
 
 const EmptyContextTable = () => {
-  let steps = useSelector(state => state.steps);
-  let currentTraverseId = useSelector(state => state.currentTraverseId);
+  let steps = useSelector(state => state.debugger.steps);
+  let currentTraverseId = useSelector(state => state.debugger.currentTraverseId);
   let dispatch = useDispatch();
   return (
     <>
@@ -333,10 +232,8 @@ const EmptyContextTable = () => {
 };
 
 const ContextRow = ({ row }) => {
-  let currentTraverseId = useSelector(state => state.currentTraverseId);
-  let currentTaskNum = useSelector(state => state.currentTaskNum);
-  let steps = useSelector(state => state.steps);
-  let mode = useSelector(state => state.mode)
+  let currentTraverseId = useSelector(state => state.debugger.currentTraverseId);
+  let steps = useSelector(state => state.debugger.steps);
   let dispatch = useDispatch();
   let {
     contextExp,
@@ -401,11 +298,9 @@ const ContextRow = ({ row }) => {
 };
 
 const Stepper = ({ rowInfo }) => {
-  let steps = useSelector(state => state.steps);
-  let currentTaskNum = useSelector(state => state.currentTaskNum);
-  let currentTraverseId = useSelector(state => state.currentTraverseId);
+  let steps = useSelector(state => state.debugger.steps);
+  let currentTraverseId = useSelector(state => state.debugger.currentTraverseId);
   let stepsInRow = rowInfo.filter(ri => ri[2]);
-  let mode = useSelector(state => state.mode)
   let dispatch = useDispatch();
   return (
     <>
@@ -438,7 +333,7 @@ const Stepper = ({ rowInfo }) => {
 
 ReactDOM.render(
   <Provider store={store}>
-    <Debuger></Debuger>
+    <App></App>
   </Provider>,
-  document.getElementById('debugger'),
+  document.getElementById('react-root'),
 );
