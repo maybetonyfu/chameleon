@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "build": "esbuild index.jsx --bundle --minify --sourcemap --outfile=build/out.js",
+    "build": "esbuild index.jsx --bundle --sourcemap --outfile=build/out.js",
     "dev": "esbuild index.jsx --bundle --sourcemap --outfile=build/out.js --watch"
   },
   "keywords": [],
@@ -12,11 +12,14 @@
   "license": "ISC",
   "dependencies": {
     "@analytics/mixpanel": "^0.4.0",
+    "@devbookhq/splitter": "^1.3.2",
+    "@heroicons/react": "^1.0.6",
     "@openreplay/tracker": "^3.5.4",
     "@reduxjs/toolkit": "^1.8.0",
     "analytics": "^0.8.1",
     "esbuild": "^0.14.29",
     "nanoid": "^3.3.2",
+    "ramda": "^0.28.0",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
     "react-modal": "^3.14.4",

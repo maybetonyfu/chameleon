@@ -1,12 +1,17 @@
-import { createSlice,createAsyncThunk } from '@reduxjs/toolkit'
-import { arrEq } from './helper';
+import { createSlice, createAsyncThunk } from '@reduxjs/toolkit'
 import tasks from './code';
+import * as R from 'ramda'
+import { drawAnnotations, makeParentHighlightB, makeHighlightB, makeHighlight } from './util';
 
+export const editorModes = {
+    edit: 0,
+    normal: 1,
+};
 
 export let typeCheckThunk = createAsyncThunk(
     'typeCheck',
-    async (text, { dispatch }) => {
-        let response = await fetch(backendUrl + '/typecheck', {
+    async (text) => {
+        let response = await fetch('/typecheck', {
             method: 'POST',
             body: text,
         });
@@ -26,7 +31,7 @@ export let switchTaskThunk = createAsyncThunk(
 
 const initialState = {
     currentStepNum: null,
-    currentStep: null,
+    text: '',
     currentTraverseId: null,
     currentContextItem: null,
     steps: [],
@@ -39,15 +44,24 @@ const initialState = {
     wellTyped: false,
     loadError: null,
     parseError: null,
+    mode: editorModes.normal,
+    widgets: [],
+    highlights: [],
 };
 
 const { actions, reducer } = createSlice({
     name: 'editor',
     initialState,
     reducers: {
+        toEditMode: R.assoc('mode', editorModes.edit),
+        toNormalMode: R.assoc('mode', editorModes.normal),
+        setText(state, action) {
+            state.text = action.payload
+        },
         setTask(state, action) {
-            if (action.payload < 0 || action.payload > 7) return state;
+            if (action.payload < 0 || action.payload > tasks.length) return state;
             state.currentTaskNum = action.payload;
+            state.text = tasks[action.payload]
         },
         setStep(state, action) {
             if (state.currentStepNum === null) return state;
@@ -55,7 +69,7 @@ const { actions, reducer } = createSlice({
                 return state;
 
             let currentStepNum = action.payload;
-            let currentStep = convertStep(
+            let { highlights, widgets } = convertStep(
                 state.steps[currentStepNum],
                 currentStepNum,
             );
@@ -65,12 +79,16 @@ const { actions, reducer } = createSlice({
                 state.context,
                 currentTraverseId,
             );
-            let prevLocs = getPrevLocs(state.steps, currentStepNum);
-            let nextLocs = getNextLocs(state.steps, currentStepNum);
+
             state.currentStepNum = currentStepNum
-            state.currentStep = currentStep
-            state.prevLocs = prevLocs
-            state.nextLocs = nextLocs
+            let nhighlights = [
+                ...highlights,
+                ...getPrevLocs(state.steps, currentStepNum),
+                ...getNextLocs(state.steps, currentStepNum)]
+            console.log(nhighlights)
+            state.highlights = nhighlights
+            state.widgets = widgets
+
             state.currentContextItem = currentContextItem
             state.currentTraverseId = currentTraverseId
         },
@@ -79,7 +97,7 @@ const { actions, reducer } = createSlice({
             if (state.currentStepNum <= 0) return state;
 
             let currentStepNum = state.currentStepNum - 1;
-            let currentStep = convertStep(
+            let { highlights, widgets } = convertStep(
                 state.steps[currentStepNum],
                 currentStepNum,
             );
@@ -88,27 +106,23 @@ const { actions, reducer } = createSlice({
                 state.context,
                 currentTraverseId,
             );
-            let prevLocs = getPrevLocs(state.steps, currentStepNum);
-            let nextLocs = getNextLocs(state.steps, currentStepNum);
-            return Object.assign(
-                {},
-                {
-                    ...state,
-                    currentStepNum,
-                    currentStep,
-                    currentTraverseId,
-                    currentContextItem,
-                    prevLocs,
-                    nextLocs,
-                },
-            );
+
+            state.currentStepNum = currentStepNum
+            state.highlights = [
+                ...highlights,
+                ...getPrevLocs(state.steps, currentStepNum),
+                ...getNextLocs(state.steps, currentStepNum)]
+            state.widgets = widgets
+
+            state.currentContextItem = currentContextItem
+            state.currentTraverseId = currentTraverseId
         },
         nextStep(state, action) {
             if (state.currentStepNum === null) return state;
             if (state.currentStepNum >= state.numOfSteps - 1) return state;
 
             let currentStepNum = state.currentStepNum + 1;
-            let currentStep = convertStep(
+            let { highlights, widgets } = convertStep(
                 state.steps[currentStepNum],
                 currentStepNum,
             );
@@ -117,100 +131,90 @@ const { actions, reducer } = createSlice({
                 state.context,
                 currentTraverseId,
             );
-            let prevLocs = getPrevLocs(state.steps, currentStepNum);
-            let nextLocs = getNextLocs(state.steps, currentStepNum);
-            return Object.assign(
-                {},
-                {
-                    ...state,
-                    currentStepNum,
-                    currentStep,
-                    currentTraverseId,
-                    currentContextItem,
-                    prevLocs,
-                    nextLocs,
-                },
-            );
+
+            state.currentStepNum = currentStepNum
+            state.highlights = [
+                ...highlights,
+                ...getPrevLocs(state.steps, currentStepNum),
+                ...getNextLocs(state.steps, currentStepNum)]
+            state.widgets = widgets
+
+            state.currentContextItem = currentContextItem
+            state.currentTraverseId = currentTraverseId
         },
     },
     extraReducers: (builder) => {
-        builder.addCase(
-            typeCheckThunk.fulfilled, (state, action) => {
-                if (action.payload.tag === 'ChTypeError') {
-                    let steps = action.payload.steps;
-                    let context = action.payload.contextTable;
-                    let currentStepNum = 0;
-                    let currentStep = convertStep(steps[currentStepNum], currentStepNum);
-                    let currentTraverseId = steps[currentStepNum].stepId;
+        builder
+            .addCase(
+                typeCheckThunk.fulfilled, (state, action) => {
+                    if (action.payload.tag === 'ChTypeError') {
+                        let steps = action.payload.steps;
+                        let context = action.payload.contextTable;
+                        let currentStepNum = 0;
+                        let { highlights, widgets } = convertStep(steps[currentStepNum], currentStepNum);
+                        let currentTraverseId = steps[currentStepNum].stepId;
+                        state.context = context
+                        state.steps = steps
+                        let nhighlights = [
+                            ...highlights,
+                            ...getPrevLocs(steps, currentStepNum),
+                            ...getNextLocs(steps, currentStepNum)]
+                        console.log(getPrevLocs(steps, currentStepNum))
+                        console.log(getNextLocs(steps, currentStepNum))
 
-                    let currentContextItem = getCurrentActiveContext(
-                        context,
-                        currentTraverseId,
-                    );
-
-                    let numOfSteps = steps.length;
-                    let numOfContextRows = context.length;
-                    let prevLocs = getPrevLocs(steps, currentStepNum);
-                    let nextLocs = getNextLocs(steps, currentStepNum);
-                    let showHighlights = true;
-                    return Object.assign(
-                        {},
-                        {
-                            ...state,
-                            steps,
-                            numOfSteps,
-                            numOfContextRows,
+                        state.highlights = nhighlights
+                        state.widgets = widgets
+                        state.numOfSteps = steps.length;
+                        state.numOfContextRows = context.length;
+                        state.currentStepNum = currentStepNum
+                        state.currentTraverseId = currentTraverseId;
+                        state.currentContextItem = getCurrentActiveContext(
                             context,
-                            currentStepNum,
-                            currentStep,
                             currentTraverseId,
-                            currentContextItem,
-                            prevLocs,
-                            nextLocs,
-                            showHighlights,
-                            parseError: null,
-                            loadError: null,
-                        },
-                    );
-                } else if (action.payload.tag === 'ChSuccess') {
-                    return Object.assign(
-                        {},
-                        {
-                            ...state,
-                            wellTyped: true,
-                            parseError: null,
-                            loadError: null,
-                        },
-                    );
-                } else if (action.payload.tag === 'ChLoadError') {
-                    let loadError = action.payload.missing;
-                    return Object.assign(
-                        {},
-                        {
-                            ...state,
-                            loadError,
-                            parseError: null,
-                        },
-                    );
-                } else if (action.payload.tag === 'ChParseError') {
-                    let parseError = {
-                        message: action.payload.message,
-                        loc: action.payload.loc,
-                    };
-                    return Object.assign(
-                        {},
-                        {
-                            ...state,
-                            parseError,
-                            loadError: null,
-                        },
-                    );
-                }
-            })
+                        );
+
+                        state.parseError = null
+                        state.loadError = null
+
+                    } else if (action.payload.tag === 'ChSuccess') {
+                        return Object.assign(
+                            {},
+                            {
+                                ...state,
+                                wellTyped: true,
+                                parseError: null,
+                                loadError: null,
+                            },
+                        );
+                    } else if (action.payload.tag === 'ChLoadError') {
+                        let loadError = action.payload.missing;
+                        return Object.assign(
+                            {},
+                            {
+                                ...state,
+                                loadError,
+                                parseError: null,
+                            },
+                        );
+                    } else if (action.payload.tag === 'ChParseError') {
+                        let parseError = {
+                            message: action.payload.message,
+                            loc: action.payload.loc,
+                        };
+                        return Object.assign(
+                            {},
+                            {
+                                ...state,
+                                parseError,
+                                loadError: null,
+                            },
+                        );
+                    }
+                })
     }
 })
 
-export const { setStep, setTask, prevStep, nextStep } = actions
+export const { setStep, prevStep, nextStep, setTask, setText, toEditMode, toNormalMode } = actions
 export default reducer
 
 
@@ -227,70 +231,52 @@ function convertLocation({
     };
 }
 
-function locEq(loc1, loc2) {
-    return (
-        loc1.from.line === loc2.from.line &&
-        loc1.from.ch === loc2.from.ch &&
-        loc1.to.line === loc2.to.line &&
-        loc1.to.ch === loc2.to.ch
-    );
-}
-
 function getCurrentActiveContext(contexts, currentTraverseId) {
     let item = contexts.find(c => {
-        return c.contextSteps.find(x => arrEq(x.at(0), currentTraverseId)).at(2);
+        return R.nth(2)(
+            c.contextSteps.find(x => R.equals(R.nth(0, x), currentTraverseId))
+        )
     });
     return item === undefined ? null : item;
 }
 
 function getPrevLocs(steps, currentNum) {
     if (steps.length === 0) return [];
-    let { locA, locB } = convertStep(steps[currentNum], currentNum);
+    let { rangeA, rangeB } = convertStep(steps[currentNum], currentNum);
     return steps
         .filter((_, i) => i < currentNum)
         .map(step => convertStep(step, 0))
-        .flatMap(step => [step.locA, step.locB])
-        .filter(l => !(locEq(l, locA) || locEq(l, locB)));
+        .flatMap(step => [step.rangeA, step.rangeB])
+        .filter(l => !(R.equals(l, rangeA) || R.equals(l, rangeB)))
+        .flatMap(l => makeHighlight(l, 'marker1'))
 }
 
 function getNextLocs(steps, currentNum) {
     if (steps.length === 0) return [];
-    let { locA, locB } = convertStep(steps[currentNum], currentNum);
+    let { rangeA, rangeB } = convertStep(steps[currentNum], currentNum);
     return steps
         .filter((_, i) => i > currentNum)
         .map(step => convertStep(step, 0))
-        .flatMap(step => [step.locA, step.locB])
-        .filter(l => !(locEq(l, locA) || locEq(l, locB)));
+        .flatMap(step => [step.rangeA, step.rangeB])
+        .filter(l => !(R.equals(l, rangeA) || R.equals(l, rangeB)))
+        .flatMap(l => makeHighlight(l, 'marker2'))
 }
 
 function convertStep(step, stepNum) {
     let reason = step['explanation'];
-    let text;
     let direction = step['order'];
-    let locA = convertLocation(step['stepA']);
-    let locB = convertLocation(step['stepB']);
-    if (direction === 'LR') {
-        text = `
-            <span class="markerA inline-block w-2 h-2 rounded-sm"></span>
-            ${reason}
-            <span class="markerB inline-block w-2 h-2 rounded-sm"></span>
-            <span class="text-xs text-gray-400">(step</span>
-            <span class="bg-green-400 inline-block w-4 h-4 text-xs rounded-full">${stepNum +
-            1}</span><span class="font-xs text-gray-400">)</span>
-    `;
-    } else {
-        text = `
-            <span class="markerB inline-block w-2 h-2 rounded-sm"></span>
-            ${reason}
-            <span class="markerA inline-block w-2 h-2 rounded-sm"></span>
-            <span class="text-xs text-gray-400">(step</span>
-            <span class="bg-green-400 inline-block w-4 h-4 text-xs rounded-full">${stepNum +
-            1}</span><span class="font-xs text-gray-400">)</span>
-    `;
-    }
-    return {
-        locA,
-        locB,
-        text,
-    };
+    let rangeA = convertLocation(step['stepA']);
+    let rangeB = convertLocation(step['stepB']);
+    let highlights = [
+        makeHighlightB(
+            rangeA,
+            'marker1'
+        ),
+        makeHighlightB(
+            rangeB, 'marker2'
+        )
+    ]
+    let widgets = drawAnnotations(rangeA, rangeB, reason, stepNum, direction)
+
+    return { highlights, widgets, rangeA, rangeB }
 }

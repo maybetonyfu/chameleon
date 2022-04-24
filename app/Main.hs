@@ -69,3 +69,10 @@ favicon :: ScottyM ()
 favicon = get "/favicon.ico" $ do
   setHeader "Content-Type" "image/vnd.microsoft.icon"
   file "static/build/favicon.ico"
+
+sourceMap :: ScottyM ()
+sourceMap = get (regex "^.*\\.map")  $ do
+  path <- param "0"
+  let filename = "static/build" `T.append` path
+  setHeader "Content-Type" "application/json"
+  file (T.unpack filename)
