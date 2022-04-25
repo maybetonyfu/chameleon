@@ -55,7 +55,7 @@ const EditorNormerMode = () => {
 
 const Line = ({ text, line }) => {
   return (
-    <div className='h-6'>
+    <div className='h-6 my-0.5'>
       {text.split('').map((t, ch) => (
         <Cell text={t} line={line} ch={ch} key={ch}></Cell>
       ))}

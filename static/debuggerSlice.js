@@ -10,7 +10,7 @@ export const editorModes = {
 
 export let typeCheckThunk = createAsyncThunk(
     'typeCheck',
-    async (_, {dispatch, getState}) => {
+    async (_, { dispatch, getState }) => {
         dispatch(resetHighlights())
         let state = getState()
         let text = state.debugger.text
@@ -36,6 +36,7 @@ export let switchTaskThunk = createAsyncThunk(
 const initialState = {
     currentStepNum: null,
     text: '',
+    longestLine: 0,
     currentTraverseId: null,
     currentContextItem: null,
     steps: [],
@@ -66,6 +67,7 @@ const { actions, reducer } = createSlice({
             if (action.payload < 0 || action.payload > tasks.length) return state;
             state.currentTaskNum = action.payload;
             state.text = tasks[action.payload]
+            state.longestLine = tasks[action.payload].split('\n').map(line => line.split('').length).sort().reverse()[0]
         },
         setStep(state, action) {
             if (state.currentStepNum === null) return state;
@@ -76,6 +78,7 @@ const { actions, reducer } = createSlice({
             let { highlights, widgets } = convertStep(
                 state.steps[currentStepNum],
                 currentStepNum,
+                state.longestLine
             );
 
             let currentTraverseId = state.steps[currentStepNum].stepId;
@@ -94,7 +97,7 @@ const { actions, reducer } = createSlice({
             state.currentContextItem = currentContextItem
             state.currentTraverseId = currentTraverseId
         },
-        resetHighlights (state) {
+        resetHighlights(state) {
             state.highlights = []
             state.widgets = []
         },
@@ -106,6 +109,7 @@ const { actions, reducer } = createSlice({
             let { highlights, widgets } = convertStep(
                 state.steps[currentStepNum],
                 currentStepNum,
+                state.longestLine
             );
             let currentTraverseId = state.steps[currentStepNum].stepId;
             let currentContextItem = getCurrentActiveContext(
@@ -131,6 +135,7 @@ const { actions, reducer } = createSlice({
             let { highlights, widgets } = convertStep(
                 state.steps[currentStepNum],
                 currentStepNum,
+                state.longestLine
             );
             let currentTraverseId = state.steps[currentStepNum].stepId;
             let currentContextItem = getCurrentActiveContext(
@@ -157,7 +162,11 @@ const { actions, reducer } = createSlice({
                         let steps = action.payload.steps;
                         let context = action.payload.contextTable;
                         let currentStepNum = 0;
-                        let { highlights, widgets } = convertStep(steps[currentStepNum], currentStepNum);
+                        let { highlights, widgets } = convertStep(
+                            steps[currentStepNum],
+                            currentStepNum,
+                            state.longestLine
+                        );
                         let currentTraverseId = steps[currentStepNum].stepId;
                         state.context = context
                         state.steps = steps
@@ -245,10 +254,10 @@ function getCurrentActiveContext(contexts, currentTraverseId) {
 
 function getPrevLocs(steps, currentNum) {
     if (steps.length === 0) return [];
-    let { rangeA, rangeB } = convertStep(steps[currentNum], currentNum);
+    let { rangeA, rangeB } = convertStep(steps[currentNum], currentNum, 0);
     return steps
         .filter((_, i) => i < currentNum)
-        .map(step => convertStep(step, 0))
+        .map(step => convertStep(step, 0, 0))
         .flatMap(step => [step.rangeA, step.rangeB])
         .filter(l => !(doesRangeSurround(l, rangeA) || doesRangeSurround(l, rangeB)))
         .flatMap(l => makeHighlight(l, 'marker1'))
@@ -256,16 +265,16 @@ function getPrevLocs(steps, currentNum) {
 
 function getNextLocs(steps, currentNum) {
     if (steps.length === 0) return [];
-    let { rangeA, rangeB } = convertStep(steps[currentNum], currentNum);
+    let { rangeA, rangeB } = convertStep(steps[currentNum], currentNum, 0);
     return steps
         .filter((_, i) => i > currentNum)
-        .map(step => convertStep(step, 0))
+        .map(step => convertStep(step, 0, 0))
         .flatMap(step => [step.rangeA, step.rangeB])
         .filter(l => !(doesRangeSurround(l, rangeA) || doesRangeSurround(l, rangeB)))
         .flatMap(l => makeHighlight(l, 'marker2'))
 }
 
-function convertStep(step, stepNum) {
+function convertStep(step, stepNum, offset) {
     let reason = step['explanation'];
     let direction = step['order'];
     let rangeA = convertLocation(step['stepA']);
@@ -273,7 +282,7 @@ function convertStep(step, stepNum) {
     let highlights;
     if (doesRangeSurround(rangeA, rangeB)) {
         highlights = [
-             makeParentHighlightB(
+            makeParentHighlightB(
                 rangeA,
                 'marker1'
             ),
@@ -304,6 +313,6 @@ function convertStep(step, stepNum) {
         ]
     }
 
-    let widgets = drawAnnotations(rangeA, rangeB, reason, stepNum, direction)
+    let widgets = drawAnnotations(rangeA, rangeB, reason, stepNum, direction, offset)
     return { highlights, widgets, rangeA, rangeB }
 }

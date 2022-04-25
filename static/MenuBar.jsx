@@ -34,7 +34,7 @@ const MenuBar = () => {
                 dispatch(typeCheckThunk())
             }}
         >
-            <EyeIcon className='h-4 w-4 mr-1'></EyeIcon>Normal Mode
+            <EyeIcon className='h-4 w-4 mr-1'></EyeIcon>Type check
         </button>
 
     </div>

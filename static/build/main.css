@@ -427,9 +427,11 @@
 }
 
 .marker1 {
-    background-color: var(--color-cerulean-2);
+    /* background-color: var(--color-cerulean-2);
+	 */
+	 background-color: var(--colorA-lighter);
 }
 
 .marker2 {
-    background-color: var(--color-cinnamon-2);
+    background-color: var(--colorB-lighter);
 }

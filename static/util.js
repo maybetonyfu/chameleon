@@ -65,7 +65,7 @@ export const doesRangeIntersect = (rangeA, rangeB) => {
   );
 };
 
-export function drawAnnotations(rangeA, rangeB, reason, step, direction) {
+export function drawAnnotations(rangeA, rangeB, reason, step, direction, offset) {
   let color = false;
   if (rangeB.from.line < rangeA.from.line) {
     // B
@@ -84,6 +84,7 @@ export function drawAnnotations(rangeA, rangeB, reason, step, direction) {
         height: 1,
       },
       color,
+      offset,
     );
     return [
       {
@@ -132,6 +133,7 @@ export function drawAnnotations(rangeA, rangeB, reason, step, direction) {
         height: 1,
       },
       color,
+      offset
     );
     return [
       {
@@ -166,14 +168,15 @@ export function drawAnnotations(rangeA, rangeB, reason, step, direction) {
   }
 }
 
-function boxStyles(topElem, bottomElem, color) {
-  const downwardBarHeight = 0.375;
+function boxStyles(topElem, bottomElem, color, offset) {
+  console.log()
+  const downwardBarHeight = 0.28;
   const annotationWidth = 18;
   const annotationHeight = 1.25;
-  const stepAsideDistance = 36;
   const chWidth = 0.625;
   const chHeight = 1.5;
   const lineColor = '#666666';
+  const stepAsideDistance = offset * chWidth + 15;
   const styleTop = {
     background: color ? 'var(--color-azure-3)' : 'transparent',
     opacity: color ? 0.5 : 1,

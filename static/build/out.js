@@ -24532,7 +24532,8 @@ fromGregorian :: Year -> Month -> Int -> Maybe Day
 fromGregorian y m d = Just (Day y m d)
 
 periodAsDateSpan :: Period -> DataSpan
-periodAsDateSpan (WeekPeriod b) =  DateSpan (Just b) (Just (addDays 7 b))
+periodAsDateSpan (WeekPeriod b) = 
+  DateSpan (Just b) (Just (addDays 7 b))
 periodAsDateSpan (MonthPeriod y m) =
   let
     (y', m')
@@ -25473,7 +25474,7 @@ y = if z then u else v
   var doesRangeSurround = (rangeA, rangeB) => {
     return pointBeforeInclusive(rangeA.from, rangeB.from) && pointAfterInclusive(rangeA.to, rangeB.to);
   };
-  function drawAnnotations(rangeA, rangeB, reason, step, direction) {
+  function drawAnnotations(rangeA, rangeB, reason, step, direction, offset) {
     let color = false;
     if (rangeB.from.line < rangeA.from.line) {
       const [topBox, bottomBox, inbetweenBox, annotationBox] = boxStyles({
@@ -25486,7 +25487,7 @@ y = if z then u else v
         top: rangeA.from.line,
         width: rangeA.to.ch - rangeA.from.ch,
         height: 1
-      }, color);
+      }, color, offset);
       return [
         {
           relativeTo: rangeB.from,
@@ -25528,7 +25529,7 @@ y = if z then u else v
         top: rangeB.from.line,
         width: rangeB.to.ch - rangeB.from.ch,
         height: 1
-      }, color);
+      }, color, offset);
       return [
         {
           relativeTo: rangeA.from,
@@ -25561,14 +25562,15 @@ y = if z then u else v
       ];
     }
   }
-  function boxStyles(topElem, bottomElem, color) {
-    const downwardBarHeight = 0.375;
+  function boxStyles(topElem, bottomElem, color, offset) {
+    console.log();
+    const downwardBarHeight = 0.28;
     const annotationWidth = 18;
     const annotationHeight = 1.25;
-    const stepAsideDistance = 36;
     const chWidth = 0.625;
     const chHeight = 1.5;
     const lineColor = "#666666";
+    const stepAsideDistance = offset * chWidth + 15;
     const styleTop = {
       background: color ? "var(--color-azure-3)" : "transparent",
       opacity: color ? 0.5 : 1,
@@ -25669,6 +25671,7 @@ y = if z then u else v
   var initialState = {
     currentStepNum: null,
     text: "",
+    longestLine: 0,
     currentTraverseId: null,
     currentContextItem: null,
     steps: [],
@@ -25699,6 +25702,7 @@ y = if z then u else v
           return state;
         state.currentTaskNum = action.payload;
         state.text = code_default[action.payload];
+        state.longestLine = code_default[action.payload].split("\n").map((line) => line.split("").length).sort().reverse()[0];
       },
       setStep(state, action) {
         if (state.currentStepNum === null)
@@ -25706,7 +25710,7 @@ y = if z then u else v
         if (action.payload > state.numOfSteps - 1 || action.payload < 0)
           return state;
         let currentStepNum = action.payload;
-        let { highlights, widgets } = convertStep(state.steps[currentStepNum], currentStepNum);
+        let { highlights, widgets } = convertStep(state.steps[currentStepNum], currentStepNum, state.longestLine);
         let currentTraverseId = state.steps[currentStepNum].stepId;
         let currentContextItem = getCurrentActiveContext(state.context, currentTraverseId);
         state.currentStepNum = currentStepNum;
@@ -25729,7 +25733,7 @@ y = if z then u else v
         if (state.currentStepNum <= 0)
           return state;
         let currentStepNum = state.currentStepNum - 1;
-        let { highlights, widgets } = convertStep(state.steps[currentStepNum], currentStepNum);
+        let { highlights, widgets } = convertStep(state.steps[currentStepNum], currentStepNum, state.longestLine);
         let currentTraverseId = state.steps[currentStepNum].stepId;
         let currentContextItem = getCurrentActiveContext(state.context, currentTraverseId);
         state.currentStepNum = currentStepNum;
@@ -25748,7 +25752,7 @@ y = if z then u else v
         if (state.currentStepNum >= state.numOfSteps - 1)
           return state;
         let currentStepNum = state.currentStepNum + 1;
-        let { highlights, widgets } = convertStep(state.steps[currentStepNum], currentStepNum);
+        let { highlights, widgets } = convertStep(state.steps[currentStepNum], currentStepNum, state.longestLine);
         let currentTraverseId = state.steps[currentStepNum].stepId;
         let currentContextItem = getCurrentActiveContext(state.context, currentTraverseId);
         state.currentStepNum = currentStepNum;
@@ -25768,7 +25772,7 @@ y = if z then u else v
           let steps = action.payload.steps;
           let context = action.payload.contextTable;
           let currentStepNum = 0;
-          let { highlights, widgets } = convertStep(steps[currentStepNum], currentStepNum);
+          let { highlights, widgets } = convertStep(steps[currentStepNum], currentStepNum, state.longestLine);
           let currentTraverseId = steps[currentStepNum].stepId;
           state.context = context;
           state.steps = steps;
@@ -25836,16 +25840,16 @@ y = if z then u else v
   function getPrevLocs(steps, currentNum) {
     if (steps.length === 0)
       return [];
-    let { rangeA, rangeB } = convertStep(steps[currentNum], currentNum);
-    return steps.filter((_3, i3) => i3 < currentNum).map((step) => convertStep(step, 0)).flatMap((step) => [step.rangeA, step.rangeB]).filter((l3) => !(doesRangeSurround(l3, rangeA) || doesRangeSurround(l3, rangeB))).flatMap((l3) => makeHighlight(l3, "marker1"));
+    let { rangeA, rangeB } = convertStep(steps[currentNum], currentNum, 0);
+    return steps.filter((_3, i3) => i3 < currentNum).map((step) => convertStep(step, 0, 0)).flatMap((step) => [step.rangeA, step.rangeB]).filter((l3) => !(doesRangeSurround(l3, rangeA) || doesRangeSurround(l3, rangeB))).flatMap((l3) => makeHighlight(l3, "marker1"));
   }
   function getNextLocs(steps, currentNum) {
     if (steps.length === 0)
       return [];
-    let { rangeA, rangeB } = convertStep(steps[currentNum], currentNum);
-    return steps.filter((_3, i3) => i3 > currentNum).map((step) => convertStep(step, 0)).flatMap((step) => [step.rangeA, step.rangeB]).filter((l3) => !(doesRangeSurround(l3, rangeA) || doesRangeSurround(l3, rangeB))).flatMap((l3) => makeHighlight(l3, "marker2"));
+    let { rangeA, rangeB } = convertStep(steps[currentNum], currentNum, 0);
+    return steps.filter((_3, i3) => i3 > currentNum).map((step) => convertStep(step, 0, 0)).flatMap((step) => [step.rangeA, step.rangeB]).filter((l3) => !(doesRangeSurround(l3, rangeA) || doesRangeSurround(l3, rangeB))).flatMap((l3) => makeHighlight(l3, "marker2"));
   }
-  function convertStep(step, stepNum) {
+  function convertStep(step, stepNum, offset) {
     let reason = step["explanation"];
     let direction = step["order"];
     let rangeA = convertLocation(step["stepA"]);
@@ -25867,7 +25871,7 @@ y = if z then u else v
         makeHighlightB(rangeA, "marker1")
       ];
     }
-    let widgets = drawAnnotations(rangeA, rangeB, reason, stepNum, direction);
+    let widgets = drawAnnotations(rangeA, rangeB, reason, stepNum, direction, offset);
     return { highlights, widgets, rangeA, rangeB };
   }
 
@@ -26194,7 +26198,7 @@ y = if z then u else v
   };
   var Line = ({ text, line }) => {
     return /* @__PURE__ */ import_react9.default.createElement("div", {
-      className: "h-6"
+      className: "h-6 my-0.5"
     }, text.split("").map((t3, ch) => /* @__PURE__ */ import_react9.default.createElement(Cell, {
       text: t3,
       line,
@@ -26540,7 +26544,7 @@ y = if z then u else v
       }
     }, /* @__PURE__ */ import_react11.default.createElement(EyeIcon_default, {
       className: "h-4 w-4 mr-1"
-    }), "Normal Mode"));
+    }), "Type check"));
   };
   var MenuBar_default = MenuBar;
 

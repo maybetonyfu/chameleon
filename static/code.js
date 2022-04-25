@@ -143,7 +143,8 @@ fromGregorian :: Year -> Month -> Int -> Maybe Day
 fromGregorian y m d = Just (Day y m d)
 
 periodAsDateSpan :: Period -> DataSpan
-periodAsDateSpan (WeekPeriod b) =  DateSpan (Just b) (Just (addDays 7 b))
+periodAsDateSpan (WeekPeriod b) = 
+  DateSpan (Just b) (Just (addDays 7 b))
 periodAsDateSpan (MonthPeriod y m) =
   let
     (y', m')
