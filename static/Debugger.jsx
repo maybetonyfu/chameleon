@@ -30,7 +30,7 @@ const Debugger = () => {
         if (wellTyped) {
           return <div className="p-4 flex items-center">
             <ion-icon size="large" style={{ color: 'rgb(74, 222, 128)' }} name="checkmark-circle"></ion-icon>
-            <span class="p-2">Congratulations! Your code is well typed.</span>
+            <span className="p-2">Congratulations! Your code is well typed.</span>
           </div>
         } else if (parseError !== null) {
           return <ParseErrorReport />;
@@ -226,16 +226,16 @@ const ContextRow = ({ row }) => {
     contextType2SimpleString,
     contextSteps,
   } = row;
-  let affinity = 
+  let affinity =
     R.pipe(
       R.find(R.pipe(R.nth(0), R.equals(currentTraverseId))),
       R.nth(1)
-    ) (contextSteps)
+    )(contextSteps)
 
   let affinityClass =
     affinity === 'R' ? 'sideA' : affinity === 'L' ? 'sideB' : 'sideAB';
   let firstReleventStepTId = R.nth(0)(contextSteps.find(R.nth(2)));
-  let lastReleventStepTId = 
+  let lastReleventStepTId =
     R.pipe(
       R.reverse,
       R.find(R.nth(2)),

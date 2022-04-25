@@ -238,7 +238,8 @@ export const partitionBy = (array, fun) => {
   return Object.values(res)
 }
 
-
+// z-index order: text >  bottom bar >= BorderBoxChild > BorderBoxParent > topBar > normalBoxParent > normalBoxChild 
+//                 50        40            40                   30           20         10              0
 export const makeParentHighlightB = (range, m) => {
   return {
     ...range,
@@ -250,6 +251,7 @@ export const makeParentHighlightB = (range, m) => {
         'border-t',
         'border-b',
         'border-black',
+        'z-30'
       ],
       start: ['-left-0.5', 'border-l', 'rounded-l-sm'],
       end: ['-right-0.5', 'border-r', 'rounded-r-sm'],
@@ -261,7 +263,7 @@ export const makeParentHighlight = (range, m) => {
   return {
     ...range,
     marker: {
-      shared: [m, '-inset-y-0.5', 'inset-x-0'],
+      shared: [m, '-inset-y-0.5', 'inset-x-0', 'z-10'],
       start: ['-left-0.5', 'rounded-l-sm'],
       end: ['-right-0.5', 'rounded-r-sm'],
     },
@@ -272,7 +274,7 @@ export const makeHighlightB = (range, marker) => {
   return {
     ...range,
     marker: {
-      shared: [marker, 'inset-0', 'border-t', 'border-b', 'border-black'],
+      shared: [marker, 'inset-0', 'border-t', 'border-b', 'border-black', 'z-40'],
       start: ['border-l', 'rounded-l-sm'],
       end: ['border-r', 'rounded-r-sm'],
     },
@@ -283,7 +285,7 @@ export const makeHighlight = (range, marker) => {
   return {
     ...range,
     marker: {
-      shared: [marker, 'inset-0'],
+      shared: [marker, 'inset-0', 'z-0'],
       start: ['rounded-l-sm'],
       end: ['rounded-r-sm'],
     },

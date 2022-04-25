@@ -1053,7 +1053,7 @@
             var dispatcher = resolveDispatcher();
             return dispatcher.useRef(initialValue);
           }
-          function useEffect2(create, deps) {
+          function useEffect3(create, deps) {
             var dispatcher = resolveDispatcher();
             return dispatcher.useEffect(create, deps);
           }
@@ -1623,7 +1623,7 @@
           exports.useCallback = useCallback;
           exports.useContext = useContext5;
           exports.useDebugValue = useDebugValue2;
-          exports.useEffect = useEffect2;
+          exports.useEffect = useEffect3;
           exports.useImperativeHandle = useImperativeHandle;
           exports.useLayoutEffect = useLayoutEffect2;
           exports.useMemo = useMemo4;
@@ -1869,7 +1869,7 @@
           var taskQueue = [];
           var timerQueue = [];
           var taskIdCounter = 1;
-          var currentTask2 = null;
+          var currentTask = null;
           var currentPriorityLevel = NormalPriority;
           var isPerformingWork = false;
           var isHostCallbackScheduled = false;
@@ -1917,10 +1917,10 @@
                 try {
                   return workLoop(hasTimeRemaining, initialTime2);
                 } catch (error) {
-                  if (currentTask2 !== null) {
+                  if (currentTask !== null) {
                     var currentTime = exports.unstable_now();
-                    markTaskErrored(currentTask2, currentTime);
-                    currentTask2.isQueued = false;
+                    markTaskErrored(currentTask, currentTime);
+                    currentTask.isQueued = false;
                   }
                   throw error;
                 }
@@ -1928,7 +1928,7 @@
                 return workLoop(hasTimeRemaining, initialTime2);
               }
             } finally {
-              currentTask2 = null;
+              currentTask = null;
               currentPriorityLevel = previousPriorityLevel;
               isPerformingWork = false;
             }
@@ -1936,22 +1936,22 @@
           function workLoop(hasTimeRemaining, initialTime2) {
             var currentTime = initialTime2;
             advanceTimers(currentTime);
-            currentTask2 = peek(taskQueue);
-            while (currentTask2 !== null && !enableSchedulerDebugging) {
-              if (currentTask2.expirationTime > currentTime && (!hasTimeRemaining || exports.unstable_shouldYield())) {
+            currentTask = peek(taskQueue);
+            while (currentTask !== null && !enableSchedulerDebugging) {
+              if (currentTask.expirationTime > currentTime && (!hasTimeRemaining || exports.unstable_shouldYield())) {
                 break;
               }
-              var callback = currentTask2.callback;
+              var callback = currentTask.callback;
               if (typeof callback === "function") {
-                currentTask2.callback = null;
-                currentPriorityLevel = currentTask2.priorityLevel;
-                var didUserCallbackTimeout = currentTask2.expirationTime <= currentTime;
+                currentTask.callback = null;
+                currentPriorityLevel = currentTask.priorityLevel;
+                var didUserCallbackTimeout = currentTask.expirationTime <= currentTime;
                 var continuationCallback = callback(didUserCallbackTimeout);
                 currentTime = exports.unstable_now();
                 if (typeof continuationCallback === "function") {
-                  currentTask2.callback = continuationCallback;
+                  currentTask.callback = continuationCallback;
                 } else {
-                  if (currentTask2 === peek(taskQueue)) {
+                  if (currentTask === peek(taskQueue)) {
                     pop(taskQueue);
                   }
                 }
@@ -1959,9 +1959,9 @@
               } else {
                 pop(taskQueue);
               }
-              currentTask2 = peek(taskQueue);
+              currentTask = peek(taskQueue);
             }
-            if (currentTask2 !== null) {
+            if (currentTask !== null) {
               return true;
             } else {
               var firstTimer = peek(timerQueue);
@@ -2437,11 +2437,11 @@
       if (true) {
         (function() {
           "use strict";
-          var React11 = require_react();
+          var React12 = require_react();
           var _assign = require_object_assign();
           var Scheduler = require_scheduler();
           var tracing = require_tracing();
-          var ReactSharedInternals = React11.__SECRET_INTERNALS_DO_NOT_USE_OR_YOU_WILL_BE_FIRED;
+          var ReactSharedInternals = React12.__SECRET_INTERNALS_DO_NOT_USE_OR_YOU_WILL_BE_FIRED;
           function warn(format) {
             {
               for (var _len = arguments.length, args = new Array(_len > 1 ? _len - 1 : 0), _key = 1; _key < _len; _key++) {
@@ -2473,7 +2473,7 @@
               Function.prototype.apply.call(console[level], console, argsWithFormat);
             }
           }
-          if (!React11) {
+          if (!React12) {
             {
               throw Error("ReactDOM was loaded before React. Make sure you load the React package before loading ReactDOM.");
             }
@@ -3689,7 +3689,7 @@
           var didWarnInvalidChild = false;
           function flattenChildren(children) {
             var content = "";
-            React11.Children.forEach(children, function(child) {
+            React12.Children.forEach(children, function(child) {
               if (child == null) {
                 return;
               }
@@ -3700,7 +3700,7 @@
           function validateProps(element, props) {
             {
               if (typeof props.children === "object" && props.children !== null) {
-                React11.Children.forEach(props.children, function(child) {
+                React12.Children.forEach(props.children, function(child) {
                   if (child == null) {
                     return;
                   }
@@ -10893,7 +10893,7 @@
           }
           var fakeInternalInstance = {};
           var isArray = Array.isArray;
-          var emptyRefsObject = new React11.Component().refs;
+          var emptyRefsObject = new React12.Component().refs;
           var didWarnAboutStateAssignmentForComponent;
           var didWarnAboutUninitializedState;
           var didWarnAboutGetSnapshotBeforeUpdateWithoutDidUpdate;
@@ -21195,7 +21195,7 @@ For more info, visit https://reactjs.org/link/mock-scheduler`);
       if (true) {
         (function() {
           "use strict";
-          var React11 = require_react();
+          var React12 = require_react();
           var _assign = require_object_assign();
           var REACT_ELEMENT_TYPE = 60103;
           var REACT_PORTAL_TYPE = 60106;
@@ -21252,7 +21252,7 @@ For more info, visit https://reactjs.org/link/mock-scheduler`);
             }
             return null;
           }
-          var ReactSharedInternals = React11.__SECRET_INTERNALS_DO_NOT_USE_OR_YOU_WILL_BE_FIRED;
+          var ReactSharedInternals = React12.__SECRET_INTERNALS_DO_NOT_USE_OR_YOU_WILL_BE_FIRED;
           function error(format) {
             {
               for (var _len2 = arguments.length, args = new Array(_len2 > 1 ? _len2 - 1 : 0), _key2 = 1; _key2 < _len2; _key2++) {
@@ -22248,7 +22248,7 @@ For more info, visit https://reactjs.org/link/mock-scheduler`);
   });
 
   // index.jsx
-  var import_react11 = __toESM(require_react());
+  var import_react12 = __toESM(require_react());
   var import_react_dom2 = __toESM(require_react_dom());
 
   // node_modules/react-redux/es/components/Provider.js
@@ -25443,6 +25443,15 @@ y = if z then u else v
     return str.replaceAll("[Char]", "String");
   };
   var within = (point, { from, to }) => pointAfterInclusive(point, from) && pointBeforeExclusive(point, to);
+  var pointBeforeInclusive = (point1, point2) => {
+    if (point1.line < point2.line) {
+      return true;
+    } else if (point1.line === point2.line) {
+      return point1.ch <= point2.ch;
+    } else {
+      return false;
+    }
+  };
   var pointBeforeExclusive = (point1, point2) => {
     if (point1.line < point2.line) {
       return true;
@@ -25460,6 +25469,9 @@ y = if z then u else v
     } else {
       return false;
     }
+  };
+  var doesRangeSurround = (rangeA, rangeB) => {
+    return pointBeforeInclusive(rangeA.from, rangeB.from) && pointAfterInclusive(rangeA.to, rangeB.to);
   };
   function drawAnnotations(rangeA, rangeB, reason, step, direction) {
     let color = false;
@@ -25594,11 +25606,29 @@ y = if z then u else v
     };
     return [styleTop, styleBottom, styleInbetween, styleAnnotation];
   }
+  var makeParentHighlightB = (range, m2) => {
+    return {
+      ...range,
+      marker: {
+        shared: [
+          m2,
+          "-inset-y-0.5",
+          "inset-x-0",
+          "border-t",
+          "border-b",
+          "border-black",
+          "z-30"
+        ],
+        start: ["-left-0.5", "border-l", "rounded-l-sm"],
+        end: ["-right-0.5", "border-r", "rounded-r-sm"]
+      }
+    };
+  };
   var makeHighlightB = (range, marker) => {
     return {
       ...range,
       marker: {
-        shared: [marker, "inset-0", "border-t", "border-b", "border-black"],
+        shared: [marker, "inset-0", "border-t", "border-b", "border-black", "z-40"],
         start: ["border-l", "rounded-l-sm"],
         end: ["border-r", "rounded-r-sm"]
       }
@@ -25608,7 +25638,7 @@ y = if z then u else v
     return {
       ...range,
       marker: {
-        shared: [marker, "inset-0"],
+        shared: [marker, "inset-0", "z-0"],
         start: ["rounded-l-sm"],
         end: ["rounded-r-sm"]
       }
@@ -25620,7 +25650,11 @@ y = if z then u else v
     edit: 0,
     normal: 1
   };
-  var typeCheckThunk = createAsyncThunk("typeCheck", async (text) => {
+  var typeCheckThunk = createAsyncThunk("typeCheck", async (_3, { dispatch, getState }) => {
+    dispatch(resetHighlights());
+    let state = getState();
+    let text = state.debugger.text;
+    console.log(text);
     let response = await fetch("/typecheck", {
       method: "POST",
       body: text
@@ -25630,8 +25664,7 @@ y = if z then u else v
   });
   var switchTaskThunk = createAsyncThunk("switchTask", async (n3, { dispatch }) => {
     dispatch(setTask(n3));
-    let text = code_default[n3];
-    dispatch(typeCheckThunk(text));
+    dispatch(typeCheckThunk(null));
   });
   var initialState = {
     currentStepNum: null,
@@ -25677,16 +25710,18 @@ y = if z then u else v
         let currentTraverseId = state.steps[currentStepNum].stepId;
         let currentContextItem = getCurrentActiveContext(state.context, currentTraverseId);
         state.currentStepNum = currentStepNum;
-        let nhighlights = [
+        state.highlights = [
           ...highlights,
           ...getPrevLocs(state.steps, currentStepNum),
           ...getNextLocs(state.steps, currentStepNum)
         ];
-        console.log(nhighlights);
-        state.highlights = nhighlights;
         state.widgets = widgets;
         state.currentContextItem = currentContextItem;
         state.currentTraverseId = currentTraverseId;
+      },
+      resetHighlights(state) {
+        state.highlights = [];
+        state.widgets = [];
       },
       prevStep(state, action) {
         if (state.currentStepNum === null)
@@ -25737,14 +25772,11 @@ y = if z then u else v
           let currentTraverseId = steps[currentStepNum].stepId;
           state.context = context;
           state.steps = steps;
-          let nhighlights = [
+          state.highlights = [
             ...highlights,
             ...getPrevLocs(steps, currentStepNum),
             ...getNextLocs(steps, currentStepNum)
           ];
-          console.log(getPrevLocs(steps, currentStepNum));
-          console.log(getNextLocs(steps, currentStepNum));
-          state.highlights = nhighlights;
           state.widgets = widgets;
           state.numOfSteps = steps.length;
           state.numOfContextRows = context.length;
@@ -25753,6 +25785,7 @@ y = if z then u else v
           state.currentContextItem = getCurrentActiveContext(context, currentTraverseId);
           state.parseError = null;
           state.loadError = null;
+          state.wellTyped = false;
         } else if (action.payload.tag === "ChSuccess") {
           return Object.assign({}, {
             ...state,
@@ -25781,7 +25814,7 @@ y = if z then u else v
       });
     }
   });
-  var { setStep, prevStep, nextStep, setTask, setText, toEditMode, toNormalMode } = actions;
+  var { setStep, prevStep, nextStep, setTask, setText, toEditMode, toNormalMode, resetHighlights } = actions;
   var debuggerSlice_default = reducer;
   function convertLocation({
     srcSpanEndLine,
@@ -25804,23 +25837,36 @@ y = if z then u else v
     if (steps.length === 0)
       return [];
     let { rangeA, rangeB } = convertStep(steps[currentNum], currentNum);
-    return steps.filter((_3, i3) => i3 < currentNum).map((step) => convertStep(step, 0)).flatMap((step) => [step.rangeA, step.rangeB]).filter((l3) => !(equals_default(l3, rangeA) || equals_default(l3, rangeB))).flatMap((l3) => makeHighlight(l3, "marker1"));
+    return steps.filter((_3, i3) => i3 < currentNum).map((step) => convertStep(step, 0)).flatMap((step) => [step.rangeA, step.rangeB]).filter((l3) => !(doesRangeSurround(l3, rangeA) || doesRangeSurround(l3, rangeB))).flatMap((l3) => makeHighlight(l3, "marker1"));
   }
   function getNextLocs(steps, currentNum) {
     if (steps.length === 0)
       return [];
     let { rangeA, rangeB } = convertStep(steps[currentNum], currentNum);
-    return steps.filter((_3, i3) => i3 > currentNum).map((step) => convertStep(step, 0)).flatMap((step) => [step.rangeA, step.rangeB]).filter((l3) => !(equals_default(l3, rangeA) || equals_default(l3, rangeB))).flatMap((l3) => makeHighlight(l3, "marker2"));
+    return steps.filter((_3, i3) => i3 > currentNum).map((step) => convertStep(step, 0)).flatMap((step) => [step.rangeA, step.rangeB]).filter((l3) => !(doesRangeSurround(l3, rangeA) || doesRangeSurround(l3, rangeB))).flatMap((l3) => makeHighlight(l3, "marker2"));
   }
   function convertStep(step, stepNum) {
     let reason = step["explanation"];
     let direction = step["order"];
     let rangeA = convertLocation(step["stepA"]);
     let rangeB = convertLocation(step["stepB"]);
-    let highlights = [
-      makeHighlightB(rangeA, "marker1"),
-      makeHighlightB(rangeB, "marker2")
-    ];
+    let highlights;
+    if (doesRangeSurround(rangeA, rangeB)) {
+      highlights = [
+        makeParentHighlightB(rangeA, "marker1"),
+        makeHighlightB(rangeB, "marker2")
+      ];
+    } else if (doesRangeSurround(rangeB, rangeA)) {
+      highlights = [
+        makeParentHighlightB(rangeB, "marker2"),
+        makeHighlightB(rangeA, "marker1")
+      ];
+    } else {
+      highlights = [
+        makeHighlightB(rangeB, "marker2"),
+        makeHighlightB(rangeA, "marker1")
+      ];
+    }
     let widgets = drawAnnotations(rangeA, rangeB, reason, stepNum, direction);
     return { highlights, widgets, rangeA, rangeB };
   }
@@ -26109,22 +26155,10 @@ y = if z then u else v
 
   // Editor.jsx
   var App = () => {
-    const dispatch = useDispatch();
     return /* @__PURE__ */ import_react9.default.createElement("div", {
-      className: "flex flex-col p-4 h-full"
-    }, /* @__PURE__ */ import_react9.default.createElement("div", {
-      className: "flex"
-    }, /* @__PURE__ */ import_react9.default.createElement("button", {
-      className: "bg-gray-300 px-4 py-1 rounded-md mx-2 flex justify-center items-center",
-      onClick: (_3) => dispatch(toEditMode())
-    }, /* @__PURE__ */ import_react9.default.createElement(PencilAltIcon_default, {
-      className: "h-4 w-4 mr-1"
-    }), "Edit Mode"), /* @__PURE__ */ import_react9.default.createElement("button", {
-      className: "bg-gray-300 px-4 py-1 rounded-md mx-2 flex justify-center items-center",
-      onClick: (_3) => dispatch(toNormalMode())
-    }, /* @__PURE__ */ import_react9.default.createElement(EyeIcon_default, {
-      className: "h-4 w-4 mr-1"
-    }), "Normal Mode")), /* @__PURE__ */ import_react9.default.createElement(Editor, null));
+      className: "flex flex-col p-3 overflow-auto",
+      style: { height: "calc(100vh - 2.5rem)" }
+    }, /* @__PURE__ */ import_react9.default.createElement(Editor, null));
   };
   var Editor = () => {
     const mode = useSelector(path_default(["debugger", "mode"]));
@@ -26142,7 +26176,7 @@ y = if z then u else v
     const text = useSelector(path_default(["debugger", "text"]));
     const dispatch = useDispatch();
     return /* @__PURE__ */ import_react9.default.createElement("textarea", {
-      className: "w-full h-full bg-gray-100",
+      className: "w-full h-full",
       style: { resize: "none" },
       onChange: (e3) => dispatch(setText(e3.target.value)),
       value: text
@@ -26150,7 +26184,9 @@ y = if z then u else v
   };
   var EditorNormerMode = () => {
     const text = useSelector(path_default(["debugger", "text"]));
-    return /* @__PURE__ */ import_react9.default.createElement("div", null, text.split("\n").map((t3, line) => /* @__PURE__ */ import_react9.default.createElement(Line, {
+    return /* @__PURE__ */ import_react9.default.createElement("div", {
+      className: ""
+    }, text.split("\n").map((t3, line) => /* @__PURE__ */ import_react9.default.createElement(Line, {
       text: t3,
       line,
       key: line
@@ -26192,31 +26228,31 @@ y = if z then u else v
     if (content.type === "annotation") {
       if (content.direction === "LR") {
         return /* @__PURE__ */ import_react9.default.createElement("div", {
-          className: classes.join(" "),
+          className: "flex items-center " + classes.join(" "),
           style: styles
         }, /* @__PURE__ */ import_react9.default.createElement("span", {
           className: "marker1 border border-black inline-block w-2 h-2 rounded-sm mr-1"
         }), content.reason, /* @__PURE__ */ import_react9.default.createElement("span", {
           className: "marker2 border border-black inline-block w-2 h-2 rounded-sm ml-1"
         }), /* @__PURE__ */ import_react9.default.createElement("span", {
-          className: "text-gray-400"
+          className: "ml-1 text-gray-400"
         }, "(step"), /* @__PURE__ */ import_react9.default.createElement("span", {
-          className: "bg-green-400 inline-block w-4 h-4 rounded-full"
+          className: "bg-green-400 inline-block w-4 h-4 text-xs rounded-full"
         }, content.step + 1), /* @__PURE__ */ import_react9.default.createElement("span", {
           className: "text-gray-400"
         }, ")"));
       } else {
         return /* @__PURE__ */ import_react9.default.createElement("div", {
-          className: classes.join(" "),
+          className: "flex items-center " + classes.join(" "),
           style: styles
         }, /* @__PURE__ */ import_react9.default.createElement("span", {
           className: "marker2 border border-black inline-block w-2 h-2 rounded-sm mr-1"
         }), content.reason, /* @__PURE__ */ import_react9.default.createElement("span", {
           className: "marker1 border border-black inline-block w-2 h-2 rounded-sm ml-1"
         }), /* @__PURE__ */ import_react9.default.createElement("span", {
-          className: "text-gray-400"
+          className: "ml-1 text-gray-400"
         }, "(step"), /* @__PURE__ */ import_react9.default.createElement("span", {
-          className: "bg-green-400 inline-block w-4 h-4 rounded-full"
+          className: "bg-green-400 inline-block w-4 h-4 text-xs rounded-full"
         }, content.step + 1), /* @__PURE__ */ import_react9.default.createElement("span", {
           className: "text-gray-400"
         }, ")"));
@@ -26237,7 +26273,7 @@ y = if z then u else v
       classes = [...classes, ...highlight.marker.end];
     }
     return /* @__PURE__ */ import_react9.default.createElement("div", {
-      className: "absolute z-30 " + classes.join(" ")
+      className: "absolute " + classes.join(" ")
     });
   };
   var Editor_default = App;
@@ -26265,7 +26301,7 @@ y = if z then u else v
           style: { color: "rgb(74, 222, 128)" },
           name: "checkmark-circle"
         }), /* @__PURE__ */ import_react10.default.createElement("span", {
-          class: "p-2"
+          className: "p-2"
         }, "Congratulations! Your code is well typed."));
       } else if (parseError !== null) {
         return /* @__PURE__ */ import_react10.default.createElement(ParseErrorReport, null);
@@ -26459,19 +26495,68 @@ y = if z then u else v
   };
   var Debugger_default = Debugger;
 
-  // index.jsx
-  var currentTask = 1;
-  store_default.dispatch(switchTaskThunk(currentTask));
-  var App2 = () => {
+  // MenuBar.jsx
+  var import_react11 = __toESM(require_react());
+  var MenuBar = () => {
+    const dispatch = useDispatch();
+    (0, import_react11.useEffect)(() => {
+      dispatch(setTask(0));
+      dispatch(typeCheckThunk());
+    }, []);
     return /* @__PURE__ */ import_react11.default.createElement("div", {
-      className: "w-full h-full"
-    }, /* @__PURE__ */ import_react11.default.createElement(y2, {
-      initialSizes: [60, 40]
-    }, /* @__PURE__ */ import_react11.default.createElement(Editor_default, null), /* @__PURE__ */ import_react11.default.createElement(Debugger_default, null)));
+      className: "w-full bg-gray-100 h-10 flex items-center px-3"
+    }, /* @__PURE__ */ import_react11.default.createElement("p", {
+      className: "mr-1"
+    }, "Load examples"), /* @__PURE__ */ import_react11.default.createElement("select", {
+      defaultValue: 0,
+      onChange: (e3) => dispatch(switchTaskThunk(e3.target.value)),
+      className: "bg-gray-300 h-8 px-4 py-1 rounded-md"
+    }, /* @__PURE__ */ import_react11.default.createElement("option", {
+      value: 0
+    }, "Example 1"), /* @__PURE__ */ import_react11.default.createElement("option", {
+      value: 1
+    }, "Example 2"), /* @__PURE__ */ import_react11.default.createElement("option", {
+      value: 2
+    }, "Example 3"), /* @__PURE__ */ import_react11.default.createElement("option", {
+      value: 3
+    }, "Example 4"), /* @__PURE__ */ import_react11.default.createElement("option", {
+      value: 4
+    }, "Example 5"), /* @__PURE__ */ import_react11.default.createElement("option", {
+      value: 5
+    }, "Example 6"), /* @__PURE__ */ import_react11.default.createElement("option", {
+      value: 6
+    }, "Example 7"), /* @__PURE__ */ import_react11.default.createElement("option", {
+      value: 7
+    }, "Example 8")), /* @__PURE__ */ import_react11.default.createElement("button", {
+      className: "bg-gray-300 px-4 py-1 rounded-md mx-2 flex h-8 justify-center items-center",
+      onClick: (_3) => dispatch(toEditMode())
+    }, /* @__PURE__ */ import_react11.default.createElement(PencilAltIcon_default, {
+      className: "h-4 w-4 mr-1"
+    }), "Edit code"), /* @__PURE__ */ import_react11.default.createElement("button", {
+      className: "bg-gray-300 px-4 py-1 rounded-md mx-2 flex h-8 justify-center items-center",
+      onClick: (_3) => {
+        dispatch(toNormalMode());
+        dispatch(typeCheckThunk());
+      }
+    }, /* @__PURE__ */ import_react11.default.createElement(EyeIcon_default, {
+      className: "h-4 w-4 mr-1"
+    }), "Normal Mode"));
   };
-  import_react_dom2.default.render(/* @__PURE__ */ import_react11.default.createElement(import_react11.default.StrictMode, null, /* @__PURE__ */ import_react11.default.createElement(Provider_default, {
+  var MenuBar_default = MenuBar;
+
+  // index.jsx
+  var App2 = () => {
+    return /* @__PURE__ */ import_react12.default.createElement("div", {
+      className: "w-full h-full flex flex-col"
+    }, /* @__PURE__ */ import_react12.default.createElement(MenuBar_default, null), /* @__PURE__ */ import_react12.default.createElement("div", {
+      className: "flex-grow"
+    }, /* @__PURE__ */ import_react12.default.createElement(y2, {
+      initialSizes: [60, 40]
+    }, /* @__PURE__ */ import_react12.default.createElement(Editor_default, null), /* @__PURE__ */ import_react12.default.createElement(Debugger_default, null))));
+  };
+  import_react_dom2.default.render(/* @__PURE__ */ import_react12.default.createElement(import_react12.default.StrictMode, null, /* @__PURE__ */ import_react12.default.createElement(Provider_default, {
     store: store_default
-  }, /* @__PURE__ */ import_react11.default.createElement(App2, null))), document.getElementById("react-root"));
+  }, /* @__PURE__ */ import_react12.default.createElement(App2, null))), document.getElementById("react-root"));
 })();
 /*
 object-assign

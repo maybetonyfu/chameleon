@@ -1,7 +1,7 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit'
 import tasks from './code';
 import * as R from 'ramda'
-import { drawAnnotations, makeParentHighlightB, makeHighlightB, makeHighlight } from './util';
+import { drawAnnotations, makeParentHighlightB, makeHighlightB, makeHighlight, doesRangeSurround } from './util';
 
 export const editorModes = {
     edit: 0,
@@ -10,7 +10,11 @@ export const editorModes = {
 
 export let typeCheckThunk = createAsyncThunk(
     'typeCheck',
-    async (text) => {
+    async (_, {dispatch, getState}) => {
+        dispatch(resetHighlights())
+        let state = getState()
+        let text = state.debugger.text
+        console.log(text)
         let response = await fetch('/typecheck', {
             method: 'POST',
             body: text,
@@ -24,8 +28,8 @@ export let switchTaskThunk = createAsyncThunk(
     'switchTask',
     async (n, { dispatch }) => {
         dispatch(setTask(n));
-        let text = tasks[n];
-        dispatch(typeCheckThunk(text));
+        // let text = tasks[n];
+        dispatch(typeCheckThunk(null));
     },
 );
 
@@ -81,16 +85,18 @@ const { actions, reducer } = createSlice({
             );
 
             state.currentStepNum = currentStepNum
-            let nhighlights = [
+            state.highlights = [
                 ...highlights,
                 ...getPrevLocs(state.steps, currentStepNum),
                 ...getNextLocs(state.steps, currentStepNum)]
-            console.log(nhighlights)
-            state.highlights = nhighlights
             state.widgets = widgets
 
             state.currentContextItem = currentContextItem
             state.currentTraverseId = currentTraverseId
+        },
+        resetHighlights (state) {
+            state.highlights = []
+            state.widgets = []
         },
         prevStep(state, action) {
             if (state.currentStepNum === null) return state;
@@ -155,14 +161,10 @@ const { actions, reducer } = createSlice({
                         let currentTraverseId = steps[currentStepNum].stepId;
                         state.context = context
                         state.steps = steps
-                        let nhighlights = [
+                        state.highlights = [
                             ...highlights,
                             ...getPrevLocs(steps, currentStepNum),
                             ...getNextLocs(steps, currentStepNum)]
-                        console.log(getPrevLocs(steps, currentStepNum))
-                        console.log(getNextLocs(steps, currentStepNum))
-
-                        state.highlights = nhighlights
                         state.widgets = widgets
                         state.numOfSteps = steps.length;
                         state.numOfContextRows = context.length;
@@ -175,6 +177,7 @@ const { actions, reducer } = createSlice({
 
                         state.parseError = null
                         state.loadError = null
+                        state.wellTyped = false
 
                     } else if (action.payload.tag === 'ChSuccess') {
                         return Object.assign(
@@ -183,7 +186,7 @@ const { actions, reducer } = createSlice({
                                 ...state,
                                 wellTyped: true,
                                 parseError: null,
-                                loadError: null,
+                                loadError: null
                             },
                         );
                     } else if (action.payload.tag === 'ChLoadError') {
@@ -193,7 +196,7 @@ const { actions, reducer } = createSlice({
                             {
                                 ...state,
                                 loadError,
-                                parseError: null,
+                                parseError: null
                             },
                         );
                     } else if (action.payload.tag === 'ChParseError') {
@@ -206,7 +209,7 @@ const { actions, reducer } = createSlice({
                             {
                                 ...state,
                                 parseError,
-                                loadError: null,
+                                loadError: null
                             },
                         );
                     }
@@ -214,7 +217,7 @@ const { actions, reducer } = createSlice({
     }
 })
 
-export const { setStep, prevStep, nextStep, setTask, setText, toEditMode, toNormalMode } = actions
+export const { setStep, prevStep, nextStep, setTask, setText, toEditMode, toNormalMode, resetHighlights } = actions
 export default reducer
 
 
@@ -247,7 +250,7 @@ function getPrevLocs(steps, currentNum) {
         .filter((_, i) => i < currentNum)
         .map(step => convertStep(step, 0))
         .flatMap(step => [step.rangeA, step.rangeB])
-        .filter(l => !(R.equals(l, rangeA) || R.equals(l, rangeB)))
+        .filter(l => !(doesRangeSurround(l, rangeA) || doesRangeSurround(l, rangeB)))
         .flatMap(l => makeHighlight(l, 'marker1'))
 }
 
@@ -258,7 +261,7 @@ function getNextLocs(steps, currentNum) {
         .filter((_, i) => i > currentNum)
         .map(step => convertStep(step, 0))
         .flatMap(step => [step.rangeA, step.rangeB])
-        .filter(l => !(R.equals(l, rangeA) || R.equals(l, rangeB)))
+        .filter(l => !(doesRangeSurround(l, rangeA) || doesRangeSurround(l, rangeB)))
         .flatMap(l => makeHighlight(l, 'marker2'))
 }
 
@@ -267,16 +270,40 @@ function convertStep(step, stepNum) {
     let direction = step['order'];
     let rangeA = convertLocation(step['stepA']);
     let rangeB = convertLocation(step['stepB']);
-    let highlights = [
-        makeHighlightB(
-            rangeA,
-            'marker1'
-        ),
-        makeHighlightB(
-            rangeB, 'marker2'
-        )
-    ]
-    let widgets = drawAnnotations(rangeA, rangeB, reason, stepNum, direction)
+    let highlights;
+    if (doesRangeSurround(rangeA, rangeB)) {
+        highlights = [
+             makeParentHighlightB(
+                rangeA,
+                'marker1'
+            ),
+            makeHighlightB(
+                rangeB, 'marker2'
+            )
+        ]
+    } else if (doesRangeSurround(rangeB, rangeA)) {
+        highlights = [
 
+            makeParentHighlightB(
+                rangeB, 'marker2'
+            ),
+            makeHighlightB(
+                rangeA,
+                'marker1'
+            ),
+        ]
+    } else {
+        highlights = [
+            makeHighlightB(
+                rangeB, 'marker2'
+            ),
+            makeHighlightB(
+                rangeA,
+                'marker1'
+            ),
+        ]
+    }
+
+    let widgets = drawAnnotations(rangeA, rangeB, reason, stepNum, direction)
     return { highlights, widgets, rangeA, rangeB }
 }

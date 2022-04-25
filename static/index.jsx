@@ -8,17 +8,22 @@ import {
 import Splitter, { SplitDirection } from '@devbookhq/splitter'
 import Editor from "./Editor"
 import Debugger from "./Debugger"
+import MenuBar from "./MenuBar"
 
-let currentTask = 1;
+// let currentTask = 1;
 
-store.dispatch(switchTaskThunk(currentTask));
+// store.dispatch(switchTaskThunk(currentTask));
 
 const App = () => {
-  return <div className='w-full h-full'>
-    <Splitter initialSizes={[60, 40]}>
-      <Editor></Editor>
-      <Debugger></Debugger>
-    </Splitter>
+  return <div className='w-full h-full flex flex-col'>
+    <MenuBar></MenuBar>
+    <div className='flex-grow'>
+      <Splitter initialSizes={[60, 40]}>
+        <Editor></Editor>
+        <Debugger></Debugger>
+      </Splitter>
+
+    </div>
   </div>
 }
 

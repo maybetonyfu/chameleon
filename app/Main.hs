@@ -20,7 +20,7 @@ import Web.Scotty
     setHeader,
   )
 
-main = scotty 5000 (typecheck >> home >> js >> css >> intro >> consent >> explanatory >> svg >> favicon)
+main = scotty 5000 (typecheck >> home >> sourceMap >> js >> css >> intro >> consent >> explanatory >> svg >> favicon)
 
 typecheck :: ScottyM ()
 typecheck = post "/typecheck" $ do
@@ -45,7 +45,7 @@ explanatory = get "/explanatory" $ do
   file "static/build/explanatory.html"
 
 js :: ScottyM ()
-js = get (regex "^.*\\.js") $ do
+js = get (regex "^.*\\.js$") $ do
   path <- param "0"
   let filename = "static/build" `T.append` path
   setHeader "Content-Type" "application/javascript"
@@ -71,7 +71,7 @@ favicon = get "/favicon.ico" $ do
   file "static/build/favicon.ico"
 
 sourceMap :: ScottyM ()
-sourceMap = get (regex "^.*\\.map")  $ do
+sourceMap = get (regex "^.*\\.js\\.map")  $ do
   path <- param "0"
   let filename = "static/build" `T.append` path
   setHeader "Content-Type" "application/json"
