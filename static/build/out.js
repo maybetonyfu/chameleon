@@ -1824,8 +1824,8 @@
           }
           function siftDown(heap, node, i3) {
             var index = i3;
-            var length = heap.length;
-            while (index < length) {
+            var length3 = heap.length;
+            while (index < length3) {
               var leftIndex = (index + 1) * 2 - 1;
               var left = heap[leftIndex];
               var rightIndex = leftIndex + 1;
@@ -3403,7 +3403,7 @@
               return isRendering;
             }
           }
-          function toString2(value) {
+          function toString4(value) {
             return "" + value;
           }
           function getToStringValue(value) {
@@ -3593,10 +3593,10 @@
             if (value != null) {
               if (type3 === "number") {
                 if (value === 0 && node.value === "" || node.value != value) {
-                  node.value = toString2(value);
+                  node.value = toString4(value);
                 }
-              } else if (node.value !== toString2(value)) {
-                node.value = toString2(value);
+              } else if (node.value !== toString4(value)) {
+                node.value = toString4(value);
               }
             } else if (type3 === "submit" || type3 === "reset") {
               node.removeAttribute("value");
@@ -3623,7 +3623,7 @@
               if (isButton && (props.value === void 0 || props.value === null)) {
                 return;
               }
-              var initialValue = toString2(node._wrapperState.initialValue);
+              var initialValue = toString4(node._wrapperState.initialValue);
               if (!isHydrating2) {
                 {
                   if (initialValue !== node.value) {
@@ -3679,9 +3679,9 @@
           function setDefaultValue(node, type3, value) {
             if (type3 !== "number" || getActiveElement(node.ownerDocument) !== node) {
               if (value == null) {
-                node.defaultValue = toString2(node._wrapperState.initialValue);
-              } else if (node.defaultValue !== toString2(value)) {
-                node.defaultValue = toString2(value);
+                node.defaultValue = toString4(node._wrapperState.initialValue);
+              } else if (node.defaultValue !== toString4(value)) {
+                node.defaultValue = toString4(value);
               }
             }
           }
@@ -3724,7 +3724,7 @@
           }
           function postMountWrapper$1(element, props) {
             if (props.value != null) {
-              element.setAttribute("value", toString2(getToStringValue(props.value)));
+              element.setAttribute("value", toString4(getToStringValue(props.value)));
             }
           }
           function getHostProps$1(element, props) {
@@ -3784,7 +3784,7 @@
                 }
               }
             } else {
-              var _selectedValue = toString2(getToStringValue(propValue));
+              var _selectedValue = toString4(getToStringValue(propValue));
               var defaultSelected = null;
               for (var _i2 = 0; _i2 < options2.length; _i2++) {
                 if (options2[_i2].value === _selectedValue) {
@@ -3866,7 +3866,7 @@
             var hostProps = _assign({}, props, {
               value: void 0,
               defaultValue: void 0,
-              children: toString2(node._wrapperState.initialValue)
+              children: toString4(node._wrapperState.initialValue)
             });
             return hostProps;
           }
@@ -3917,7 +3917,7 @@
             var value = getToStringValue(props.value);
             var defaultValue = getToStringValue(props.defaultValue);
             if (value != null) {
-              var newValue = toString2(value);
+              var newValue = toString4(value);
               if (newValue !== node.value) {
                 node.value = newValue;
               }
@@ -3926,7 +3926,7 @@
               }
             }
             if (defaultValue != null) {
-              node.defaultValue = toString2(defaultValue);
+              node.defaultValue = toString4(defaultValue);
             }
           }
           function postMountWrapper$3(element, props) {
@@ -7598,7 +7598,7 @@
             return getModernOffsetsFromPoints(outerNode, anchorNode, anchorOffset, focusNode, focusOffset);
           }
           function getModernOffsetsFromPoints(outerNode, anchorNode, anchorOffset, focusNode, focusOffset) {
-            var length = 0;
+            var length3 = 0;
             var start = -1;
             var end = -1;
             var indexWithinAnchor = 0;
@@ -7610,13 +7610,13 @@
                 var next = null;
                 while (true) {
                   if (node === anchorNode && (anchorOffset === 0 || node.nodeType === TEXT_NODE)) {
-                    start = length + anchorOffset;
+                    start = length3 + anchorOffset;
                   }
                   if (node === focusNode && (focusOffset === 0 || node.nodeType === TEXT_NODE)) {
-                    end = length + focusOffset;
+                    end = length3 + focusOffset;
                   }
                   if (node.nodeType === TEXT_NODE) {
-                    length += node.nodeValue.length;
+                    length3 += node.nodeValue.length;
                   }
                   if ((next = node.firstChild) === null) {
                     break;
@@ -7629,10 +7629,10 @@
                     break outer;
                   }
                   if (parentNode === anchorNode && ++indexWithinAnchor === anchorOffset) {
-                    start = length;
+                    start = length3;
                   }
                   if (parentNode === focusNode && ++indexWithinFocus === focusOffset) {
-                    end = length;
+                    end = length3;
                   }
                   if ((next = node.nextSibling) !== null) {
                     break;
@@ -7657,9 +7657,9 @@
               return;
             }
             var selection = win.getSelection();
-            var length = node.textContent.length;
-            var start = Math.min(offsets.start, length);
-            var end = offsets.end === void 0 ? start : Math.min(offsets.end, length);
+            var length3 = node.textContent.length;
+            var start = Math.min(offsets.start, length3);
+            var end = offsets.end === void 0 ? start : Math.min(offsets.end, length3);
             if (!selection.extend && start > end) {
               var temp = end;
               end = start;
@@ -23602,19 +23602,19 @@ For more info, visit https://reactjs.org/link/mock-scheduler`);
     return __defProps(a3, __getOwnPropDescs(b3));
   };
   var __async = function(__this, __arguments, generator) {
-    return new Promise(function(resolve, reject) {
+    return new Promise(function(resolve, reject3) {
       var fulfilled = function(value) {
         try {
           step(generator.next(value));
         } catch (e3) {
-          reject(e3);
+          reject3(e3);
         }
       };
       var rejected = function(value) {
         try {
           step(generator.throw(value));
         } catch (e3) {
-          reject(e3);
+          reject3(e3);
         }
       };
       var step = function(x2) {
@@ -24320,9 +24320,9 @@ For more info, visit https://reactjs.org/link/mock-scheduler`);
         var requestId = (options == null ? void 0 : options.idGenerator) ? options.idGenerator(arg) : nanoid();
         var abortController = new AC();
         var abortReason;
-        var abortedPromise = new Promise(function(_3, reject) {
+        var abortedPromise = new Promise(function(_3, reject3) {
           return abortController.signal.addEventListener("abort", function() {
-            return reject({ name: "AbortError", message: abortReason || "Aborted" });
+            return reject3({ name: "AbortError", message: abortReason || "Aborted" });
           });
         });
         var started = false;
@@ -24694,11 +24694,11 @@ y = if z then u else v
   }
 
   // node_modules/ramda/es/internal/_curryN.js
-  function _curryN(length, received, fn2) {
+  function _curryN(length3, received, fn2) {
     return function() {
       var combined = [];
       var argsIdx = 0;
-      var left = length;
+      var left = length3;
       var combinedIdx = 0;
       while (combinedIdx < received.length || argsIdx < arguments.length) {
         var result;
@@ -24714,16 +24714,16 @@ y = if z then u else v
         }
         combinedIdx += 1;
       }
-      return left <= 0 ? fn2.apply(this, combined) : _arity(left, _curryN(length, combined, fn2));
+      return left <= 0 ? fn2.apply(this, combined) : _arity(left, _curryN(length3, combined, fn2));
     };
   }
 
   // node_modules/ramda/es/curryN.js
-  var curryN = /* @__PURE__ */ _curry2(function curryN2(length, fn2) {
-    if (length === 1) {
+  var curryN = /* @__PURE__ */ _curry2(function curryN2(length3, fn2) {
+    if (length3 === 1) {
       return _curry1(fn2);
     }
-    return _arity(length, _curryN(length, [], fn2));
+    return _arity(length3, _curryN(length3, [], fn2));
   });
   var curryN_default = curryN;
 
@@ -25101,6 +25101,12 @@ y = if z then u else v
   });
   var assoc_default = assoc;
 
+  // node_modules/ramda/es/internal/_isFunction.js
+  function _isFunction(x2) {
+    var type3 = Object.prototype.toString.call(x2);
+    return type3 === "[object Function]" || type3 === "[object AsyncFunction]" || type3 === "[object GeneratorFunction]" || type3 === "[object AsyncGeneratorFunction]";
+  }
+
   // node_modules/ramda/es/type.js
   var type = /* @__PURE__ */ _curry1(function type2(val) {
     return val === null ? "Null" : val === void 0 ? "Undefined" : Object.prototype.toString.call(val).slice(8, -1);
@@ -25117,12 +25123,12 @@ y = if z then u else v
   // node_modules/ramda/es/internal/_checkForMethod.js
   function _checkForMethod(methodname, fn2) {
     return function() {
-      var length = arguments.length;
-      if (length === 0) {
+      var length3 = arguments.length;
+      if (length3 === 0) {
         return fn2();
       }
-      var obj = arguments[length - 1];
-      return isArray_default(obj) || typeof obj[methodname] !== "function" ? fn2.apply(this, arguments) : obj[methodname].apply(obj, Array.prototype.slice.call(arguments, 0, length - 1));
+      var obj = arguments[length3 - 1];
+      return isArray_default(obj) || typeof obj[methodname] !== "function" ? fn2.apply(this, arguments) : obj[methodname].apply(obj, Array.prototype.slice.call(arguments, 0, length3 - 1));
     };
   }
 
@@ -25149,6 +25155,10 @@ y = if z then u else v
     return _isString(list) ? list.split("").reverse().join("") : Array.prototype.slice.call(list, 0).reverse();
   });
   var reverse_default = reverse;
+
+  // node_modules/ramda/es/head.js
+  var head = /* @__PURE__ */ nth_default(0);
+  var head_default = head;
 
   // node_modules/ramda/es/internal/_arrayFromIterator.js
   function _arrayFromIterator(iter) {
@@ -25306,6 +25316,64 @@ y = if z then u else v
   });
   var equals_default = equals;
 
+  // node_modules/ramda/es/internal/_indexOf.js
+  function _indexOf(list, a3, idx) {
+    var inf, item;
+    if (typeof list.indexOf === "function") {
+      switch (typeof a3) {
+        case "number":
+          if (a3 === 0) {
+            inf = 1 / a3;
+            while (idx < list.length) {
+              item = list[idx];
+              if (item === 0 && 1 / item === inf) {
+                return idx;
+              }
+              idx += 1;
+            }
+            return -1;
+          } else if (a3 !== a3) {
+            while (idx < list.length) {
+              item = list[idx];
+              if (typeof item === "number" && item !== item) {
+                return idx;
+              }
+              idx += 1;
+            }
+            return -1;
+          }
+          return list.indexOf(a3, idx);
+        case "string":
+        case "boolean":
+        case "function":
+        case "undefined":
+          return list.indexOf(a3, idx);
+        case "object":
+          if (a3 === null) {
+            return list.indexOf(a3, idx);
+          }
+      }
+    }
+    while (idx < list.length) {
+      if (equals_default(list[idx], a3)) {
+        return idx;
+      }
+      idx += 1;
+    }
+    return -1;
+  }
+
+  // node_modules/ramda/es/internal/_includes.js
+  function _includes(a3, list) {
+    return _indexOf(list, a3, 0) >= 0;
+  }
+
+  // node_modules/ramda/es/internal/_quote.js
+  function _quote(s3) {
+    var escaped = s3.replace(/\\/g, "\\\\").replace(/[\b]/g, "\\b").replace(/\f/g, "\\f").replace(/\n/g, "\\n").replace(/\r/g, "\\r").replace(/\t/g, "\\t").replace(/\v/g, "\\v").replace(/\0/g, "\\0");
+    return '"' + escaped.replace(/"/g, '\\"') + '"';
+  }
+
   // node_modules/ramda/es/internal/_toISOString.js
   var pad = function pad2(n3) {
     return (n3 < 10 ? "0" : "") + n3;
@@ -25315,6 +25383,14 @@ y = if z then u else v
   } : function _toISOString3(d3) {
     return d3.getUTCFullYear() + "-" + pad(d3.getUTCMonth() + 1) + "-" + pad(d3.getUTCDate()) + "T" + pad(d3.getUTCHours()) + ":" + pad(d3.getUTCMinutes()) + ":" + pad(d3.getUTCSeconds()) + "." + (d3.getUTCMilliseconds() / 1e3).toFixed(3).slice(2, 5) + "Z";
   };
+  var toISOString_default = _toISOString;
+
+  // node_modules/ramda/es/internal/_complement.js
+  function _complement(f3) {
+    return function() {
+      return !f3.apply(this, arguments);
+    };
+  }
 
   // node_modules/ramda/es/internal/_filter.js
   function _filter(fn2, list) {
@@ -25364,6 +25440,59 @@ y = if z then u else v
   }));
   var filter_default = filter;
 
+  // node_modules/ramda/es/reject.js
+  var reject = /* @__PURE__ */ _curry2(function reject2(pred, filterable) {
+    return filter_default(_complement(pred), filterable);
+  });
+  var reject_default = reject;
+
+  // node_modules/ramda/es/internal/_toString.js
+  function _toString(x2, seen) {
+    var recur = function recur2(y3) {
+      var xs = seen.concat([x2]);
+      return _includes(y3, xs) ? "<Circular>" : _toString(y3, xs);
+    };
+    var mapPairs = function(obj, keys4) {
+      return _map(function(k2) {
+        return _quote(k2) + ": " + recur(obj[k2]);
+      }, keys4.slice().sort());
+    };
+    switch (Object.prototype.toString.call(x2)) {
+      case "[object Arguments]":
+        return "(function() { return arguments; }(" + _map(recur, x2).join(", ") + "))";
+      case "[object Array]":
+        return "[" + _map(recur, x2).concat(mapPairs(x2, reject_default(function(k2) {
+          return /^\d+$/.test(k2);
+        }, keys_default(x2)))).join(", ") + "]";
+      case "[object Boolean]":
+        return typeof x2 === "object" ? "new Boolean(" + recur(x2.valueOf()) + ")" : x2.toString();
+      case "[object Date]":
+        return "new Date(" + (isNaN(x2.valueOf()) ? recur(NaN) : _quote(toISOString_default(x2))) + ")";
+      case "[object Null]":
+        return "null";
+      case "[object Number]":
+        return typeof x2 === "object" ? "new Number(" + recur(x2.valueOf()) + ")" : 1 / x2 === -Infinity ? "-0" : x2.toString(10);
+      case "[object String]":
+        return typeof x2 === "object" ? "new String(" + recur(x2.valueOf()) + ")" : _quote(x2);
+      case "[object Undefined]":
+        return "undefined";
+      default:
+        if (typeof x2.toString === "function") {
+          var repr = x2.toString();
+          if (repr !== "[object Object]") {
+            return repr;
+          }
+        }
+        return "{" + mapPairs(x2, keys_default(x2)).join(", ") + "}";
+    }
+  }
+
+  // node_modules/ramda/es/toString.js
+  var toString2 = /* @__PURE__ */ _curry1(function toString3(val) {
+    return _toString(val, []);
+  });
+  var toString_default = toString2;
+
   // node_modules/ramda/es/curry.js
   var curry = /* @__PURE__ */ _curry1(function curry2(fn2) {
     return curryN_default(fn2.length, fn2);
@@ -25411,6 +25540,29 @@ y = if z then u else v
   }));
   var find_default = find;
 
+  // node_modules/ramda/es/invoker.js
+  var invoker = /* @__PURE__ */ _curry2(function invoker2(arity, method) {
+    return curryN_default(arity + 1, function() {
+      var target = arguments[arity];
+      if (target != null && _isFunction(target[method])) {
+        return target[method].apply(target, Array.prototype.slice.call(arguments, 0, arity));
+      }
+      throw new TypeError(toString_default(target) + ' does not have a method named "' + method + '"');
+    });
+  });
+  var invoker_default = invoker;
+
+  // node_modules/ramda/es/internal/_isNumber.js
+  function _isNumber(x2) {
+    return Object.prototype.toString.call(x2) === "[object Number]";
+  }
+
+  // node_modules/ramda/es/length.js
+  var length = /* @__PURE__ */ _curry1(function length2(list) {
+    return list != null && _isNumber(list.length) ? list.length : NaN;
+  });
+  var length_default = length;
+
   // node_modules/ramda/es/paths.js
   var paths = /* @__PURE__ */ _curry2(function paths2(pathsArray, obj) {
     return pathsArray.map(function(paths3) {
@@ -25435,6 +25587,22 @@ y = if z then u else v
     return paths_default([pathAr], obj)[0];
   });
   var path_default = path;
+
+  // node_modules/ramda/es/sort.js
+  var sort = /* @__PURE__ */ _curry2(function sort2(comparator, list) {
+    return Array.prototype.slice.call(list, 0).sort(comparator);
+  });
+  var sort_default = sort;
+
+  // node_modules/ramda/es/split.js
+  var split = /* @__PURE__ */ invoker_default(1, "split");
+  var split_default = split;
+
+  // node_modules/ramda/es/subtract.js
+  var subtract = /* @__PURE__ */ _curry2(function subtract2(a3, b3) {
+    return Number(a3) - Number(b3);
+  });
+  var subtract_default = subtract;
 
   // node_modules/ramda/es/trim.js
   var hasProtoTrim = typeof String.prototype.trim === "function";
@@ -25570,7 +25738,7 @@ y = if z then u else v
     const chWidth = 0.625;
     const chHeight = 1.5;
     const lineColor = "#666666";
-    const stepAsideDistance = offset * chWidth + 15;
+    const stepAsideDistance = offset * chWidth + 10;
     const styleTop = {
       background: color ? "var(--color-azure-3)" : "transparent",
       opacity: color ? 0.5 : 1,
@@ -25702,7 +25870,8 @@ y = if z then u else v
           return state;
         state.currentTaskNum = action.payload;
         state.text = code_default[action.payload];
-        state.longestLine = code_default[action.payload].split("\n").map((line) => line.split("").length).sort().reverse()[0];
+        console.log(code_default[action.payload]);
+        state.longestLine = pipe(split_default("\n"), map_default(split_default("")), map_default(length_default), sort_default(subtract_default), reverse_default, head_default)(code_default[action.payload]);
       },
       setStep(state, action) {
         if (state.currentStepNum === null)
@@ -26247,7 +26416,7 @@ y = if z then u else v
         }, ")"));
       } else {
         return /* @__PURE__ */ import_react9.default.createElement("div", {
-          className: "flex items-center " + classes.join(" "),
+          className: "flex items-center justify-center " + classes.join(" "),
           style: styles
         }, /* @__PURE__ */ import_react9.default.createElement("span", {
           className: "marker2 border border-black inline-block w-2 h-2 rounded-sm mr-1"

@@ -115,7 +115,7 @@ const Widget = ({ styles, classes, content }) => {
       );
     } else {
       return (
-        <div className={'flex items-center ' + classes.join(' ')} style={styles}>
+        <div className={'flex items-center justify-center ' + classes.join(' ')} style={styles}>
           <span className='marker2 border border-black inline-block w-2 h-2 rounded-sm mr-1'></span>
           {content.reason}
           <span className='marker1 border border-black inline-block w-2 h-2 rounded-sm ml-1'></span>

@@ -67,7 +67,16 @@ const { actions, reducer } = createSlice({
             if (action.payload < 0 || action.payload > tasks.length) return state;
             state.currentTaskNum = action.payload;
             state.text = tasks[action.payload]
-            state.longestLine = tasks[action.payload].split('\n').map(line => line.split('').length).sort().reverse()[0]
+            console.log(tasks[action.payload])
+            // state.longestLine = .split('\n').map(line => line.split('').length).sort().reverse()[0]
+            state.longestLine = R.pipe(
+                R.split('\n'),
+                R.map(R.split('')),
+                R.map(R.length),
+                R.sort(R.subtract),
+                R.reverse,
+                R.head
+            )(tasks[action.payload])
         },
         setStep(state, action) {
             if (state.currentStepNum === null) return state;
