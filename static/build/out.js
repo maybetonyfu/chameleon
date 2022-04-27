@@ -25987,7 +25987,16 @@ y = if z then u else v
       });
     }
   });
-  var { setStep, prevStep, nextStep, setTask, setText, toEditMode, toNormalMode, resetHighlights } = actions;
+  var {
+    setStep,
+    prevStep,
+    nextStep,
+    setTask,
+    setText,
+    toEditMode,
+    toNormalMode,
+    resetHighlights
+  } = actions;
   var debuggerSlice_default = reducer;
   function convertLocation({
     srcSpanEndLine,
@@ -26401,33 +26410,33 @@ y = if z then u else v
     if (content.type === "annotation") {
       if (content.direction === "LR") {
         return /* @__PURE__ */ import_react9.default.createElement("div", {
-          className: "flex items-center " + classes.join(" "),
+          className: "flex items-center justify-center text-gray-400 " + classes.join(" "),
           style: styles
         }, /* @__PURE__ */ import_react9.default.createElement("span", {
           className: "marker1 border border-black inline-block w-2 h-2 rounded-sm mr-1"
         }), content.reason, /* @__PURE__ */ import_react9.default.createElement("span", {
           className: "marker2 border border-black inline-block w-2 h-2 rounded-sm ml-1"
         }), /* @__PURE__ */ import_react9.default.createElement("span", {
-          className: "ml-1 text-gray-400"
+          className: "ml-1 text-gray-500"
         }, "(step"), /* @__PURE__ */ import_react9.default.createElement("span", {
-          className: "bg-green-400 inline-block w-4 h-4 text-xs rounded-full"
+          className: "bg-green-400 text-black inline-block w-4 h-4 text-xs rounded-full"
         }, content.step + 1), /* @__PURE__ */ import_react9.default.createElement("span", {
-          className: "text-gray-400"
+          className: "text-gray-500"
         }, ")"));
       } else {
         return /* @__PURE__ */ import_react9.default.createElement("div", {
-          className: "flex items-center justify-center " + classes.join(" "),
+          className: "flex items-center justify-center  text-gray-400 " + classes.join(" "),
           style: styles
         }, /* @__PURE__ */ import_react9.default.createElement("span", {
           className: "marker2 border border-black inline-block w-2 h-2 rounded-sm mr-1"
         }), content.reason, /* @__PURE__ */ import_react9.default.createElement("span", {
           className: "marker1 border border-black inline-block w-2 h-2 rounded-sm ml-1"
         }), /* @__PURE__ */ import_react9.default.createElement("span", {
-          className: "ml-1 text-gray-400"
+          className: "ml-1 text-gray-500"
         }, "(step"), /* @__PURE__ */ import_react9.default.createElement("span", {
-          className: "bg-green-400 inline-block w-4 h-4 text-xs rounded-full"
+          className: "bg-green-400 text-black inline-block w-4 h-4 text-xs rounded-full"
         }, content.step + 1), /* @__PURE__ */ import_react9.default.createElement("span", {
-          className: "text-gray-400"
+          className: "text-gray-500"
         }, ")"));
       }
     } else {

@@ -100,30 +100,31 @@ const Cell = ({ text, line, ch }) => {
 
 const Widget = ({ styles, classes, content }) => {
   if (content.type === 'annotation') {
+    // this is very cluncky
     if (content.direction === 'LR') {
       return (
-        <div className={'flex items-center ' + classes.join(' ')} style={styles}>
+        <div className={'flex items-center justify-center text-gray-400 ' + classes.join(' ')} style={styles}>
           <span className='marker1 border border-black inline-block w-2 h-2 rounded-sm mr-1'></span>
           {content.reason}
           <span className='marker2 border border-black inline-block w-2 h-2 rounded-sm ml-1'></span>
-          <span className='ml-1 text-gray-400'>(step</span>
-          <span className='bg-green-400 inline-block w-4 h-4 text-xs rounded-full'>
+          <span className='ml-1 text-gray-500'>(step</span>
+          <span className='bg-green-400 text-black inline-block w-4 h-4 text-xs rounded-full'>
           {content.step + 1}
           </span>
-          <span className='text-gray-400'>)</span>
+          <span className='text-gray-500'>)</span>
         </div>
       );
     } else {
       return (
-        <div className={'flex items-center justify-center ' + classes.join(' ')} style={styles}>
+        <div className={'flex items-center justify-center  text-gray-400 ' + classes.join(' ')} style={styles}>
           <span className='marker2 border border-black inline-block w-2 h-2 rounded-sm mr-1'></span>
           {content.reason}
           <span className='marker1 border border-black inline-block w-2 h-2 rounded-sm ml-1'></span>
-          <span className='ml-1 text-gray-400'>(step</span>
-          <span className='bg-green-400 inline-block w-4 h-4 text-xs rounded-full'>
+          <span className='ml-1 text-gray-500'>(step</span>
+          <span className='bg-green-400 text-black inline-block w-4 h-4 text-xs rounded-full'>
             {content.step + 1}
           </span>
-          <span className='text-gray-400'>)</span>
+          <span className='text-gray-500'>)</span>
         </div>
       );
     }

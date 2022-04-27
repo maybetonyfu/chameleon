@@ -5,7 +5,7 @@ module Run where
 import Agda.Utils.Graph.AdjacencyMap.Unidirectional hiding (lookup, transpose)
 import Builtin
 import Constraint hiding (main, processFile)
-import Control.Lens
+import Control.Lens hiding (use)
 import Control.Monad.Trans.State.Lazy
 import Data.Aeson
 import Data.List
@@ -64,10 +64,10 @@ processFile text =
    in case pResult of
         ParseOk hModule ->
           let ((_, scopes), _) = runState (getScopes Global m hModule) (m + 1)
-              mergedBindings = builtInScopes ++ scopes
+              mergedScope = builtInScopes ++ scopes
               filedOrderings = builtInFO ++ getFieldOrdering hModule
               names = allNames scopes
-              (goals, solvestate) = runState (matchTerm Unit hModule) (n, mergedBindings, filedOrderings, [])
+              (goals, solvestate) = runState (matchTerm Unit hModule) (n, mergedScope, filedOrderings, [])
               goals' = zipWith (\g n -> g {goalNum = n}) goals [0 ..]
               res = runGoalNWithState ks 1 (conjN (map unlabel (goals' ++ goals' ++ goals')))
            in if not . null . view _4 $ solvestate
@@ -78,7 +78,6 @@ processFile text =
                       let mus = getMus ks goals'
                           instanciationTable = concatMap instanciation mus
                           names' =
-                            -- trace ("\nInsta Table:\n" ++ show instanciationTable) $
                             useFunctionNewNames instanciationTable names
                           graphG = fromEdges . graphView $ mus
                           reachables = concatMap (map snd . Map.toList . reachableFrom graphG) [0 .. length goals']
@@ -134,6 +133,14 @@ processFile text =
                                   --   trace ("\nConcrete:" ++ name ++ ":\n" ++ unlines (map toSig concrete)) $
                                   let (leftmost, rightmost) = polarEnds concrete
                                       (leftmostSimp, rightmostSimp) = polarEnds simplified
+                                      --
+                                      scpId = (read . reverse . takeWhile (/= '.') . reverse $ name) :: Int
+                                      scope = find ((== scpId) . scopeId) mergedScope
+                                      _used = if isNothing scope then [] else use (fromJust scope)
+                                      usedBuiltInScopes = filter (\scp -> any (`elem` _used) (generate scp)) builtInScopes
+                                      usedBuilltInNames = concatMap (\scp -> map (++ ('.' : show (scopeId scp))) (generate scp)) usedBuiltInScopes
+                                      usedBuiltInTypes = typings ks usedBuilltInNames []
+                                      --
                                       sides =
                                         zipWith
                                           ( \(t1, t2) (g1, g2) ->

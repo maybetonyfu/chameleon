@@ -96,41 +96,41 @@ compareConstraints (Label n1 (term1, term1') _ reason1 loc1 _) (Label n2 (term2,
   | term1' == term2' && not (isFresh term1') && not (isFresh term2') = [ChStep "is identical to" LR loc1 loc2 (n1, n2)]
   | reason1 == "Defined" && reason2 == "Matched" = [ChStep "takes argument" LR loc1 loc2 (n1, n2)]
   | reason1 == "Matched" && reason2 == "Defined" = [ChStep "takes argument" RL loc1 loc2 (n1, n2)]
-  | 
-      trace
-      ( "\nreason1: "
-          ++ reason1
-          ++ " ("
-          ++ show term1
-          ++ " === "
-          ++ show term1'
-          ++ ")\nreason2: "
-          ++ reason2
-          ++ " ("
-          ++ show term2
-          ++ " === "
-          ++ show term2'
-          ++ ")\n"
-      ) $
+  |
+      -- trace
+      -- ( "\nreason1: "
+      --     ++ reason1
+      --     ++ " ("
+      --     ++ show term1
+      --     ++ " === "
+      --     ++ show term1'
+      --     ++ ")\nreason2: "
+      --     ++ reason2
+      --     ++ " ("
+      --     ++ show term2
+      --     ++ " === "
+      --     ++ show term2'
+      --     ++ ")\n"
+      -- ) $
     reason1 /= "Defined" && reason2 == "Defined" = [ChStep "is defined as" RL loc1 loc2 (n1, n2)]
-  | 
-      trace
-      ( "\nreason1: "
-          ++ reason1
-          ++ " ("
-          ++ show term1
-          ++ " === "
-          ++ show term1'
-          ++ ")\nreason2: "
-          ++ reason2
-          ++ " ("
-          ++ show term2
-          ++ " === "
-          ++ show term2'
-          ++ ")\n"
-      ) $
+  |
+      -- trace
+      -- ( "\nreason1: "
+      --     ++ reason1
+      --     ++ " ("
+      --     ++ show term1
+      --     ++ " === "
+      --     ++ show term1'
+      --     ++ ")\nreason2: "
+      --     ++ reason2
+      --     ++ " ("
+      --     ++ show term2
+      --     ++ " === "
+      --     ++ show term2'
+      --     ++ ")\n"
+      -- ) $
     reason1 == "Defined" && reason2 /= "Defined" = [ChStep "is defined as" LR loc1 loc2 (n1, n2)]
-  | 
+  |
 
     reason1 /= "Defined" && reason2 == "Defined" = [ChStep "is defined as" RL loc1 loc2 (n1, n2)]
   | reason1 == "Applied" && reason2 == "Applied" && loc1 <= loc2 = [ChStep "is applied at" LR loc1 loc2 (n1, n2)]
