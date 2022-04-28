@@ -36,7 +36,8 @@ data ChContext = ChContext
     contextType2Simple :: TypeForm,
     contextType2String :: String,
     contextType2SimpleString :: String,
-    contextSteps :: [((Int, Int), Affinity, Bool)]
+    contextSteps :: [((Int, Int), Affinity, Bool)],
+    contextGlobals :: [[String]]
   }
   deriving (Show, Generic)
 
@@ -139,7 +140,9 @@ processFile text =
                                       _used = if isNothing scope then [] else use (fromJust scope)
                                       usedBuiltInScopes = filter (\scp -> any (`elem` _used) (generate scp)) builtInScopes
                                       usedBuilltInNames = concatMap (\scp -> map (++ ('.' : show (scopeId scp))) (generate scp)) usedBuiltInScopes
-                                      usedBuiltInTypes = typings ks usedBuilltInNames []
+                                      usedBuilltInNormalNames = map showProperName usedBuilltInNames
+                                      usedBuiltInTypes = map toSig $ typings ks usedBuilltInNames []
+                                      nameTypePairs = transpose [usedBuilltInNormalNames, usedBuiltInTypes]
                                       --
                                       sides =
                                         zipWith
@@ -167,6 +170,7 @@ processFile text =
                                         (toSig rightmost)
                                         (toSig rightmostSimp)
                                         normalizedSides
+                                        nameTypePairs
                               )
                               relevent
                           contextTableSorted = sortOn (fromJust . findIndex ((== M) . view _2) . contextSteps) contextTable
