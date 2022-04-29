@@ -14,11 +14,56 @@
         href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:ital@0;1&family=JetBrains+Mono:ital,wght@0,400;1,100&display=swap"
         rel="stylesheet">
     <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="./main.css">
-    <script type="module" src="/out.js"></script>
 </head>
 
 <body class="h-screen w-full">
-    <div id="react-root" class="w-full h-full"></div>
+    <section>
+        <h1>Chameleon</h1>
+        <p>Chameleon is a set of tools to make solving type errors in Haskell easier and more fun. </p>
+    </section>
+    <section>
+        <h2>Features</h2>
+        <section>
+            <h3>Human-Centered Methods</h3>
+            We improve each feature in Chameleon based on the
+            feedback from the Haskell community. Debugging idioms
+            in Chameleon has been tested individually and in combinations.
+        </section>
+        <section>
+            <h3>Multi-location type errors</h3>
+            While many type systems try to pinpoint one exact error location in the code, the accuracy is often hit or miss. Chameleon tries to narrow down to a few suspects and asks the programmer to identify the real culprit. While both approaches have pros and cons, we believe Chameleon is more flexible and catches bugs faster.
+        </section>
+        <section>
+            <h3>Unbiased type errors</h3>
+            Instead of assuming one type is "Expected" and one type is "Actual", Chameleon will report two equally possible alternatives that type errors can happen. Many techniques have been proposed to solve this problem (Known as left-right bias) on type solver level. Chameleon combines the type solver capable of eliminating this bias and smart visual cues to distinguish the evidence for one type and the other.
+        </section>
+        <section>
+            <h3>Deduction step</h3>
+            The deduction step is a tool to peek inside the type checking engine. It shows step-by-step reasoning that explains why one type cannot reconcile with another in simple language. Chameleon's interactive interface allows users to make incremental assumptions and see how that affects the typing of the whole program.
+        </section>
+        <section>
+            <h3>More are coming!</h3>
+            Hang tight! We are working on more features to make Chameleon even better!
+        </section>
+    </section>
+    <section>
+        <h2>Playground</h2>
+        <p>The chameleon playground is an online editor for you to test out some of the chameleon features.</p>
+    </section>
+    <section>
+        <h2>Resources</h2>
+        <a>GitHub repository</a>
+        <a>Playground</a>
+        <a>YouTube Video</a>
+    </section>
+    <section>
+        <h2>About us</h2>
+        <section>
+            <h3>Tony Fu</h3>
+            <p>
+               Tony is a Ph.D. student in Computer Science at Monash University. Tony is interested in programming language design, type systems, and functional programming.
+            </p>
+        </section>
+    </section>
 </body>
 </html>
