@@ -515,7 +515,9 @@ termToType term =
     go _ _ _ _ = error ""
 
 
-toSig t = fromTerm t Unit Empty
+toSig t =
+  let varmap = zip (allVars t) (map (:[]) ['a' .. ])
+  in fromTerm varmap t Unit Empty
 
 data TypeForm = TypeFormPart String | TypeForm [TypeForm] deriving (Show, Eq, Generic)
 
@@ -574,25 +576,25 @@ toTypeForm p@(Pair x y) parent flag
 
 typeForm t = toTypeForm t Unit Empty
 
-fromTerm :: Term -> Term -> Flag -> String
+fromTerm :: [(Term, String)] -> Term -> Term -> Flag -> String
 -- fromTerm varMap term parentTerm level index
-fromTerm Unit parent flag = ""
-fromTerm (Atom x) parent flag  = x
-fromTerm (Var ('_' : '.' : x)) parent flag = [['a' ..] !! (read x :: Int)]
-fromTerm (Var _) parent index = error "Variable is not fresh"
-fromTerm p@(Pair (Atom "Function") (Pair a b)) parent flag
-      | isFunction parent && flag == FunctionFirst = mconcat ["(", fromTerm a p FunctionFirst, "->" , fromTerm b p Empty, ")"]
-      | otherwise = mconcat [fromTerm a p FunctionFirst,  "->", fromTerm b p Empty]
+fromTerm varmap Unit parent flag = ""
+fromTerm varmap (Atom x) parent flag  = x
+fromTerm varmap v@(Var x) parent flag = fromJust (lookup v varmap)
+fromTerm varmap (Var _) parent index = error "Variable is not fresh"
+fromTerm varmap p@(Pair (Atom "Function") (Pair a b)) parent flag
+      | isFunction parent && flag == FunctionFirst = mconcat ["(", fromTerm varmap a p FunctionFirst, "->" , fromTerm varmap b p Empty, ")"]
+      | otherwise = mconcat [fromTerm varmap a p FunctionFirst,  "->", fromTerm varmap b p Empty]
 
-fromTerm p@(Pair (Atom "List") t) parent flag = mconcat ["[", fromTerm t p Empty, "]"]
+fromTerm varmap p@(Pair (Atom "List") t) parent flag = mconcat ["[", fromTerm varmap t p Empty, "]"]
 
-fromTerm p@(Pair (Atom "Tuple") (Pair a b)) parent flag   = mconcat ["(" , fromTerm a p TupleFirst , ",", fromTerm b p TupleBody,  ")"]
+fromTerm varmap p@(Pair (Atom "Tuple") (Pair a b)) parent flag   = mconcat ["(" , fromTerm varmap a p TupleFirst , ",", fromTerm varmap b p TupleBody,  ")"]
 
-fromTerm p@(Pair x y) parent flag
-      | isTypeCon parent = mconcat ["(" , fromTerm x parent Empty , " ", fromTerm y parent Empty,  ")"]
-      | otherwise = mconcat [fromTerm x p Empty , " ", fromTerm y p Empty]
+fromTerm varmap p@(Pair x y) parent flag
+      | isTypeCon parent = mconcat ["(" , fromTerm varmap x parent Empty , " ", fromTerm varmap y parent Empty,  ")"]
+      | otherwise = mconcat [fromTerm varmap x p Empty , " ", fromTerm varmap y p Empty]
 
-data Flag = TupleRoot | TupleFirst | TupleBody | FunctionFirst | Empty deriving(Eq)
+data Flag = TupleRoot | TupleFirst | TupleBody | FunctionFirst | Empty deriving (Eq)
 
 isFunction :: Term -> Bool
 isFunction (Pair (Atom "Function") _) = True

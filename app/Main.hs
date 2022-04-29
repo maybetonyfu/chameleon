@@ -20,13 +20,29 @@ import Web.Scotty
     setHeader,
   )
 
-main = scotty 5000 (typecheck >> home >> sourceMap >> js >> css >> intro >> consent >> explanatory >> svg >> favicon)
+main = scotty 5000 (
+  typecheck
+    >> home
+    >> sourceMap
+    >> js
+    >> css
+    >> intro
+    >> consent
+    >> explanatory
+    >> playground
+    >> svg
+    >> favicon)
 
 typecheck :: ScottyM ()
 typecheck = post "/typecheck" $ do
   content <- body
   let result = processFile (BS.unpack content)
   json result
+
+playground :: ScottyM ()
+playground = get "/playground" $ do
+  file "static/build/playground.html"
+
 
 home :: ScottyM ()
 home = get "/" $ do

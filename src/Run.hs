@@ -134,15 +134,16 @@ processFile text =
                                   --   trace ("\nConcrete:" ++ name ++ ":\n" ++ unlines (map toSig concrete)) $
                                   let (leftmost, rightmost) = polarEnds concrete
                                       (leftmostSimp, rightmostSimp) = polarEnds simplified
-                                      --
+                                      -- globals in the scope
                                       scpId = (read . reverse . takeWhile (/= '.') . reverse $ name) :: Int
                                       scope = find ((== scpId) . scopeId) mergedScope
                                       _used = if isNothing scope then [] else use (fromJust scope)
                                       usedBuiltInScopes = filter (\scp -> any (`elem` _used) (generate scp)) builtInScopes
                                       usedBuilltInNames = concatMap (\scp -> map (++ ('.' : show (scopeId scp))) (generate scp)) usedBuiltInScopes
                                       usedBuilltInNormalNames = map showProperName usedBuilltInNames
-                                      usedBuiltInTypes = map toSig $ typings ks usedBuilltInNames []
-                                      nameTypePairs = transpose [usedBuilltInNormalNames, usedBuiltInTypes]
+                                      usedBuiltInTypes =  typings ks usedBuilltInNames []
+                                      usedBuiltInTypeSigs = trace (show usedBuiltInTypes) $ map toSig usedBuiltInTypes
+                                      nameTypePairs = transpose [usedBuilltInNormalNames, usedBuiltInTypeSigs]
                                       --
                                       sides =
                                         zipWith
