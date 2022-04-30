@@ -10,60 +10,142 @@
     <script nomodule="" src="https://unpkg.com/ionicons@5.0.0/dist/ionicons/ionicons.js"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link
-        href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:ital@0;1&family=JetBrains+Mono:ital,wght@0,400;1,100&display=swap"
-        rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;700;800&display=swap" rel="stylesheet"> 
     <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body {
+            font-family: 'Manrope', sans-serif;
+        }
+    </style>
 </head>
 
-<body class="h-screen w-full">
-    <section>
-        <h1>Chameleon</h1>
-        <p>Chameleon is a set of tools to make solving type errors in Haskell easier and more fun. </p>
+<body class="w-full flex flex-col items-center">
+    <section class="w-5/6 md:w-3/4 lg:w-3/5 flex px-12 h-80 items-center">
+
+        <div>
+            <h1 class="text-6xl font-extrabold my-5">Chameleon</h2>
+                <p class="text-lg my-5">
+                    A tool to make solving type errors in Haskell simple and fun.
+                </p>
+                <a href="/playground" class="px-4 py-2 bg-green-300 text-lg font-bold rounded-md">Go to playground</a>
+        </div>
+        <div>
+            <svg
+                class="w-48" viewBox="0 0 100 100" version="1.1" xmlns="http://www.w3.org/2000/svg"
+                xmlns:xlink="http://www.w3.org/1999/xlink" xml:space="preserve" xmlns:serif="http://www.serif.com/"
+                style="fill-rule:evenodd;clip-rule:evenodd;stroke-linejoin:round;stroke-miterlimit:2;">
+                <!-- <path
+                    d="M100,25c0,-13.798 -11.202,-25 -25,-25l-50,0c-13.798,0 -25,11.202 -25,25l0,50c0,13.798 11.202,25 25,25l50,0c13.798,0 25,-11.202 25,-25l0,-50Z"
+                    style="fill:#b6d399;" /> -->
+                <path d="M9.061,50.971c-0,3.037 3.464,5.499 7.737,5.499l-0,-5.499l-7.737,0Z" style="fill:#3eac3a;" />
+                <rect x="16.793" y="50.98" width="43.762" height="5.49" style="fill:#3eac3a;" />
+                <path d="M50,10.032c-22.61,0 -40.939,18.329 -40.939,40.939l40.939,0l0,-40.939Z" style="fill:#3c9339;" />
+                <path d="M46.807,69.476c0,7.182 6.164,13.005 13.769,13.005l-0,-13.005l-13.769,-0Z"
+                    style="fill:#3c9339;" />
+                <path d="M56.139,60.144c-5.154,-0 -9.332,4.178 -9.332,9.332l9.332,-0l0,-9.332Z" style="fill:#087604;" />
+                <path
+                    d="M60.555,82.481c12.507,0 22.645,-11.512 22.645,-25.712c0,-14.2 -10.138,-25.712 -22.645,-25.712l0,51.424Z"
+                    style="fill:#21781e;" />
+                <path d="M56.139,60.144c2.439,-0 4.416,2.089 4.416,4.666c0,2.577 -1.977,4.666 -4.416,4.666l0,-9.332Z"
+                    style="fill:#0d9509;" />
+                <path d="M56.139,56.472l0,-0.002l4.416,0l0,4.572l0,-0l0,-0.026c0,-2.466 -1.967,-4.475 -4.416,-4.544Z"
+                    style="fill:#3eac3a;" />
+                <path d="M50,50.985l-0,-0.005l10.555,0l0,10.926l-0,0l0,-0.062c0,-5.892 -4.702,-10.696 -10.555,-10.859Z"
+                    style="fill:#1c7e18;" />
+                <path d="M53.205,31.056l-0,0.001l-3.205,0l0,-3.317l0,-0l0,0.019c0,1.789 1.428,3.247 3.205,3.297Z"
+                    style="fill:#21781e;" />
+                <rect x="50" y="31.057" width="10.555" height="19.923" style="fill:#21781e;" />
+                <path d="M34.015,56.47c0,4.563 3.908,8.262 8.729,8.262c4.821,-0 8.729,-3.699 8.729,-8.262l-17.458,0Z"
+                    style="fill:#486c47;" />
+            </svg>
+        </div>
     </section>
-    <section>
-        <h2>Features</h2>
-        <section>
-            <h3>Human-Centered Methods</h3>
-            We improve each feature in Chameleon based on the
-            feedback from the Haskell community. Debugging idioms
-            in Chameleon has been tested individually and in combinations.
+    <section class="w-5/6 md:w-3/4 lg:w-3/5 px-12 py-4">
+        <h2 class="text-4xl my-4 font-bold border-b-8 border-purple-400 inline-block">Why Chameleon?</h2>
+        <section class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <section>
+                <h3 class="font-bold text-3xl font-light">Human-Centered Methods</h3>
+                <p class="text-lg">
+                    We improve each feature in Chameleon based on the
+                    feedback from the Haskell community. Debugging idioms
+                    in Chameleon has been tested individually and in combinations.
+                </p>
+            </section>
+            <section>
+                <h3 class="font-bold text-3xl  font-light">Multi-location type errors</h3>
+                <p class="text-lg">
+
+                    While many type systems try to pinpoint one exact error location in the code, the accuracy is often
+                    hit or
+                    miss. Chameleon tries to narrow down to a few suspects and asks the programmer to identify the real
+                    culprit.
+                    While both approaches have pros and cons, we believe Chameleon is more flexible and catches bugs
+                    faster.
+                </p>
+            </section>
+            <section>
+                <h3 class="font-bold text-3xl font-light ">Unbiased type errors</h3>
+                <p class="text-lg">
+                    Instead of assuming one type is "Expected" and one type is "Actual", Chameleon will report two
+                    equally
+                    possible alternatives that type errors can happen. Many techniques have been proposed to solve this
+                    problem
+                    (Known as left-right bias) on type solver level. Chameleon combines the type solver capable of
+                    eliminating
+                    this bias and smart visual cues to distinguish the evidence for one type and the other.
+                </p>
+            </section>
+            <section>
+                <h3 class="font-bold text-3xl  font-light">Deduction step</h3>
+                <p class="text-lg">
+                    The deduction step is a tool to peek inside the type checking engine. It shows step-by-step
+                    reasoning that
+                    explains why one type cannot reconcile with another in simple language. Chameleon's interactive
+                    interface
+                    allows users to make incremental assumptions and see how that affects the typing of the whole
+                    program.
+                </p>
+            </section>
+            <section>
+                <h3 class="font-bold text-3xl  font-light">More are coming!</h3>
+                <p class="text-lg">
+                    Hang tight! We are working on more features to make Chameleon even better!
+                </p>
+            </section>
         </section>
-        <section>
-            <h3>Multi-location type errors</h3>
-            While many type systems try to pinpoint one exact error location in the code, the accuracy is often hit or miss. Chameleon tries to narrow down to a few suspects and asks the programmer to identify the real culprit. While both approaches have pros and cons, we believe Chameleon is more flexible and catches bugs faster.
-        </section>
-        <section>
-            <h3>Unbiased type errors</h3>
-            Instead of assuming one type is "Expected" and one type is "Actual", Chameleon will report two equally possible alternatives that type errors can happen. Many techniques have been proposed to solve this problem (Known as left-right bias) on type solver level. Chameleon combines the type solver capable of eliminating this bias and smart visual cues to distinguish the evidence for one type and the other.
-        </section>
-        <section>
-            <h3>Deduction step</h3>
-            The deduction step is a tool to peek inside the type checking engine. It shows step-by-step reasoning that explains why one type cannot reconcile with another in simple language. Chameleon's interactive interface allows users to make incremental assumptions and see how that affects the typing of the whole program.
-        </section>
-        <section>
-            <h3>More are coming!</h3>
-            Hang tight! We are working on more features to make Chameleon even better!
-        </section>
+
     </section>
-    <section>
-        <h2>Playground</h2>
-        <p>The chameleon playground is an online editor for you to test out some of the chameleon features.</p>
+    <section class="w-5/6 md:w-3/4 lg:w-3/5 px-12 py-4">
+        <h2 class="text-4xl my-4 font-bold border-b-8 border-purple-400 inline-block">Playground</h2>
+        <p class="text-lg my-4">The chameleon playground is an online editor for you to test out some of the chameleon
+            features.
+        </p>
+        <a href="/playground" class="px-4 py-2 bg-green-300 text-lg font-bold rounded-md">Go to playground</a>
     </section>
-    <section>
-        <h2>Resources</h2>
-        <a>GitHub repository</a>
-        <a>Playground</a>
-        <a>YouTube Video</a>
+    <section class="w-5/6 md:w-3/4 lg:w-3/5 px-12 py-4">
+        <h2 class="text-4xl my-4 font-bold border-b-8 border-purple-400 inline-block">Resources</h2>
+        <ul class="grid grid-cols-1 gap-3">
+            <li>
+                <a class="text-blue-700" href="https://github.com/maybetonyfu/chameleon">GitHub repository</a>
+            </li>
+            <li>
+                <a class="text-blue-700" href="/playground">Playground</a>
+            </li>
+            <li>
+                <a class="text-blue-700" href="">YouTube Video</a>
+            </li>
+        </ul>
     </section>
-    <section>
-        <h2>About us</h2>
+    <!-- <section class="w-5/6 md:w-3/4 lg:w-3/5 px-12 py-4">
+        <h2 class="text-4xl my-4 font-bold border-b-8 border-purple-400 inline-block">Who are we</h2>
         <section>
-            <h3>Tony Fu</h3>
-            <p>
-               Tony is a Ph.D. student in Computer Science at Monash University. Tony is interested in programming language design, type systems, and functional programming.
+            <h3 class="text-2xl">Tony Fu</h3>
+            <p class="text-lg">
+                Tony is a Ph.D. student in Computer Science at Monash University. Tony is interested in programming
+                language design, type systems, and functional programming.
             </p>
         </section>
-    </section>
+    </section> -->
 </body>
+
 </html>
