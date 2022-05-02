@@ -9,16 +9,8 @@ import {
   switchTaskThunk,
 } from './debuggerSlice';
 import { ArrowCircleUpIcon, ArrowCircleDownIcon } from "@heroicons/react/solid"
-
-const StringTypeSig = ({ simple, full }) => {
-  let unlaliasedFull = unAlias(full);
-  if (unlaliasedFull.length > 50) {
-    return <span>{unAlias(simple)}</span>;
-  } else {
-    return <span>{unlaliasedFull}</span>;
-  }
-};
-
+import TabReport from "./TabReport"
+import TypeSig from './TypeSig'
 
 const Debugger = () => {
   let wellTyped = useSelector(state => state.debugger.wellTyped);
@@ -37,7 +29,7 @@ const Debugger = () => {
         } else if (loadError !== null) {
           return <LoadErrorReport />;
         } else if (!wellTyped) {
-          return <TypeErrorReport />;
+          return <TabReport />;
         }
       })()}
     </div>
@@ -106,10 +98,10 @@ const ImportedTypes = () => {
   return <div>
     <div>Imported functions types:</div>
     {
-      (() => { 
+      (() => {
         if (R.allPass([hasProperty, hasMoreThanOneGlobal])(contextItem)) {
           return contextItem.contextGlobals.map((mapping, k) => <Imported mapping={mapping} key={k}></Imported>)
-        } else{
+        } else {
           return <div>No globals</div>
         }
       })()
@@ -117,7 +109,7 @@ const ImportedTypes = () => {
   </div>
 }
 
-const Imported = ({mapping}) => {
+const Imported = ({ mapping }) => {
   let [name, sig] = mapping
   return <div>{name} :: {sig}</div>
 }
@@ -137,10 +129,10 @@ const Message = () => {
       <div className='my-1 text-sm'>
         <span className='inline-block mr-1'>Possible type 1: </span>
         <span className='code groupMarkerB rounded-sm px-0.5 cursor-pointer'>
-          <StringTypeSig
+          <TypeSig
             simple={contextItem.contextType1SimpleString}
             full={contextItem.contextType1String}
-          ></StringTypeSig>
+          ></TypeSig>
         </span>
       </div>
       <div className='text-xs italic'>Possible type 1 can be infered from the orange highlights on the left side</div>
@@ -148,10 +140,10 @@ const Message = () => {
       <div className='mb-1 mt-2 text-sm'>
         <span className='inline-block mr-1'>Possible type 2: </span>
         <span className='code groupMarkerA rounded-sm px-0.5 cursor-pointer'>
-          <StringTypeSig
+          <TypeSig
             simple={contextItem.contextType2SimpleString}
             full={contextItem.contextType2String}
-          ></StringTypeSig>
+          ></TypeSig>
         </span>
       </div>
       <div className='text-xs italic'>Possible type 2 can be infered from the blue highlights on the left side</div>

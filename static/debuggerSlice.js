@@ -20,7 +20,7 @@ export let typeCheckThunk = createAsyncThunk(
     dispatch(resetHighlights());
     let state = getState();
     let text = state.debugger.text;
-    console.log(text);
+    // console.log(text);
     let response = await fetch('/typecheck', {
       method: 'POST',
       body: text,

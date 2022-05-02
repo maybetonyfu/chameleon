@@ -495,7 +495,7 @@
             }
             return element;
           };
-          function createElement5(type3, config, children) {
+          function createElement3(type3, config, children) {
             var propName;
             var props = {};
             var key = null;
@@ -932,7 +932,7 @@
             }
             return lazyType;
           }
-          function forwardRef5(render) {
+          function forwardRef3(render) {
             {
               if (render != null && render.$$typeof === REACT_MEMO_TYPE) {
                 error("forwardRef requires a render function but received a `memo` component. Instead of forwardRef(memo(...)), use memo(forwardRef(...)).");
@@ -1341,9 +1341,9 @@
           }
           function checkPropTypes(typeSpecs, values, location, componentName, element) {
             {
-              var has3 = Function.call.bind(Object.prototype.hasOwnProperty);
+              var has = Function.call.bind(Object.prototype.hasOwnProperty);
               for (var typeSpecName in typeSpecs) {
-                if (has3(typeSpecs, typeSpecName)) {
+                if (has(typeSpecs, typeSpecName)) {
                   var error$1 = void 0;
                   try {
                     if (typeof typeSpecs[typeSpecName] !== "function") {
@@ -1543,7 +1543,7 @@
                 error("React.createElement: type is invalid -- expected a string (for built-in components) or a class/function (for composite components) but got: %s.%s", typeString, info);
               }
             }
-            var element = createElement5.apply(this, arguments);
+            var element = createElement3.apply(this, arguments);
             if (element == null) {
               return element;
             }
@@ -1616,7 +1616,7 @@
           exports.createElement = createElement$1;
           exports.createFactory = createFactory;
           exports.createRef = createRef;
-          exports.forwardRef = forwardRef5;
+          exports.forwardRef = forwardRef3;
           exports.isValidElement = isValidElement;
           exports.lazy = lazy;
           exports.memo = memo;
@@ -2489,7 +2489,7 @@
           var Mode = 8;
           var ContextConsumer = 9;
           var ContextProvider = 10;
-          var ForwardRef5 = 11;
+          var ForwardRef3 = 11;
           var Profiler = 12;
           var SuspenseComponent = 13;
           var MemoComponent = 14;
@@ -3269,7 +3269,7 @@
               case IndeterminateComponent:
               case SimpleMemoComponent:
                 return describeFunctionComponentFrame(fiber.type);
-              case ForwardRef5:
+              case ForwardRef3:
                 return describeFunctionComponentFrame(fiber.type.render);
               case Block:
                 return describeFunctionComponentFrame(fiber.type._render);
@@ -5409,7 +5409,7 @@
           function get2(key) {
             return key._reactInternals;
           }
-          function has3(key) {
+          function has(key) {
             return key._reactInternals !== void 0;
           }
           function set(key, value) {
@@ -8454,7 +8454,7 @@
               }
             }
           }
-          function createElement5(type3, props, rootContainerElement, parentNamespace) {
+          function createElement3(type3, props, rootContainerElement, parentNamespace) {
             var isCustomComponentTag;
             var ownerDocument = getOwnerDocumentFromRootContainer(rootContainerElement);
             var domElement;
@@ -9331,7 +9331,7 @@
               }
               parentNamespace = hostContextDev.namespace;
             }
-            var domElement = createElement5(type3, props, rootContainerInstance, parentNamespace);
+            var domElement = createElement3(type3, props, rootContainerInstance, parentNamespace);
             precacheFiberNode(internalInstanceHandle, domElement);
             updateFiberProps(domElement, props);
             return domElement;
@@ -9723,9 +9723,9 @@
           }
           function checkPropTypes(typeSpecs, values, location, componentName, element) {
             {
-              var has4 = Function.call.bind(Object.prototype.hasOwnProperty);
+              var has2 = Function.call.bind(Object.prototype.hasOwnProperty);
               for (var typeSpecName in typeSpecs) {
-                if (has4(typeSpecs, typeSpecName)) {
+                if (has2(typeSpecs, typeSpecName)) {
                   var error$1 = void 0;
                   try {
                     if (typeof typeSpecs[typeSpecName] !== "function") {
@@ -12150,7 +12150,7 @@
                   }
                   case Block:
                   case FunctionComponent:
-                  case ForwardRef5:
+                  case ForwardRef3:
                   case SimpleMemoComponent: {
                     {
                       {
@@ -14742,7 +14742,7 @@
                 child = updateClassComponent(null, workInProgress2, Component, resolvedProps, renderLanes2);
                 return child;
               }
-              case ForwardRef5: {
+              case ForwardRef3: {
                 {
                   workInProgress2.type = Component = resolveForwardRefForHotReloading(Component);
                 }
@@ -15635,7 +15635,7 @@
                 return updateSuspenseComponent(current2, workInProgress2, renderLanes2);
               case HostPortal:
                 return updatePortalComponent(current2, workInProgress2, renderLanes2);
-              case ForwardRef5: {
+              case ForwardRef3: {
                 var type3 = workInProgress2.type;
                 var _unresolvedProps2 = workInProgress2.pendingProps;
                 var _resolvedProps2 = workInProgress2.elementType === type3 ? _unresolvedProps2 : resolveDefaultProps(type3, _unresolvedProps2);
@@ -15807,7 +15807,7 @@
               case LazyComponent:
               case SimpleMemoComponent:
               case FunctionComponent:
-              case ForwardRef5:
+              case ForwardRef3:
               case Fragment:
               case Mode:
               case Profiler:
@@ -16452,7 +16452,7 @@
           function commitBeforeMutationLifeCycles(current2, finishedWork) {
             switch (finishedWork.tag) {
               case FunctionComponent:
-              case ForwardRef5:
+              case ForwardRef3:
               case SimpleMemoComponent:
               case Block: {
                 return;
@@ -16573,7 +16573,7 @@
           function commitLifeCycles(finishedRoot, current2, finishedWork, committedLanes) {
             switch (finishedWork.tag) {
               case FunctionComponent:
-              case ForwardRef5:
+              case ForwardRef3:
               case SimpleMemoComponent:
               case Block: {
                 {
@@ -16774,7 +16774,7 @@
             onCommitUnmount(current2);
             switch (current2.tag) {
               case FunctionComponent:
-              case ForwardRef5:
+              case ForwardRef3:
               case MemoComponent:
               case SimpleMemoComponent:
               case Block: {
@@ -17082,7 +17082,7 @@
           function commitWork(current2, finishedWork) {
             switch (finishedWork.tag) {
               case FunctionComponent:
-              case ForwardRef5:
+              case ForwardRef3:
               case MemoComponent:
               case SimpleMemoComponent:
               case Block: {
@@ -18637,7 +18637,7 @@
                 return;
               }
               var tag = fiber.tag;
-              if (tag !== IndeterminateComponent && tag !== HostRoot && tag !== ClassComponent && tag !== FunctionComponent && tag !== ForwardRef5 && tag !== MemoComponent && tag !== SimpleMemoComponent && tag !== Block) {
+              if (tag !== IndeterminateComponent && tag !== HostRoot && tag !== ClassComponent && tag !== FunctionComponent && tag !== ForwardRef3 && tag !== MemoComponent && tag !== SimpleMemoComponent && tag !== Block) {
                 return;
               }
               var componentName = getComponentName(fiber.type) || "ReactComponent";
@@ -18666,7 +18666,7 @@
           function warnAboutUpdateOnUnmountedFiberInDEV(fiber) {
             {
               var tag = fiber.tag;
-              if (tag !== HostRoot && tag !== ClassComponent && tag !== FunctionComponent && tag !== ForwardRef5 && tag !== MemoComponent && tag !== SimpleMemoComponent && tag !== Block) {
+              if (tag !== HostRoot && tag !== ClassComponent && tag !== FunctionComponent && tag !== ForwardRef3 && tag !== MemoComponent && tag !== SimpleMemoComponent && tag !== Block) {
                 return;
               }
               if ((fiber.flags & PassiveUnmountPendingDev) !== NoFlags) {
@@ -18736,7 +18736,7 @@
               if (isRendering && (executionContext & RenderContext) !== NoContext && !getIsUpdatingOpaqueValueInRenderPhaseInDEV()) {
                 switch (fiber.tag) {
                   case FunctionComponent:
-                  case ForwardRef5:
+                  case ForwardRef3:
                   case SimpleMemoComponent: {
                     var renderingComponentName = workInProgress && getComponentName(workInProgress.type) || "Unknown";
                     var dedupeKey = renderingComponentName;
@@ -18991,7 +18991,7 @@ For more info, visit https://reactjs.org/link/mock-scheduler`);
                   }
                   break;
                 }
-                case ForwardRef5: {
+                case ForwardRef3: {
                   if ($$typeofNextType === REACT_FORWARD_REF_TYPE) {
                     needsCompareFamilies = true;
                   } else if ($$typeofNextType === REACT_LAZY_TYPE) {
@@ -19067,7 +19067,7 @@ For more info, visit https://reactjs.org/link/mock-scheduler`);
                 case ClassComponent:
                   candidateType = type3;
                   break;
-                case ForwardRef5:
+                case ForwardRef3:
                   candidateType = type3.render;
                   break;
               }
@@ -19129,7 +19129,7 @@ For more info, visit https://reactjs.org/link/mock-scheduler`);
                 case ClassComponent:
                   candidateType = type3;
                   break;
-                case ForwardRef5:
+                case ForwardRef3:
                   candidateType = type3.render;
                   break;
               }
@@ -19278,7 +19278,7 @@ For more info, visit https://reactjs.org/link/mock-scheduler`);
             } else if (Component !== void 0 && Component !== null) {
               var $$typeof = Component.$$typeof;
               if ($$typeof === REACT_FORWARD_REF_TYPE) {
-                return ForwardRef5;
+                return ForwardRef3;
               }
               if ($$typeof === REACT_MEMO_TYPE) {
                 return MemoComponent;
@@ -19342,7 +19342,7 @@ For more info, visit https://reactjs.org/link/mock-scheduler`);
                 case ClassComponent:
                   workInProgress2.type = resolveClassForHotReloading(current2.type);
                   break;
-                case ForwardRef5:
+                case ForwardRef3:
                   workInProgress2.type = resolveForwardRefForHotReloading(current2.type);
                   break;
               }
@@ -19452,7 +19452,7 @@ For more info, visit https://reactjs.org/link/mock-scheduler`);
                           fiberTag = ContextConsumer;
                           break getTag;
                         case REACT_FORWARD_REF_TYPE:
-                          fiberTag = ForwardRef5;
+                          fiberTag = ForwardRef3;
                           {
                             resolvedType = resolveForwardRefForHotReloading(resolvedType);
                           }
@@ -20280,7 +20280,7 @@ For more info, visit https://reactjs.org/link/mock-scheduler`);
                 throw Error("Target container is not a DOM element.");
               }
             }
-            if (!(parentComponent != null && has3(parentComponent))) {
+            if (!(parentComponent != null && has(parentComponent))) {
               {
                 throw Error("parentComponent must be a valid React Component");
               }
@@ -20483,7 +20483,7 @@ For more info, visit https://reactjs.org/link/mock-scheduler`);
           var ContextConsumer = REACT_CONTEXT_TYPE;
           var ContextProvider = REACT_PROVIDER_TYPE;
           var Element = REACT_ELEMENT_TYPE;
-          var ForwardRef5 = REACT_FORWARD_REF_TYPE;
+          var ForwardRef3 = REACT_FORWARD_REF_TYPE;
           var Fragment = REACT_FRAGMENT_TYPE;
           var Lazy = REACT_LAZY_TYPE;
           var Memo = REACT_MEMO_TYPE;
@@ -20542,7 +20542,7 @@ For more info, visit https://reactjs.org/link/mock-scheduler`);
           exports.ContextConsumer = ContextConsumer;
           exports.ContextProvider = ContextProvider;
           exports.Element = Element;
-          exports.ForwardRef = ForwardRef5;
+          exports.ForwardRef = ForwardRef3;
           exports.Fragment = Fragment;
           exports.Lazy = Lazy;
           exports.Memo = Memo;
@@ -20607,7 +20607,7 @@ For more info, visit https://reactjs.org/link/mock-scheduler`);
       if (true) {
         ReactPropTypesSecret = require_ReactPropTypesSecret();
         loggedTypeFailures = {};
-        has3 = require_has();
+        has = require_has();
         printWarning = function(text) {
           var message = "Warning: " + text;
           if (typeof console !== "undefined") {
@@ -20621,11 +20621,11 @@ For more info, visit https://reactjs.org/link/mock-scheduler`);
       }
       var ReactPropTypesSecret;
       var loggedTypeFailures;
-      var has3;
+      var has;
       function checkPropTypes(typeSpecs, values, location, componentName, getStack) {
         if (true) {
           for (var typeSpecName in typeSpecs) {
-            if (has3(typeSpecs, typeSpecName)) {
+            if (has(typeSpecs, typeSpecName)) {
               var error;
               try {
                 if (typeof typeSpecs[typeSpecName] !== "function") {
@@ -20665,7 +20665,7 @@ For more info, visit https://reactjs.org/link/mock-scheduler`);
       var ReactIs = require_react_is();
       var assign = require_object_assign();
       var ReactPropTypesSecret = require_ReactPropTypesSecret();
-      var has3 = require_has();
+      var has = require_has();
       var checkPropTypes = require_checkPropTypes();
       var printWarning = function() {
       };
@@ -20874,7 +20874,7 @@ For more info, visit https://reactjs.org/link/mock-scheduler`);
               return new PropTypeError("Invalid " + location + " `" + propFullName + "` of type " + ("`" + propType + "` supplied to `" + componentName + "`, expected an object."));
             }
             for (var key in propValue) {
-              if (has3(propValue, key)) {
+              if (has(propValue, key)) {
                 var error = typeChecker(propValue, key, componentName, location, propFullName + "." + key, ReactPropTypesSecret);
                 if (error instanceof Error) {
                   return error;
@@ -20905,7 +20905,7 @@ For more info, visit https://reactjs.org/link/mock-scheduler`);
               if (checkerResult == null) {
                 return null;
               }
-              if (checkerResult.data && has3(checkerResult.data, "expectedType")) {
+              if (checkerResult.data && has(checkerResult.data, "expectedType")) {
                 expectedTypes.push(checkerResult.data.expectedType);
               }
             }
@@ -20957,7 +20957,7 @@ For more info, visit https://reactjs.org/link/mock-scheduler`);
             var allKeys = assign({}, props[propName], shapeTypes);
             for (var key in allKeys) {
               var checker = shapeTypes[key];
-              if (has3(shapeTypes, key) && typeof checker !== "function") {
+              if (has(shapeTypes, key) && typeof checker !== "function") {
                 return invalidValidatorError(componentName, location, propFullName, key, getPreciseType(checker));
               }
               if (!checker) {
@@ -21617,9 +21617,9 @@ For more info, visit https://reactjs.org/link/mock-scheduler`);
           }
           function checkPropTypes(typeSpecs, values, location, componentName, element) {
             {
-              var has3 = Function.call.bind(Object.prototype.hasOwnProperty);
+              var has = Function.call.bind(Object.prototype.hasOwnProperty);
               for (var typeSpecName in typeSpecs) {
-                if (has3(typeSpecs, typeSpecName)) {
+                if (has(typeSpecs, typeSpecName)) {
                   var error$1 = void 0;
                   try {
                     if (typeof typeSpecs[typeSpecName] !== "function") {
@@ -22143,7 +22143,7 @@ For more info, visit https://reactjs.org/link/mock-scheduler`);
           var ContextConsumer = REACT_CONTEXT_TYPE;
           var ContextProvider = REACT_PROVIDER_TYPE;
           var Element = REACT_ELEMENT_TYPE;
-          var ForwardRef5 = REACT_FORWARD_REF_TYPE;
+          var ForwardRef3 = REACT_FORWARD_REF_TYPE;
           var Fragment = REACT_FRAGMENT_TYPE;
           var Lazy = REACT_LAZY_TYPE;
           var Memo = REACT_MEMO_TYPE;
@@ -22207,7 +22207,7 @@ For more info, visit https://reactjs.org/link/mock-scheduler`);
           exports.ContextConsumer = ContextConsumer;
           exports.ContextProvider = ContextProvider;
           exports.Element = Element;
-          exports.ForwardRef = ForwardRef5;
+          exports.ForwardRef = ForwardRef3;
           exports.Fragment = Fragment;
           exports.Lazy = Lazy;
           exports.Memo = Memo;
@@ -22248,7 +22248,7 @@ For more info, visit https://reactjs.org/link/mock-scheduler`);
   });
 
   // index.jsx
-  var import_react12 = __toESM(require_react());
+  var import_react14 = __toESM(require_react());
   var import_react_dom2 = __toESM(require_react_dom());
 
   // node_modules/react-redux/es/components/Provider.js
@@ -24815,12 +24815,6 @@ y = if z then u else v
     }
   };
 
-  // node_modules/ramda/es/max.js
-  var max = /* @__PURE__ */ _curry2(function max2(a3, b3) {
-    return b3 > a3 ? b3 : a3;
-  });
-  var max_default = max;
-
   // node_modules/ramda/es/internal/_map.js
   function _map(fn2, functor) {
     var idx = 0;
@@ -25062,31 +25056,9 @@ y = if z then u else v
   });
   var prop_default = prop;
 
-  // node_modules/ramda/es/pluck.js
-  var pluck = /* @__PURE__ */ _curry2(function pluck2(p3, list) {
-    return map_default(prop_default(p3), list);
-  });
-  var pluck_default = pluck;
-
   // node_modules/ramda/es/reduce.js
   var reduce = /* @__PURE__ */ _curry3(_reduce);
   var reduce_default = reduce;
-
-  // node_modules/ramda/es/allPass.js
-  var allPass = /* @__PURE__ */ _curry1(function allPass2(preds) {
-    return curryN_default(reduce_default(max_default, 0, pluck_default("length", preds)), function() {
-      var idx = 0;
-      var len = preds.length;
-      while (idx < len) {
-        if (!preds[idx].apply(this, arguments)) {
-          return false;
-        }
-        idx += 1;
-      }
-      return true;
-    });
-  });
-  var allPass_default = allPass;
 
   // node_modules/ramda/es/internal/_assoc.js
   function _assoc(prop3, val, obj) {
@@ -25140,12 +25112,6 @@ y = if z then u else v
     return val === null ? "Null" : val === void 0 ? "Undefined" : Object.prototype.toString.call(val).slice(8, -1);
   });
   var type_default = type;
-
-  // node_modules/ramda/es/not.js
-  var not = /* @__PURE__ */ _curry1(function not2(a3) {
-    return !a3;
-  });
-  var not_default = not;
 
   // node_modules/ramda/es/internal/_pipe.js
   function _pipe(f3, g3) {
@@ -25574,31 +25540,6 @@ y = if z then u else v
   }));
   var find_default = find;
 
-  // node_modules/ramda/es/hasPath.js
-  var hasPath = /* @__PURE__ */ _curry2(function hasPath2(_path, obj) {
-    if (_path.length === 0 || isNil_default(obj)) {
-      return false;
-    }
-    var val = obj;
-    var idx = 0;
-    while (idx < _path.length) {
-      if (!isNil_default(val) && _has(_path[idx], val)) {
-        val = val[_path[idx]];
-        idx += 1;
-      } else {
-        return false;
-      }
-    }
-    return true;
-  });
-  var hasPath_default = hasPath;
-
-  // node_modules/ramda/es/has.js
-  var has = /* @__PURE__ */ _curry2(function has2(prop3, obj) {
-    return hasPath_default([prop3], obj);
-  });
-  var has_default = has;
-
   // node_modules/ramda/es/invoker.js
   var invoker = /* @__PURE__ */ _curry2(function invoker2(arity, method) {
     return curryN_default(arity + 1, function() {
@@ -25883,7 +25824,6 @@ y = if z then u else v
     dispatch(resetHighlights());
     let state = getState();
     let text = state.debugger.text;
-    console.log(text);
     let response = await fetch("/typecheck", {
       method: "POST",
       body: text
@@ -26318,9 +26258,9 @@ y = if z then u else v
   // Editor.jsx
   var import_react9 = __toESM(require_react());
 
-  // node_modules/@heroicons/react/solid/esm/ArrowCircleDownIcon.js
+  // node_modules/@heroicons/react/solid/esm/EyeIcon.js
   var React4 = __toESM(require_react(), 1);
-  function ArrowCircleDownIcon(props, svgRef) {
+  function EyeIcon(props, svgRef) {
     return /* @__PURE__ */ React4.createElement("svg", Object.assign({
       xmlns: "http://www.w3.org/2000/svg",
       viewBox: "0 0 20 20",
@@ -26328,17 +26268,19 @@ y = if z then u else v
       "aria-hidden": "true",
       ref: svgRef
     }, props), /* @__PURE__ */ React4.createElement("path", {
+      d: "M10 12a2 2 0 100-4 2 2 0 000 4z"
+    }), /* @__PURE__ */ React4.createElement("path", {
       fillRule: "evenodd",
-      d: "M10 18a8 8 0 100-16 8 8 0 000 16zm1-11a1 1 0 10-2 0v3.586L7.707 9.293a1 1 0 00-1.414 1.414l3 3a1 1 0 001.414 0l3-3a1 1 0 00-1.414-1.414L11 10.586V7z",
+      d: "M.458 10C1.732 5.943 5.522 3 10 3s8.268 2.943 9.542 7c-1.274 4.057-5.064 7-9.542 7S1.732 14.057.458 10zM14 10a4 4 0 11-8 0 4 4 0 018 0z",
       clipRule: "evenodd"
     }));
   }
-  var ForwardRef = React4.forwardRef(ArrowCircleDownIcon);
-  var ArrowCircleDownIcon_default = ForwardRef;
+  var ForwardRef = React4.forwardRef(EyeIcon);
+  var EyeIcon_default = ForwardRef;
 
-  // node_modules/@heroicons/react/solid/esm/ArrowCircleUpIcon.js
+  // node_modules/@heroicons/react/solid/esm/PencilAltIcon.js
   var React5 = __toESM(require_react(), 1);
-  function ArrowCircleUpIcon(props, svgRef) {
+  function PencilAltIcon(props, svgRef) {
     return /* @__PURE__ */ React5.createElement("svg", Object.assign({
       xmlns: "http://www.w3.org/2000/svg",
       viewBox: "0 0 20 20",
@@ -26346,53 +26288,15 @@ y = if z then u else v
       "aria-hidden": "true",
       ref: svgRef
     }, props), /* @__PURE__ */ React5.createElement("path", {
-      fillRule: "evenodd",
-      d: "M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-8.707l-3-3a1 1 0 00-1.414 0l-3 3a1 1 0 001.414 1.414L9 9.414V13a1 1 0 102 0V9.414l1.293 1.293a1 1 0 001.414-1.414z",
-      clipRule: "evenodd"
-    }));
-  }
-  var ForwardRef2 = React5.forwardRef(ArrowCircleUpIcon);
-  var ArrowCircleUpIcon_default = ForwardRef2;
-
-  // node_modules/@heroicons/react/solid/esm/EyeIcon.js
-  var React6 = __toESM(require_react(), 1);
-  function EyeIcon(props, svgRef) {
-    return /* @__PURE__ */ React6.createElement("svg", Object.assign({
-      xmlns: "http://www.w3.org/2000/svg",
-      viewBox: "0 0 20 20",
-      fill: "currentColor",
-      "aria-hidden": "true",
-      ref: svgRef
-    }, props), /* @__PURE__ */ React6.createElement("path", {
-      d: "M10 12a2 2 0 100-4 2 2 0 000 4z"
-    }), /* @__PURE__ */ React6.createElement("path", {
-      fillRule: "evenodd",
-      d: "M.458 10C1.732 5.943 5.522 3 10 3s8.268 2.943 9.542 7c-1.274 4.057-5.064 7-9.542 7S1.732 14.057.458 10zM14 10a4 4 0 11-8 0 4 4 0 018 0z",
-      clipRule: "evenodd"
-    }));
-  }
-  var ForwardRef3 = React6.forwardRef(EyeIcon);
-  var EyeIcon_default = ForwardRef3;
-
-  // node_modules/@heroicons/react/solid/esm/PencilAltIcon.js
-  var React7 = __toESM(require_react(), 1);
-  function PencilAltIcon(props, svgRef) {
-    return /* @__PURE__ */ React7.createElement("svg", Object.assign({
-      xmlns: "http://www.w3.org/2000/svg",
-      viewBox: "0 0 20 20",
-      fill: "currentColor",
-      "aria-hidden": "true",
-      ref: svgRef
-    }, props), /* @__PURE__ */ React7.createElement("path", {
       d: "M17.414 2.586a2 2 0 00-2.828 0L7 10.172V13h2.828l7.586-7.586a2 2 0 000-2.828z"
-    }), /* @__PURE__ */ React7.createElement("path", {
+    }), /* @__PURE__ */ React5.createElement("path", {
       fillRule: "evenodd",
       d: "M2 6a2 2 0 012-2h4a1 1 0 010 2H4v10h10v-4a1 1 0 112 0v4a2 2 0 01-2 2H4a2 2 0 01-2-2V6z",
       clipRule: "evenodd"
     }));
   }
-  var ForwardRef4 = React7.forwardRef(PencilAltIcon);
-  var PencilAltIcon_default = ForwardRef4;
+  var ForwardRef2 = React5.forwardRef(PencilAltIcon);
+  var PencilAltIcon_default = ForwardRef2;
 
   // Editor.jsx
   var App = () => {
@@ -26520,8 +26424,14 @@ y = if z then u else v
   var Editor_default = App;
 
   // Debugger.jsx
+  var import_react12 = __toESM(require_react());
+
+  // TabReport.jsx
+  var import_react11 = __toESM(require_react());
+
+  // TypeSig.jsx
   var import_react10 = __toESM(require_react());
-  var StringTypeSig = ({ simple, full }) => {
+  var StringTypeSig2 = ({ simple, full }) => {
     let unlaliasedFull = unAlias(full);
     if (unlaliasedFull.length > 50) {
       return /* @__PURE__ */ import_react10.default.createElement("span", null, unAlias(simple));
@@ -26529,325 +26439,249 @@ y = if z then u else v
       return /* @__PURE__ */ import_react10.default.createElement("span", null, unlaliasedFull);
     }
   };
+  var TypeSig_default = StringTypeSig2;
+
+  // TabReport.jsx
+  var TabReport = () => {
+    let context = useSelector(path_default(["debugger", "context"]));
+    let traverseId = useSelector(path_default(["debugger", "currentTraverseId"]));
+    return /* @__PURE__ */ import_react11.default.createElement("div", {
+      className: "p-4"
+    }, /* @__PURE__ */ import_react11.default.createElement("div", {
+      className: "bg-gray-200 p1 rounded-2xl flex cursor-pointer"
+    }, context.map((c3, i3) => /* @__PURE__ */ import_react11.default.createElement(Tab, {
+      key: i3,
+      steps: c3.contextSteps,
+      exp: c3.contextExp,
+      active: c3.contextSteps.find(pipe(nth_default(0), equals_default(traverseId)))[2]
+    }))), /* @__PURE__ */ import_react11.default.createElement(Message, null), /* @__PURE__ */ import_react11.default.createElement(ReleventTerms, null));
+  };
+  var Tab = ({ active = false, steps, exp }) => {
+    return /* @__PURE__ */ import_react11.default.createElement("div", {
+      className: "p-2 rounded-2xl inline-block w-max m-1 " + (active ? "bg-gray-900" : "bg-white")
+    }, /* @__PURE__ */ import_react11.default.createElement("div", {
+      className: "px-1 text-2xl mb-3 " + (active ? "text-white" : "text-gray-800")
+    }, exp), /* @__PURE__ */ import_react11.default.createElement("div", null, /* @__PURE__ */ import_react11.default.createElement(TabSteps, {
+      steps,
+      active
+    })));
+  };
+  var TabSteps = ({ active = false, steps }) => {
+    return /* @__PURE__ */ import_react11.default.createElement("div", {
+      className: "flex"
+    }, steps.map((step, i3) => [...step, i3]).filter(nth_default(2)).map((step) => /* @__PURE__ */ import_react11.default.createElement(TabStep, {
+      active,
+      key: step[3],
+      traverseId: step[0],
+      step: step[3]
+    })));
+  };
+  var TabStep = ({ active = false, step, traverseId }) => {
+    let dispatch = useDispatch();
+    let currentTraverseId = useSelector(path_default(["debugger", "currentTraverseId"]));
+    let stepping = equals_default(currentTraverseId, traverseId);
+    let face = active && stepping ? "bg-green-400 text-black" : active ? "bg-gray-400 text-black" : "bg-gray-700 text-white";
+    return /* @__PURE__ */ import_react11.default.createElement("div", {
+      onClick: (_3) => {
+        dispatch(setStep(step));
+      },
+      className: "w-5 h-5 leading-5 flex justify-center cursor-pointer rounded-full text-md mx-0.5 " + face
+    }, step + 1);
+  };
+  var Message = () => {
+    let contextItem = useSelector((state) => state.debugger.currentContextItem);
+    return contextItem === null ? null : /* @__PURE__ */ import_react11.default.createElement("div", {
+      className: "mb-5"
+    }, /* @__PURE__ */ import_react11.default.createElement("div", {
+      className: "text-md my-2 w-full"
+    }, /* @__PURE__ */ import_react11.default.createElement("div", null, "It's possible to infer two conflicting types for the expression", /* @__PURE__ */ import_react11.default.createElement("span", {
+      className: "code ml-2 px-1 rounded-md bg-gray-700 text-white inline-block not-italic"
+    }, contextItem["contextExp"]), ":")), /* @__PURE__ */ import_react11.default.createElement("div", {
+      className: "my-1 "
+    }, /* @__PURE__ */ import_react11.default.createElement("span", {
+      className: "inline-block mr-1"
+    }, "Possible type 1: "), /* @__PURE__ */ import_react11.default.createElement("span", {
+      className: "code groupMarkerB rounded-sm px-0.5 cursor-pointer"
+    }, /* @__PURE__ */ import_react11.default.createElement(TypeSig_default, {
+      simple: contextItem.contextType1SimpleString,
+      full: contextItem.contextType1String
+    }))), /* @__PURE__ */ import_react11.default.createElement("div", {
+      className: "text-xs italic"
+    }, "Possible type 1 can be infered from the orange highlights on the left side"), /* @__PURE__ */ import_react11.default.createElement("div", {
+      className: "mb-1 mt-3"
+    }, /* @__PURE__ */ import_react11.default.createElement("span", {
+      className: "inline-block mr-1"
+    }, "Possible type 2: "), /* @__PURE__ */ import_react11.default.createElement("span", {
+      className: "code groupMarkerA rounded-sm px-0.5 cursor-pointer"
+    }, /* @__PURE__ */ import_react11.default.createElement(TypeSig_default, {
+      simple: contextItem.contextType2SimpleString,
+      full: contextItem.contextType2String
+    }))), /* @__PURE__ */ import_react11.default.createElement("div", {
+      className: "text-xs italic"
+    }, "Possible type 2 can be infered from the blue highlights on the left side"));
+  };
+  var ReleventTerms = () => {
+    let context = useSelector(path_default(["debugger", "context"]));
+    let currentExp = useSelector(path_default(["debugger", "currentContextItem", "contextExp"]));
+    let releventContext = context.filter((c3) => c3.contextExp !== currentExp);
+    return /* @__PURE__ */ import_react11.default.createElement("div", {
+      className: "p-2 border-2 rounded-2xl border-black "
+    }, /* @__PURE__ */ import_react11.default.createElement("div", {
+      className: ""
+    }, "Relevent type information:"), releventContext.map((c3, i3) => /* @__PURE__ */ import_react11.default.createElement(ReleventItem, {
+      item: c3,
+      key: i3
+    })));
+  };
+  var ReleventItem = ({ item }) => {
+    let currentTraverseId = useSelector(path_default(["debugger", "currentTraverseId"]));
+    let affinity = pipe(find_default(pipe(nth_default(0), equals_default(currentTraverseId))), nth_default(1))(item.contextSteps);
+    return /* @__PURE__ */ import_react11.default.createElement("div", null, item.contextExp, ":: ", affinity);
+  };
+  var TabReport_default = TabReport;
+
+  // Debugger.jsx
   var Debugger = () => {
     let wellTyped = useSelector((state) => state.debugger.wellTyped);
     let loadError = useSelector((state) => state.debugger.loadError);
     let parseError = useSelector((state) => state.debugger.parseError);
-    return /* @__PURE__ */ import_react10.default.createElement("div", null, (() => {
+    return /* @__PURE__ */ import_react12.default.createElement("div", null, (() => {
       if (wellTyped) {
-        return /* @__PURE__ */ import_react10.default.createElement("div", {
+        return /* @__PURE__ */ import_react12.default.createElement("div", {
           className: "p-4 flex items-center"
-        }, /* @__PURE__ */ import_react10.default.createElement("ion-icon", {
+        }, /* @__PURE__ */ import_react12.default.createElement("ion-icon", {
           size: "large",
           style: { color: "rgb(74, 222, 128)" },
           name: "checkmark-circle"
-        }), /* @__PURE__ */ import_react10.default.createElement("span", {
+        }), /* @__PURE__ */ import_react12.default.createElement("span", {
           className: "p-2"
         }, "Congratulations! Your code is well typed."));
       } else if (parseError !== null) {
-        return /* @__PURE__ */ import_react10.default.createElement(ParseErrorReport, null);
+        return /* @__PURE__ */ import_react12.default.createElement(ParseErrorReport, null);
       } else if (loadError !== null) {
-        return /* @__PURE__ */ import_react10.default.createElement(LoadErrorReport, null);
+        return /* @__PURE__ */ import_react12.default.createElement(LoadErrorReport, null);
       } else if (!wellTyped) {
-        return /* @__PURE__ */ import_react10.default.createElement(TypeErrorReport, null);
+        return /* @__PURE__ */ import_react12.default.createElement(TabReport_default, null);
       }
     })());
   };
   var ParseErrorReport = () => {
     let parseError = useSelector((state) => state.debugger.parseError);
-    return /* @__PURE__ */ import_react10.default.createElement("div", {
+    return /* @__PURE__ */ import_react12.default.createElement("div", {
       class: "p-4"
-    }, /* @__PURE__ */ import_react10.default.createElement("p", {
+    }, /* @__PURE__ */ import_react12.default.createElement("p", {
       className: "py-2 px-4"
-    }, "A syntax error was found in the code"), /* @__PURE__ */ import_react10.default.createElement("div", {
+    }, "A syntax error was found in the code"), /* @__PURE__ */ import_react12.default.createElement("div", {
       className: "bg-gray-100 py-2 px-4 rounded-md"
-    }, /* @__PURE__ */ import_react10.default.createElement("p", null, " ", parseError.message, " "), /* @__PURE__ */ import_react10.default.createElement("p", null, "Location: ", parseError.loc.srcLine, ":", parseError.loc.srcColumn)));
+    }, /* @__PURE__ */ import_react12.default.createElement("p", null, " ", parseError.message, " "), /* @__PURE__ */ import_react12.default.createElement("p", null, "Location: ", parseError.loc.srcLine, ":", parseError.loc.srcColumn)));
   };
   var LoadErrorReport = () => {
     let loadError = useSelector((state) => state.debugger.loadError);
-    return /* @__PURE__ */ import_react10.default.createElement("div", {
+    return /* @__PURE__ */ import_react12.default.createElement("div", {
       class: "p-4"
-    }, /* @__PURE__ */ import_react10.default.createElement("p", {
+    }, /* @__PURE__ */ import_react12.default.createElement("p", {
       className: "py-2 px-4"
     }, "A variable is used without being declared."), loadError.map(([v2, loc]) => {
-      return /* @__PURE__ */ import_react10.default.createElement("div", {
+      return /* @__PURE__ */ import_react12.default.createElement("div", {
         className: "bg-gray-100 py-2 px-4 rounded-md"
-      }, /* @__PURE__ */ import_react10.default.createElement("p", null, "Variable: ", v2, " "), /* @__PURE__ */ import_react10.default.createElement("p", null, "Location: ", " " + loc.srcSpanStartLine, ":", loc.srcSpanStartColumn, " -", " " + loc.srcSpanEndLine, ":", loc.srcSpanEndColumn));
+      }, /* @__PURE__ */ import_react12.default.createElement("p", null, "Variable: ", v2, " "), /* @__PURE__ */ import_react12.default.createElement("p", null, "Location: ", " " + loc.srcSpanStartLine, ":", loc.srcSpanStartColumn, " -", " " + loc.srcSpanEndLine, ":", loc.srcSpanEndColumn));
     }));
-  };
-  var TypeErrorReport = () => {
-    return /* @__PURE__ */ import_react10.default.createElement("div", {
-      className: "p-2 flex flex-col items-start",
-      style: { fontFamily: "IBM Plex Sans" }
-    }, /* @__PURE__ */ import_react10.default.createElement(Message, null), /* @__PURE__ */ import_react10.default.createElement("div", {
-      className: "pt-4 text-xs italic"
-    }, "Below are all the expressions (in the middle column) that can cause the type error."), /* @__PURE__ */ import_react10.default.createElement("div", {
-      className: "pb-2 italic text-xs"
-    }, "(Use the up and down buttons to verify each fact)"), /* @__PURE__ */ import_react10.default.createElement(TypingTable, null), /* @__PURE__ */ import_react10.default.createElement(ImportedTypes, null));
-  };
-  var ImportedTypes = () => {
-    let contextItem = useSelector((state) => state.debugger.currentContextItem);
-    let hasProperty = has_default("contextGlobals");
-    let hasMoreThanOneGlobal = pipe(prop_default("contextGlobals"), length_default, equals_default(0), not_default);
-    return /* @__PURE__ */ import_react10.default.createElement("div", null, /* @__PURE__ */ import_react10.default.createElement("div", null, "Imported functions types:"), (() => {
-      if (allPass_default([hasProperty, hasMoreThanOneGlobal])(contextItem)) {
-        return contextItem.contextGlobals.map((mapping, k2) => /* @__PURE__ */ import_react10.default.createElement(Imported, {
-          mapping,
-          key: k2
-        }));
-      } else {
-        return /* @__PURE__ */ import_react10.default.createElement("div", null, "No globals");
-      }
-    })());
-  };
-  var Imported = ({ mapping }) => {
-    let [name, sig] = mapping;
-    return /* @__PURE__ */ import_react10.default.createElement("div", null, name, " :: ", sig);
-  };
-  var Message = () => {
-    let contextItem = useSelector((state) => state.debugger.currentContextItem);
-    return contextItem === null ? null : /* @__PURE__ */ import_react10.default.createElement("div", {
-      className: "mb-5"
-    }, /* @__PURE__ */ import_react10.default.createElement("div", {
-      className: "text-md my-2 w-full"
-    }, /* @__PURE__ */ import_react10.default.createElement("div", null, "It is possible to infer two conflicting types for the expression", /* @__PURE__ */ import_react10.default.createElement("span", {
-      className: "code ml-2 px-1 rounded-md bg-gray-700 text-white inline-block not-italic"
-    }, contextItem["contextExp"]), ":")), /* @__PURE__ */ import_react10.default.createElement("div", {
-      className: "my-1 text-sm"
-    }, /* @__PURE__ */ import_react10.default.createElement("span", {
-      className: "inline-block mr-1"
-    }, "Possible type 1: "), /* @__PURE__ */ import_react10.default.createElement("span", {
-      className: "code groupMarkerB rounded-sm px-0.5 cursor-pointer"
-    }, /* @__PURE__ */ import_react10.default.createElement(StringTypeSig, {
-      simple: contextItem.contextType1SimpleString,
-      full: contextItem.contextType1String
-    }))), /* @__PURE__ */ import_react10.default.createElement("div", {
-      className: "text-xs italic"
-    }, "Possible type 1 can be infered from the orange highlights on the left side"), /* @__PURE__ */ import_react10.default.createElement("div", {
-      className: "mb-1 mt-2 text-sm"
-    }, /* @__PURE__ */ import_react10.default.createElement("span", {
-      className: "inline-block mr-1"
-    }, "Possible type 2: "), /* @__PURE__ */ import_react10.default.createElement("span", {
-      className: "code groupMarkerA rounded-sm px-0.5 cursor-pointer"
-    }, /* @__PURE__ */ import_react10.default.createElement(StringTypeSig, {
-      simple: contextItem.contextType2SimpleString,
-      full: contextItem.contextType2String
-    }))), /* @__PURE__ */ import_react10.default.createElement("div", {
-      className: "text-xs italic"
-    }, "Possible type 2 can be infered from the blue highlights on the left side"));
-  };
-  var TypingTable = () => {
-    let dispatch = useDispatch();
-    let context = useSelector((state) => state.debugger.context);
-    return /* @__PURE__ */ import_react10.default.createElement("div", {
-      className: "grid gap-1 context-grid text-xs w-full",
-      style: { fontFamily: "JetBrains Mono" }
-    }, /* @__PURE__ */ import_react10.default.createElement("div", {
-      className: "text-center"
-    }, /* @__PURE__ */ import_react10.default.createElement(ArrowCircleUpIcon_default, {
-      onClick: () => {
-        dispatch(prevStep());
-      },
-      className: "w-5 cursor-pointer"
-    })), /* @__PURE__ */ import_react10.default.createElement("div", {
-      className: "text-center"
-    }, "TYPE 1"), /* @__PURE__ */ import_react10.default.createElement("div", {
-      className: "text-center"
-    }, "EXPRESSION"), /* @__PURE__ */ import_react10.default.createElement("div", {
-      className: "text-center"
-    }, "TYPE 2"), (() => {
-      if (context.length === 0) {
-        return /* @__PURE__ */ import_react10.default.createElement(EmptyContextTable, null);
-      } else {
-        return context.map((row, i3) => /* @__PURE__ */ import_react10.default.createElement(ContextRow, {
-          row,
-          key: i3
-        }));
-      }
-    })(), /* @__PURE__ */ import_react10.default.createElement("div", {
-      className: "text-center"
-    }, /* @__PURE__ */ import_react10.default.createElement(ArrowCircleDownIcon_default, {
-      onClick: () => {
-        dispatch(nextStep());
-      },
-      className: "w-5 cursor-pointer"
-    })), /* @__PURE__ */ import_react10.default.createElement("div", {
-      className: "text-center"
-    }), /* @__PURE__ */ import_react10.default.createElement("div", {
-      className: "text-center"
-    }), /* @__PURE__ */ import_react10.default.createElement("div", {
-      className: "text-center"
-    }));
-  };
-  var EmptyContextTable = () => {
-    let steps = useSelector((state) => state.debugger.steps);
-    let currentTraverseId = useSelector((state) => state.debugger.currentTraverseId);
-    let dispatch = useDispatch();
-    return /* @__PURE__ */ import_react10.default.createElement(import_react10.default.Fragment, null, /* @__PURE__ */ import_react10.default.createElement("div", {
-      className: "flex flex-col justify-center items-center"
-    }, steps.map(({ stepId }, i3) => {
-      return /* @__PURE__ */ import_react10.default.createElement("div", {
-        key: i3,
-        onClick: () => {
-          dispatch(setStep(i3));
-        },
-        className: "rounded-lg w-4 h-4 my-0.5 p-0.5 cursor-pointer text-xs leading-3 text-center " + (equals_default(stepId, currentTraverseId) ? "bg-green-400" : "bg-gray-400")
-      }, i3 + 1);
-    })), /* @__PURE__ */ import_react10.default.createElement("div", null), /* @__PURE__ */ import_react10.default.createElement("div", null), /* @__PURE__ */ import_react10.default.createElement("div", null));
-  };
-  var ContextRow = ({ row }) => {
-    let currentTraverseId = useSelector((state) => state.debugger.currentTraverseId);
-    let steps = useSelector((state) => state.debugger.steps);
-    let dispatch = useDispatch();
-    let {
-      contextExp,
-      contextType1String,
-      contextType1SimpleString,
-      contextType2String,
-      contextType2SimpleString,
-      contextSteps
-    } = row;
-    let affinity = pipe(find_default(pipe(nth_default(0), equals_default(currentTraverseId))), nth_default(1))(contextSteps);
-    let affinityClass = affinity === "R" ? "sideA" : affinity === "L" ? "sideB" : "sideAB";
-    let firstReleventStepTId = nth_default(0)(contextSteps.find(nth_default(2)));
-    let lastReleventStepTId = pipe(reverse_default, find_default(nth_default(2)), nth_default(0))(contextSteps);
-    let firstReleventStep = steps.findIndex((step) => equals_default(step["stepId"], firstReleventStepTId));
-    let lastReleventStep = steps.findIndex((step) => equals_default(step["stepId"], lastReleventStepTId));
-    return /* @__PURE__ */ import_react10.default.createElement(import_react10.default.Fragment, null, /* @__PURE__ */ import_react10.default.createElement(Stepper, {
-      rowInfo: contextSteps
-    }), /* @__PURE__ */ import_react10.default.createElement("div", {
-      onClick: () => {
-        dispatch(setStep(firstReleventStep));
-      },
-      className: "rounded-sm p-1 groupMarkerB flex justify-center items-center cursor-pointer"
-    }, /* @__PURE__ */ import_react10.default.createElement(StringTypeSig, {
-      simple: contextType1SimpleString,
-      full: contextType1String
-    }), " "), /* @__PURE__ */ import_react10.default.createElement("div", {
-      className: "rounded-sm p-1 flex justify-center items-center " + affinityClass
-    }, contextExp), /* @__PURE__ */ import_react10.default.createElement("div", {
-      onClick: () => {
-        dispatch(setStep(lastReleventStep));
-      },
-      className: "rounded-sm p-1 groupMarkerA flex justify-center items-center cursor-pointer"
-    }, /* @__PURE__ */ import_react10.default.createElement(StringTypeSig, {
-      simple: contextType2SimpleString,
-      full: contextType2String
-    }), " "));
-  };
-  var Stepper = ({ rowInfo }) => {
-    let steps = useSelector((state) => state.debugger.steps);
-    let currentTraverseId = useSelector((state) => state.debugger.currentTraverseId);
-    let stepsInRow = rowInfo.filter((ri) => ri[2]);
-    let dispatch = useDispatch();
-    return /* @__PURE__ */ import_react10.default.createElement(import_react10.default.Fragment, null, /* @__PURE__ */ import_react10.default.createElement("div", {
-      className: "flex flex-col justify-center items-center"
-    }, stepsInRow.map(([traverseId, _z1, _z2]) => {
-      let stepId = steps.findIndex(pipe(prop_default("stepId"), equals_default(traverseId)));
-      return /* @__PURE__ */ import_react10.default.createElement("div", {
-        key: stepId,
-        onClick: () => {
-          dispatch(setStep(stepId));
-        },
-        className: "rounded-lg w-4 h-4 my-0.5 p-0.5 cursor-pointer text-xs leading-3 text-center " + (equals_default(traverseId, currentTraverseId) ? "bg-green-400" : "bg-gray-400")
-      }, stepId + 1);
-    })));
   };
   var Debugger_default = Debugger;
 
   // MenuBar.jsx
-  var import_react11 = __toESM(require_react());
+  var import_react13 = __toESM(require_react());
   var MenuBar = () => {
     const dispatch = useDispatch();
-    (0, import_react11.useEffect)(() => {
+    (0, import_react13.useEffect)(() => {
       dispatch(setTask(0));
       dispatch(typeCheckThunk());
     }, []);
-    return /* @__PURE__ */ import_react11.default.createElement("div", {
+    return /* @__PURE__ */ import_react13.default.createElement("div", {
       className: "w-full bg-gray-100 h-10 flex items-center"
-    }, /* @__PURE__ */ import_react11.default.createElement("a", {
+    }, /* @__PURE__ */ import_react13.default.createElement("a", {
       href: "/",
       className: "cursor-pointer mr-4 px-4",
       style: {}
-    }, /* @__PURE__ */ import_react11.default.createElement("svg", {
+    }, /* @__PURE__ */ import_react13.default.createElement("svg", {
       className: "w-10",
       viewBox: "0 0 100 100"
-    }, /* @__PURE__ */ import_react11.default.createElement("path", {
+    }, /* @__PURE__ */ import_react13.default.createElement("path", {
       d: "M9.061,50.971c-0,3.037 3.464,5.499 7.737,5.499l-0,-5.499l-7.737,0Z",
       style: { fill: "#3eac3a" }
-    }), /* @__PURE__ */ import_react11.default.createElement("rect", {
+    }), /* @__PURE__ */ import_react13.default.createElement("rect", {
       x: "16.793",
       y: "50.98",
       width: "43.762",
       height: "5.49",
       style: { fill: "#3eac3a" }
-    }), /* @__PURE__ */ import_react11.default.createElement("path", {
+    }), /* @__PURE__ */ import_react13.default.createElement("path", {
       d: "M50,10.032c-22.61,0 -40.939,18.329 -40.939,40.939l40.939,0l0,-40.939Z",
       style: { fill: "#3c9339" }
-    }), /* @__PURE__ */ import_react11.default.createElement("path", {
+    }), /* @__PURE__ */ import_react13.default.createElement("path", {
       d: "M46.807,69.476c0,7.182 6.164,13.005 13.769,13.005l-0,-13.005l-13.769,-0Z",
       style: { fill: "#3c9339" }
-    }), /* @__PURE__ */ import_react11.default.createElement("path", {
+    }), /* @__PURE__ */ import_react13.default.createElement("path", {
       d: "M56.139,60.144c-5.154,-0 -9.332,4.178 -9.332,9.332l9.332,-0l0,-9.332Z",
       style: { fill: "#087604" }
-    }), /* @__PURE__ */ import_react11.default.createElement("path", {
+    }), /* @__PURE__ */ import_react13.default.createElement("path", {
       d: "M60.555,82.481c12.507,0 22.645,-11.512 22.645,-25.712c0,-14.2 -10.138,-25.712 -22.645,-25.712l0,51.424Z",
       style: { fill: "#21781e" }
-    }), /* @__PURE__ */ import_react11.default.createElement("path", {
+    }), /* @__PURE__ */ import_react13.default.createElement("path", {
       d: "M56.139,60.144c2.439,-0 4.416,2.089 4.416,4.666c0,2.577 -1.977,4.666 -4.416,4.666l0,-9.332Z",
       style: { fill: "#0d9509" }
-    }), /* @__PURE__ */ import_react11.default.createElement("path", {
+    }), /* @__PURE__ */ import_react13.default.createElement("path", {
       d: "M56.139,56.472l0,-0.002l4.416,0l0,4.572l0,-0l0,-0.026c0,-2.466 -1.967,-4.475 -4.416,-4.544Z",
       style: { fill: "#3eac3a" }
-    }), /* @__PURE__ */ import_react11.default.createElement("path", {
+    }), /* @__PURE__ */ import_react13.default.createElement("path", {
       d: "M50,50.985l-0,-0.005l10.555,0l0,10.926l-0,0l0,-0.062c0,-5.892 -4.702,-10.696 -10.555,-10.859Z",
       style: { fill: "#1c7e18" }
-    }), /* @__PURE__ */ import_react11.default.createElement("path", {
+    }), /* @__PURE__ */ import_react13.default.createElement("path", {
       d: "M53.205,31.056l-0,0.001l-3.205,0l0,-3.317l0,-0l0,0.019c0,1.789 1.428,3.247 3.205,3.297Z",
       style: { fill: "#21781e" }
-    }), /* @__PURE__ */ import_react11.default.createElement("rect", {
+    }), /* @__PURE__ */ import_react13.default.createElement("rect", {
       x: "50",
       y: "31.057",
       width: "10.555",
       height: "19.923",
       style: { fill: "#21781e" }
-    }), /* @__PURE__ */ import_react11.default.createElement("path", {
+    }), /* @__PURE__ */ import_react13.default.createElement("path", {
       d: "M34.015,56.47c0,4.563 3.908,8.262 8.729,8.262c4.821,-0 8.729,-3.699 8.729,-8.262l-17.458,0Z",
       style: { fill: "#486c47" }
-    }))), /* @__PURE__ */ import_react11.default.createElement("p", {
+    }))), /* @__PURE__ */ import_react13.default.createElement("p", {
       className: "mr-1"
-    }, "Load examples:"), /* @__PURE__ */ import_react11.default.createElement("select", {
+    }, "Load examples:"), /* @__PURE__ */ import_react13.default.createElement("select", {
       defaultValue: 0,
       onChange: (e3) => dispatch(switchTaskThunk(e3.target.value)),
       className: "bg-gray-300 h-8 px-4 py-1 rounded-md"
-    }, /* @__PURE__ */ import_react11.default.createElement("option", {
+    }, /* @__PURE__ */ import_react13.default.createElement("option", {
       value: 0
-    }, "Example 1"), /* @__PURE__ */ import_react11.default.createElement("option", {
+    }, "Example 1"), /* @__PURE__ */ import_react13.default.createElement("option", {
       value: 1
-    }, "Example 2"), /* @__PURE__ */ import_react11.default.createElement("option", {
+    }, "Example 2"), /* @__PURE__ */ import_react13.default.createElement("option", {
       value: 2
-    }, "Example 3"), /* @__PURE__ */ import_react11.default.createElement("option", {
+    }, "Example 3"), /* @__PURE__ */ import_react13.default.createElement("option", {
       value: 3
-    }, "Example 4"), /* @__PURE__ */ import_react11.default.createElement("option", {
+    }, "Example 4"), /* @__PURE__ */ import_react13.default.createElement("option", {
       value: 4
-    }, "Example 5"), /* @__PURE__ */ import_react11.default.createElement("option", {
+    }, "Example 5"), /* @__PURE__ */ import_react13.default.createElement("option", {
       value: 5
-    }, "Example 6"), /* @__PURE__ */ import_react11.default.createElement("option", {
+    }, "Example 6"), /* @__PURE__ */ import_react13.default.createElement("option", {
       value: 6
-    }, "Example 7"), /* @__PURE__ */ import_react11.default.createElement("option", {
+    }, "Example 7"), /* @__PURE__ */ import_react13.default.createElement("option", {
       value: 7
-    }, "Example 8")), /* @__PURE__ */ import_react11.default.createElement("button", {
+    }, "Example 8")), /* @__PURE__ */ import_react13.default.createElement("button", {
       className: "bg-gray-300 px-4 py-1 rounded-md mx-2 flex h-8 justify-center items-center",
       onClick: (_3) => dispatch(toEditMode())
-    }, /* @__PURE__ */ import_react11.default.createElement(PencilAltIcon_default, {
+    }, /* @__PURE__ */ import_react13.default.createElement(PencilAltIcon_default, {
       className: "h-4 w-4 mr-1"
-    }), "Edit code"), /* @__PURE__ */ import_react11.default.createElement("button", {
+    }), "Edit code"), /* @__PURE__ */ import_react13.default.createElement("button", {
       className: "bg-gray-300 px-4 py-1 rounded-md mx-2 flex h-8 justify-center items-center",
       onClick: (_3) => {
         dispatch(toNormalMode());
         dispatch(typeCheckThunk());
       }
-    }, /* @__PURE__ */ import_react11.default.createElement(EyeIcon_default, {
+    }, /* @__PURE__ */ import_react13.default.createElement(EyeIcon_default, {
       className: "h-4 w-4 mr-1"
     }), "Type check"));
   };
@@ -26855,17 +26689,17 @@ y = if z then u else v
 
   // index.jsx
   var App2 = () => {
-    return /* @__PURE__ */ import_react12.default.createElement("div", {
+    return /* @__PURE__ */ import_react14.default.createElement("div", {
       className: "w-full h-full flex flex-col"
-    }, /* @__PURE__ */ import_react12.default.createElement(MenuBar_default, null), /* @__PURE__ */ import_react12.default.createElement("div", {
+    }, /* @__PURE__ */ import_react14.default.createElement(MenuBar_default, null), /* @__PURE__ */ import_react14.default.createElement("div", {
       className: "flex-grow"
-    }, /* @__PURE__ */ import_react12.default.createElement(y2, {
+    }, /* @__PURE__ */ import_react14.default.createElement(y2, {
       initialSizes: [60, 40]
-    }, /* @__PURE__ */ import_react12.default.createElement(Editor_default, null), /* @__PURE__ */ import_react12.default.createElement(Debugger_default, null))));
+    }, /* @__PURE__ */ import_react14.default.createElement(Editor_default, null), /* @__PURE__ */ import_react14.default.createElement(Debugger_default, null))));
   };
-  import_react_dom2.default.render(/* @__PURE__ */ import_react12.default.createElement(import_react12.default.StrictMode, null, /* @__PURE__ */ import_react12.default.createElement(Provider_default, {
+  import_react_dom2.default.render(/* @__PURE__ */ import_react14.default.createElement(import_react14.default.StrictMode, null, /* @__PURE__ */ import_react14.default.createElement(Provider_default, {
     store: store_default
-  }, /* @__PURE__ */ import_react12.default.createElement(App2, null))), document.getElementById("react-root"));
+  }, /* @__PURE__ */ import_react14.default.createElement(App2, null))), document.getElementById("react-root"));
 })();
 /*
 object-assign
