@@ -94,9 +94,33 @@ const TypeErrorReport = () => {
       <div className='pb-2 italic text-xs'>(Use the up and down buttons to verify each fact)</div>
 
       <TypingTable></TypingTable>
+      <ImportedTypes></ImportedTypes>
     </div>
   );
 };
+
+const ImportedTypes = () => {
+  let contextItem = useSelector(state => state.debugger.currentContextItem);
+  let hasProperty = R.has('contextGlobals')
+  let hasMoreThanOneGlobal = R.pipe(R.prop('contextGlobals'), R.length, R.equals(0), R.not)
+  return <div>
+    <div>Imported functions types:</div>
+    {
+      (() => { 
+        if (R.allPass([hasProperty, hasMoreThanOneGlobal])(contextItem)) {
+          return contextItem.contextGlobals.map((mapping, k) => <Imported mapping={mapping} key={k}></Imported>)
+        } else{
+          return <div>No globals</div>
+        }
+      })()
+    }
+  </div>
+}
+
+const Imported = ({mapping}) => {
+  let [name, sig] = mapping
+  return <div>{name} :: {sig}</div>
+}
 
 const Message = () => {
   let contextItem = useSelector(state => state.debugger.currentContextItem);
@@ -111,7 +135,7 @@ const Message = () => {
       </div>
 
       <div className='my-1 text-sm'>
-        <span className='w-14 inline-block'>Type 1: </span>
+        <span className='inline-block mr-1'>Possible type 1: </span>
         <span className='code groupMarkerB rounded-sm px-0.5 cursor-pointer'>
           <StringTypeSig
             simple={contextItem.contextType1SimpleString}
@@ -119,10 +143,10 @@ const Message = () => {
           ></StringTypeSig>
         </span>
       </div>
-      <div className='text-xs italic'>Type 1 can be infered from the orange highlights on the left side</div>
+      <div className='text-xs italic'>Possible type 1 can be infered from the orange highlights on the left side</div>
 
       <div className='mb-1 mt-2 text-sm'>
-        <span className='w-14 inline-block'>Type 2: </span>
+        <span className='inline-block mr-1'>Possible type 2: </span>
         <span className='code groupMarkerA rounded-sm px-0.5 cursor-pointer'>
           <StringTypeSig
             simple={contextItem.contextType2SimpleString}
@@ -130,7 +154,7 @@ const Message = () => {
           ></StringTypeSig>
         </span>
       </div>
-      <div className='text-xs italic'>Type 2 can be infered from the blue highlights on the left side</div>
+      <div className='text-xs italic'>Possible type 2 can be infered from the blue highlights on the left side</div>
 
     </div>
   );

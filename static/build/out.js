@@ -1341,9 +1341,9 @@
           }
           function checkPropTypes(typeSpecs, values, location, componentName, element) {
             {
-              var has = Function.call.bind(Object.prototype.hasOwnProperty);
+              var has3 = Function.call.bind(Object.prototype.hasOwnProperty);
               for (var typeSpecName in typeSpecs) {
-                if (has(typeSpecs, typeSpecName)) {
+                if (has3(typeSpecs, typeSpecName)) {
                   var error$1 = void 0;
                   try {
                     if (typeof typeSpecs[typeSpecName] !== "function") {
@@ -5409,7 +5409,7 @@
           function get2(key) {
             return key._reactInternals;
           }
-          function has(key) {
+          function has3(key) {
             return key._reactInternals !== void 0;
           }
           function set(key, value) {
@@ -9723,9 +9723,9 @@
           }
           function checkPropTypes(typeSpecs, values, location, componentName, element) {
             {
-              var has2 = Function.call.bind(Object.prototype.hasOwnProperty);
+              var has4 = Function.call.bind(Object.prototype.hasOwnProperty);
               for (var typeSpecName in typeSpecs) {
-                if (has2(typeSpecs, typeSpecName)) {
+                if (has4(typeSpecs, typeSpecName)) {
                   var error$1 = void 0;
                   try {
                     if (typeof typeSpecs[typeSpecName] !== "function") {
@@ -20280,7 +20280,7 @@ For more info, visit https://reactjs.org/link/mock-scheduler`);
                 throw Error("Target container is not a DOM element.");
               }
             }
-            if (!(parentComponent != null && has(parentComponent))) {
+            if (!(parentComponent != null && has3(parentComponent))) {
               {
                 throw Error("parentComponent must be a valid React Component");
               }
@@ -20607,7 +20607,7 @@ For more info, visit https://reactjs.org/link/mock-scheduler`);
       if (true) {
         ReactPropTypesSecret = require_ReactPropTypesSecret();
         loggedTypeFailures = {};
-        has = require_has();
+        has3 = require_has();
         printWarning = function(text) {
           var message = "Warning: " + text;
           if (typeof console !== "undefined") {
@@ -20621,11 +20621,11 @@ For more info, visit https://reactjs.org/link/mock-scheduler`);
       }
       var ReactPropTypesSecret;
       var loggedTypeFailures;
-      var has;
+      var has3;
       function checkPropTypes(typeSpecs, values, location, componentName, getStack) {
         if (true) {
           for (var typeSpecName in typeSpecs) {
-            if (has(typeSpecs, typeSpecName)) {
+            if (has3(typeSpecs, typeSpecName)) {
               var error;
               try {
                 if (typeof typeSpecs[typeSpecName] !== "function") {
@@ -20665,7 +20665,7 @@ For more info, visit https://reactjs.org/link/mock-scheduler`);
       var ReactIs = require_react_is();
       var assign = require_object_assign();
       var ReactPropTypesSecret = require_ReactPropTypesSecret();
-      var has = require_has();
+      var has3 = require_has();
       var checkPropTypes = require_checkPropTypes();
       var printWarning = function() {
       };
@@ -20874,7 +20874,7 @@ For more info, visit https://reactjs.org/link/mock-scheduler`);
               return new PropTypeError("Invalid " + location + " `" + propFullName + "` of type " + ("`" + propType + "` supplied to `" + componentName + "`, expected an object."));
             }
             for (var key in propValue) {
-              if (has(propValue, key)) {
+              if (has3(propValue, key)) {
                 var error = typeChecker(propValue, key, componentName, location, propFullName + "." + key, ReactPropTypesSecret);
                 if (error instanceof Error) {
                   return error;
@@ -20905,7 +20905,7 @@ For more info, visit https://reactjs.org/link/mock-scheduler`);
               if (checkerResult == null) {
                 return null;
               }
-              if (checkerResult.data && has(checkerResult.data, "expectedType")) {
+              if (checkerResult.data && has3(checkerResult.data, "expectedType")) {
                 expectedTypes.push(checkerResult.data.expectedType);
               }
             }
@@ -20957,7 +20957,7 @@ For more info, visit https://reactjs.org/link/mock-scheduler`);
             var allKeys = assign({}, props[propName], shapeTypes);
             for (var key in allKeys) {
               var checker = shapeTypes[key];
-              if (has(shapeTypes, key) && typeof checker !== "function") {
+              if (has3(shapeTypes, key) && typeof checker !== "function") {
                 return invalidValidatorError(componentName, location, propFullName, key, getPreciseType(checker));
               }
               if (!checker) {
@@ -21617,9 +21617,9 @@ For more info, visit https://reactjs.org/link/mock-scheduler`);
           }
           function checkPropTypes(typeSpecs, values, location, componentName, element) {
             {
-              var has = Function.call.bind(Object.prototype.hasOwnProperty);
+              var has3 = Function.call.bind(Object.prototype.hasOwnProperty);
               for (var typeSpecName in typeSpecs) {
-                if (has(typeSpecs, typeSpecName)) {
+                if (has3(typeSpecs, typeSpecName)) {
                   var error$1 = void 0;
                   try {
                     if (typeof typeSpecs[typeSpecName] !== "function") {
@@ -24815,6 +24815,12 @@ y = if z then u else v
     }
   };
 
+  // node_modules/ramda/es/max.js
+  var max = /* @__PURE__ */ _curry2(function max2(a3, b3) {
+    return b3 > a3 ? b3 : a3;
+  });
+  var max_default = max;
+
   // node_modules/ramda/es/internal/_map.js
   function _map(fn2, functor) {
     var idx = 0;
@@ -25056,9 +25062,31 @@ y = if z then u else v
   });
   var prop_default = prop;
 
+  // node_modules/ramda/es/pluck.js
+  var pluck = /* @__PURE__ */ _curry2(function pluck2(p3, list) {
+    return map_default(prop_default(p3), list);
+  });
+  var pluck_default = pluck;
+
   // node_modules/ramda/es/reduce.js
   var reduce = /* @__PURE__ */ _curry3(_reduce);
   var reduce_default = reduce;
+
+  // node_modules/ramda/es/allPass.js
+  var allPass = /* @__PURE__ */ _curry1(function allPass2(preds) {
+    return curryN_default(reduce_default(max_default, 0, pluck_default("length", preds)), function() {
+      var idx = 0;
+      var len = preds.length;
+      while (idx < len) {
+        if (!preds[idx].apply(this, arguments)) {
+          return false;
+        }
+        idx += 1;
+      }
+      return true;
+    });
+  });
+  var allPass_default = allPass;
 
   // node_modules/ramda/es/internal/_assoc.js
   function _assoc(prop3, val, obj) {
@@ -25112,6 +25140,12 @@ y = if z then u else v
     return val === null ? "Null" : val === void 0 ? "Undefined" : Object.prototype.toString.call(val).slice(8, -1);
   });
   var type_default = type;
+
+  // node_modules/ramda/es/not.js
+  var not = /* @__PURE__ */ _curry1(function not2(a3) {
+    return !a3;
+  });
+  var not_default = not;
 
   // node_modules/ramda/es/internal/_pipe.js
   function _pipe(f3, g3) {
@@ -25539,6 +25573,31 @@ y = if z then u else v
     }
   }));
   var find_default = find;
+
+  // node_modules/ramda/es/hasPath.js
+  var hasPath = /* @__PURE__ */ _curry2(function hasPath2(_path, obj) {
+    if (_path.length === 0 || isNil_default(obj)) {
+      return false;
+    }
+    var val = obj;
+    var idx = 0;
+    while (idx < _path.length) {
+      if (!isNil_default(val) && _has(_path[idx], val)) {
+        val = val[_path[idx]];
+        idx += 1;
+      } else {
+        return false;
+      }
+    }
+    return true;
+  });
+  var hasPath_default = hasPath;
+
+  // node_modules/ramda/es/has.js
+  var has = /* @__PURE__ */ _curry2(function has2(prop3, obj) {
+    return hasPath_default([prop3], obj);
+  });
+  var has_default = has;
 
   // node_modules/ramda/es/invoker.js
   var invoker = /* @__PURE__ */ _curry2(function invoker2(arity, method) {
@@ -26524,7 +26583,26 @@ y = if z then u else v
       className: "pt-4 text-xs italic"
     }, "Below are all the expressions (in the middle column) that can cause the type error."), /* @__PURE__ */ import_react10.default.createElement("div", {
       className: "pb-2 italic text-xs"
-    }, "(Use the up and down buttons to verify each fact)"), /* @__PURE__ */ import_react10.default.createElement(TypingTable, null));
+    }, "(Use the up and down buttons to verify each fact)"), /* @__PURE__ */ import_react10.default.createElement(TypingTable, null), /* @__PURE__ */ import_react10.default.createElement(ImportedTypes, null));
+  };
+  var ImportedTypes = () => {
+    let contextItem = useSelector((state) => state.debugger.currentContextItem);
+    let hasProperty = has_default("contextGlobals");
+    let hasMoreThanOneGlobal = pipe(prop_default("contextGlobals"), length_default, equals_default(0), not_default);
+    return /* @__PURE__ */ import_react10.default.createElement("div", null, /* @__PURE__ */ import_react10.default.createElement("div", null, "Imported functions types:"), (() => {
+      if (allPass_default([hasProperty, hasMoreThanOneGlobal])(contextItem)) {
+        return contextItem.contextGlobals.map((mapping, k2) => /* @__PURE__ */ import_react10.default.createElement(Imported, {
+          mapping,
+          key: k2
+        }));
+      } else {
+        return /* @__PURE__ */ import_react10.default.createElement("div", null, "No globals");
+      }
+    })());
+  };
+  var Imported = ({ mapping }) => {
+    let [name, sig] = mapping;
+    return /* @__PURE__ */ import_react10.default.createElement("div", null, name, " :: ", sig);
   };
   var Message = () => {
     let contextItem = useSelector((state) => state.debugger.currentContextItem);
@@ -26537,26 +26615,26 @@ y = if z then u else v
     }, contextItem["contextExp"]), ":")), /* @__PURE__ */ import_react10.default.createElement("div", {
       className: "my-1 text-sm"
     }, /* @__PURE__ */ import_react10.default.createElement("span", {
-      className: "w-14 inline-block"
-    }, "Type 1: "), /* @__PURE__ */ import_react10.default.createElement("span", {
+      className: "inline-block mr-1"
+    }, "Possible type 1: "), /* @__PURE__ */ import_react10.default.createElement("span", {
       className: "code groupMarkerB rounded-sm px-0.5 cursor-pointer"
     }, /* @__PURE__ */ import_react10.default.createElement(StringTypeSig, {
       simple: contextItem.contextType1SimpleString,
       full: contextItem.contextType1String
     }))), /* @__PURE__ */ import_react10.default.createElement("div", {
       className: "text-xs italic"
-    }, "Type 1 can be infered from the orange highlights on the left side"), /* @__PURE__ */ import_react10.default.createElement("div", {
+    }, "Possible type 1 can be infered from the orange highlights on the left side"), /* @__PURE__ */ import_react10.default.createElement("div", {
       className: "mb-1 mt-2 text-sm"
     }, /* @__PURE__ */ import_react10.default.createElement("span", {
-      className: "w-14 inline-block"
-    }, "Type 2: "), /* @__PURE__ */ import_react10.default.createElement("span", {
+      className: "inline-block mr-1"
+    }, "Possible type 2: "), /* @__PURE__ */ import_react10.default.createElement("span", {
       className: "code groupMarkerA rounded-sm px-0.5 cursor-pointer"
     }, /* @__PURE__ */ import_react10.default.createElement(StringTypeSig, {
       simple: contextItem.contextType2SimpleString,
       full: contextItem.contextType2String
     }))), /* @__PURE__ */ import_react10.default.createElement("div", {
       className: "text-xs italic"
-    }, "Type 2 can be infered from the blue highlights on the left side"));
+    }, "Possible type 2 can be infered from the blue highlights on the left side"));
   };
   var TypingTable = () => {
     let dispatch = useDispatch();
@@ -26686,10 +26764,59 @@ y = if z then u else v
       dispatch(typeCheckThunk());
     }, []);
     return /* @__PURE__ */ import_react11.default.createElement("div", {
-      className: "w-full bg-gray-100 h-10 flex items-center px-3"
-    }, /* @__PURE__ */ import_react11.default.createElement("p", {
+      className: "w-full bg-gray-100 h-10 flex items-center"
+    }, /* @__PURE__ */ import_react11.default.createElement("a", {
+      href: "/",
+      className: "cursor-pointer mr-4 px-4",
+      style: {}
+    }, /* @__PURE__ */ import_react11.default.createElement("svg", {
+      className: "w-10",
+      viewBox: "0 0 100 100"
+    }, /* @__PURE__ */ import_react11.default.createElement("path", {
+      d: "M9.061,50.971c-0,3.037 3.464,5.499 7.737,5.499l-0,-5.499l-7.737,0Z",
+      style: { fill: "#3eac3a" }
+    }), /* @__PURE__ */ import_react11.default.createElement("rect", {
+      x: "16.793",
+      y: "50.98",
+      width: "43.762",
+      height: "5.49",
+      style: { fill: "#3eac3a" }
+    }), /* @__PURE__ */ import_react11.default.createElement("path", {
+      d: "M50,10.032c-22.61,0 -40.939,18.329 -40.939,40.939l40.939,0l0,-40.939Z",
+      style: { fill: "#3c9339" }
+    }), /* @__PURE__ */ import_react11.default.createElement("path", {
+      d: "M46.807,69.476c0,7.182 6.164,13.005 13.769,13.005l-0,-13.005l-13.769,-0Z",
+      style: { fill: "#3c9339" }
+    }), /* @__PURE__ */ import_react11.default.createElement("path", {
+      d: "M56.139,60.144c-5.154,-0 -9.332,4.178 -9.332,9.332l9.332,-0l0,-9.332Z",
+      style: { fill: "#087604" }
+    }), /* @__PURE__ */ import_react11.default.createElement("path", {
+      d: "M60.555,82.481c12.507,0 22.645,-11.512 22.645,-25.712c0,-14.2 -10.138,-25.712 -22.645,-25.712l0,51.424Z",
+      style: { fill: "#21781e" }
+    }), /* @__PURE__ */ import_react11.default.createElement("path", {
+      d: "M56.139,60.144c2.439,-0 4.416,2.089 4.416,4.666c0,2.577 -1.977,4.666 -4.416,4.666l0,-9.332Z",
+      style: { fill: "#0d9509" }
+    }), /* @__PURE__ */ import_react11.default.createElement("path", {
+      d: "M56.139,56.472l0,-0.002l4.416,0l0,4.572l0,-0l0,-0.026c0,-2.466 -1.967,-4.475 -4.416,-4.544Z",
+      style: { fill: "#3eac3a" }
+    }), /* @__PURE__ */ import_react11.default.createElement("path", {
+      d: "M50,50.985l-0,-0.005l10.555,0l0,10.926l-0,0l0,-0.062c0,-5.892 -4.702,-10.696 -10.555,-10.859Z",
+      style: { fill: "#1c7e18" }
+    }), /* @__PURE__ */ import_react11.default.createElement("path", {
+      d: "M53.205,31.056l-0,0.001l-3.205,0l0,-3.317l0,-0l0,0.019c0,1.789 1.428,3.247 3.205,3.297Z",
+      style: { fill: "#21781e" }
+    }), /* @__PURE__ */ import_react11.default.createElement("rect", {
+      x: "50",
+      y: "31.057",
+      width: "10.555",
+      height: "19.923",
+      style: { fill: "#21781e" }
+    }), /* @__PURE__ */ import_react11.default.createElement("path", {
+      d: "M34.015,56.47c0,4.563 3.908,8.262 8.729,8.262c4.821,-0 8.729,-3.699 8.729,-8.262l-17.458,0Z",
+      style: { fill: "#486c47" }
+    }))), /* @__PURE__ */ import_react11.default.createElement("p", {
       className: "mr-1"
-    }, "Load examples"), /* @__PURE__ */ import_react11.default.createElement("select", {
+    }, "Load examples:"), /* @__PURE__ */ import_react11.default.createElement("select", {
       defaultValue: 0,
       onChange: (e3) => dispatch(switchTaskThunk(e3.target.value)),
       className: "bg-gray-300 h-8 px-4 py-1 rounded-md"

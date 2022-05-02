@@ -31,9 +31,7 @@
         </div>
         <div>
             <svg
-                class="w-48" viewBox="0 0 100 100" version="1.1" xmlns="http://www.w3.org/2000/svg"
-                xmlns:xlink="http://www.w3.org/1999/xlink" xml:space="preserve" xmlns:serif="http://www.serif.com/"
-                style="fill-rule:evenodd;clip-rule:evenodd;stroke-linejoin:round;stroke-miterlimit:2;">
+                class="w-48" viewBox="0 0 100 100">
                 <!-- <path
                     d="M100,25c0,-13.798 -11.202,-25 -25,-25l-50,0c-13.798,0 -25,11.202 -25,25l0,50c0,13.798 11.202,25 25,25l50,0c13.798,0 25,-11.202 25,-25l0,-50Z"
                     style="fill:#b6d399;" /> -->
@@ -62,9 +60,9 @@
     </section>
     <section class="w-5/6 md:w-3/4 lg:w-3/5 px-12 py-4">
         <h2 class="text-4xl my-4 font-bold border-b-8 border-purple-400 inline-block">Why Chameleon?</h2>
-        <section class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <section class="grid grid-cols-1 md:grid-cols-2 gap-x-4 gap-y-10">
             <section>
-                <h3 class="font-bold text-3xl font-light">Human-Centered Methods</h3>
+                <h3 class="font-bold text-3xl font-light mb-3">Human-Centered Methods</h3>
                 <p class="text-lg">
                     We improve each feature in Chameleon based on the
                     feedback from the Haskell community. Debugging idioms
@@ -72,7 +70,7 @@
                 </p>
             </section>
             <section>
-                <h3 class="font-bold text-3xl  font-light">Multi-location type errors</h3>
+                <h3 class="font-bold text-3xl  font-light mb-3">Multi-location type errors</h3>
                 <p class="text-lg">
 
                     While many type systems try to pinpoint one exact error location in the code, the accuracy is often
@@ -84,7 +82,7 @@
                 </p>
             </section>
             <section>
-                <h3 class="font-bold text-3xl font-light ">Unbiased type errors</h3>
+                <h3 class="font-bold text-3xl font-light mb-3 ">Unbiased type errors</h3>
                 <p class="text-lg">
                     Instead of assuming one type is "Expected" and one type is "Actual", Chameleon will report two
                     equally
@@ -96,7 +94,7 @@
                 </p>
             </section>
             <section>
-                <h3 class="font-bold text-3xl  font-light">Deduction step</h3>
+                <h3 class="font-bold text-3xl  font-light mb-3">Deduction step</h3>
                 <p class="text-lg">
                     The deduction step is a tool to peek inside the type checking engine. It shows step-by-step
                     reasoning that
@@ -107,7 +105,7 @@
                 </p>
             </section>
             <section>
-                <h3 class="font-bold text-3xl  font-light">More are coming!</h3>
+                <h3 class="font-bold text-3xl  font-light mb-3">More are coming!</h3>
                 <p class="text-lg">
                     Hang tight! We are working on more features to make Chameleon even better!
                 </p>
@@ -132,11 +130,33 @@
                 <a class="text-blue-700" href="/playground">Playground</a>
             </li>
             <li>
-                <a class="text-blue-700" href="">YouTube Video</a>
+                <a class="text-blue-700" href="https://www.youtube.com/watch?v=SLBzu_ArXHA">YouTube Video</a>
             </li>
         </ul>
     </section>
-    <!-- <section class="w-5/6 md:w-3/4 lg:w-3/5 px-12 py-4">
+    <section class="w-5/6 md:w-3/4 lg:w-3/5 px-12 py-4">
+        <h2 class="text-4xl my-4 font-bold border-b-8 border-purple-400 inline-block">Contact us</h2>
+        <div class="text-lg">
+            Let us know if you are teaching Haskell and interested in running Chameleon in your class.
+            Let us know if you have new ideas for debugging type errors. 
+            Let us know if you want to get involved in the Chameleon project, either by reporting bugs, writing code,
+            or participating user studies. 
+            Seriously, anything is welcome. 
+            
+        </div>
+        <form class="py-4">
+            <div class="py-1 flex items-start">
+                <label for="email" class="text-lg mr-2  w-24">Email: </label>
+                <input  id="email" type="email" class="border px-4 py-2 text-lg rounded-md flex-grow" placeholder="john@example.com"/>
+            </div>
+            <div class="py-1 flex items-start">
+                <label for="comment" class="text-lg mr-2 w-24">Comment: </label>
+                <textarea  id="comment" class="border px-4 py-2 text-lg rounded-md flex-grow"></textarea>
+            </div>
+            <input type="submit" value="Send" class="bg-green-300 rounded-md px-8 py-2 font-bold cursor-pointer">
+        </form>
+    </section>
+        <!-- <section class="w-5/6 md:w-3/4 lg:w-3/5 px-12 py-4">
         <h2 class="text-4xl my-4 font-bold border-b-8 border-purple-400 inline-block">Who are we</h2>
         <section>
             <h3 class="text-2xl">Tony Fu</h3>
