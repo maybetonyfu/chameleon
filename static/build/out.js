@@ -26457,19 +26457,23 @@ y = if z then u else v
     }))), /* @__PURE__ */ import_react11.default.createElement(Message, null), /* @__PURE__ */ import_react11.default.createElement(ReleventTerms, null));
   };
   var Tab = ({ active = false, steps, exp }) => {
+    let dispatch = useDispatch();
+    let tabReleventSteps = steps.map((step, i3) => [...step, i3]).filter(nth_default(2));
+    let tabDefaultStep = tabReleventSteps[Math.round(tabReleventSteps.length / 2) - 1][3];
     return /* @__PURE__ */ import_react11.default.createElement("div", {
+      onClick: (_3) => dispatch(setStep(tabDefaultStep)),
       className: "p-2 rounded-2xl inline-block w-max m-1 " + (active ? "bg-gray-900" : "bg-white")
     }, /* @__PURE__ */ import_react11.default.createElement("div", {
       className: "px-1 text-2xl mb-3 " + (active ? "text-white" : "text-gray-800")
     }, exp), /* @__PURE__ */ import_react11.default.createElement("div", null, /* @__PURE__ */ import_react11.default.createElement(TabSteps, {
-      steps,
+      steps: tabReleventSteps,
       active
     })));
   };
   var TabSteps = ({ active = false, steps }) => {
     return /* @__PURE__ */ import_react11.default.createElement("div", {
       className: "flex"
-    }, steps.map((step, i3) => [...step, i3]).filter(nth_default(2)).map((step) => /* @__PURE__ */ import_react11.default.createElement(TabStep, {
+    }, steps.map((step) => /* @__PURE__ */ import_react11.default.createElement(TabStep, {
       active,
       key: step[3],
       traverseId: step[0],
@@ -26481,8 +26485,9 @@ y = if z then u else v
     let currentTraverseId = useSelector(path_default(["debugger", "currentTraverseId"]));
     let stepping = equals_default(currentTraverseId, traverseId);
     let face = active && stepping ? "bg-green-400 text-black" : active ? "bg-gray-400 text-black" : "bg-gray-700 text-white";
-    return /* @__PURE__ */ import_react11.default.createElement("div", {
-      onClick: (_3) => {
+    return /* @__PURE__ */ import_react11.default.createElement("button", {
+      onClick: (e3) => {
+        e3.stopPropagation();
         dispatch(setStep(step));
       },
       className: "w-5 h-5 leading-5 flex justify-center cursor-pointer rounded-full text-md mx-0.5 " + face
@@ -26536,7 +26541,17 @@ y = if z then u else v
   var ReleventItem = ({ item }) => {
     let currentTraverseId = useSelector(path_default(["debugger", "currentTraverseId"]));
     let affinity = pipe(find_default(pipe(nth_default(0), equals_default(currentTraverseId))), nth_default(1))(item.contextSteps);
-    return /* @__PURE__ */ import_react11.default.createElement("div", null, item.contextExp, ":: ", affinity);
+    let type3 = affinity === "L" ? item.contextType1String : item.contextType2String;
+    let origin = affinity === "L" ? "orange facts" : "blue facts";
+    return /* @__PURE__ */ import_react11.default.createElement("div", {
+      className: "flex"
+    }, /* @__PURE__ */ import_react11.default.createElement("div", null, item.contextExp), /* @__PURE__ */ import_react11.default.createElement("div", {
+      className: "code mx-0.5"
+    }, "::"), /* @__PURE__ */ import_react11.default.createElement("div", {
+      className: "code"
+    }, type3), /* @__PURE__ */ import_react11.default.createElement("div", {
+      className: "ml-1"
+    }, " (From ", origin, ") "));
   };
   var TabReport_default = TabReport;
 

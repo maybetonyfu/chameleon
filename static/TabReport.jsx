@@ -24,24 +24,28 @@ const TabReport = () => {
     )
 }
 const Tab = ({ active = false, steps, exp }) => {
+    let dispatch = useDispatch()
+    let tabReleventSteps = steps
+        .map((step, i) => [...step, i])
+        .filter(R.nth(2))
+    let tabDefaultStep = tabReleventSteps[Math.round(tabReleventSteps.length / 2)  - 1][3]
     return (
-        <div className={'p-2 rounded-2xl inline-block w-max m-1 ' + (active ? 'bg-gray-900' : 'bg-white')} >
+        <div
+            onClick={_ => dispatch(setStep(tabDefaultStep))}
+            className={'p-2 rounded-2xl inline-block w-max m-1 ' + (active ? 'bg-gray-900' : 'bg-white')} >
             <div className={'px-1 text-2xl mb-3 ' + (active ? 'text-white' : 'text-gray-800')} >{exp}</div>
             <div>
                 <TabSteps
-                    steps={steps}
+                    steps={tabReleventSteps}
                     active={active}></TabSteps>
             </div>
         </div>)
-
 }
 
 const TabSteps = ({ active = false, steps }) => {
     return (
         <div className='flex'>
             {steps
-                .map((step, i) => [...step, i])
-                .filter(R.nth(2))
                 .map(step => <TabStep active={active} key={step[3]} traverseId={step[0]} step={step[3]}></TabStep>)
             }
         </div>)
@@ -55,13 +59,13 @@ const TabStep = ({ active = false, step, traverseId }) => {
         : active ? 'bg-gray-400 text-black'
             : 'bg-gray-700 text-white'
     return (
-        <div
-            onClick={_ => { dispatch(setStep(step)) }}
+        <button
+            onClick={e => { e.stopPropagation(); dispatch(setStep(step)) }}
             className={
                 'w-5 h-5 leading-5 flex justify-center cursor-pointer rounded-full text-md mx-0.5 '
                 + face}>
             {step + 1}
-        </div>
+        </button>
     )
 }
 
@@ -123,7 +127,16 @@ const ReleventItem = ({ item }) => {
             R.find(R.pipe(R.nth(0), R.equals(currentTraverseId))),
             R.nth(1)
         )(item.contextSteps)
-    return <div>{item.contextExp}:: {affinity}</div>
+    let type = affinity === 'L' ? item.contextType1String : item.contextType2String
+    let origin = affinity === 'L' ? 'orange facts': 'blue facts'
+    return (
+        <div className='flex'>
+            <div>{item.contextExp}</div>
+            <div className='code mx-0.5'>::</div>
+            <div className='code'>{type}</div>
+            <div className='ml-1'> (From {origin}) </div>
+        </div>
+    )
 }
 
 export default TabReport
