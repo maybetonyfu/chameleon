@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chameleon Type Debugger</title>
+    <script defer src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
+    <script src="//unpkg.com/alpinejs" defer></script>
+    <script>
+        let client = supabase.createClient('https://azuarsmxncuvxnjgzxdj.supabase.co', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImF6dWFyc214bmN1dnhuamd6eGRqIiwicm9sZSI6ImFub24iLCJpYXQiOjE2NTE2Mjc5NjksImV4cCI6MTk2NzIwMzk2OX0.tKLrilS6DvS2QXxBMxY0qzp9r8U4eFMgqLfXRx5hRXA')
+        function app() {
+            return {
+                email: '',
+                password: '',
+                feedbacks: [],
+                user: client.auth.user(),
+                async signup() {
+                    let user = await client.auth.signUp({ email: this.email, password: this.password })
+                    console.log(user)
+                },
+                async signin(e) {
+                    e.preventDefault()
+                    let user = await client.auth.signIn({ email: this.email, password: this.password })
+                    window.location = window.location.href
+                },
+                async signout() {
+                    await client.auth.signOut()
+                    window.location = window.location.href
+                },
+                async init() {
+                    let { data, error } = await client.from('feedback').select('*')
+                    this.feedbacks = data
+                }
+            }
+        }
+    </script>
+</head>
+
+<body class="w-full flex flex-col items-center" x-data="app()">
+    <template x-if="user === null">
+        <form class="flex justify-end w-full items-center py-1 bg-blue-800 text-white">
+            <label>Email </label> <input class="mx-2 px-1 rounded-sm border text-black" x-model="email" type="email">
+            <label>Password </label> <input class="mx-2 px-1 rounded-sm border text-black" x-model="password" type="password">
+            <button class="bg-gray-300 px-2 rounded-sm mx-2 text-black" @click="signin">Sign in</button>
+        </form>
+    </template>
+    <template x-if="user !== null">
+        <div class="flex justify-end w-full items-center py-1 bg-blue-800 text-white">
+            <span class="mx-2" x-text="user.email"></span>
+            <button class="bg-gray-300 px-2 rounded-md mx-4 text-black" @click="signout">Sign out</button></button>
+        </div>
+    </template>
+    <div class="flex flex-col w-1/2">
+        <template x-for="fbk in feedbacks">
+            <div class="my-2 border p-2 rounded-md">
+                <div class="" x-text="fbk.comment"></div>
+                <div class="text-gray-500 text-sm"><span class="" x-text="fbk.created_at"></span></div>
+                <div class="text-gray-500 text-sm"><span class="" x-text="fbk.email"></span></div>
+            </div>
+        </template>
+    </div>
+</body>
+
+</html>

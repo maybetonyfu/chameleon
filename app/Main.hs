@@ -4,6 +4,7 @@ module Main where
 
 import qualified Data.ByteString.Lazy.Char8 as BS
 import Data.Monoid (mconcat)
+import Control.Monad.IO.Class
 import qualified Data.Text.Lazy as T
 import JsonInstance
 import Run hiding (main)
@@ -26,12 +27,10 @@ main = scotty 5000 (
     >> sourceMap
     >> js
     >> css
-    >> intro
-    >> consent
-    >> explanatory
-    >> playground
     >> svg
-    >> favicon)
+    >> favicon
+    >> page
+    )
 
 typecheck :: ScottyM ()
 typecheck = post "/typecheck" $ do
@@ -39,26 +38,12 @@ typecheck = post "/typecheck" $ do
   let result = processFile (BS.unpack content)
   json result
 
-playground :: ScottyM ()
-playground = get "/playground" $ do
-  file "static/build/playground.html"
+
 
 
 home :: ScottyM ()
 home = get "/" $ do
   file "static/build/index.html"
-
-intro :: ScottyM ()
-intro = get "/intro" $ do
-  file "static/build/introduction.html"
-
-consent :: ScottyM ()
-consent = get "/consent" $ do
-  file "static/build/consent.html"
-
-explanatory :: ScottyM ()
-explanatory = get "/explanatory" $ do
-  file "static/build/explanatory.html"
 
 js :: ScottyM ()
 js = get (regex "^.*\\.js$") $ do
@@ -91,4 +76,10 @@ sourceMap = get (regex "^.*\\.js\\.map")  $ do
   path <- param "0"
   let filename = "static/build" `T.append` path
   setHeader "Content-Type" "application/json"
+  file (T.unpack filename)
+
+page :: ScottyM ()
+page = get "/:page" $ do
+  pageName <- param "page"
+  let filename = "static/build/" `T.append` pageName `T.append` ".html"
   file (T.unpack filename)
