@@ -26843,6 +26843,8 @@ y = if z then u else v
     }, /* @__PURE__ */ import_react14.default.createElement(Toggle_default, {
       active: deductionStpe,
       onClick: (_3) => {
+        if (!multipleExps && !deductionStpe)
+          dispatch(toggleMultileExpThunk());
         dispatch(toggleDebuggerStpes());
       }
     })), /* @__PURE__ */ import_react14.default.createElement("div", {
@@ -26852,6 +26854,8 @@ y = if z then u else v
     }, /* @__PURE__ */ import_react14.default.createElement(Toggle_default, {
       active: multipleExps,
       onClick: (_3) => {
+        if (multipleExps && deductionStpe)
+          dispatch(toggleDebuggerStpes());
         dispatch(toggleMultileExpThunk());
       }
     }))));

@@ -75,12 +75,16 @@ const MenuBar = () => {
         <div className="flex items-center px-2">
             <div className="mr-1">Debugging Step:</div>
             <div className="ml-1 mr-2">
-                <Toggle active={deductionStpe} onClick={_ => { dispatch(toggleDebuggerStpes()) }}></Toggle>
+                <Toggle active={deductionStpe} onClick={_ => { 
+                    if (!multipleExps && !deductionStpe) dispatch(toggleMultileExpThunk())
+                    dispatch(toggleDebuggerStpes()) 
+                }}></Toggle>
             </div>
 
             <div className="mr-1">Multiple Expressions:</div>
             <div className="ml-1 mr-2">
                 <Toggle active={multipleExps} onClick={_ => {
+                    if (multipleExps && deductionStpe) dispatch(toggleDebuggerStpes())
                     dispatch(toggleMultileExpThunk())
                 }}></Toggle>
             </div>
