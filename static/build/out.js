@@ -2437,11 +2437,11 @@
       if (true) {
         (function() {
           "use strict";
-          var React12 = require_react();
+          var React13 = require_react();
           var _assign = require_object_assign();
           var Scheduler = require_scheduler();
           var tracing = require_tracing();
-          var ReactSharedInternals = React12.__SECRET_INTERNALS_DO_NOT_USE_OR_YOU_WILL_BE_FIRED;
+          var ReactSharedInternals = React13.__SECRET_INTERNALS_DO_NOT_USE_OR_YOU_WILL_BE_FIRED;
           function warn(format) {
             {
               for (var _len = arguments.length, args = new Array(_len > 1 ? _len - 1 : 0), _key = 1; _key < _len; _key++) {
@@ -2473,7 +2473,7 @@
               Function.prototype.apply.call(console[level], console, argsWithFormat);
             }
           }
-          if (!React12) {
+          if (!React13) {
             {
               throw Error("ReactDOM was loaded before React. Make sure you load the React package before loading ReactDOM.");
             }
@@ -3689,7 +3689,7 @@
           var didWarnInvalidChild = false;
           function flattenChildren(children) {
             var content = "";
-            React12.Children.forEach(children, function(child) {
+            React13.Children.forEach(children, function(child) {
               if (child == null) {
                 return;
               }
@@ -3700,7 +3700,7 @@
           function validateProps(element, props) {
             {
               if (typeof props.children === "object" && props.children !== null) {
-                React12.Children.forEach(props.children, function(child) {
+                React13.Children.forEach(props.children, function(child) {
                   if (child == null) {
                     return;
                   }
@@ -10893,7 +10893,7 @@
           }
           var fakeInternalInstance = {};
           var isArray = Array.isArray;
-          var emptyRefsObject = new React12.Component().refs;
+          var emptyRefsObject = new React13.Component().refs;
           var didWarnAboutStateAssignmentForComponent;
           var didWarnAboutUninitializedState;
           var didWarnAboutGetSnapshotBeforeUpdateWithoutDidUpdate;
@@ -21195,7 +21195,7 @@ For more info, visit https://reactjs.org/link/mock-scheduler`);
       if (true) {
         (function() {
           "use strict";
-          var React12 = require_react();
+          var React13 = require_react();
           var _assign = require_object_assign();
           var REACT_ELEMENT_TYPE = 60103;
           var REACT_PORTAL_TYPE = 60106;
@@ -21252,7 +21252,7 @@ For more info, visit https://reactjs.org/link/mock-scheduler`);
             }
             return null;
           }
-          var ReactSharedInternals = React12.__SECRET_INTERNALS_DO_NOT_USE_OR_YOU_WILL_BE_FIRED;
+          var ReactSharedInternals = React13.__SECRET_INTERNALS_DO_NOT_USE_OR_YOU_WILL_BE_FIRED;
           function error(format) {
             {
               for (var _len2 = arguments.length, args = new Array(_len2 > 1 ? _len2 - 1 : 0), _key2 = 1; _key2 < _len2; _key2++) {
@@ -22248,7 +22248,7 @@ For more info, visit https://reactjs.org/link/mock-scheduler`);
   });
 
   // index.jsx
-  var import_react14 = __toESM(require_react());
+  var import_react15 = __toESM(require_react());
   var import_react_dom2 = __toESM(require_react_dom());
 
   // node_modules/react-redux/es/components/Provider.js
@@ -25113,6 +25113,12 @@ y = if z then u else v
   });
   var type_default = type;
 
+  // node_modules/ramda/es/not.js
+  var not = /* @__PURE__ */ _curry1(function not2(a3) {
+    return !a3;
+  });
+  var not_default = not;
+
   // node_modules/ramda/es/internal/_pipe.js
   function _pipe(f3, g3) {
     return function() {
@@ -25499,6 +25505,12 @@ y = if z then u else v
   });
   var curry_default = curry;
 
+  // node_modules/ramda/es/defaultTo.js
+  var defaultTo = /* @__PURE__ */ _curry2(function defaultTo2(d3, v2) {
+    return v2 == null || v2 !== v2 ? d3 : v2;
+  });
+  var defaultTo_default = defaultTo;
+
   // node_modules/ramda/es/internal/_xfind.js
   var XFind = /* @__PURE__ */ function() {
     function XFind2(f3, xf) {
@@ -25587,6 +25599,47 @@ y = if z then u else v
     return paths_default([pathAr], obj)[0];
   });
   var path_default = path;
+
+  // node_modules/ramda/es/internal/_modify.js
+  function _modify(prop3, fn2, obj) {
+    if (isInteger_default(prop3) && isArray_default(obj)) {
+      var arr = [].concat(obj);
+      arr[prop3] = fn2(arr[prop3]);
+      return arr;
+    }
+    var result = {};
+    for (var p3 in obj) {
+      result[p3] = obj[p3];
+    }
+    result[prop3] = fn2(result[prop3]);
+    return result;
+  }
+
+  // node_modules/ramda/es/modifyPath.js
+  var modifyPath = /* @__PURE__ */ _curry3(function modifyPath2(path3, fn2, object) {
+    if (!_isObject(object) && !isArray_default(object) || path3.length === 0) {
+      return object;
+    }
+    var idx = path3[0];
+    if (!_has(idx, object)) {
+      return object;
+    }
+    if (path3.length === 1) {
+      return _modify(idx, fn2, object);
+    }
+    var val = modifyPath2(Array.prototype.slice.call(path3, 1), fn2, object[idx]);
+    if (val === object[idx]) {
+      return object;
+    }
+    return _assoc(idx, val, object);
+  });
+  var modifyPath_default = modifyPath;
+
+  // node_modules/ramda/es/modify.js
+  var modify = /* @__PURE__ */ _curry3(function modify2(prop3, fn2, object) {
+    return modifyPath_default([prop3], fn2, object);
+  });
+  var modify_default = modify;
 
   // node_modules/ramda/es/sort.js
   var sort = /* @__PURE__ */ _curry2(function sort2(comparator, list) {
@@ -25831,6 +25884,15 @@ y = if z then u else v
     let data = response.json();
     return data;
   });
+  var toggleMultileExpThunk = createAsyncThunk("multipleExpThunk", async (_3, { dispatch, getState }) => {
+    let state = getState();
+    let newStep = Math.floor(state.debugger.steps.length / 2);
+    if (state.debugger.multipleExps) {
+      dispatch(setStep(newStep));
+    }
+    dispatch(toggleMultipleExps());
+    return null;
+  });
   var switchTaskThunk = createAsyncThunk("switchTask", async (n3, { dispatch }) => {
     dispatch(setTask(n3));
     dispatch(typeCheckThunk(null));
@@ -25853,7 +25915,9 @@ y = if z then u else v
     parseError: null,
     mode: editorModes.normal,
     widgets: [],
-    highlights: []
+    highlights: [],
+    debuggingSteps: true,
+    multipleExps: true
   };
   var { actions, reducer } = createSlice({
     name: "editor",
@@ -25861,6 +25925,8 @@ y = if z then u else v
     reducers: {
       toEditMode: assoc_default("mode", editorModes.edit),
       toNormalMode: assoc_default("mode", editorModes.normal),
+      toggleDebuggerStpes: modify_default("debuggingSteps", not_default),
+      toggleMultipleExps: modify_default("multipleExps", not_default),
       setText(state, action) {
         state.text = action.payload;
       },
@@ -25994,7 +26060,9 @@ y = if z then u else v
     setText,
     toEditMode,
     toNormalMode,
-    resetHighlights
+    resetHighlights,
+    toggleDebuggerStpes,
+    toggleMultipleExps
   } = actions;
   var debuggerSlice_default = reducer;
   function convertLocation({
@@ -26257,48 +26325,6 @@ y = if z then u else v
 
   // Editor.jsx
   var import_react9 = __toESM(require_react());
-
-  // node_modules/@heroicons/react/solid/esm/EyeIcon.js
-  var React4 = __toESM(require_react(), 1);
-  function EyeIcon(props, svgRef) {
-    return /* @__PURE__ */ React4.createElement("svg", Object.assign({
-      xmlns: "http://www.w3.org/2000/svg",
-      viewBox: "0 0 20 20",
-      fill: "currentColor",
-      "aria-hidden": "true",
-      ref: svgRef
-    }, props), /* @__PURE__ */ React4.createElement("path", {
-      d: "M10 12a2 2 0 100-4 2 2 0 000 4z"
-    }), /* @__PURE__ */ React4.createElement("path", {
-      fillRule: "evenodd",
-      d: "M.458 10C1.732 5.943 5.522 3 10 3s8.268 2.943 9.542 7c-1.274 4.057-5.064 7-9.542 7S1.732 14.057.458 10zM14 10a4 4 0 11-8 0 4 4 0 018 0z",
-      clipRule: "evenodd"
-    }));
-  }
-  var ForwardRef = React4.forwardRef(EyeIcon);
-  var EyeIcon_default = ForwardRef;
-
-  // node_modules/@heroicons/react/solid/esm/PencilAltIcon.js
-  var React5 = __toESM(require_react(), 1);
-  function PencilAltIcon(props, svgRef) {
-    return /* @__PURE__ */ React5.createElement("svg", Object.assign({
-      xmlns: "http://www.w3.org/2000/svg",
-      viewBox: "0 0 20 20",
-      fill: "currentColor",
-      "aria-hidden": "true",
-      ref: svgRef
-    }, props), /* @__PURE__ */ React5.createElement("path", {
-      d: "M17.414 2.586a2 2 0 00-2.828 0L7 10.172V13h2.828l7.586-7.586a2 2 0 000-2.828z"
-    }), /* @__PURE__ */ React5.createElement("path", {
-      fillRule: "evenodd",
-      d: "M2 6a2 2 0 012-2h4a1 1 0 010 2H4v10h10v-4a1 1 0 112 0v4a2 2 0 01-2 2H4a2 2 0 01-2-2V6z",
-      clipRule: "evenodd"
-    }));
-  }
-  var ForwardRef2 = React5.forwardRef(PencilAltIcon);
-  var PencilAltIcon_default = ForwardRef2;
-
-  // Editor.jsx
   var App = () => {
     return /* @__PURE__ */ import_react9.default.createElement("div", {
       className: "flex flex-col p-3 overflow-auto",
@@ -26351,6 +26377,7 @@ y = if z then u else v
     const point = { line, ch };
     const highlights = useSelector(path_default(["debugger", "highlights"]));
     const widgets = useSelector(path_default(["debugger", "widgets"]));
+    const deductionStpe = useSelector(path_default(["debugger", "debuggingSteps"]));
     const highlighters = highlights.filter(curry_default(within)(point)).map((hl, k2) => /* @__PURE__ */ import_react9.default.createElement(Highlighter, {
       highlight: hl,
       line,
@@ -26365,7 +26392,7 @@ y = if z then u else v
     })))(widgets);
     return /* @__PURE__ */ import_react9.default.createElement("div", {
       className: "inline-block w-2.5 h-6 relative"
-    }, highlighters, appliedWidgets, /* @__PURE__ */ import_react9.default.createElement("div", {
+    }, highlighters, deductionStpe ? appliedWidgets : null, /* @__PURE__ */ import_react9.default.createElement("div", {
       className: "absolute w-full h-full z-50"
     }, text));
   };
@@ -26410,6 +26437,8 @@ y = if z then u else v
     }
   };
   var Highlighter = ({ highlight, line, ch }) => {
+    const deductionSteps = useSelector(path_default(["debugger", "debuggingSteps"]));
+    const resetBorder = deductionSteps ? "" : " border-t-0 border-b-0 border-r-0 border-l-0";
     let classes = highlight.marker.shared;
     if (equals_default(highlight.from, { line, ch })) {
       classes = [...classes, ...highlight.marker.start];
@@ -26418,13 +26447,53 @@ y = if z then u else v
       classes = [...classes, ...highlight.marker.end];
     }
     return /* @__PURE__ */ import_react9.default.createElement("div", {
-      className: "absolute " + classes.join(" ")
+      className: "absolute " + classes.join(" ") + resetBorder
     });
   };
   var Editor_default = App;
 
   // Debugger.jsx
   var import_react12 = __toESM(require_react());
+
+  // node_modules/@heroicons/react/solid/esm/EyeIcon.js
+  var React5 = __toESM(require_react(), 1);
+  function EyeIcon(props, svgRef) {
+    return /* @__PURE__ */ React5.createElement("svg", Object.assign({
+      xmlns: "http://www.w3.org/2000/svg",
+      viewBox: "0 0 20 20",
+      fill: "currentColor",
+      "aria-hidden": "true",
+      ref: svgRef
+    }, props), /* @__PURE__ */ React5.createElement("path", {
+      d: "M10 12a2 2 0 100-4 2 2 0 000 4z"
+    }), /* @__PURE__ */ React5.createElement("path", {
+      fillRule: "evenodd",
+      d: "M.458 10C1.732 5.943 5.522 3 10 3s8.268 2.943 9.542 7c-1.274 4.057-5.064 7-9.542 7S1.732 14.057.458 10zM14 10a4 4 0 11-8 0 4 4 0 018 0z",
+      clipRule: "evenodd"
+    }));
+  }
+  var ForwardRef = React5.forwardRef(EyeIcon);
+  var EyeIcon_default = ForwardRef;
+
+  // node_modules/@heroicons/react/solid/esm/PencilAltIcon.js
+  var React6 = __toESM(require_react(), 1);
+  function PencilAltIcon(props, svgRef) {
+    return /* @__PURE__ */ React6.createElement("svg", Object.assign({
+      xmlns: "http://www.w3.org/2000/svg",
+      viewBox: "0 0 20 20",
+      fill: "currentColor",
+      "aria-hidden": "true",
+      ref: svgRef
+    }, props), /* @__PURE__ */ React6.createElement("path", {
+      d: "M17.414 2.586a2 2 0 00-2.828 0L7 10.172V13h2.828l7.586-7.586a2 2 0 000-2.828z"
+    }), /* @__PURE__ */ React6.createElement("path", {
+      fillRule: "evenodd",
+      d: "M2 6a2 2 0 012-2h4a1 1 0 010 2H4v10h10v-4a1 1 0 112 0v4a2 2 0 01-2 2H4a2 2 0 01-2-2V6z",
+      clipRule: "evenodd"
+    }));
+  }
+  var ForwardRef2 = React6.forwardRef(PencilAltIcon);
+  var PencilAltIcon_default = ForwardRef2;
 
   // TabReport.jsx
   var import_react11 = __toESM(require_react());
@@ -26445,34 +26514,36 @@ y = if z then u else v
   var TabReport = () => {
     let context = useSelector(path_default(["debugger", "context"]));
     let traverseId = useSelector(path_default(["debugger", "currentTraverseId"]));
+    const multipleExps = useSelector(path_default(["debugger", "multipleExps"]));
     return /* @__PURE__ */ import_react11.default.createElement("div", {
       className: "p-4"
     }, /* @__PURE__ */ import_react11.default.createElement("div", {
       className: "bg-gray-200 p1 rounded-2xl flex cursor-pointer"
-    }, context.map((c3, i3) => /* @__PURE__ */ import_react11.default.createElement(Tab, {
+    }, multipleExps ? context.map((c3, i3) => /* @__PURE__ */ import_react11.default.createElement(Tab, {
       key: i3,
       steps: c3.contextSteps,
       exp: c3.contextExp,
       active: c3.contextSteps.find(pipe(nth_default(0), equals_default(traverseId)))[2]
-    }))), /* @__PURE__ */ import_react11.default.createElement(Message, null), /* @__PURE__ */ import_react11.default.createElement(ReleventTerms, null));
+    })) : null), /* @__PURE__ */ import_react11.default.createElement(Message, null), /* @__PURE__ */ import_react11.default.createElement(ReleventTerms, null));
   };
   var Tab = ({ active = false, steps, exp }) => {
     let dispatch = useDispatch();
+    const deductionStpe = useSelector(path_default(["debugger", "debuggingSteps"]));
     let tabReleventSteps = steps.map((step, i3) => [...step, i3]).filter(nth_default(2));
     let tabDefaultStep = tabReleventSteps[Math.round(tabReleventSteps.length / 2) - 1][3];
     return /* @__PURE__ */ import_react11.default.createElement("div", {
       onClick: (_3) => dispatch(setStep(tabDefaultStep)),
       className: "p-2 rounded-2xl inline-block w-max m-1 " + (active ? "bg-gray-900" : "bg-white")
     }, /* @__PURE__ */ import_react11.default.createElement("div", {
-      className: "px-1 text-2xl mb-3 " + (active ? "text-white" : "text-gray-800")
-    }, exp), /* @__PURE__ */ import_react11.default.createElement("div", null, /* @__PURE__ */ import_react11.default.createElement(TabSteps, {
+      className: "text-2xl mr-8 " + (active ? "text-white" : "text-gray-800")
+    }, exp), deductionStpe ? /* @__PURE__ */ import_react11.default.createElement(TabSteps, {
       steps: tabReleventSteps,
       active
-    })));
+    }) : null);
   };
   var TabSteps = ({ active = false, steps }) => {
     return /* @__PURE__ */ import_react11.default.createElement("div", {
-      className: "flex"
+      className: "flex py-1"
     }, steps.map((step) => /* @__PURE__ */ import_react11.default.createElement(TabStep, {
       active,
       key: step[3],
@@ -26512,7 +26583,7 @@ y = if z then u else v
       full: contextItem.contextType1String
     }))), /* @__PURE__ */ import_react11.default.createElement("div", {
       className: "text-xs italic"
-    }, "Possible type 1 can be infered from the orange highlights on the left side"), /* @__PURE__ */ import_react11.default.createElement("div", {
+    }, "Infered from the orange highlights on the left side"), /* @__PURE__ */ import_react11.default.createElement("div", {
       className: "mb-1 mt-3"
     }, /* @__PURE__ */ import_react11.default.createElement("span", {
       className: "inline-block mr-1"
@@ -26523,35 +26594,69 @@ y = if z then u else v
       full: contextItem.contextType2String
     }))), /* @__PURE__ */ import_react11.default.createElement("div", {
       className: "text-xs italic"
-    }, "Possible type 2 can be infered from the blue highlights on the left side"));
+    }, "Infered from the blue highlights on the left side"));
   };
   var ReleventTerms = () => {
     let context = useSelector(path_default(["debugger", "context"]));
-    let currentExp = useSelector(path_default(["debugger", "currentContextItem", "contextExp"]));
-    let releventContext = context.filter((c3) => c3.contextExp !== currentExp);
+    let currentContextItem = useSelector(path_default(["debugger", "currentContextItem"]));
+    let releventContext = context.filter((c3) => c3.contextExp !== currentContextItem.contextExp);
     return /* @__PURE__ */ import_react11.default.createElement("div", {
-      className: "p-2 border-2 rounded-2xl border-black "
+      className: "p-2 rounded-lg bg-gray-200"
     }, /* @__PURE__ */ import_react11.default.createElement("div", {
       className: ""
     }, "Relevent type information:"), releventContext.map((c3, i3) => /* @__PURE__ */ import_react11.default.createElement(ReleventItem, {
       item: c3,
       key: i3
+    })), defaultTo_default([])(prop_default("contextGlobals", currentContextItem)).map(([exp, type3], i3) => /* @__PURE__ */ import_react11.default.createElement(GlobalTypeHints, {
+      exp,
+      type: type3,
+      key: i3
     })));
+  };
+  var GlobalTypeHints = ({ exp, type: type3 }) => {
+    return /* @__PURE__ */ import_react11.default.createElement("div", {
+      className: "flex flex-col my-1.5 p-1 bg-gray-100 rounded-md h-16 justify-center"
+    }, /* @__PURE__ */ import_react11.default.createElement("div", {
+      className: "flex items-center"
+    }, /* @__PURE__ */ import_react11.default.createElement("div", {
+      className: "code"
+    }, exp), /* @__PURE__ */ import_react11.default.createElement("div", {
+      className: "code mx-0.5"
+    }, "::"), /* @__PURE__ */ import_react11.default.createElement("div", {
+      className: "code px-0.5 rounded-sm"
+    }, type3)), /* @__PURE__ */ import_react11.default.createElement("div", {
+      className: "ml-1 text-sm italic"
+    }, " Imported from Prelude"));
   };
   var ReleventItem = ({ item }) => {
     let currentTraverseId = useSelector(path_default(["debugger", "currentTraverseId"]));
+    const multipleExps = useSelector(path_default(["debugger", "multipleExps"]));
+    let dispatch = useDispatch();
     let affinity = pipe(find_default(pipe(nth_default(0), equals_default(currentTraverseId))), nth_default(1))(item.contextSteps);
     let type3 = affinity === "L" ? item.contextType1String : item.contextType2String;
-    let origin = affinity === "L" ? "orange facts" : "blue facts";
+    let origin = affinity === "L" ? "orange highlights" : "blue highlights";
+    let tabReleventSteps = item.contextSteps.map((step, i3) => [...step, i3]).filter(nth_default(2));
+    let tabDefaultStep = tabReleventSteps[Math.round(tabReleventSteps.length / 2) - 1][3];
     return /* @__PURE__ */ import_react11.default.createElement("div", {
-      className: "flex"
-    }, /* @__PURE__ */ import_react11.default.createElement("div", null, item.contextExp), /* @__PURE__ */ import_react11.default.createElement("div", {
+      className: "flex flex-col my-1.5 bg-white p-1 rounded-md"
+    }, /* @__PURE__ */ import_react11.default.createElement("div", {
+      className: "flex justify-between"
+    }, /* @__PURE__ */ import_react11.default.createElement("div", {
+      className: "flex items-center"
+    }, /* @__PURE__ */ import_react11.default.createElement("div", {
+      className: "code"
+    }, item.contextExp), /* @__PURE__ */ import_react11.default.createElement("div", {
       className: "code mx-0.5"
     }, "::"), /* @__PURE__ */ import_react11.default.createElement("div", {
-      className: "code"
-    }, type3), /* @__PURE__ */ import_react11.default.createElement("div", {
-      className: "ml-1"
-    }, " (From ", origin, ") "));
+      className: "code px-0.5 rounded-sm  " + (affinity === "L" ? "marker2" : "marker1")
+    }, type3)), multipleExps ? /* @__PURE__ */ import_react11.default.createElement("div", {
+      className: "bg-white p-1 rounded-md flex items-center"
+    }, /* @__PURE__ */ import_react11.default.createElement("div", null, "Looks wrong? "), /* @__PURE__ */ import_react11.default.createElement("button", {
+      onClick: (_3) => dispatch(setStep(tabDefaultStep)),
+      className: "bg-gray-900 text-white rounded-lg px-2 py-1 mx-1"
+    }, "Inspect")) : null), /* @__PURE__ */ import_react11.default.createElement("div", {
+      className: "ml-1 text-sm italic"
+    }, " Inferred from ", origin, " "));
   };
   var TabReport_default = TabReport;
 
@@ -26605,116 +26710,167 @@ y = if z then u else v
   var Debugger_default = Debugger;
 
   // MenuBar.jsx
+  var import_react14 = __toESM(require_react());
+
+  // Toggle.jsx
   var import_react13 = __toESM(require_react());
+  var Toggle = ({ active, onClick }) => {
+    return /* @__PURE__ */ import_react13.default.createElement("div", {
+      className: "py-2 flex items-center"
+    }, /* @__PURE__ */ import_react13.default.createElement("span", {
+      onClick,
+      className: `
+        switch-button
+        flex
+        w-10
+        h-6
+        rounded-full
+        items-center
+        px-1
+        cursor-pointer
+      ` + (active ? "flex-row-reverse bg-green-400" : "bg-gray-500")
+    }, /* @__PURE__ */ import_react13.default.createElement("span", {
+      className: "block h-4 w-4 rounded-full " + (active ? "bg-gray-600" : "bg-gray-100")
+    })));
+  };
+  var Toggle_default = Toggle;
+
+  // MenuBar.jsx
   var MenuBar = () => {
     const dispatch = useDispatch();
-    (0, import_react13.useEffect)(() => {
-      dispatch(setTask(0));
+    const deductionStpe = useSelector(path_default(["debugger", "debuggingSteps"]));
+    const multipleExps = useSelector(path_default(["debugger", "multipleExps"]));
+    const steps = useSelector(path_default(["debugger", "steps"]));
+    const middleStep = Math.floor(steps.length / 2);
+    (0, import_react14.useEffect)(() => {
+      dispatch(setTask(1));
       dispatch(typeCheckThunk());
     }, []);
-    return /* @__PURE__ */ import_react13.default.createElement("div", {
-      className: "w-full bg-gray-100 h-10 flex items-center"
-    }, /* @__PURE__ */ import_react13.default.createElement("a", {
+    return /* @__PURE__ */ import_react14.default.createElement("div", {
+      className: "w-full bg-gray-100 h-10 flex justify-between"
+    }, /* @__PURE__ */ import_react14.default.createElement("div", {
+      className: "flex items-center"
+    }, /* @__PURE__ */ import_react14.default.createElement("a", {
       href: "/",
       className: "cursor-pointer mr-4 px-4",
       style: {}
-    }, /* @__PURE__ */ import_react13.default.createElement("svg", {
+    }, /* @__PURE__ */ import_react14.default.createElement("svg", {
       className: "w-10",
       viewBox: "0 0 100 100"
-    }, /* @__PURE__ */ import_react13.default.createElement("path", {
+    }, /* @__PURE__ */ import_react14.default.createElement("path", {
       d: "M9.061,50.971c-0,3.037 3.464,5.499 7.737,5.499l-0,-5.499l-7.737,0Z",
       style: { fill: "#3eac3a" }
-    }), /* @__PURE__ */ import_react13.default.createElement("rect", {
+    }), /* @__PURE__ */ import_react14.default.createElement("rect", {
       x: "16.793",
       y: "50.98",
       width: "43.762",
       height: "5.49",
       style: { fill: "#3eac3a" }
-    }), /* @__PURE__ */ import_react13.default.createElement("path", {
+    }), /* @__PURE__ */ import_react14.default.createElement("path", {
       d: "M50,10.032c-22.61,0 -40.939,18.329 -40.939,40.939l40.939,0l0,-40.939Z",
       style: { fill: "#3c9339" }
-    }), /* @__PURE__ */ import_react13.default.createElement("path", {
+    }), /* @__PURE__ */ import_react14.default.createElement("path", {
       d: "M46.807,69.476c0,7.182 6.164,13.005 13.769,13.005l-0,-13.005l-13.769,-0Z",
       style: { fill: "#3c9339" }
-    }), /* @__PURE__ */ import_react13.default.createElement("path", {
+    }), /* @__PURE__ */ import_react14.default.createElement("path", {
       d: "M56.139,60.144c-5.154,-0 -9.332,4.178 -9.332,9.332l9.332,-0l0,-9.332Z",
       style: { fill: "#087604" }
-    }), /* @__PURE__ */ import_react13.default.createElement("path", {
+    }), /* @__PURE__ */ import_react14.default.createElement("path", {
       d: "M60.555,82.481c12.507,0 22.645,-11.512 22.645,-25.712c0,-14.2 -10.138,-25.712 -22.645,-25.712l0,51.424Z",
       style: { fill: "#21781e" }
-    }), /* @__PURE__ */ import_react13.default.createElement("path", {
+    }), /* @__PURE__ */ import_react14.default.createElement("path", {
       d: "M56.139,60.144c2.439,-0 4.416,2.089 4.416,4.666c0,2.577 -1.977,4.666 -4.416,4.666l0,-9.332Z",
       style: { fill: "#0d9509" }
-    }), /* @__PURE__ */ import_react13.default.createElement("path", {
+    }), /* @__PURE__ */ import_react14.default.createElement("path", {
       d: "M56.139,56.472l0,-0.002l4.416,0l0,4.572l0,-0l0,-0.026c0,-2.466 -1.967,-4.475 -4.416,-4.544Z",
       style: { fill: "#3eac3a" }
-    }), /* @__PURE__ */ import_react13.default.createElement("path", {
+    }), /* @__PURE__ */ import_react14.default.createElement("path", {
       d: "M50,50.985l-0,-0.005l10.555,0l0,10.926l-0,0l0,-0.062c0,-5.892 -4.702,-10.696 -10.555,-10.859Z",
       style: { fill: "#1c7e18" }
-    }), /* @__PURE__ */ import_react13.default.createElement("path", {
+    }), /* @__PURE__ */ import_react14.default.createElement("path", {
       d: "M53.205,31.056l-0,0.001l-3.205,0l0,-3.317l0,-0l0,0.019c0,1.789 1.428,3.247 3.205,3.297Z",
       style: { fill: "#21781e" }
-    }), /* @__PURE__ */ import_react13.default.createElement("rect", {
+    }), /* @__PURE__ */ import_react14.default.createElement("rect", {
       x: "50",
       y: "31.057",
       width: "10.555",
       height: "19.923",
       style: { fill: "#21781e" }
-    }), /* @__PURE__ */ import_react13.default.createElement("path", {
+    }), /* @__PURE__ */ import_react14.default.createElement("path", {
       d: "M34.015,56.47c0,4.563 3.908,8.262 8.729,8.262c4.821,-0 8.729,-3.699 8.729,-8.262l-17.458,0Z",
       style: { fill: "#486c47" }
-    }))), /* @__PURE__ */ import_react13.default.createElement("p", {
+    }))), /* @__PURE__ */ import_react14.default.createElement("p", {
       className: "mr-1"
-    }, "Load examples:"), /* @__PURE__ */ import_react13.default.createElement("select", {
-      defaultValue: 0,
+    }, "Load examples:"), /* @__PURE__ */ import_react14.default.createElement("select", {
+      defaultValue: 1,
       onChange: (e3) => dispatch(switchTaskThunk(e3.target.value)),
       className: "bg-gray-300 h-8 px-4 py-1 rounded-md"
-    }, /* @__PURE__ */ import_react13.default.createElement("option", {
+    }, /* @__PURE__ */ import_react14.default.createElement("option", {
       value: 0
-    }, "Example 1"), /* @__PURE__ */ import_react13.default.createElement("option", {
+    }, "Example 1"), /* @__PURE__ */ import_react14.default.createElement("option", {
       value: 1
-    }, "Example 2"), /* @__PURE__ */ import_react13.default.createElement("option", {
+    }, "Example 2"), /* @__PURE__ */ import_react14.default.createElement("option", {
       value: 2
-    }, "Example 3"), /* @__PURE__ */ import_react13.default.createElement("option", {
+    }, "Example 3"), /* @__PURE__ */ import_react14.default.createElement("option", {
       value: 3
-    }, "Example 4"), /* @__PURE__ */ import_react13.default.createElement("option", {
+    }, "Example 4"), /* @__PURE__ */ import_react14.default.createElement("option", {
       value: 4
-    }, "Example 5"), /* @__PURE__ */ import_react13.default.createElement("option", {
+    }, "Example 5"), /* @__PURE__ */ import_react14.default.createElement("option", {
       value: 5
-    }, "Example 6"), /* @__PURE__ */ import_react13.default.createElement("option", {
+    }, "Example 6"), /* @__PURE__ */ import_react14.default.createElement("option", {
       value: 6
-    }, "Example 7"), /* @__PURE__ */ import_react13.default.createElement("option", {
+    }, "Example 7"), /* @__PURE__ */ import_react14.default.createElement("option", {
       value: 7
-    }, "Example 8")), /* @__PURE__ */ import_react13.default.createElement("button", {
+    }, "Example 8")), /* @__PURE__ */ import_react14.default.createElement("button", {
       className: "bg-gray-300 px-4 py-1 rounded-md mx-2 flex h-8 justify-center items-center",
       onClick: (_3) => dispatch(toEditMode())
-    }, /* @__PURE__ */ import_react13.default.createElement(PencilAltIcon_default, {
+    }, /* @__PURE__ */ import_react14.default.createElement(PencilAltIcon_default, {
       className: "h-4 w-4 mr-1"
-    }), "Edit code"), /* @__PURE__ */ import_react13.default.createElement("button", {
+    }), "Edit code"), /* @__PURE__ */ import_react14.default.createElement("button", {
       className: "bg-gray-300 px-4 py-1 rounded-md mx-2 flex h-8 justify-center items-center",
       onClick: (_3) => {
         dispatch(toNormalMode());
         dispatch(typeCheckThunk());
       }
-    }, /* @__PURE__ */ import_react13.default.createElement(EyeIcon_default, {
+    }, /* @__PURE__ */ import_react14.default.createElement(EyeIcon_default, {
       className: "h-4 w-4 mr-1"
-    }), "Type check"));
+    }), "Type check")), /* @__PURE__ */ import_react14.default.createElement("div", {
+      className: "flex items-center px-2"
+    }, /* @__PURE__ */ import_react14.default.createElement("div", {
+      className: "mr-1"
+    }, "Debugging Step:"), /* @__PURE__ */ import_react14.default.createElement("div", {
+      className: "ml-1 mr-2"
+    }, /* @__PURE__ */ import_react14.default.createElement(Toggle_default, {
+      active: deductionStpe,
+      onClick: (_3) => {
+        dispatch(toggleDebuggerStpes());
+      }
+    })), /* @__PURE__ */ import_react14.default.createElement("div", {
+      className: "mr-1"
+    }, "Multiple Expressions:"), /* @__PURE__ */ import_react14.default.createElement("div", {
+      className: "ml-1 mr-2"
+    }, /* @__PURE__ */ import_react14.default.createElement(Toggle_default, {
+      active: multipleExps,
+      onClick: (_3) => {
+        dispatch(toggleMultileExpThunk());
+      }
+    }))));
   };
   var MenuBar_default = MenuBar;
 
   // index.jsx
   var App2 = () => {
-    return /* @__PURE__ */ import_react14.default.createElement("div", {
+    return /* @__PURE__ */ import_react15.default.createElement("div", {
       className: "w-full h-full flex flex-col"
-    }, /* @__PURE__ */ import_react14.default.createElement(MenuBar_default, null), /* @__PURE__ */ import_react14.default.createElement("div", {
+    }, /* @__PURE__ */ import_react15.default.createElement(MenuBar_default, null), /* @__PURE__ */ import_react15.default.createElement("div", {
       className: "flex-grow"
-    }, /* @__PURE__ */ import_react14.default.createElement(y2, {
+    }, /* @__PURE__ */ import_react15.default.createElement(y2, {
       initialSizes: [60, 40]
-    }, /* @__PURE__ */ import_react14.default.createElement(Editor_default, null), /* @__PURE__ */ import_react14.default.createElement(Debugger_default, null))));
+    }, /* @__PURE__ */ import_react15.default.createElement(Editor_default, null), /* @__PURE__ */ import_react15.default.createElement(Debugger_default, null))));
   };
-  import_react_dom2.default.render(/* @__PURE__ */ import_react14.default.createElement(import_react14.default.StrictMode, null, /* @__PURE__ */ import_react14.default.createElement(Provider_default, {
+  import_react_dom2.default.render(/* @__PURE__ */ import_react15.default.createElement(import_react15.default.StrictMode, null, /* @__PURE__ */ import_react15.default.createElement(Provider_default, {
     store: store_default
-  }, /* @__PURE__ */ import_react14.default.createElement(App2, null))), document.getElementById("react-root"));
+  }, /* @__PURE__ */ import_react15.default.createElement(App2, null))), document.getElementById("react-root"));
 })();
 /*
 object-assign

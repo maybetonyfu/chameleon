@@ -1,12 +1,10 @@
 import React from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { editorModes, toEditMode, toNormalMode, setText } from './debuggerSlice';
+import { editorModes, setText } from './debuggerSlice';
 import { within } from './util';
 import * as R from 'ramda';
-import { PencilAltIcon, EyeIcon } from "@heroicons/react/solid"
 
 const App = () => {
-  // const dispatch = useDispatch();
   return (
     <div className='flex flex-col p-3 overflow-auto' style={{height: 'calc(100vh - 2.5rem)'}}>
       <Editor></Editor>
@@ -67,6 +65,7 @@ const Cell = ({ text, line, ch }) => {
   const point = { line, ch };
   const highlights = useSelector(R.path(['debugger', 'highlights']));
   const widgets = useSelector(R.path(['debugger', 'widgets']));
+  const deductionStpe = useSelector(R.path(['debugger', 'debuggingSteps']))
   const highlighters = highlights
     .filter(R.curry(within)(point))
     .map((hl, k) => (
@@ -92,7 +91,7 @@ const Cell = ({ text, line, ch }) => {
   return (
     <div className='inline-block w-2.5 h-6 relative'>
       {highlighters}
-      {appliedWidgets}
+      {deductionStpe ? appliedWidgets : null}
       <div className='absolute w-full h-full z-50'>{text}</div>
     </div>
   );
@@ -134,6 +133,8 @@ const Widget = ({ styles, classes, content }) => {
 };
 
 const Highlighter = ({ highlight, line, ch }) => {
+  const deductionSteps = useSelector(R.path(['debugger', 'debuggingSteps']))
+  const resetBorder = deductionSteps ? '' :' border-t-0 border-b-0 border-r-0 border-l-0'
   let classes = highlight.marker.shared;
   if (R.equals(highlight.from, { line, ch })) {
     classes = [...classes, ...highlight.marker.start];
@@ -141,7 +142,7 @@ const Highlighter = ({ highlight, line, ch }) => {
   if (R.equals(highlight.to, { line, ch: ch + 1 })) {
     classes = [...classes, ...highlight.marker.end];
   }
-  return <div className={'absolute ' + classes.join(' ')}></div>;
+  return <div className={'absolute ' + classes.join(' ') + resetBorder}></div>;
 };
 
 export default App

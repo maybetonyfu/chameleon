@@ -7,15 +7,17 @@ import { setStep } from "./debuggerSlice"
 const TabReport = () => {
     let context = useSelector(R.path(['debugger', 'context']))
     let traverseId = useSelector(R.path(['debugger', 'currentTraverseId']))
+    const multipleExps = useSelector(R.path(['debugger', 'multipleExps']))
+
     return (
         <div className='p-4'>
             <div className='bg-gray-200 p1 rounded-2xl flex cursor-pointer'>
                 {
-                    context.map((c, i) => <Tab
+                    multipleExps ? context.map((c, i) => <Tab
                         key={i}
                         steps={c.contextSteps}
                         exp={c.contextExp}
-                        active={c.contextSteps.find(R.pipe(R.nth(0), R.equals(traverseId)))[2]}></Tab>)
+                        active={c.contextSteps.find(R.pipe(R.nth(0), R.equals(traverseId)))[2]}></Tab>) : null
                 }
             </div>
             <Message></Message>
@@ -25,26 +27,28 @@ const TabReport = () => {
 }
 const Tab = ({ active = false, steps, exp }) => {
     let dispatch = useDispatch()
+    const deductionStpe = useSelector(R.path(['debugger', 'debuggingSteps']))
     let tabReleventSteps = steps
         .map((step, i) => [...step, i])
         .filter(R.nth(2))
-    let tabDefaultStep = tabReleventSteps[Math.round(tabReleventSteps.length / 2)  - 1][3]
+    let tabDefaultStep = tabReleventSteps[Math.round(tabReleventSteps.length / 2) - 1][3]
     return (
         <div
             onClick={_ => dispatch(setStep(tabDefaultStep))}
             className={'p-2 rounded-2xl inline-block w-max m-1 ' + (active ? 'bg-gray-900' : 'bg-white')} >
-            <div className={'px-1 text-2xl mb-3 ' + (active ? 'text-white' : 'text-gray-800')} >{exp}</div>
-            <div>
+            <div className={'text-2xl mr-8 ' + (active ? 'text-white' : 'text-gray-800')} >{exp}</div>
+            {deductionStpe ?
                 <TabSteps
                     steps={tabReleventSteps}
                     active={active}></TabSteps>
-            </div>
+                : null}
+
         </div>)
 }
 
 const TabSteps = ({ active = false, steps }) => {
     return (
-        <div className='flex'>
+        <div className='flex py-1'>
             {steps
                 .map(step => <TabStep active={active} key={step[3]} traverseId={step[0]} step={step[3]}></TabStep>)
             }
@@ -90,7 +94,7 @@ const Message = () => {
                     ></TypeSig>
                 </span>
             </div>
-            <div className='text-xs italic'>Possible type 1 can be infered from the orange highlights on the left side</div>
+            <div className='text-xs italic'>Infered from the orange highlights on the left side</div>
 
             <div className='mb-1 mt-3'>
                 <span className='inline-block mr-1'>Possible type 2: </span>
@@ -101,7 +105,7 @@ const Message = () => {
                     ></TypeSig>
                 </span>
             </div>
-            <div className='text-xs italic'>Possible type 2 can be infered from the blue highlights on the left side</div>
+            <div className='text-xs italic'>Infered from the blue highlights on the left side</div>
 
         </div>
     );
@@ -109,12 +113,27 @@ const Message = () => {
 
 const ReleventTerms = () => {
     let context = useSelector(R.path(['debugger', 'context']))
-    let currentExp = useSelector(R.path(['debugger', 'currentContextItem', "contextExp"]))
-    let releventContext = context.filter(c => c.contextExp !== currentExp)
+    let currentContextItem = useSelector(R.path(['debugger', 'currentContextItem']))
+    let releventContext = context.filter(c => c.contextExp !== currentContextItem.contextExp)
+
     return (
-        <div className='p-2 border-2 rounded-2xl border-black '>
+        <div className='p-2 rounded-lg bg-gray-200'>
             <div className=''>Relevent type information:</div>
             {releventContext.map((c, i) => <ReleventItem item={c} key={i}></ReleventItem>)}
+            {R.defaultTo([])(R.prop('contextGlobals', currentContextItem)).map(([exp, type], i) => <GlobalTypeHints exp={exp} type={type} key={i}></GlobalTypeHints>)}
+        </div>
+    )
+}
+
+const GlobalTypeHints = ({ exp, type }) => {
+    return (
+        <div className='flex flex-col my-1.5 p-1 bg-gray-100 rounded-md h-16 justify-center'>
+            <div className='flex items-center'>
+                <div className='code'>{exp}</div>
+                <div className='code mx-0.5'>::</div>
+                <div className={'code px-0.5 rounded-sm'}>{type}</div>
+            </div>
+            <div className='ml-1 text-sm italic'> Imported from Prelude</div>
 
         </div>
     )
@@ -122,19 +141,41 @@ const ReleventTerms = () => {
 
 const ReleventItem = ({ item }) => {
     let currentTraverseId = useSelector(R.path(['debugger', 'currentTraverseId']))
+    const multipleExps = useSelector(R.path(['debugger', 'multipleExps']))
+
+    let dispatch = useDispatch()
     let affinity =
         R.pipe(
             R.find(R.pipe(R.nth(0), R.equals(currentTraverseId))),
             R.nth(1)
         )(item.contextSteps)
     let type = affinity === 'L' ? item.contextType1String : item.contextType2String
-    let origin = affinity === 'L' ? 'orange facts': 'blue facts'
+    let origin = affinity === 'L' ? 'orange highlights' : 'blue highlights'
+    let tabReleventSteps = item.contextSteps
+        .map((step, i) => [...step, i])
+        .filter(R.nth(2))
+    let tabDefaultStep = tabReleventSteps[Math.round(tabReleventSteps.length / 2) - 1][3]
     return (
-        <div className='flex'>
-            <div>{item.contextExp}</div>
-            <div className='code mx-0.5'>::</div>
-            <div className='code'>{type}</div>
-            <div className='ml-1'> (From {origin}) </div>
+        <div className='flex flex-col my-1.5 bg-white p-1 rounded-md'>
+            <div className='flex justify-between'>
+                <div className='flex items-center'>
+                    <div className='code'>{item.contextExp}</div>
+                    <div className='code mx-0.5'>::</div>
+                    <div className={'code px-0.5 rounded-sm  ' + (affinity === 'L' ? 'marker2' : 'marker1')}>{type}</div>
+                </div>
+                {multipleExps ? (
+                    <div className='bg-white p-1 rounded-md flex items-center'>
+
+                        <div>Looks wrong? </div>
+                        <button
+                            onClick={_ => dispatch(setStep(tabDefaultStep))}
+                            className="bg-gray-900 text-white rounded-lg px-2 py-1 mx-1">Inspect</button>
+                    </div>
+                ) : null}
+
+            </div>
+            <div className='ml-1 text-sm italic'> Inferred from {origin} </div>
+
         </div>
     )
 }

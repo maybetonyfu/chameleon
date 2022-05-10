@@ -30,11 +30,21 @@ export let typeCheckThunk = createAsyncThunk(
   },
 );
 
+export let toggleMultileExpThunk = createAsyncThunk('multipleExpThunk',
+  async (_, { dispatch , getState}) => {
+    let state = getState();
+    let newStep = Math.floor(state.debugger.steps.length / 2)
+    if (state.debugger.multipleExps) {
+      dispatch(setStep(newStep))
+    }
+    dispatch(toggleMultipleExps());
+    return null
+  })
+
 export let switchTaskThunk = createAsyncThunk(
   'switchTask',
   async (n, { dispatch }) => {
     dispatch(setTask(n));
-    // let text = tasks[n];
     dispatch(typeCheckThunk(null));
   },
 );
@@ -58,6 +68,8 @@ const initialState = {
   mode: editorModes.normal,
   widgets: [],
   highlights: [],
+  debuggingSteps: true,
+  multipleExps: true,
 };
 
 const { actions, reducer } = createSlice({
@@ -66,6 +78,8 @@ const { actions, reducer } = createSlice({
   reducers: {
     toEditMode: R.assoc('mode', editorModes.edit),
     toNormalMode: R.assoc('mode', editorModes.normal),
+    toggleDebuggerStpes: R.modify('debuggingSteps', R.not),
+    toggleMultipleExps: R.modify('multipleExps', R.not),
     setText(state, action) {
       state.text = action.payload;
     },
@@ -251,6 +265,8 @@ export const {
   toEditMode,
   toNormalMode,
   resetHighlights,
+  toggleDebuggerStpes,
+  toggleMultipleExps,
 } = actions;
 export default reducer;
 
@@ -303,7 +319,7 @@ function getNextLocs(steps, currentNum) {
 }
 
 function convertStep(step, stepNum, offset) {
-  let reason = step['explanation'];
+  let reason = step['explanation']
   let direction = step['order'];
   let rangeA = convertLocation(step['stepA']);
   let rangeB = convertLocation(step['stepB']);
