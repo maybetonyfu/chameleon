@@ -19,6 +19,7 @@ import Language.Haskell.Exts.Syntax
 import Nameable
 import Scope hiding (main, processFile)
 import System.Environment
+import qualified Kanren as KR
 
 data LabeledGoal = Label
   { goalNum :: Int,
@@ -63,7 +64,8 @@ varByNameWithScope scpType namable = do
       return Nothing
     Just scp' -> do
       let uniqueVarName = uniqueName (scopeId scp') (getName namable)
-      return $ Just (var uniqueVarName)
+      let requirements = map (view _2) . filter ((== getName namable) . view _1) $ constraints scp'
+      return $ Just (KR.Var uniqueVarName requirements)
 
 varsByNamesWithScope :: (Nameable a, Annotated a) => Maybe ScopeType -> [a SrcSpanInfo] -> SolveState [Maybe Term]
 varsByNamesWithScope scpType namables = mapM (varByNameWithScope scpType) namables
@@ -134,7 +136,7 @@ instance MatchTerm Decl where
     -- let gInstance = hasInstance constraints typeClassName vTypeVar
     -- 3. (Optional) a `haso` X'
 
-    return $ gClassDecls
+    return gClassDecls
   matchTerm _ (InstDecl l _ _ maybeInstaDecls) = return []
   matchTerm _ node = error (show node ++ " is not supported")
 
@@ -562,9 +564,9 @@ instance MatchTerm Pat where
       Just varTerm -> do
         let label = Label 0 (varTerm, term) [] "Matched" (sl node)
         return [label (varTerm === term)]
-  matchTerm term (PLit _ _ literal) = do 
+  matchTerm term (PLit _ _ literal) = do
     goals <- matchTerm term literal
-    return $ map (\g -> g{reason="Matched"}) goals
+    return $ map (\g -> g {reason = "Matched"}) goals
   matchTerm term node@(PNPlusK (SrcSpanInfo sp _) name _) = do
     mbV <- varByName name
     case mbV of
