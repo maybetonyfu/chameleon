@@ -16,10 +16,23 @@ data Error = Occurred | Mismatch deriving (Eq, Show)
 
 data Term
   = Var String [String]
-  | Atom String
-  | Pair Term Term
+  | Atom String [String]
+  | Pair Term Term [String]
   | Unit
-  deriving (Eq, Show)
+  deriving (Show)
+
+concatTag :: [String] -> Term -> Term
+concatTag tags (Var x tags') = Var x (tags' ++ tags) 
+concatTag tags (Atom x tags') = Atom x (tags' ++ tags) 
+concatTag tags (Pair x y tags') = Pair x y (tags' ++ tags) 
+concatTag _  Unit = Unit
+
+instance Eq Term where
+  Var x _ == Var y _ = x == y
+  Atom x _ == Atom y _ = x == y
+  Pair x1 x2 _ == Pair y1 y2 _ = x1 == x2 && y1 == y2
+  Unit == Unit = True
+  _ == _ = False
 
 type Subst = Map String Term
 
@@ -40,40 +53,32 @@ allVars :: Term -> [Term]
 allVars v@(Var _ _) = [v]
 allVars Atom {} = []
 allVars Unit = []
-allVars (Pair x y) = allVars x ++ allVars y
+allVars (Pair x y _) = allVars x ++ allVars y
 
 fromList :: [Term] -> Term
 fromList [] = undefined
 fromList [x] = x
-fromList (x : xs) = Pair x (fromList xs)
+fromList (x : xs) = Pair x (fromList xs) []
 
 toList :: Term -> [Term]
-toList (Pair x y) = x : toList y
+toList (Pair x y _) = x : toList y
 toList a = [a]
 
 properList :: Term -> Bool
-properList (Pair _ Unit) = True
-properList (Pair _ b) = properList b
+properList (Pair _ Unit _) = True
+properList (Pair _ b _) = properList b
 properList _ = False
 
 atomToString :: Term -> String
-atomToString (Atom x) = x
+atomToString (Atom x _) = x
 atomToString _ = error "Cannot deref a non-atom term"
 
 varToString :: Term -> String
 varToString (Var x _) = x
 varToString _ = error "Cannot deref a non-var term"
 
-concat' :: Term -> Term -> Term
-concat' a b
-  | properList a = Pair a b
-  | otherwise =
-    case a of
-      Pair x y -> Pair x (concat' y b)
-      _ -> Pair a b
-
 walk :: KanrenState -> Term -> Term
-walk (subst, n) (Var x tags) = maybe (Var x tags) (walk (subst, n)) (Map.lookup x subst)
+walk (subst, n) (Var x tags) = maybe (Var x tags) (concatTag tags . walk (subst, n)) (Map.lookup x subst)
 walk _ term = term
 
 walk' :: KanrenState -> Term -> Term
@@ -81,7 +86,7 @@ walk' sub v =
   let v' = walk sub v
    in case v' of
         Var x tags -> Var x tags
-        Pair h t -> Pair (walk' sub h) (walk' sub t)
+        Pair h t tags -> Pair (walk' sub h) (walk' sub t) tags
         _ -> v'
 
 extend :: VarName -> Term -> KanrenState -> Either Error KanrenState
@@ -95,7 +100,7 @@ occurs subst x term =
   case walk subst term of
     Var y tags ->
       x == y
-    Pair a b ->
+    Pair a b _ ->
       occurs subst x a || occurs subst x b
     _ ->
       False
@@ -106,11 +111,12 @@ occurs subst x term =
 unify :: Term -> Term -> KanrenState -> Either Error KanrenState
 unify a b st =
   case (walk st a, walk st b) of
-    (Atom x, Atom y) ->
+    (Atom x tagsX, Atom y tagsY) ->
       if x == y
         then Right st
         else Left Mismatch
     (Var x tagsX, Var y tagsY) ->
+      -- trace (x ++ "[" ++ intercalate "." tagsX ++ "] === " ++ y ++ "[" ++ intercalate "." tagsX ++  "]") $
       if x == y
         then Right st
         else extend x (Var y (tagsY ++ tagsX)) st
@@ -118,7 +124,7 @@ unify a b st =
       extend x term st
     (term, Var y tags) ->
       extend y term st
-    (Pair a1 a2, Pair b1 b2) ->
+    (Pair a1 a2 tagsA, Pair b1 b2 tagsB) ->
       unify a1 b1 st >>= unify a2 b2
     (Unit, Unit) ->
       Right st
@@ -139,7 +145,6 @@ fails _ = []
     Left e -> []
     Right s -> [s]
 
-
 -- Splitter has two relations: MatchUp and MatchDown
 -- MatchUp (Splitter =.= RHS):  RHS vars will be splitters too
 -- Propagate (Splitter =.= Splitter):
@@ -147,29 +152,26 @@ fails _ = []
 showSubs :: KanrenState -> IO ()
 showSubs (a, b) = mapM_ print $ Map.toList a
 
-
 (==<) :: Term -> Term -> Goal
-(==<) t1 t2 = copy t1 t2 []
+(==<) t1 t2 = copy t1 t2
 
-copy :: Term -> Term -> [(Term, String)] -> Goal
-copy x y constraints (sub, n) =
+copy :: Term -> Term -> Goal
+copy x y (sub, n) =
   let y' = walk' (sub, n) y
-      uniqueVars = nub (allVars y')
-      lookUpAllValuesByKey key = map (view _2) . filter ((== key) . view _1)
-      copiedVars =
+      oldVars = nub (allVars y')
+      newVars =
         zipWith
-          ( \v i ->
-              var
-                (intercalate "." (lookUpAllValuesByKey v constraints ++ [show i]))
+          ( \(Var _ tags) i ->
+              Var (intercalate "." ["internal", show i]) tags
           )
-          uniqueVars
+          oldVars
           [n ..]
-      mapping = zip uniqueVars copiedVars
+      mapping = zip oldVars newVars
       replace v@(Var _ _) origAndCopy = snd . fromJust $ find ((== v) . fst) origAndCopy
-      replace (Pair x y) origAndCopy = Pair (replace x origAndCopy) (replace y origAndCopy)
+      replace (Pair x y tags) origAndCopy = Pair (replace x origAndCopy) (replace y origAndCopy) tags
       replace n _ = n
       newY = replace y' mapping
-   in (x === newY) (sub, n + length uniqueVars)
+   in (x === newY) (sub, n + length newVars)
 
 conj2 :: Goal -> Goal -> Goal
 conj2 g1 g2 sub = g1 sub >>= g2
@@ -217,7 +219,9 @@ never = never
 
 var x = Var x []
 
-atom = Atom
+atom x = Atom x []
+
+pair x y = Pair x y []
 
 callFresh :: (Term -> Goal) -> Goal
 callFresh f (sub, n) = f (var ("internal." ++ show n)) (sub, n + 1)
@@ -236,7 +240,7 @@ reifyName n = "_." ++ show n
 
 replaceTerm :: Term -> Term -> Term -> Term
 replaceTerm old new v@(Var _ _) = if v == old then new else v
-replaceTerm old new (Pair x y) = Pair (replaceTerm old new x) (replaceTerm old new y)
+replaceTerm old new (Pair x y tags) = Pair (replaceTerm old new x) (replaceTerm old new y) tags
 replaceTerm old new x = x
 
 reifyS :: Term -> KanrenState -> KanrenState
@@ -247,15 +251,18 @@ reifyS term (sub, n) =
           let n = length sub
               rn = reifyName n
            in (Map.insert v' (Var rn tags) sub, n)
-        Pair h t ->
+        Pair h t tags ->
           let r = reifyS h (sub, n)
            in reifyS t r
         _ -> (sub, n)
 
 reify :: Term -> KanrenState -> Term
 reify term sub =
+
   let v = walk' sub term
-      r = reifyS v emptyS
+      r = 
+        -- trace ("\n[Reify] " ++ show term ++ " ->" ++ show v ++ "\n") $
+         reifyS v emptyS
    in walk' r v
 
 runGoalN :: Int -> Goal -> [KanrenState]
@@ -310,14 +317,14 @@ run5 :: [String] -> Goal -> [[Term]]
 run5 = runN 5
 
 conso :: Term -> Term -> Term -> Goal
-conso x y pair = pair === Pair x y
+conso x y pair = pair === Pair x y []
 
 heado :: Term -> Term -> Goal
-heado (Pair t' _) t = t === t'
+heado (Pair t' _ _) t = t === t'
 heado _ _ = fails
 
 elemo :: Term -> Term -> Goal
-elemo t (Pair x xs) =
+elemo t (Pair x xs _) =
   disj2 (x === t) (elemo t xs)
 elemo t _ = fails
 
@@ -363,30 +370,28 @@ eq =
 testOrder :: Goal
 testOrder =
   let env =
-        [ ("y", funOf [var "x", Atom "Int"]),
-          ("z", funOf [var "y", Atom "Int"]),
-          ("x", funOf [Atom "Int", Atom "Int", var "u"])
+        [ ("y", funOf [var "x", atom "Int"]),
+          ("z", funOf [var "y", atom "Int"]),
+          ("x", funOf [atom "Int", atom "Int", var "u"])
         ]
    in conjN
         [ var "u" === atom "Int",
-          matchFun env "y" (funOf [Atom "Int", var "z"]),
-          matchFun env "x" (funOf [Atom "Int", var "y"])
+          matchFun env "y" (funOf [atom "Int", var "z"]),
+          matchFun env "x" (funOf [atom "Int", var "y"])
         ]
-
-
 
 tupOf :: [Term] -> Term
 tupOf [] = Unit
 tupOf [x] = x
-tupOf (x : xs) = Pair (atom "Tuple") (Pair x (tupOf xs))
+tupOf (x : xs) = pair (atom "Tuple") (pair x (tupOf xs))
 
 lstOf :: Term -> Term
-lstOf = Pair (atom "List")
+lstOf = pair (atom "List")
 
 funOf :: [Term] -> Term
 funOf [] = Unit
 funOf [x] = x
-funOf (x : xs) = Pair (atom "Function") (Pair x (funOf xs))
+funOf (x : xs) = pair (atom "Function") (pair x (funOf xs))
 
 termToType :: Term -> String
 termToType term =
@@ -395,18 +400,18 @@ termToType term =
     go :: [(Term, Char)] -> Int -> Term -> Term -> String
     go varMap n parent Unit = ""
     go varMap n parent (Var ('_' : '.' : x) _) = [['a' ..] !! (read x :: Int)]
-    go varMap n parent (Atom x) = x
+    go varMap n parent (Atom x _) = x
     -- go varMap n parent (Var x) = [fromJust (lookup (Var x) varMap)]
-    go varMap n parent p@(Pair (Atom "Function") (Pair a b))
+    go varMap n parent p@(Pair (Atom "Function" _) (Pair a b _) _)
       | isFunction parent && n == 0 = "(" ++ go varMap 0 p a ++ " -> " ++ go varMap 1 p b ++ ")"
       | otherwise = go varMap 0 p a ++ " -> " ++ go varMap 1 p b
-    go varMap n parent p@(Pair (Atom "List") t) = "[" ++ go varMap 0 p t ++ "]"
-    go varMap n parent p@(Pair (Atom "Tuple") t) =
+    go varMap n parent p@(Pair (Atom "List" _) t _) = "[" ++ go varMap 0 p t ++ "]"
+    go varMap n parent p@(Pair (Atom "Tuple" _) t _) =
       -- let listP = toList t
       --     content = intercalate "," (zipWith (\t' n' -> go varMap n' p t') listP [0 ..])
       --  in "(" ++ content ++ ")"
       "(" ++ go varMap 0 p t ++ ")"
-    go varMap n parent p@(Pair x y)
+    go varMap n parent p@(Pair x y _)
       | isTypeCon parent =
         let listP = toList y
             content = unwords (zipWith (\t' n' -> go varMap n' p t') listP [0 ..])
@@ -423,23 +428,13 @@ toSig t =
 
 data TypeForm = TypeFormPart String | TypeForm [TypeForm] deriving (Show, Eq, Generic)
 
--- instance Semigroup TypeForm where
---   (<>) = mappend
-
--- instance Monoid  TypeForm where
---   mappend (TypeFormPart a)  (TypeFormPart b) = TypeForm [TypeFormPart a, TypeFormPart b]
---   mappend (TypeForm a) (TypeForm b) = TypeForm (a ++ b)
---   mappend (TypeFormPart a) (TypeForm b) = TypeForm (TypeFormPart a:b)
---   mappend (TypeForm b) (TypeFormPart a)  = TypeForm (b ++ [TypeFormPart a ])
---   mempty = TypeForm []
-
 toTypeForm :: Term -> Term -> Flag -> TypeForm
 -- fromTerm varMap term parentTerm level index
 toTypeForm Unit parent flag = TypeForm []
-toTypeForm (Atom x) parent flag = TypeFormPart x
+toTypeForm (Atom x _) parent flag = TypeFormPart x
 toTypeForm (Var ('_' : '.' : x) _) parent flag = TypeFormPart [['a' ..] !! (read x :: Int)]
 toTypeForm (Var _ _) parent index = error "Variable is not fresh"
-toTypeForm p@(Pair (Atom "Function") (Pair a b)) parent flag
+toTypeForm p@(Pair (Atom "Function" _) (Pair a b _) _) parent flag
   | isFunction parent && flag == FunctionFirst =
     TypeForm
       [ TypeFormPart "(",
@@ -450,9 +445,9 @@ toTypeForm p@(Pair (Atom "Function") (Pair a b)) parent flag
       ]
   | otherwise =
     TypeForm [toTypeForm a p FunctionFirst, TypeFormPart "->", toTypeForm b p Empty]
-toTypeForm p@(Pair (Atom "List") t) parent flag =
+toTypeForm p@(Pair (Atom "List" _) t _) parent flag =
   TypeForm [TypeFormPart "[", toTypeForm t p Empty, TypeFormPart "]"]
-toTypeForm p@(Pair (Atom "Tuple") (Pair a b)) parent flag =
+toTypeForm p@(Pair (Atom "Tuple" _) (Pair a b _) _) parent flag =
   TypeForm
     [ TypeFormPart "(",
       toTypeForm a p TupleFirst,
@@ -460,7 +455,7 @@ toTypeForm p@(Pair (Atom "Tuple") (Pair a b)) parent flag =
       toTypeForm b p TupleBody,
       TypeFormPart ")"
     ]
-toTypeForm p@(Pair x y) parent flag
+toTypeForm p@(Pair x y _) parent flag
   | isTypeCon parent =
     TypeForm
       [ TypeFormPart "(",
@@ -477,64 +472,44 @@ typeForm t = toTypeForm t Unit Empty
 fromTerm :: [(Term, String)] -> Term -> Term -> Flag -> String
 -- fromTerm varMap term parentTerm level index
 fromTerm varmap Unit parent flag = ""
-fromTerm varmap (Atom x) parent flag = x
+fromTerm varmap (Atom x _) parent flag = x
 fromTerm varmap v@(Var x _) parent flag = fromJust (lookup v varmap)
-fromTerm varmap p@(Pair (Atom "Function") (Pair a b)) parent flag
+fromTerm varmap p@(Pair (Atom "Function" _) (Pair a b _) _) parent flag
   | isFunction parent && flag == FunctionFirst = mconcat ["(", fromTerm varmap a p FunctionFirst, "->", fromTerm varmap b p Empty, ")"]
   | otherwise = mconcat [fromTerm varmap a p FunctionFirst, "->", fromTerm varmap b p Empty]
-fromTerm varmap p@(Pair (Atom "List") t) parent flag = mconcat ["[", fromTerm varmap t p Empty, "]"]
-fromTerm varmap p@(Pair (Atom "Tuple") (Pair a b)) parent flag = mconcat ["(", fromTerm varmap a p TupleFirst, ",", fromTerm varmap b p TupleBody, ")"]
-fromTerm varmap p@(Pair x y) parent flag
+fromTerm varmap p@(Pair (Atom "List" _) t _) parent flag = mconcat ["[", fromTerm varmap t p Empty, "]"]
+fromTerm varmap p@(Pair (Atom "Tuple" _) (Pair a b _) _) parent flag = mconcat ["(", fromTerm varmap a p TupleFirst, ",", fromTerm varmap b p TupleBody, ")"]
+fromTerm varmap p@(Pair x y _) parent flag
   | isTypeCon parent = mconcat ["(", fromTerm varmap x parent Empty, " ", fromTerm varmap y parent Empty, ")"]
   | otherwise = mconcat [fromTerm varmap x p Empty, " ", fromTerm varmap y p Empty]
 
 data Flag = TupleRoot | TupleFirst | TupleBody | FunctionFirst | Empty deriving (Eq)
 
 isFunction :: Term -> Bool
-isFunction (Pair (Atom "Function") _) = True
+isFunction (Pair (Atom "Function" _) _ _) = True
 isFunction _ = False
 
 funHead :: Term -> Term
-funHead (Pair (Atom "Function") (Pair a b)) = a
+funHead (Pair (Atom "Function" _) (Pair a b _) _) = a
 funHead _ = error "Function head applied to non functional term"
 
 funBody :: Term -> Term
-funBody (Pair (Atom "Function") (Pair a b)) = b
+funBody (Pair (Atom "Function" _) (Pair a b _) _) = b
 funBody _ = error "Function body applied to non functional term"
 
 isTuple :: Term -> Bool
-isTuple (Pair (Atom "Tuple") _) = True
+isTuple (Pair (Atom "Tuple" _) _ _) = True
 isTuple _ = False
 
 isTypeCon :: Term -> Bool
-isTypeCon (Pair (Atom "Function") _) = False
-isTypeCon (Pair (Atom "List") _) = False
-isTypeCon (Pair (Atom "Tuple") _) = False
-isTypeCon (Pair _ _) = True
+isTypeCon (Pair (Atom "Function" _) _ _) = False
+isTypeCon (Pair (Atom "List" _) _ _) = False
+isTypeCon (Pair (Atom "Tuple" _) _ _) = False
+isTypeCon Pair {} = True
 isTypeCon _ = False
 
-prettyTerm :: Term -> String
-prettyTerm Unit = ""
-prettyTerm (Var x _)
-  | "fresh." `isPrefixOf` x = x
-  | "internal." `isPrefixOf` x = x
-  | otherwise = takeWhile (/= '.') x
-prettyTerm (Atom x) = x
-prettyTerm (Pair x y) = prettyTerm x ++ ", " ++ prettyTerm y
-
 moreConcreteThan :: Term -> Term -> Bool
-moreConcreteThan (Pair a1 a2) (Pair b1 b2) = a1 `moreConcreteThan` b1 && a2 `moreConcreteThan` b2
-moreConcreteThan (Pair _ _) _ = True
-moreConcreteThan (Atom _) (Var _ _) = True
+moreConcreteThan (Pair a1 a2 _) (Pair b1 b2 _) = a1 `moreConcreteThan` b1 && a2 `moreConcreteThan` b2
+moreConcreteThan Pair {} _ = True
+moreConcreteThan (Atom _ _) (Var _ _) = True
 moreConcreteThan _ _ = False
-
--- examples
-kstring = Pair (atom "List") (atom "Char")
-
-kmaybeInt = Pair (atom "Maybe") (atom "Int")
-
-kmaybeString = Pair (atom "Maybe") kstring
-
-kmaybemaybeInt = Pair (atom "Maybe") kmaybeInt
-
-kflip = funOf [funOf [atom "a", atom "b", atom "c"], atom "b", atom "a", atom "c"]

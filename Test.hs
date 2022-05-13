@@ -60,6 +60,7 @@ module Task where
 -- x -> conjN  [funOf (var a) (var a) (atom Int)
 -- fresh (tv -> x ==< funOf tv (var a) (var b) (atom Int))
 
+u = undefined
 
 c :: (Eq a, Ord b) => a -> b
-c = undefined
+c x = u

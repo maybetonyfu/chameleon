@@ -168,8 +168,8 @@ instance MatchTerm DeclHead where
     case mbTypeVar of
       Nothing -> return []
       Just vTypeVar -> do
-        let label = Label 0 (term, Pair vHead vTypeVar) [] "Annotated" (sl node)
-        return (label (term === Pair vHead vTypeVar) : gHead)
+        let label = Label 0 (term, pair vHead vTypeVar) [] "Annotated" (sl node)
+        return (label (term === pair vHead vTypeVar) : gHead)
 
 instance MatchTerm QualConDecl where
   matchTerm term (QualConDecl _ _ _ conDecl) = matchTerm term conDecl
@@ -276,7 +276,8 @@ instance MatchTerm Match where
     mbFunVar <- varByName name
     case mbFunVar of
       Nothing -> return []
-      Just funVar -> do
+      Just funVar -> trace ( " 0-000000000 ---- :" ++ show funVar) $  do
+        
         gWheres <- concat <$> mapM (matchTerm Unit) (maybeToList maybeWheres)
         args <- freshVarN (length pats)
         ret <- freshVar
@@ -621,8 +622,8 @@ instance MatchTerm Literal where
     let label = Label 0 (term, atom "Char") [] "Literal" (sl node)
     return [label (term === atom "Char")]
   matchTerm term node@String {} = do
-    let label = Label 0 (term, Pair (atom "List") (atom "Char")) [] "Literal" (sl node)
-    return [label (term === Pair (atom "List") (atom "Char"))]
+    let label = Label 0 (term, pair (atom "List") (atom "Char")) [] "Literal" (sl node)
+    return [label (term === pair (atom "List") (atom "Char"))]
   matchTerm term node@Int {} = do
     let label = Label 0 (term, atom "Int") [] "Literal" (sl node)
     return [label (term === atom "Int")]
@@ -642,11 +643,13 @@ processFile filepath = do
           filedOrderings = getFieldOrdering hModule
           names = allNames scopes
           goals = sortOn goalNum $ evalState (matchTerm Unit hModule) (0, scopes, filedOrderings, [])
+          krenstate = runGoalNWithState emptyS 1 (conjN (map unlabel goals))
           res = run1 names (conjN (map unlabel goals))
       mapM_ print scopes
       mapM_ print goals
       print names
       print res
+      print krenstate
     ParseFailed srcLoc message ->
       putStrLn $
         unlines

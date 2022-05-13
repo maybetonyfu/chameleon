@@ -20,7 +20,7 @@ processFile filepath = do
       print "OK"
       let bindings = moduleBindings hModule
           cons = getInstances bindings hModule
-          res = run1 [] (hasInstance cons "X" (Pair (atom "Maybe") (var "abcd")))
+          res = run1 [] (hasInstance cons "X" (Pair (atom "Maybe") (var "abcd") []))
       print res
     ParseFailed srcLoc message ->
       putStrLn $
@@ -51,7 +51,7 @@ instance HasInstance InstRule where
           Just ctx ->
             case ctx of
               (CxSingle _ (TypeA _ t)) ->
-                let (Pair x y) = typeToTerm bindings t
+                let (Pair x y _) = typeToTerm bindings t
                     tVar = y
                     className = atomToString x
                     fun = \ins t ->
@@ -71,7 +71,7 @@ typeToTerm bindings (TyList _ t) = lstOf (typeToTerm bindings t)
 typeToTerm bindings (TyFun _ t1 t2) = funOf [typeToTerm bindings t1, typeToTerm bindings t2]
 typeToTerm bindings (TyTuple _ _ ts) = tupOf . map (typeToTerm bindings) $ ts
 typeToTerm bindings (TyUnboxedSum _ ts) = tupOf . map (typeToTerm bindings) $ ts
-typeToTerm bindings (TyApp _ t1 t2) = Pair (typeToTerm bindings t1) (typeToTerm bindings t2)
+typeToTerm bindings (TyApp _ t1 t2) = Pair (typeToTerm bindings t1) (typeToTerm bindings t2) []
 typeToTerm bindings (TyParen _ t) = typeToTerm bindings t
 typeToTerm _ _ = error "Unsupported type"
 
