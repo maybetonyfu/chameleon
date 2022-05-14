@@ -19,7 +19,7 @@ data Term
   | Atom String [String]
   | Pair Term Term [String]
   | Unit
-  deriving (Show)
+  deriving (Show, Ord)
 
 concatTag :: [String] -> Term -> Term
 concatTag tags (Var x tags') = Var x (tags' ++ tags) 
@@ -116,7 +116,6 @@ unify a b st =
         then Right st
         else Left Mismatch
     (Var x tagsX, Var y tagsY) ->
-      -- trace (x ++ "[" ++ intercalate "." tagsX ++ "] === " ++ y ++ "[" ++ intercalate "." tagsX ++  "]") $
       if x == y
         then Right st
         else extend x (Var y (tagsY ++ tagsX)) st
@@ -153,7 +152,7 @@ showSubs :: KanrenState -> IO ()
 showSubs (a, b) = mapM_ print $ Map.toList a
 
 (==<) :: Term -> Term -> Goal
-(==<) t1 t2 = copy t1 t2
+(==<)  = copy
 
 copy :: Term -> Term -> Goal
 copy x y (sub, n) =
@@ -223,6 +222,22 @@ atom x = Atom x []
 
 pair x y = Pair x y []
 
+getTags :: Term -> [String]
+getTags (Var _ tags) = tags
+getTags (Atom _ tags) = tags
+getTags (Pair _ _ tags) = tags
+getTags Unit = []
+
+setTags :: [String] -> Term -> Term
+setTags tags (Var x _) = Var x tags
+setTags tags (Atom x _) = Atom x tags
+setTags tags (Pair x y _) = Pair x y tags
+setTags _ Unit = Unit
+
+appendTags :: [String] -> Term -> Term
+appendTags tags t = setTags (getTags t ++ tags) t  
+
+
 callFresh :: (Term -> Goal) -> Goal
 callFresh f (sub, n) = f (var ("internal." ++ show n)) (sub, n + 1)
 
@@ -242,6 +257,9 @@ replaceTerm :: Term -> Term -> Term -> Term
 replaceTerm old new v@(Var _ _) = if v == old then new else v
 replaceTerm old new (Pair x y tags) = Pair (replaceTerm old new x) (replaceTerm old new y) tags
 replaceTerm old new x = x
+
+
+-- name KanrenState 
 
 reifyS :: Term -> KanrenState -> KanrenState
 reifyS term (sub, n) =

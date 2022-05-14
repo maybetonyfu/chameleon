@@ -25,6 +25,7 @@ library
       Builtin
       Constraint
       FieldOrdering
+      Graph
       Instance
       JsonInstance
       Kanren
