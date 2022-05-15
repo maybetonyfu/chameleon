@@ -19,7 +19,7 @@ data Term
   | Atom String [String]
   | Pair Term Term [String]
   | Unit
-  deriving (Show, Ord)
+  deriving (Show, Eq, Ord)
 
 concatTag :: [String] -> Term -> Term
 concatTag tags (Var x tags') = Var x (tags' ++ tags) 
@@ -27,12 +27,12 @@ concatTag tags (Atom x tags') = Atom x (tags' ++ tags)
 concatTag tags (Pair x y tags') = Pair x y (tags' ++ tags) 
 concatTag _  Unit = Unit
 
-instance Eq Term where
-  Var x _ == Var y _ = x == y
-  Atom x _ == Atom y _ = x == y
-  Pair x1 x2 _ == Pair y1 y2 _ = x1 == x2 && y1 == y2
-  Unit == Unit = True
-  _ == _ = False
+-- instance Eq Term where
+--   Var x _ == Var y _ = x == y
+--   Atom x _ == Atom y _ = x == y
+--   Pair x1 x2 _ == Pair y1 y2 _ = x1 == x2 && y1 == y2
+--   Unit == Unit = True
+--   _ == _ = False
 
 type Subst = Map String Term
 

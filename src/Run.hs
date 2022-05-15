@@ -78,22 +78,21 @@ processFile text =
                     then
                       let mus = getMus ks goals'
                           instanciationTable = concatMap instanciation mus
-                          names' =
-                            useFunctionNewNames instanciationTable names
+                          names' = useFunctionNewNames instanciationTable names
                           graphG = fromEdges . graphView $ mus
                           reachables = concatMap (map snd . Map.toList . reachableFrom graphG) [0 .. length goals']
                           longestIndexPairs = snd $ maximumBy (\(n, _) (m, _) -> compare n m) reachables -- [(a,b), (b,c), (c,d)]
                           longestIndexChain = (source . head $ longestIndexPairs) : map target longestIndexPairs -- [a,b,c,d]
                           longestChain' = map (\n -> fromJust $ find ((== n) . goalNum) goals') longestIndexChain
-                          leftOuts = mus \\ longestChain'
-                          reinsert :: [LabeledGoal] -> [LabeledGoal] -> [LabeledGoal]
-                          reinsert oldchain [] = oldchain
-                          reinsert oldchain gs
-                            | Just g <- find (head oldchain `adjs`) gs = reinsert (g : oldchain) (gs \\ [g])
-                            | Just g <- find (last oldchain `adjs`) gs = reinsert (oldchain ++ [g]) (gs \\ [g])
-                            | otherwise = reinsert oldchain gs
+                          -- leftOuts = mus \\ longestChain'
+                          -- reinsert :: [LabeledGoal] -> [LabeledGoal] -> [LabeledGoal]
+                          -- reinsert oldchain [] = oldchain
+                          -- reinsert oldchain gs
+                          --   | Just g <- find (head oldchain `adjs`) gs = reinsert (g : oldchain) (gs \\ [g])
+                          --   | Just g <- find (last oldchain `adjs`) gs = reinsert (oldchain ++ [g]) (gs \\ [g])
+                          --   | otherwise = reinsert oldchain gs
                           -- longestChain = reinsert longestChain' leftOuts
-                          longestChain = const longestChain' leftOuts
+                          longestChain = longestChain'
                           reasonings =
                             -- trace ("\n Alll Constraints:\n" ++ unlines (map show mus)) $
                             --   trace ("\n Constraints:\n" ++ unlines (map show longestChain)) $
@@ -102,8 +101,19 @@ processFile text =
                             -- trace ("\nOriginal Names:\n" ++ show names ++ "\nNew Names: \n" ++ show names') $
                             map
                               ( \g ->
-                                  let mss = maximalSatisfiableSubset ks (longestChain \\ [g]) (goals' \\ [g])
-                                      originalNames = typings ks names mss
+                                  let mss = maximalSatisfiableSubset ks (filter ((/= goalNum g) . goalNum) longestChain) (filter ((/= goalNum g) . goalNum) goals')
+                                      originalNames =
+                                        -- trace
+                                        --   ( "\n\nRemoved: " ++ show g ++ "\n\n"
+                                        --       -- ++ "\n\nlongestChain : "
+                                        --       -- ++ unlines (map show (filter ((/= goalNum g) . goalNum) longestChain))
+                                        --       ++ "\n\nmss : "
+                                        --       ++ unlines (map show mss)
+                                        --       ++ "\n\nnames : "
+                                        --       ++ unlines names'
+                                        --       ++ "\n\n"
+                                        --   ) $ 
+                                          typings ks names mss
                                       newNames = typings ks names' mss
                                       chooseConcrete a b old new =
                                         let result = if a `moreConcreteThan` b then a else b
@@ -111,7 +121,7 @@ processFile text =
                                    in zipWith4 chooseConcrete originalNames newNames names names'
                               )
                               longestChain
-                          simplifyTypes = map (\g -> typings ks names (longestChain \\ [g])) longestChain
+                          simplifyTypes = map (\g -> typings ks names (filter ((/= goalNum g) . goalNum) longestChain)) longestChain
                           altTable =
                             zip3
                               names
@@ -141,8 +151,8 @@ processFile text =
                                       usedBuiltInScopes = filter (\scp -> any (`elem` _used) (generate scp)) builtInScopes
                                       usedBuilltInNames = concatMap (\scp -> map (++ ('.' : show (scopeId scp))) (generate scp)) usedBuiltInScopes
                                       usedBuilltInNormalNames = map showProperName usedBuilltInNames
-                                      usedBuiltInTypes =  typings ks usedBuilltInNames []
-                                      usedBuiltInTypeSigs = trace (show usedBuiltInTypes) $ map toSig usedBuiltInTypes
+                                      usedBuiltInTypes = typings ks usedBuilltInNames []
+                                      usedBuiltInTypeSigs = map toSig usedBuiltInTypes
                                       nameTypePairs = transpose [usedBuilltInNormalNames, usedBuiltInTypeSigs]
                                       --
                                       sides =
@@ -242,10 +252,11 @@ maximalSatisfiableSubset ks mus (g : gs) =
 
 typings :: KanrenState -> [String] -> [LabeledGoal] -> [Term]
 typings ks names goals =
-  let res = run1WithState ks names (conjN (map unlabel (sortOn goalNum goals ++ sortOn goalNum goals)))
-   in if null res
-        then error "typing should only accept satisfiable constraints"
-        else head res
+  -- trace ("\nGoals: " ++ unlines (map show goals) ++ "\n" ++ unlines names ++ "\n") $
+    let res = run1WithState ks names (conjN (map unlabel (sortOn goalNum goals ++ sortOn goalNum goals)))
+     in if null res
+          then error "typing should only accept satisfiable constraints"
+          else head res
 
 showTyping :: (String, Term) -> String
 showTyping (name, term) =
