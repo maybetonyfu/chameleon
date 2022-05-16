@@ -1,12 +1,90 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <title>Tutorial | Chameleon Type Debugger</title>
 </head>
+
 <body>
-    <img src="./tutorial.svg">
+    <section class="columns-2">
+        <div>
+            Chameleon consists of an editor window (left)
+            and a debugging window (right)
+        </div>
+        <div>
+            <img src="./tutorial/jpgs/Original@2x.jpg">
+        </div>
+    </section>
+    <section class="columns-2">
+        <div>
+            Debugging window shows all the uncertain expressions
+            as a list of cards. The focused card is black, others white.
+            The content of debugging window changes when the focusing on a
+            different card.
+        </div>
+        <div>
+            <img src="./tutorial/jpgs/Cards@2x.jpg">
+        </div>
+    </section>
+    <section class="columns-2">
+        <div>
+            An expression is uncertain when it can be either a
+            possible type 1 or a possible type 2. In our example,
+            x and y are both uncertain.
+        </div>
+        <div>
+            <img src="./tutorial/jpgs/Possible Types@2x.jpg">
+
+        </div>
+    </section>
+    <section class="columns-2">
+        <div>
+            Highlights are fragments of code with
+            blue or orange backgorund. They are evidence for the
+            possible types. Highlights may switch color when the
+            focused card (or debugging step) changes.
+            For example if we focus on y now, notice the highlight on
+            line 2 changes color.
+        </div>
+        <div>
+            <img src="./tutorial/jpgs/All highlights@2x.jpg">
+
+        </div>
+    </section>
+    <section class="columns-2">
+        <div>
+            A debugging step is a pair of highlights (one blue and one orange)
+            with black outline, and a text box shows how the two are related
+            to one another.
+        </div>
+        <div>
+            <img src="./tutorial/jpgs/Deduction Combined@2x.jpg">
+        </div>
+    </section>
+    <section class="columns-2">
+        <div>
+            Debugging steps can be accessed by clicking on the step button in
+            the expression card. Each card may contain one or more steps.
+        </div>
+        <div>
+            <img src="./tutorial/jpgs/Deduction Buttons@2x.jpg">
+        </div>
+    </section>
+    <section class="columns-2">
+        <div>
+            When changing step, highlights will switch color one at a time.
+            The message in the text box changes accordingly.
+            For example, clicking on step 1 and step 2 of expression x will result in
+            the editor window showing two different deduction steps.
+        </div>
+        <div>
+            <img src="./tutorial/jpgs/Deduction Step 1@2x.jpg">
+        </div>
+    </section>
 </body>
+
 </html>
