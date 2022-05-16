@@ -6,85 +6,164 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;700;800&display=swap" rel="stylesheet">
     <title>Tutorial | Chameleon Type Debugger</title>
+    <style>
+        body {
+            font-family: 'Manrope', sans-serif;
+        }
+    </style>
 </head>
 
 <body>
-    <section class="columns-2">
-        <div>
-            Chameleon consists of an editor window (left)
-            and a debugging window (right)
-        </div>
-        <div>
-            <img src="./tutorial/jpgs/Original@2x.jpg">
-        </div>
-    </section>
-    <section class="columns-2">
-        <div>
-            Debugging window shows all the uncertain expressions
-            as a list of cards. The focused card is black, others white.
-            The content of debugging window changes when the focusing on a
-            different card.
-        </div>
-        <div>
-            <img src="./tutorial/jpgs/Cards@2x.jpg">
-        </div>
-    </section>
-    <section class="columns-2">
-        <div>
-            An expression is uncertain when it can be either a
-            possible type 1 or a possible type 2. In our example,
-            x and y are both uncertain.
-        </div>
-        <div>
-            <img src="./tutorial/jpgs/Possible Types@2x.jpg">
+    <main class="container mx-auto w-5/6 md:w-3/4 lg:w-3/5 py-20 grid grid-cols-1 gap-y-20">
+        <section class="columns-2" x-data="{ step: 0} ">
+            <div class="text-lg">
+                Chameleon consists of an
+                <button class="p-0.5 border border-black rounded-md"
+                    :class="step === 1 ? 'bg-gray-600 text-white' : 'bg-gray-100 text-black'"
+                    @click="step = step === 1 ? 0: 1">editor window </button>
+                and a
+                <button class="p-0.5 border border-black rounded-md"
+                    :class="step === 2 ? 'bg-gray-600 text-white' : 'bg-gray-100 text-black'"
+                    @click="step = step === 2 ? 0: 2">debugging window </button>
+            </div>
+            <div>
+                <img x-show="step === 0" src="./tutorial/jpgs/Original@2x.jpg">
+                <img x-show="step === 1" src="./tutorial/jpgs/Editor Window@2x.jpg">
+                <img x-show="step === 2" src="./tutorial/jpgs/Debugging Window@2x.jpg">
+            </div>
+        </section>
+        <section class="columns-2" x-data="{step: 0}">
+            <div class="text-lg">
+                Debugging window shows all the uncertain expressions
+                as a list of cards. The
+                <button :class="step === 1 ? 'bg-gray-600 text-white' : 'bg-gray-100 text-black'"
+                    @click="step = step === 1 ? 0: 1" class="p-0.5 border border-black rounded-md">focused card
+                </button>is black,
+                <button :class="step === 2 ? 'bg-gray-600 text-white' : 'bg-gray-100 text-black'"
+                    @click="step = step === 2 ? 0: 2" class="p-0.5 border border-black rounded-md">unfocused cards
+                </button> are white.
+                <button :class="step === 3 ? 'bg-gray-600 text-white' : 'bg-gray-100 text-black'"
+                @click="step = step === 3 ? 0: 3" class="p-0.5 border border-black rounded-md">
+            The content of debugging window
+            </button> is specific to the focused card.
+            </div>
+            <div>
+                <img x-show="step === 0" src="./tutorial/jpgs/Cards@2x.jpg">
+                <img x-show="step === 1" src="./tutorial/jpgs/Card Active@2x.jpg">
+                <img x-show="step === 2" src="./tutorial/jpgs/Card Inactive@2x.jpg">
+                <img x-show="step === 3" src="./tutorial/jpgs/Debugging Message@2x.jpg">
 
-        </div>
-    </section>
-    <section class="columns-2">
-        <div>
-            Highlights are fragments of code with
-            blue or orange backgorund. They are evidence for the
-            possible types. Highlights may switch color when the
-            focused card (or debugging step) changes.
-            For example if we focus on y now, notice the highlight on
-            line 2 changes color.
-        </div>
-        <div>
-            <img src="./tutorial/jpgs/All highlights@2x.jpg">
+            </div>
+        </section>
+        <section class="columns-2" x-data="{step : 0}">
+            <div class="text-lg">
+                An expression is uncertain when it can be either a
+                <button :class="step === 1 ? 'bg-gray-600 text-white' : 'bg-gray-100 text-black'"
+                    @click="step = step === 1 ? 0: 1" class="p-0.5 border border-black rounded-md">possible type 1
+                </button>or a
+                <button :class="step === 2 ? 'bg-gray-600 text-white' : 'bg-gray-100 text-black'"
+                    @click="step = step === 2 ? 0: 2" class="p-0.5 border border-black rounded-md">possible type
+                    2</button>. In our example,
+                x and y are both uncertain.
+            </div>
+            <div>
+                <img x-show="step === 0" src="./tutorial/jpgs/Possible Types@2x.jpg">
+                <img x-show="step === 1" src="./tutorial/jpgs/Possible Type 1@2x.jpg">
+                <img x-show="step === 2" src="./tutorial/jpgs/Possible Type 2@2x.jpg">
 
-        </div>
-    </section>
-    <section class="columns-2">
-        <div>
-            A debugging step is a pair of highlights (one blue and one orange)
-            with black outline, and a text box shows how the two are related
-            to one another.
-        </div>
-        <div>
-            <img src="./tutorial/jpgs/Deduction Combined@2x.jpg">
-        </div>
-    </section>
-    <section class="columns-2">
-        <div>
-            Debugging steps can be accessed by clicking on the step button in
-            the expression card. Each card may contain one or more steps.
-        </div>
-        <div>
-            <img src="./tutorial/jpgs/Deduction Buttons@2x.jpg">
-        </div>
-    </section>
-    <section class="columns-2">
-        <div>
-            When changing step, highlights will switch color one at a time.
-            The message in the text box changes accordingly.
-            For example, clicking on step 1 and step 2 of expression x will result in
-            the editor window showing two different deduction steps.
-        </div>
-        <div>
-            <img src="./tutorial/jpgs/Deduction Step 1@2x.jpg">
-        </div>
-    </section>
+            </div>
+        </section>
+        <section class="columns-2" x-data="{step : 0}">
+            <div class="text-lg">
+                Highlights are fragments of code with colored backgorund. Highlight can be either
+                <button :class="step === 1 ? 'bg-gray-600 text-white' : 'bg-gray-100 text-black'"
+                    @click="step = step === 1 ? 0: 1" class="p-0.5 border border-black rounded-md"> blue</button> or
+                <button :class="step === 2 ? 'bg-gray-600 text-white' : 'bg-gray-100 text-black'"
+                    @click="step = step === 2 ? 0: 2" class="p-0.5 border border-black rounded-md"> orange </button>
+                They are evidence for the
+                possible types. 
+            </div>
+            <div>
+                <img x-show="step === 0" src="./tutorial/jpgs/All highlights@2x.jpg">
+                <img x-show="step === 1" src="./tutorial/jpgs/Blue highlights@2x.jpg">
+                <img x-show="step === 2" src="./tutorial/jpgs/Orange highlights@2x.jpg">
+
+            </div>
+        </section>
+        <section class="columns-2" x-data="{step : 0}">
+            <div class="text-lg">
+                Highlights may switch color (blue to orange or vice versa) when the
+                focused card (or debugging step) changes.
+                Notice the highlight of <span class="bg-gray-200 px-1 rounded-md">y</span> on
+                line 2 changes color when we focus on 
+                <button :class="step === 0 ? 'bg-gray-600 text-white' : 'bg-gray-100 text-black'"
+                @click="step = 0" class="p-0.5 border border-black rounded-md"> card x</button> 
+                <button :class="step === 1 ? 'bg-gray-600 text-white' : 'bg-gray-100 text-black'"
+                @click="step = 1" class="p-0.5 border border-black rounded-md"> card y </button>.
+            </div>
+            <div>
+                <img x-show="step === 0" src="./tutorial/jpgs/Original@2x.jpg">
+                <img x-show="step === 1" src="./tutorial/jpgs/Original Y@2x.jpg">
+            </div>
+        </section>
+        <section class="columns-2" x-data="{step : 0}">
+            <div class="text-lg">
+                A debugging step is
+                <button :class="step === 1 ? 'bg-gray-600 text-white' : 'bg-gray-100 text-black'"
+                    @click="step = step === 1 ? 0: 1" class="p-0.5 border border-black rounded-md"> a pair of
+                    highlights</button>
+                (one blue and one orange) with black outline, and
+                <button :class="step === 2 ? 'bg-gray-600 text-white' : 'bg-gray-100 text-black'"
+                    @click="step = step === 2 ? 0: 2" class="p-0.5 border border-black rounded-md"> a text box </button>
+                shows how the two are related
+                to one another.
+            </div>
+            <div>
+                <img x-show="step === 0" src="./tutorial/jpgs/Deduction Combined@2x.jpg">
+                <img x-show="step === 1" src="./tutorial/jpgs/Deduction Pair@2x.jpg">
+                <img x-show="step === 2" src="./tutorial/jpgs/Deduction Annotation@2x.jpg">
+
+            </div>
+        </section>
+        <section class="columns-2" x-data="{step: 0}">
+            <div class="text-lg">
+                Each card may contain one or more steps. Click on 
+                a step will activate it. At any time there can be 0 or 1
+                <button :class="step === 1 ? 'bg-gray-600 text-white' : 'bg-gray-100 text-black'"
+                @click="step = step === 1 ? 0: 1" class="p-0.5 border border-black rounded-md">active step </button> and any number of
+                <button :class="step === 2 ? 'bg-gray-600 text-white' : 'bg-gray-100 text-black'"
+                @click="step = step === 2 ? 0: 2" class="p-0.5 border border-black rounded-md">inactive steps</button>.
+            </div>
+            <div>
+                <img x-show="step === 0"  src="./tutorial/jpgs/Deduction Buttons@2x.jpg">
+                <img x-show="step === 1"  src="./tutorial/jpgs/Deduction Button Active@2x.jpg">
+                <img x-show="step === 2"  src="./tutorial/jpgs/Deduction Button Inactive@2x.jpg">
+
+            </div>
+        </section>
+        <section class="columns-2" x-data="{step: 0}">
+            <div class="text-lg">
+                When activating a step, some highlights may switch.
+                The message in the text box changes accordingly.
+                For example, clicking on
+                <button :class="step === 0 ? 'bg-gray-600 text-white' : 'bg-gray-100 text-black'" @click="step = 0"
+                    class="p-0.5 border border-black rounded-md"> step 1 </button> and
+                <button :class="step === 1 ? 'bg-gray-600 text-white' : 'bg-gray-100 text-black'" @click="step = 1"
+                    class="p-0.5 border border-black rounded-md"> step 2 </button>
+                x will result in
+                the editor window showing two different deduction steps.
+            </div>
+            <div>
+                <img x-show="step === 0" src="./tutorial/jpgs/Deduction Step 1@2x.jpg">
+                <img x-show="step === 1" src="./tutorial/jpgs/Debugging Step 2@2x.jpg">
+            </div>
+        </section>
+    </main>
 </body>
 
 </html>
