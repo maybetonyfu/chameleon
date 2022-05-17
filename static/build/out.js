@@ -495,7 +495,7 @@
             }
             return element;
           };
-          function createElement3(type3, config, children) {
+          function createElement4(type3, config, children) {
             var propName;
             var props = {};
             var key = null;
@@ -932,7 +932,7 @@
             }
             return lazyType;
           }
-          function forwardRef3(render) {
+          function forwardRef4(render) {
             {
               if (render != null && render.$$typeof === REACT_MEMO_TYPE) {
                 error("forwardRef requires a render function but received a `memo` component. Instead of forwardRef(memo(...)), use memo(forwardRef(...)).");
@@ -1041,7 +1041,7 @@
             }
             return dispatcher.useContext(Context, unstable_observedBits);
           }
-          function useState(initialState2) {
+          function useState2(initialState2) {
             var dispatcher = resolveDispatcher();
             return dispatcher.useState(initialState2);
           }
@@ -1543,7 +1543,7 @@
                 error("React.createElement: type is invalid -- expected a string (for built-in components) or a class/function (for composite components) but got: %s.%s", typeString, info);
               }
             }
-            var element = createElement3.apply(this, arguments);
+            var element = createElement4.apply(this, arguments);
             if (element == null) {
               return element;
             }
@@ -1616,7 +1616,7 @@
           exports.createElement = createElement$1;
           exports.createFactory = createFactory;
           exports.createRef = createRef;
-          exports.forwardRef = forwardRef3;
+          exports.forwardRef = forwardRef4;
           exports.isValidElement = isValidElement;
           exports.lazy = lazy;
           exports.memo = memo;
@@ -1629,7 +1629,7 @@
           exports.useMemo = useMemo4;
           exports.useReducer = useReducer3;
           exports.useRef = useRef3;
-          exports.useState = useState;
+          exports.useState = useState2;
           exports.version = ReactVersion;
         })();
       }
@@ -2437,11 +2437,11 @@
       if (true) {
         (function() {
           "use strict";
-          var React13 = require_react();
+          var React14 = require_react();
           var _assign = require_object_assign();
           var Scheduler = require_scheduler();
           var tracing = require_tracing();
-          var ReactSharedInternals = React13.__SECRET_INTERNALS_DO_NOT_USE_OR_YOU_WILL_BE_FIRED;
+          var ReactSharedInternals = React14.__SECRET_INTERNALS_DO_NOT_USE_OR_YOU_WILL_BE_FIRED;
           function warn(format) {
             {
               for (var _len = arguments.length, args = new Array(_len > 1 ? _len - 1 : 0), _key = 1; _key < _len; _key++) {
@@ -2473,7 +2473,7 @@
               Function.prototype.apply.call(console[level], console, argsWithFormat);
             }
           }
-          if (!React13) {
+          if (!React14) {
             {
               throw Error("ReactDOM was loaded before React. Make sure you load the React package before loading ReactDOM.");
             }
@@ -2489,7 +2489,7 @@
           var Mode = 8;
           var ContextConsumer = 9;
           var ContextProvider = 10;
-          var ForwardRef3 = 11;
+          var ForwardRef4 = 11;
           var Profiler = 12;
           var SuspenseComponent = 13;
           var MemoComponent = 14;
@@ -3269,7 +3269,7 @@
               case IndeterminateComponent:
               case SimpleMemoComponent:
                 return describeFunctionComponentFrame(fiber.type);
-              case ForwardRef3:
+              case ForwardRef4:
                 return describeFunctionComponentFrame(fiber.type.render);
               case Block:
                 return describeFunctionComponentFrame(fiber.type._render);
@@ -3689,7 +3689,7 @@
           var didWarnInvalidChild = false;
           function flattenChildren(children) {
             var content = "";
-            React13.Children.forEach(children, function(child) {
+            React14.Children.forEach(children, function(child) {
               if (child == null) {
                 return;
               }
@@ -3700,7 +3700,7 @@
           function validateProps(element, props) {
             {
               if (typeof props.children === "object" && props.children !== null) {
-                React13.Children.forEach(props.children, function(child) {
+                React14.Children.forEach(props.children, function(child) {
                   if (child == null) {
                     return;
                   }
@@ -8454,7 +8454,7 @@
               }
             }
           }
-          function createElement3(type3, props, rootContainerElement, parentNamespace) {
+          function createElement4(type3, props, rootContainerElement, parentNamespace) {
             var isCustomComponentTag;
             var ownerDocument = getOwnerDocumentFromRootContainer(rootContainerElement);
             var domElement;
@@ -9331,7 +9331,7 @@
               }
               parentNamespace = hostContextDev.namespace;
             }
-            var domElement = createElement3(type3, props, rootContainerInstance, parentNamespace);
+            var domElement = createElement4(type3, props, rootContainerInstance, parentNamespace);
             precacheFiberNode(internalInstanceHandle, domElement);
             updateFiberProps(domElement, props);
             return domElement;
@@ -10893,7 +10893,7 @@
           }
           var fakeInternalInstance = {};
           var isArray = Array.isArray;
-          var emptyRefsObject = new React13.Component().refs;
+          var emptyRefsObject = new React14.Component().refs;
           var didWarnAboutStateAssignmentForComponent;
           var didWarnAboutUninitializedState;
           var didWarnAboutGetSnapshotBeforeUpdateWithoutDidUpdate;
@@ -12150,7 +12150,7 @@
                   }
                   case Block:
                   case FunctionComponent:
-                  case ForwardRef3:
+                  case ForwardRef4:
                   case SimpleMemoComponent: {
                     {
                       {
@@ -14742,7 +14742,7 @@
                 child = updateClassComponent(null, workInProgress2, Component, resolvedProps, renderLanes2);
                 return child;
               }
-              case ForwardRef3: {
+              case ForwardRef4: {
                 {
                   workInProgress2.type = Component = resolveForwardRefForHotReloading(Component);
                 }
@@ -15635,7 +15635,7 @@
                 return updateSuspenseComponent(current2, workInProgress2, renderLanes2);
               case HostPortal:
                 return updatePortalComponent(current2, workInProgress2, renderLanes2);
-              case ForwardRef3: {
+              case ForwardRef4: {
                 var type3 = workInProgress2.type;
                 var _unresolvedProps2 = workInProgress2.pendingProps;
                 var _resolvedProps2 = workInProgress2.elementType === type3 ? _unresolvedProps2 : resolveDefaultProps(type3, _unresolvedProps2);
@@ -15807,7 +15807,7 @@
               case LazyComponent:
               case SimpleMemoComponent:
               case FunctionComponent:
-              case ForwardRef3:
+              case ForwardRef4:
               case Fragment:
               case Mode:
               case Profiler:
@@ -16452,7 +16452,7 @@
           function commitBeforeMutationLifeCycles(current2, finishedWork) {
             switch (finishedWork.tag) {
               case FunctionComponent:
-              case ForwardRef3:
+              case ForwardRef4:
               case SimpleMemoComponent:
               case Block: {
                 return;
@@ -16573,7 +16573,7 @@
           function commitLifeCycles(finishedRoot, current2, finishedWork, committedLanes) {
             switch (finishedWork.tag) {
               case FunctionComponent:
-              case ForwardRef3:
+              case ForwardRef4:
               case SimpleMemoComponent:
               case Block: {
                 {
@@ -16774,7 +16774,7 @@
             onCommitUnmount(current2);
             switch (current2.tag) {
               case FunctionComponent:
-              case ForwardRef3:
+              case ForwardRef4:
               case MemoComponent:
               case SimpleMemoComponent:
               case Block: {
@@ -17082,7 +17082,7 @@
           function commitWork(current2, finishedWork) {
             switch (finishedWork.tag) {
               case FunctionComponent:
-              case ForwardRef3:
+              case ForwardRef4:
               case MemoComponent:
               case SimpleMemoComponent:
               case Block: {
@@ -18637,7 +18637,7 @@
                 return;
               }
               var tag = fiber.tag;
-              if (tag !== IndeterminateComponent && tag !== HostRoot && tag !== ClassComponent && tag !== FunctionComponent && tag !== ForwardRef3 && tag !== MemoComponent && tag !== SimpleMemoComponent && tag !== Block) {
+              if (tag !== IndeterminateComponent && tag !== HostRoot && tag !== ClassComponent && tag !== FunctionComponent && tag !== ForwardRef4 && tag !== MemoComponent && tag !== SimpleMemoComponent && tag !== Block) {
                 return;
               }
               var componentName = getComponentName(fiber.type) || "ReactComponent";
@@ -18666,7 +18666,7 @@
           function warnAboutUpdateOnUnmountedFiberInDEV(fiber) {
             {
               var tag = fiber.tag;
-              if (tag !== HostRoot && tag !== ClassComponent && tag !== FunctionComponent && tag !== ForwardRef3 && tag !== MemoComponent && tag !== SimpleMemoComponent && tag !== Block) {
+              if (tag !== HostRoot && tag !== ClassComponent && tag !== FunctionComponent && tag !== ForwardRef4 && tag !== MemoComponent && tag !== SimpleMemoComponent && tag !== Block) {
                 return;
               }
               if ((fiber.flags & PassiveUnmountPendingDev) !== NoFlags) {
@@ -18736,7 +18736,7 @@
               if (isRendering && (executionContext & RenderContext) !== NoContext && !getIsUpdatingOpaqueValueInRenderPhaseInDEV()) {
                 switch (fiber.tag) {
                   case FunctionComponent:
-                  case ForwardRef3:
+                  case ForwardRef4:
                   case SimpleMemoComponent: {
                     var renderingComponentName = workInProgress && getComponentName(workInProgress.type) || "Unknown";
                     var dedupeKey = renderingComponentName;
@@ -18991,7 +18991,7 @@ For more info, visit https://reactjs.org/link/mock-scheduler`);
                   }
                   break;
                 }
-                case ForwardRef3: {
+                case ForwardRef4: {
                   if ($$typeofNextType === REACT_FORWARD_REF_TYPE) {
                     needsCompareFamilies = true;
                   } else if ($$typeofNextType === REACT_LAZY_TYPE) {
@@ -19067,7 +19067,7 @@ For more info, visit https://reactjs.org/link/mock-scheduler`);
                 case ClassComponent:
                   candidateType = type3;
                   break;
-                case ForwardRef3:
+                case ForwardRef4:
                   candidateType = type3.render;
                   break;
               }
@@ -19129,7 +19129,7 @@ For more info, visit https://reactjs.org/link/mock-scheduler`);
                 case ClassComponent:
                   candidateType = type3;
                   break;
-                case ForwardRef3:
+                case ForwardRef4:
                   candidateType = type3.render;
                   break;
               }
@@ -19278,7 +19278,7 @@ For more info, visit https://reactjs.org/link/mock-scheduler`);
             } else if (Component !== void 0 && Component !== null) {
               var $$typeof = Component.$$typeof;
               if ($$typeof === REACT_FORWARD_REF_TYPE) {
-                return ForwardRef3;
+                return ForwardRef4;
               }
               if ($$typeof === REACT_MEMO_TYPE) {
                 return MemoComponent;
@@ -19342,7 +19342,7 @@ For more info, visit https://reactjs.org/link/mock-scheduler`);
                 case ClassComponent:
                   workInProgress2.type = resolveClassForHotReloading(current2.type);
                   break;
-                case ForwardRef3:
+                case ForwardRef4:
                   workInProgress2.type = resolveForwardRefForHotReloading(current2.type);
                   break;
               }
@@ -19452,7 +19452,7 @@ For more info, visit https://reactjs.org/link/mock-scheduler`);
                           fiberTag = ContextConsumer;
                           break getTag;
                         case REACT_FORWARD_REF_TYPE:
-                          fiberTag = ForwardRef3;
+                          fiberTag = ForwardRef4;
                           {
                             resolvedType = resolveForwardRefForHotReloading(resolvedType);
                           }
@@ -20483,7 +20483,7 @@ For more info, visit https://reactjs.org/link/mock-scheduler`);
           var ContextConsumer = REACT_CONTEXT_TYPE;
           var ContextProvider = REACT_PROVIDER_TYPE;
           var Element = REACT_ELEMENT_TYPE;
-          var ForwardRef3 = REACT_FORWARD_REF_TYPE;
+          var ForwardRef4 = REACT_FORWARD_REF_TYPE;
           var Fragment = REACT_FRAGMENT_TYPE;
           var Lazy = REACT_LAZY_TYPE;
           var Memo = REACT_MEMO_TYPE;
@@ -20542,7 +20542,7 @@ For more info, visit https://reactjs.org/link/mock-scheduler`);
           exports.ContextConsumer = ContextConsumer;
           exports.ContextProvider = ContextProvider;
           exports.Element = Element;
-          exports.ForwardRef = ForwardRef3;
+          exports.ForwardRef = ForwardRef4;
           exports.Fragment = Fragment;
           exports.Lazy = Lazy;
           exports.Memo = Memo;
@@ -21195,7 +21195,7 @@ For more info, visit https://reactjs.org/link/mock-scheduler`);
       if (true) {
         (function() {
           "use strict";
-          var React13 = require_react();
+          var React14 = require_react();
           var _assign = require_object_assign();
           var REACT_ELEMENT_TYPE = 60103;
           var REACT_PORTAL_TYPE = 60106;
@@ -21252,7 +21252,7 @@ For more info, visit https://reactjs.org/link/mock-scheduler`);
             }
             return null;
           }
-          var ReactSharedInternals = React13.__SECRET_INTERNALS_DO_NOT_USE_OR_YOU_WILL_BE_FIRED;
+          var ReactSharedInternals = React14.__SECRET_INTERNALS_DO_NOT_USE_OR_YOU_WILL_BE_FIRED;
           function error(format) {
             {
               for (var _len2 = arguments.length, args = new Array(_len2 > 1 ? _len2 - 1 : 0), _key2 = 1; _key2 < _len2; _key2++) {
@@ -22143,7 +22143,7 @@ For more info, visit https://reactjs.org/link/mock-scheduler`);
           var ContextConsumer = REACT_CONTEXT_TYPE;
           var ContextProvider = REACT_PROVIDER_TYPE;
           var Element = REACT_ELEMENT_TYPE;
-          var ForwardRef3 = REACT_FORWARD_REF_TYPE;
+          var ForwardRef4 = REACT_FORWARD_REF_TYPE;
           var Fragment = REACT_FRAGMENT_TYPE;
           var Lazy = REACT_LAZY_TYPE;
           var Memo = REACT_MEMO_TYPE;
@@ -22207,7 +22207,7 @@ For more info, visit https://reactjs.org/link/mock-scheduler`);
           exports.ContextConsumer = ContextConsumer;
           exports.ContextProvider = ContextProvider;
           exports.Element = Element;
-          exports.ForwardRef = ForwardRef3;
+          exports.ForwardRef = ForwardRef4;
           exports.Fragment = Fragment;
           exports.Lazy = Lazy;
           exports.Memo = Memo;
@@ -24448,123 +24448,6 @@ For more info, visit https://reactjs.org/link/mock-scheduler`);
   N();
 
   // code.js
-  var exampleJValue = (n3) => `module Task${n3} where
-
-data JValue = JString String
-  | JNumber Double
-  | JBool Bool
-  | JNull
-  | JObject [(String, JValue)]
-  | JArray  [JValue]
-
-renderJValue :: JValue -> String
-renderJValue (JString s)   = show s
-renderJValue (JNumber n)   = show n
-renderJValue (JBool True)  = "true"
-renderJValue (JBool False) = "false"
-renderJValue JNull         = "null"
-
-renderJValue (JObject o) = "{" ++ renderPairs o ++ "}"
-renderJValue (JArray a) = "[" ++ renderPairs a ++ "]"
-
-renderPair :: (String, JValue) -> String
-renderPair (k,v)   = show k ++ ": " ++ renderJValue v
-
-renderPairs :: [(String,JValue)] -> String
-renderPairs [] = ""
-renderPairs [p] = renderPair p
-renderPairs (p:ps) = renderPair p ++ "," ++ renderPairs ps
-
--- renderArrayValues is not used anywhere, I wonder why
-renderArrayValues [] = ""
-renderArrayValues [v] = renderJValue v
-renderArrayValues (v:vs) = renderJValue v ++ "," ++ renderArrayValues vs
-`;
-  var exampleRockPaperScissors = (n3) => `module Task${n3} where
-
-data Hand = Rock | Paper | Scissors
-type Score = (Int, Int)
-
-winsOver :: Hand -> Hand -> Bool
-Rock     \`winsOver\` Scissors = True
-Paper    \`winsOver\` Rock     = True
-Scissors \`winsOver\` Paper    = True
-_        \`winsOver\` _        = False
-
-computeScore :: Hand -> Hand -> Score
-computeScore h1 h2
-  | h1 \`winsOver\` h2 = (1, 0)
-  | h2 \`winsOver\` h1 = (0, 1)
-  | otherwise        = (0, 0)
-
-combine a b = (fst a + fst b, snd a + snd b)
-
-zip' (a:as) (b:bs) = (a,b) : zip' as bs
-
-foldl1 :: (b -> a -> b) -> b -> [a] -> b
-foldl1  _ b [] = b
-foldl1  f b (a:as) = foldl1 f (f b a) as
-
-pairScore (h1, h2) = computeScore h1 h2
-
-score :: [Hand] -> [Hand] -> Score
-score h1 h2 =
-    foldl1 combine (0, 0) (pairScore (zip' h1 h2))
-
-`;
-  var exampleDateSpan = (n3) => `module Task${n3} where
-data Period
-  = DayPeriod Day
-  | WeekPeriod Day
-  | MonthPeriod Year Month
-  | YearPeriod Year
-
-type Year = Int
-type Month = Int -- 1-12
-data Day = Day Year Month Int
-
-data DataSpan = DateSpan (Maybe Day) (Maybe Day)
-
-addDays :: Int -> Day -> Day
-addDays n day = day
-
-fromGregorian :: Year -> Month -> Int -> Maybe Day
-fromGregorian y m d = Just (Day y m d)
-
-periodAsDateSpan :: Period -> DataSpan
-periodAsDateSpan (WeekPeriod b) = 
-  DateSpan (Just b) (Just (addDays 7 b))
-periodAsDateSpan (MonthPeriod y m) =
-  let
-    (y', m')
-      | m == 12 = (y + 1, 1)
-      | otherwise = (y, m + 1)
-    dayStart = Just (fromGregorian y m 1)
-    dayEnd = Just (fromGregorian y' m' 1)
-  in DateSpan dayStart dayEnd
-
-
-
-`;
-  var exampleTake = (n3) => `module Task${n3} where
-
--- Takes the first n elements from a list
-take' :: Int -> [Int] -> [Int]
-take' n [] = []
-take' n (x:xs) = x ++ take' (n - 1) xs
-`;
-  var examplePassword = (n3) => `module Task${n3} where
-
--- A data type to represent password
-data Password = P String
-
--- Validate how good a password is
-validate :: Password -> String
-validate password =
-    if length password > 10
-        then "Great password"
-        else "Password too short"
-`;
   var constAndTuple = (n3) => `module Task${n3} where
 
 x :: (Int, Bool)
@@ -24583,8 +24466,10 @@ fun a x = a
 `;
   var mostBasic = (n3) => `module Task${n3} where
 
-x 0 = 3
-x "1" = 0
+x y = 
+  case y of
+    Nothing -> Just 0
+    Just n -> n * 2
 `;
   var ifelse = (n3) => `module Task${n3} where
 u = 0
@@ -24592,16 +24477,76 @@ v = 0.1
 z = True
 y = if z then u else v
 `;
+  var intandbool = (n3) => `module Task${n3} where
+t u v = if u then v else 0
+f u v = if u then 0 else v
+d f g x = f x + g x
+b = True
+i = 3
+w = d (t i) (f i) b
+`;
+  var uconandvcon = (n3) => `module Task${n3} where
+
+data V = VCon String
+data U = UCon Bool Int (Int, Int) 
+
+u :: U -> V
+u (UCon x y j) = 
+  if x 
+    then j 
+    else fst y + snd y
+
+`;
+  var quicksort = (n3) => `module Task${n3} where
+
+quick :: [Int] -> [Int] 
+quick []   = [] 
+quick (x:xs)= 
+ let littlebigs = split xs
+ in 
+   quick (fst littlebigs) 
+    ++ [x] 
+    ++  quick (snd littlebigs)
+
+split [] _ result = result
+split (x:xs) n (littles, bigs) = 
+  if x < n 
+    then split xs n (x:littles, bigs)
+    else split xs n (littles, x:bigs)
+`;
+  var printXML = (n3) => `module Task${n3} where
+
+data XML = XML Position Part
+data Position = Top | Bottom | Left | Right
+
+type Name = String
+
+data Part =
+     Element Name [Attribute] [XML]
+   | Comment String
+   | Text String
+
+getPart :: XML -> Part
+getPart (XML pos part) = part
+
+
+printXML (Element name [attributs] xmls) = 
+  "<" ++ name ++ ">" 
+  ++ mconcat (map printXML xmls) 
+  ++ "</" ++ name ++ ">" 
+printXML (Text text) = text
+
+
+`;
   var examples = [
     mostBasic,
     ifelse,
     constAndTuple,
     inc,
-    exampleTake,
-    examplePassword,
-    exampleRockPaperScissors,
-    exampleDateSpan,
-    exampleJValue
+    intandbool,
+    uconandvcon,
+    quicksort,
+    printXML
   ].map((ex, n3) => ex(n3 + 1));
   var code_default = examples;
 
@@ -25106,6 +25051,15 @@ y = if z then u else v
     var type3 = Object.prototype.toString.call(x2);
     return type3 === "[object Function]" || type3 === "[object AsyncFunction]" || type3 === "[object GeneratorFunction]" || type3 === "[object AsyncGeneratorFunction]";
   }
+
+  // node_modules/ramda/es/clamp.js
+  var clamp = /* @__PURE__ */ _curry3(function clamp2(min, max, value) {
+    if (min > max) {
+      throw new Error("min must not be greater than max in clamp(min, max, value)");
+    }
+    return value < min ? min : value > max ? max : value;
+  });
+  var clamp_default = clamp;
 
   // node_modules/ramda/es/type.js
   var type = /* @__PURE__ */ _curry1(function type2(val) {
@@ -25791,7 +25745,7 @@ y = if z then u else v
     const chWidth = 0.625;
     const chHeight = 1.5;
     const lineColor = "#666666";
-    const stepAsideDistance = offset * chWidth + 10;
+    const stepAsideDistance = offset * chWidth + 15;
     const styleTop = {
       background: color ? "var(--color-azure-3)" : "transparent",
       opacity: color ? 0.5 : 1,
@@ -26455,9 +26409,9 @@ y = if z then u else v
   // Debugger.jsx
   var import_react12 = __toESM(require_react());
 
-  // node_modules/@heroicons/react/solid/esm/EyeIcon.js
+  // node_modules/@heroicons/react/solid/esm/BookOpenIcon.js
   var React5 = __toESM(require_react(), 1);
-  function EyeIcon(props, svgRef) {
+  function BookOpenIcon(props, svgRef) {
     return /* @__PURE__ */ React5.createElement("svg", Object.assign({
       xmlns: "http://www.w3.org/2000/svg",
       viewBox: "0 0 20 20",
@@ -26465,19 +26419,15 @@ y = if z then u else v
       "aria-hidden": "true",
       ref: svgRef
     }, props), /* @__PURE__ */ React5.createElement("path", {
-      d: "M10 12a2 2 0 100-4 2 2 0 000 4z"
-    }), /* @__PURE__ */ React5.createElement("path", {
-      fillRule: "evenodd",
-      d: "M.458 10C1.732 5.943 5.522 3 10 3s8.268 2.943 9.542 7c-1.274 4.057-5.064 7-9.542 7S1.732 14.057.458 10zM14 10a4 4 0 11-8 0 4 4 0 018 0z",
-      clipRule: "evenodd"
+      d: "M9 4.804A7.968 7.968 0 005.5 4c-1.255 0-2.443.29-3.5.804v10A7.969 7.969 0 015.5 14c1.669 0 3.218.51 4.5 1.385A7.962 7.962 0 0114.5 14c1.255 0 2.443.29 3.5.804v-10A7.968 7.968 0 0014.5 4c-1.255 0-2.443.29-3.5.804V12a1 1 0 11-2 0V4.804z"
     }));
   }
-  var ForwardRef = React5.forwardRef(EyeIcon);
-  var EyeIcon_default = ForwardRef;
+  var ForwardRef = React5.forwardRef(BookOpenIcon);
+  var BookOpenIcon_default = ForwardRef;
 
-  // node_modules/@heroicons/react/solid/esm/PencilAltIcon.js
+  // node_modules/@heroicons/react/solid/esm/EyeIcon.js
   var React6 = __toESM(require_react(), 1);
-  function PencilAltIcon(props, svgRef) {
+  function EyeIcon(props, svgRef) {
     return /* @__PURE__ */ React6.createElement("svg", Object.assign({
       xmlns: "http://www.w3.org/2000/svg",
       viewBox: "0 0 20 20",
@@ -26485,15 +26435,35 @@ y = if z then u else v
       "aria-hidden": "true",
       ref: svgRef
     }, props), /* @__PURE__ */ React6.createElement("path", {
-      d: "M17.414 2.586a2 2 0 00-2.828 0L7 10.172V13h2.828l7.586-7.586a2 2 0 000-2.828z"
+      d: "M10 12a2 2 0 100-4 2 2 0 000 4z"
     }), /* @__PURE__ */ React6.createElement("path", {
+      fillRule: "evenodd",
+      d: "M.458 10C1.732 5.943 5.522 3 10 3s8.268 2.943 9.542 7c-1.274 4.057-5.064 7-9.542 7S1.732 14.057.458 10zM14 10a4 4 0 11-8 0 4 4 0 018 0z",
+      clipRule: "evenodd"
+    }));
+  }
+  var ForwardRef2 = React6.forwardRef(EyeIcon);
+  var EyeIcon_default = ForwardRef2;
+
+  // node_modules/@heroicons/react/solid/esm/PencilAltIcon.js
+  var React7 = __toESM(require_react(), 1);
+  function PencilAltIcon(props, svgRef) {
+    return /* @__PURE__ */ React7.createElement("svg", Object.assign({
+      xmlns: "http://www.w3.org/2000/svg",
+      viewBox: "0 0 20 20",
+      fill: "currentColor",
+      "aria-hidden": "true",
+      ref: svgRef
+    }, props), /* @__PURE__ */ React7.createElement("path", {
+      d: "M17.414 2.586a2 2 0 00-2.828 0L7 10.172V13h2.828l7.586-7.586a2 2 0 000-2.828z"
+    }), /* @__PURE__ */ React7.createElement("path", {
       fillRule: "evenodd",
       d: "M2 6a2 2 0 012-2h4a1 1 0 010 2H4v10h10v-4a1 1 0 112 0v4a2 2 0 01-2 2H4a2 2 0 01-2-2V6z",
       clipRule: "evenodd"
     }));
   }
-  var ForwardRef2 = React6.forwardRef(PencilAltIcon);
-  var PencilAltIcon_default = ForwardRef2;
+  var ForwardRef3 = React7.forwardRef(PencilAltIcon);
+  var PencilAltIcon_default = ForwardRef3;
 
   // TabReport.jsx
   var import_react11 = __toESM(require_react());
@@ -26512,13 +26482,26 @@ y = if z then u else v
 
   // TabReport.jsx
   var TabReport = () => {
+    const dispatch = useDispatch();
     let context = useSelector(path_default(["debugger", "context"]));
     let traverseId = useSelector(path_default(["debugger", "currentTraverseId"]));
     const multipleExps = useSelector(path_default(["debugger", "multipleExps"]));
+    const [scrollProgress, setScrollProgress] = (0, import_react11.useState)(0);
     return /* @__PURE__ */ import_react11.default.createElement("div", {
       className: "p-4"
     }, /* @__PURE__ */ import_react11.default.createElement("div", {
-      className: "bg-gray-200 p1 rounded-2xl flex cursor-pointer"
+      className: "bg-gray-200 p1 rounded-2xl flex cursor-pointer",
+      onWheel: (e3) => {
+        setScrollProgress(scrollProgress + clamp_default(-3, 3, e3.deltaY));
+        console.log(scrollProgress);
+        if (scrollProgress > 100) {
+          dispatch(nextStep());
+          setScrollProgress(0);
+        } else if (scrollProgress < -100) {
+          dispatch(prevStep());
+          setScrollProgress(0);
+        }
+      }
     }, multipleExps ? context.map((c3, i3) => /* @__PURE__ */ import_react11.default.createElement(Tab, {
       key: i3,
       steps: c3.contextSteps,
@@ -26834,7 +26817,13 @@ y = if z then u else v
       }
     }, /* @__PURE__ */ import_react14.default.createElement(EyeIcon_default, {
       className: "h-4 w-4 mr-1"
-    }), "Type check")), /* @__PURE__ */ import_react14.default.createElement("div", {
+    }), "Type check"), /* @__PURE__ */ import_react14.default.createElement("a", {
+      href: "/tutorial",
+      target: "_blank",
+      className: "bg-gray-300 px-4 py-1 rounded-md mx-2 flex h-8 justify-center items-center"
+    }, /* @__PURE__ */ import_react14.default.createElement(BookOpenIcon_default, {
+      className: "h-4 w-4 mr-1"
+    }), "Tutorial")), /* @__PURE__ */ import_react14.default.createElement("div", {
       className: "flex items-center px-2"
     }, /* @__PURE__ */ import_react14.default.createElement("div", {
       className: "mr-1"

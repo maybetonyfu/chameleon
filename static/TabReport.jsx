@@ -1,17 +1,30 @@
-import React from 'react'
+import React, {useState} from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import * as R from "ramda"
 import TypeSig from "./TypeSig"
 
-import { setStep } from "./debuggerSlice"
+import { nextStep, prevStep, setStep } from "./debuggerSlice"
+
 const TabReport = () => {
+    const dispatch = useDispatch()
     let context = useSelector(R.path(['debugger', 'context']))
     let traverseId = useSelector(R.path(['debugger', 'currentTraverseId']))
     const multipleExps = useSelector(R.path(['debugger', 'multipleExps']))
-
+    const [scrollProgress, setScrollProgress] = useState(0)
     return (
         <div className='p-4'>
-            <div className='bg-gray-200 p1 rounded-2xl flex cursor-pointer'>
+            <div className='bg-gray-200 p1 rounded-2xl flex cursor-pointer' onWheel={e => {
+                    setScrollProgress(scrollProgress + R.clamp(-3, 3, e.deltaY))
+                    console.log(scrollProgress)
+                    if (scrollProgress > 100) {
+                        dispatch(nextStep())
+                        setScrollProgress(0)
+                    } else if (scrollProgress < -100) {
+                        dispatch(prevStep())
+                        setScrollProgress(0)
+                    }
+
+                }}>
                 {
                     multipleExps ? context.map((c, i) => <Tab
                         key={i}

@@ -1,7 +1,7 @@
 import React, { useEffect } from "react"
 import { useDispatch, useSelector } from "react-redux"
 import { toEditMode, toNormalMode, switchTaskThunk, typeCheckThunk, setTask, toggleDebuggerStpes, toggleMultileExpThunk, setStep } from "./debuggerSlice"
-import { PencilAltIcon, EyeIcon } from "@heroicons/react/solid"
+import { PencilAltIcon, EyeIcon, BookOpenIcon } from "@heroicons/react/solid"
 import Toggle from "./Toggle"
 import * as R from "ramda"
 
@@ -69,6 +69,12 @@ const MenuBar = () => {
             >
                 <EyeIcon className='h-4 w-4 mr-1'></EyeIcon>Type check
             </button>
+            <a href="/tutorial" target={"_blank"}
+                className='bg-gray-300 px-4 py-1 rounded-md mx-2 flex h-8 justify-center items-center'
+>
+                <BookOpenIcon className="h-4 w-4 mr-1"></BookOpenIcon>
+                Tutorial
+</a>
 
         </div>
 

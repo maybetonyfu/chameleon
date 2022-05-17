@@ -176,7 +176,7 @@ function boxStyles(topElem, bottomElem, color, offset) {
   const chWidth = 0.625;
   const chHeight = 1.5;
   const lineColor = '#666666';
-  const stepAsideDistance = offset * chWidth + 10;
+  const stepAsideDistance = offset * chWidth + 15;
   const styleTop = {
     background: color ? 'var(--color-azure-3)' : 'transparent',
     opacity: color ? 0.5 : 1,

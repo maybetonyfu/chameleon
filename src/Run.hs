@@ -148,7 +148,9 @@ processFile text =
                                       scpId = (read . reverse . takeWhile (/= '.') . reverse $ name) :: Int
                                       scope = find ((== scpId) . scopeId) mergedScope
                                       _used = if isNothing scope then [] else use (fromJust scope)
-                                      usedBuiltInScopes = filter (\scp -> any (`elem` _used) (generate scp)) builtInScopes
+                                      usedBuiltInScopes = filter (\scp -> 
+                                        scopeType scp /= TypeScope
+                                        && any (`elem` _used) (generate scp)) builtInScopes
                                       usedBuilltInNames = concatMap (\scp -> map (++ ('.' : show (scopeId scp))) (generate scp)) usedBuiltInScopes
                                       usedBuilltInNormalNames = map showProperName usedBuilltInNames
                                       usedBuiltInTypes = typings ks usedBuilltInNames []
