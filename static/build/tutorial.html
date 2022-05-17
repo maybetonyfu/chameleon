@@ -47,7 +47,7 @@
             <div class="text-lg">
                 <h2 class="font-bold" id="expression-cards">Uncertain expressions and cards</h2>
             
-                Debugging window shows all the 'uncertain' expressions
+                The debugging window shows all the 'uncertain' expressions
                 as a list of cards. Clicking on a card activates it. The
                 <button :class="step === 1 ? 'bg-gray-600 text-white' : 'bg-gray-100 text-black'"
                     @click="step = step === 1 ? 0: 1" class="px-0.5 border border-black rounded-md">active card
@@ -57,7 +57,7 @@
                 </button> are white. The
                 <button :class="step === 3 ? 'bg-gray-600 text-white' : 'bg-gray-100 text-black'"
                 @click="step = step === 3 ? 0: 3" class="px-0.5 border border-black rounded-md">
-                 content of the debugging window
+                 contents in the debugging window
                 </button> is specific to the active card.
             </div>
             <div>
@@ -72,7 +72,7 @@
             <div class="text-lg">
                 <h2 class="font-bold" id="possible-types">Possible types</h2>
 
-                An expression is uncertain when it can be typed in two different ways. We refer to the them as 
+                An expression is uncertain when it can be typed in two different ways. We refer to them as 
                 <button :class="step === 1 ? 'bg-gray-600 text-white' : 'bg-gray-100 text-black'"
                     @click="step = step === 1 ? 0: 1" class="px-0.5 border border-black rounded-md">possible type 1
                 </button> and
@@ -91,12 +91,12 @@
             <div class="text-lg">
                 <h2 class="font-bold" id="highlights">Highlights</h2>
 
-                Highlights are fragments of code with colored backgorund. Highlight can be either
+                Highlights are fragments of code with colored backgorund. Highlights can be either
                 <button :class="step === 1 ? 'bg-gray-600 text-white' : 'bg-gray-100 text-black'"
                     @click="step = step === 1 ? 0: 1" class="px-0.5 border border-black rounded-md"> blue</button> or
                 <button :class="step === 2 ? 'bg-gray-600 text-white' : 'bg-gray-100 text-black'"
-                    @click="step = step === 2 ? 0: 2" class="px-0.5 border border-black rounded-md"> orange </button>
-                They are evidence from which Chameleon deduces the 
+                    @click="step = step === 2 ? 0: 2" class="px-0.5 border border-black rounded-md"> orange </button>.
+                They are the parts of the source code from which Chameleon deduces the 
                 <a class="underline text-blue-800" href="#possible-types">possible types</a>.
                 
             </div>
@@ -105,12 +105,12 @@
                 <img x-show="step === 1" src="./tutorial/jpgs/Blue highlights@2x.jpg">
                 <img x-show="step === 2" src="./tutorial/jpgs/Orange highlights@2x.jpg">
 
-            </div>
+            </div>  
         </section>
         <section class="columns-2" x-data="{step : 0}">
             <div class="text-lg">
                 <h2 class="font-bold" id="color-switching">Highlights (color switching)</h2>
-                Highlights may switch color (blue to orange or vice versa) when the
+                Highlights switch color (blue to orange or vice versa) when the user change the
                 <a class="underline text-blue-800" href="#expression-cards">active card</a> (or 
                 <a class="underline text-blue-800" href="#deduction-step-ui">deduction step</a> 
                 ) changes.
@@ -134,7 +134,7 @@
                 <button :class="step === 1 ? 'bg-gray-600 text-white' : 'bg-gray-100 text-black'"
                     @click="step = step === 1 ? 0: 1" class="px-0.5 border border-black rounded-md"> a pair of
                     highlights</button>
-                (one blue and one orange) with black outline, and
+                (one blue and one orange)  outline in black, and
                 <button :class="step === 2 ? 'bg-gray-600 text-white' : 'bg-gray-100 text-black'"
                     @click="step = step === 2 ? 0: 2" class="px-0.5 border border-black rounded-md"> a text box </button>
                 showing how the two are related to one another.
@@ -149,7 +149,7 @@
         <section class="columns-2" x-data="{step: 0}">
             <div class="text-lg">
                 <h2 class="font-bold" id="deduction-step-control">Deduction step (control)</h2>
-                Each card may contain one or more steps. Click on 
+                Each card may contain one or more steps. Clicking on 
                 a step will activate it. At any time there can be 0 or 1
                 <button :class="step === 1 ? 'bg-gray-600 text-white' : 'bg-gray-100 text-black'"
                 @click="step = step === 1 ? 0: 1" class="px-0.5 border border-black rounded-md">active step </button> and any number of
@@ -184,5 +184,5 @@
         </section>
     </main>
 </body>
-
 </html>
+
