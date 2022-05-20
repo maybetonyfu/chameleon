@@ -10,22 +10,24 @@ import Data.Maybe (fromJust, maybe)
 import Debug.Trace
 import GHC.Generics (Generic)
 
+data Requirement = Need String | Provid String deriving (Eq, Ord, Show)
+
 type VarName = String
 
 data Error = Occurred | Mismatch deriving (Eq, Show)
 
 data Term
-  = Var String [String]
-  | Atom String [String]
-  | Pair Term Term [String]
+  = Var String [Requirement]
+  | Atom String [Requirement]
+  | Pair Term Term [Requirement]
   | Unit
   deriving (Show, Eq, Ord)
 
-concatTag :: [String] -> Term -> Term
-concatTag tags (Var x tags') = Var x (tags' ++ tags) 
-concatTag tags (Atom x tags') = Atom x (tags' ++ tags) 
-concatTag tags (Pair x y tags') = Pair x y (tags' ++ tags) 
-concatTag _  Unit = Unit
+concatTag :: [Requirement] -> Term -> Term
+concatTag tags (Var x tags') = Var x (tags' ++ tags)
+concatTag tags (Atom x tags') = Atom x (tags' ++ tags)
+concatTag tags (Pair x y tags') = Pair x y (tags' ++ tags)
+concatTag _ Unit = Unit
 
 -- instance Eq Term where
 --   Var x _ == Var y _ = x == y
@@ -152,7 +154,7 @@ showSubs :: KanrenState -> IO ()
 showSubs (a, b) = mapM_ print $ Map.toList a
 
 (==<) :: Term -> Term -> Goal
-(==<)  = copy
+(==<) = copy
 
 copy :: Term -> Term -> Goal
 copy x y (sub, n) =
@@ -222,21 +224,20 @@ atom x = Atom x []
 
 pair x y = Pair x y []
 
-getTags :: Term -> [String]
+getTags :: Term -> [Requirement]
 getTags (Var _ tags) = tags
 getTags (Atom _ tags) = tags
 getTags (Pair _ _ tags) = tags
 getTags Unit = []
 
-setTags :: [String] -> Term -> Term
+setTags :: [Requirement] -> Term -> Term
 setTags tags (Var x _) = Var x tags
 setTags tags (Atom x _) = Atom x tags
 setTags tags (Pair x y _) = Pair x y tags
 setTags _ Unit = Unit
 
-appendTags :: [String] -> Term -> Term
-appendTags tags t = setTags (getTags t ++ tags) t  
-
+appendTags :: [Requirement] -> Term -> Term
+appendTags tags t = setTags (getTags t ++ tags) t
 
 callFresh :: (Term -> Goal) -> Goal
 callFresh f (sub, n) = f (var ("internal." ++ show n)) (sub, n + 1)
@@ -258,8 +259,7 @@ replaceTerm old new v@(Var _ _) = if v == old then new else v
 replaceTerm old new (Pair x y tags) = Pair (replaceTerm old new x) (replaceTerm old new y) tags
 replaceTerm old new x = x
 
-
--- name KanrenState 
+-- name KanrenState
 
 reifyS :: Term -> KanrenState -> KanrenState
 reifyS term (sub, n) =
@@ -276,11 +276,10 @@ reifyS term (sub, n) =
 
 reify :: Term -> KanrenState -> Term
 reify term sub =
-
   let v = walk' sub term
-      r = 
+      r =
         -- trace ("\n[Reify] " ++ show term ++ " ->" ++ show v ++ "\n") $
-         reifyS v emptyS
+        reifyS v emptyS
    in walk' r v
 
 runGoalN :: Int -> Goal -> [KanrenState]

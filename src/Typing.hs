@@ -1,6 +1,6 @@
 module Typing where
 
-import Constraint hiding (main, processFile)
+import Constraint
 import Control.Lens hiding (List)
 import Control.Monad
 import Control.Monad.Trans.State.Lazy
@@ -67,7 +67,7 @@ varByNameWithScope scpType namable = do
     Just scp' -> do
       let uniqueVarName = uniqueName (scopeId scp') (getName namable)
       let requirements = map (view _2) . filter ((== getName namable) . view _1) $ constraints scp'
-      return $ Just (KR.Var uniqueVarName requirements)
+      return $ Just (KR.Var uniqueVarName (map Need requirements))
 
 varsByNamesWithScope :: (Nameable a, Annotated a) => Maybe ScopeType -> [a SrcSpanInfo] -> SolveState [Maybe Term]
 varsByNamesWithScope scpType namables = mapM (varByNameWithScope scpType) namables
@@ -651,39 +651,6 @@ processFile filepath = do
       print names
       print res
       print krenstate
-      let deriveRequirement :: Subst -> Subst
-          deriveRequirement subs = 
-            let allKeys = Map.keys subs
-                walkUpdateTags :: Term -> Subst -> Subst
-                walkUpdateTags Atom {} subs = subs
-                walkUpdateTags Unit subs = subs
-                walkUpdateTags (Pair x y _) subs = 
-                      walkUpdateTags y (walkUpdateTags x subs)
-                walkUpdateTags (KR.Var x tags) subs = 
-                  case Map.lookup x subs of 
-                    Nothing -> subs
-                    Just t -> 
-                      walkUpdateTags t (Map.insert x (appendTags tags t) subs)
-                walkSyncTermTags :: Subst -> Subst
-                walkSyncTermTags subs = 
-                  let addTerm (KR.Var v tags) mapping = Map.insertWith (++) (var v) tags mapping
-                      addTerm (Atom a tags) mapping =  Map.insertWith (++) (atom a) tags mapping
-                      addTerm (Pair x y tags) mapping = 
-                        Map.insertWith (++) (pair (setTags [] x) (setTags [] y)) tags (addTerm y. addTerm x $ mapping)
-                      addTerm _ mapping = mapping
-                      lookUpAndSetTag (KR.Var v _) mapping = KR.Var v (fromMaybe [] (Map.lookup (var v) mapping))
-                      lookUpAndSetTag (Atom a _) mapping = KR.Atom a (fromMaybe [] (Map.lookup (atom a) mapping))
-                      lookUpAndSetTag (Pair x y _) mapping = 
-                          KR.Pair
-                            (lookUpAndSetTag x mapping) 
-                            (lookUpAndSetTag y mapping) 
-                            (fromMaybe [] (Map.lookup (pair (setTags [] x) (setTags [] y)) mapping))
-                      lookUpAndSetTag Unit mapping = Unit
-                      tagMap = foldr addTerm Map.empty (Map.elems subs ++ Map.elems subs)
-                      reinsertTags (key, term) sub = 
-                        Map.insert key (lookUpAndSetTag term tagMap) sub 
-                  in foldr reinsertTags subs (Map.toList subs)
-            in walkSyncTermTags $ foldr (walkUpdateTags . var) subs allKeys
       print "\n\n"
       print (deriveRequirement . fst . head $ krenstate)
     ParseFailed srcLoc message ->
