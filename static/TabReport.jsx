@@ -2,41 +2,52 @@ import React, {useState} from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import * as R from "ramda"
 import TypeSig from "./TypeSig"
+import {PlusIcon} from "@heroicons/react/outline"
 
 import { nextStep, prevStep, setStep } from "./debuggerSlice"
 
 const TabReport = () => {
+
+    return (
+        <div className='p-4 bg-gray-200'>
+            <Summary></Summary>
+
+            <Message></Message>
+            <ReleventTerms></ReleventTerms>
+        </div>
+    )
+}
+
+const TabList = () => {
     const dispatch = useDispatch()
     let context = useSelector(R.path(['debugger', 'context']))
     let traverseId = useSelector(R.path(['debugger', 'currentTraverseId']))
     const multipleExps = useSelector(R.path(['debugger', 'multipleExps']))
     const [scrollProgress, setScrollProgress] = useState(0)
-    return (
-        <div className='p-4'>
-            <div className='bg-gray-200 p1 rounded-2xl flex cursor-pointer' onWheel={e => {
-                    setScrollProgress(scrollProgress + R.clamp(-3, 3, e.deltaY))
-                    console.log(scrollProgress)
-                    if (scrollProgress > 100) {
-                        dispatch(nextStep())
-                        setScrollProgress(0)
-                    } else if (scrollProgress < -100) {
-                        dispatch(prevStep())
-                        setScrollProgress(0)
-                    }
+    return <div className='ml-3 mt-3 bg-blue-100 rounded-2xl'>
+        <Expandable>
+                    <div className='flex cursor-pointer px-4' onWheel={e => {
+                        setScrollProgress(scrollProgress + R.clamp(-3, 3, e.deltaY))
+                        console.log(scrollProgress)
+                        if (scrollProgress > 100) {
+                            dispatch(nextStep())
+                            setScrollProgress(0)
+                        } else if (scrollProgress < -100) {
+                            dispatch(prevStep())
+                            setScrollProgress(0)
+                        }
 
-                }}>
-                {
-                    multipleExps ? context.map((c, i) => <Tab
-                        key={i}
-                        steps={c.contextSteps}
-                        exp={c.contextExp}
-                        active={c.contextSteps.find(R.pipe(R.nth(0), R.equals(traverseId)))[2]}></Tab>) : null
-                }
-            </div>
-            <Message></Message>
-            <ReleventTerms></ReleventTerms>
-        </div>
-    )
+                    }}>
+                    {
+                        multipleExps ? context.map((c, i) => <Tab
+                            key={i}
+                            steps={c.contextSteps}
+                            exp={c.contextExp}
+                            active={c.contextSteps.find(R.pipe(R.nth(0), R.equals(traverseId)))[2]}></Tab>) : null
+                    }
+                </div>
+        </Expandable>
+    </div> 
 }
 const Tab = ({ active = false, steps, exp }) => {
     let dispatch = useDispatch()
@@ -86,17 +97,49 @@ const TabStep = ({ active = false, step, traverseId }) => {
     )
 }
 
+const Summary = () => {
+    let contextItem = useSelector(state => state.debugger.currentContextItem);
+    return contextItem === null ? null : (
+        <Expandable>
+                <div className='mb-5 bg-white p-3'>
+                    <div className='text-md'>
+                        <div>
+                            It's possible to infer two conflicting types for the expression
+                            <span className='code ml-2 px-1 rounded-md bg-gray-700 text-white inline-block not-italic'>
+                                {contextItem['contextExp']}
+                            </span>
+                        </div>
+                    </div>
+                    <TabList></TabList>
+        </div>
+        </Expandable>
+    )
+}
+
+const Expandable = ({children}) => {
+    let size=25
+    return <div className='relative'>
+        {children}
+        <div className='cursor-pointer bg-yellow-200 rounded-full z-10 absolute border' 
+            style={{width: size, height : size, top: `calc(50% - ${size/2}px)`, left: -size/2}} >
+                <PlusIcon></PlusIcon>
+        </div>
+    </div>
+}
+
+
+
 const Message = () => {
     let contextItem = useSelector(state => state.debugger.currentContextItem);
     return contextItem === null ? null : (
         <div className='mb-5'>
-            <div className='text-md my-2 w-full'>
+            {/* <div className='text-md my-2 w-full'>
                 <div>It's possible to infer two conflicting types for the expression
                     <span className='code ml-2 px-1 rounded-md bg-gray-700 text-white inline-block not-italic'>
                         {contextItem['contextExp']}
                     </span>:
                 </div>
-            </div>
+            </div> */}
 
             <div className='my-1 '>
                 <span className='inline-block mr-1'>Possible type 1: </span>

@@ -646,13 +646,17 @@ processFile filepath = do
           goals = sortOn goalNum $ evalState (matchTerm Unit hModule) (0, scopes, filedOrderings, [])
           krenstate = runGoalNWithState emptyS 1 (conjN (map unlabel goals))
           res = run1 names (conjN (map unlabel goals))
-      mapM_ print scopes
-      mapM_ print goals
+      -- mapM_ print scopes
+      -- mapM_ print goals
       print names
+      putStrLn "\nResult:"
       print res
+      putStrLn "\nKanren State:"
       print krenstate
-      print "\n\n"
-      print (deriveRequirement . fst . head $ krenstate)
+      putStrLn "\n\n"
+      let newSubs = deriveRequirement . fst . head $ krenstate
+      print newSubs
+
     ParseFailed srcLoc message ->
       putStrLn $
         unlines

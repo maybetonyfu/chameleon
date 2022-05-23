@@ -495,7 +495,7 @@
             }
             return element;
           };
-          function createElement4(type3, config, children) {
+          function createElement5(type3, config, children) {
             var propName;
             var props = {};
             var key = null;
@@ -932,7 +932,7 @@
             }
             return lazyType;
           }
-          function forwardRef4(render) {
+          function forwardRef5(render) {
             {
               if (render != null && render.$$typeof === REACT_MEMO_TYPE) {
                 error("forwardRef requires a render function but received a `memo` component. Instead of forwardRef(memo(...)), use memo(forwardRef(...)).");
@@ -1543,7 +1543,7 @@
                 error("React.createElement: type is invalid -- expected a string (for built-in components) or a class/function (for composite components) but got: %s.%s", typeString, info);
               }
             }
-            var element = createElement4.apply(this, arguments);
+            var element = createElement5.apply(this, arguments);
             if (element == null) {
               return element;
             }
@@ -1616,7 +1616,7 @@
           exports.createElement = createElement$1;
           exports.createFactory = createFactory;
           exports.createRef = createRef;
-          exports.forwardRef = forwardRef4;
+          exports.forwardRef = forwardRef5;
           exports.isValidElement = isValidElement;
           exports.lazy = lazy;
           exports.memo = memo;
@@ -2437,11 +2437,11 @@
       if (true) {
         (function() {
           "use strict";
-          var React14 = require_react();
+          var React15 = require_react();
           var _assign = require_object_assign();
           var Scheduler = require_scheduler();
           var tracing = require_tracing();
-          var ReactSharedInternals = React14.__SECRET_INTERNALS_DO_NOT_USE_OR_YOU_WILL_BE_FIRED;
+          var ReactSharedInternals = React15.__SECRET_INTERNALS_DO_NOT_USE_OR_YOU_WILL_BE_FIRED;
           function warn(format) {
             {
               for (var _len = arguments.length, args = new Array(_len > 1 ? _len - 1 : 0), _key = 1; _key < _len; _key++) {
@@ -2473,7 +2473,7 @@
               Function.prototype.apply.call(console[level], console, argsWithFormat);
             }
           }
-          if (!React14) {
+          if (!React15) {
             {
               throw Error("ReactDOM was loaded before React. Make sure you load the React package before loading ReactDOM.");
             }
@@ -2489,7 +2489,7 @@
           var Mode = 8;
           var ContextConsumer = 9;
           var ContextProvider = 10;
-          var ForwardRef4 = 11;
+          var ForwardRef5 = 11;
           var Profiler = 12;
           var SuspenseComponent = 13;
           var MemoComponent = 14;
@@ -3269,7 +3269,7 @@
               case IndeterminateComponent:
               case SimpleMemoComponent:
                 return describeFunctionComponentFrame(fiber.type);
-              case ForwardRef4:
+              case ForwardRef5:
                 return describeFunctionComponentFrame(fiber.type.render);
               case Block:
                 return describeFunctionComponentFrame(fiber.type._render);
@@ -3689,7 +3689,7 @@
           var didWarnInvalidChild = false;
           function flattenChildren(children) {
             var content = "";
-            React14.Children.forEach(children, function(child) {
+            React15.Children.forEach(children, function(child) {
               if (child == null) {
                 return;
               }
@@ -3700,7 +3700,7 @@
           function validateProps(element, props) {
             {
               if (typeof props.children === "object" && props.children !== null) {
-                React14.Children.forEach(props.children, function(child) {
+                React15.Children.forEach(props.children, function(child) {
                   if (child == null) {
                     return;
                   }
@@ -8454,7 +8454,7 @@
               }
             }
           }
-          function createElement4(type3, props, rootContainerElement, parentNamespace) {
+          function createElement5(type3, props, rootContainerElement, parentNamespace) {
             var isCustomComponentTag;
             var ownerDocument = getOwnerDocumentFromRootContainer(rootContainerElement);
             var domElement;
@@ -9331,7 +9331,7 @@
               }
               parentNamespace = hostContextDev.namespace;
             }
-            var domElement = createElement4(type3, props, rootContainerInstance, parentNamespace);
+            var domElement = createElement5(type3, props, rootContainerInstance, parentNamespace);
             precacheFiberNode(internalInstanceHandle, domElement);
             updateFiberProps(domElement, props);
             return domElement;
@@ -10893,7 +10893,7 @@
           }
           var fakeInternalInstance = {};
           var isArray = Array.isArray;
-          var emptyRefsObject = new React14.Component().refs;
+          var emptyRefsObject = new React15.Component().refs;
           var didWarnAboutStateAssignmentForComponent;
           var didWarnAboutUninitializedState;
           var didWarnAboutGetSnapshotBeforeUpdateWithoutDidUpdate;
@@ -12150,7 +12150,7 @@
                   }
                   case Block:
                   case FunctionComponent:
-                  case ForwardRef4:
+                  case ForwardRef5:
                   case SimpleMemoComponent: {
                     {
                       {
@@ -14742,7 +14742,7 @@
                 child = updateClassComponent(null, workInProgress2, Component, resolvedProps, renderLanes2);
                 return child;
               }
-              case ForwardRef4: {
+              case ForwardRef5: {
                 {
                   workInProgress2.type = Component = resolveForwardRefForHotReloading(Component);
                 }
@@ -15635,7 +15635,7 @@
                 return updateSuspenseComponent(current2, workInProgress2, renderLanes2);
               case HostPortal:
                 return updatePortalComponent(current2, workInProgress2, renderLanes2);
-              case ForwardRef4: {
+              case ForwardRef5: {
                 var type3 = workInProgress2.type;
                 var _unresolvedProps2 = workInProgress2.pendingProps;
                 var _resolvedProps2 = workInProgress2.elementType === type3 ? _unresolvedProps2 : resolveDefaultProps(type3, _unresolvedProps2);
@@ -15807,7 +15807,7 @@
               case LazyComponent:
               case SimpleMemoComponent:
               case FunctionComponent:
-              case ForwardRef4:
+              case ForwardRef5:
               case Fragment:
               case Mode:
               case Profiler:
@@ -16452,7 +16452,7 @@
           function commitBeforeMutationLifeCycles(current2, finishedWork) {
             switch (finishedWork.tag) {
               case FunctionComponent:
-              case ForwardRef4:
+              case ForwardRef5:
               case SimpleMemoComponent:
               case Block: {
                 return;
@@ -16573,7 +16573,7 @@
           function commitLifeCycles(finishedRoot, current2, finishedWork, committedLanes) {
             switch (finishedWork.tag) {
               case FunctionComponent:
-              case ForwardRef4:
+              case ForwardRef5:
               case SimpleMemoComponent:
               case Block: {
                 {
@@ -16774,7 +16774,7 @@
             onCommitUnmount(current2);
             switch (current2.tag) {
               case FunctionComponent:
-              case ForwardRef4:
+              case ForwardRef5:
               case MemoComponent:
               case SimpleMemoComponent:
               case Block: {
@@ -17082,7 +17082,7 @@
           function commitWork(current2, finishedWork) {
             switch (finishedWork.tag) {
               case FunctionComponent:
-              case ForwardRef4:
+              case ForwardRef5:
               case MemoComponent:
               case SimpleMemoComponent:
               case Block: {
@@ -18637,7 +18637,7 @@
                 return;
               }
               var tag = fiber.tag;
-              if (tag !== IndeterminateComponent && tag !== HostRoot && tag !== ClassComponent && tag !== FunctionComponent && tag !== ForwardRef4 && tag !== MemoComponent && tag !== SimpleMemoComponent && tag !== Block) {
+              if (tag !== IndeterminateComponent && tag !== HostRoot && tag !== ClassComponent && tag !== FunctionComponent && tag !== ForwardRef5 && tag !== MemoComponent && tag !== SimpleMemoComponent && tag !== Block) {
                 return;
               }
               var componentName = getComponentName(fiber.type) || "ReactComponent";
@@ -18666,7 +18666,7 @@
           function warnAboutUpdateOnUnmountedFiberInDEV(fiber) {
             {
               var tag = fiber.tag;
-              if (tag !== HostRoot && tag !== ClassComponent && tag !== FunctionComponent && tag !== ForwardRef4 && tag !== MemoComponent && tag !== SimpleMemoComponent && tag !== Block) {
+              if (tag !== HostRoot && tag !== ClassComponent && tag !== FunctionComponent && tag !== ForwardRef5 && tag !== MemoComponent && tag !== SimpleMemoComponent && tag !== Block) {
                 return;
               }
               if ((fiber.flags & PassiveUnmountPendingDev) !== NoFlags) {
@@ -18736,7 +18736,7 @@
               if (isRendering && (executionContext & RenderContext) !== NoContext && !getIsUpdatingOpaqueValueInRenderPhaseInDEV()) {
                 switch (fiber.tag) {
                   case FunctionComponent:
-                  case ForwardRef4:
+                  case ForwardRef5:
                   case SimpleMemoComponent: {
                     var renderingComponentName = workInProgress && getComponentName(workInProgress.type) || "Unknown";
                     var dedupeKey = renderingComponentName;
@@ -18991,7 +18991,7 @@ For more info, visit https://reactjs.org/link/mock-scheduler`);
                   }
                   break;
                 }
-                case ForwardRef4: {
+                case ForwardRef5: {
                   if ($$typeofNextType === REACT_FORWARD_REF_TYPE) {
                     needsCompareFamilies = true;
                   } else if ($$typeofNextType === REACT_LAZY_TYPE) {
@@ -19067,7 +19067,7 @@ For more info, visit https://reactjs.org/link/mock-scheduler`);
                 case ClassComponent:
                   candidateType = type3;
                   break;
-                case ForwardRef4:
+                case ForwardRef5:
                   candidateType = type3.render;
                   break;
               }
@@ -19129,7 +19129,7 @@ For more info, visit https://reactjs.org/link/mock-scheduler`);
                 case ClassComponent:
                   candidateType = type3;
                   break;
-                case ForwardRef4:
+                case ForwardRef5:
                   candidateType = type3.render;
                   break;
               }
@@ -19278,7 +19278,7 @@ For more info, visit https://reactjs.org/link/mock-scheduler`);
             } else if (Component !== void 0 && Component !== null) {
               var $$typeof = Component.$$typeof;
               if ($$typeof === REACT_FORWARD_REF_TYPE) {
-                return ForwardRef4;
+                return ForwardRef5;
               }
               if ($$typeof === REACT_MEMO_TYPE) {
                 return MemoComponent;
@@ -19342,7 +19342,7 @@ For more info, visit https://reactjs.org/link/mock-scheduler`);
                 case ClassComponent:
                   workInProgress2.type = resolveClassForHotReloading(current2.type);
                   break;
-                case ForwardRef4:
+                case ForwardRef5:
                   workInProgress2.type = resolveForwardRefForHotReloading(current2.type);
                   break;
               }
@@ -19452,7 +19452,7 @@ For more info, visit https://reactjs.org/link/mock-scheduler`);
                           fiberTag = ContextConsumer;
                           break getTag;
                         case REACT_FORWARD_REF_TYPE:
-                          fiberTag = ForwardRef4;
+                          fiberTag = ForwardRef5;
                           {
                             resolvedType = resolveForwardRefForHotReloading(resolvedType);
                           }
@@ -20483,7 +20483,7 @@ For more info, visit https://reactjs.org/link/mock-scheduler`);
           var ContextConsumer = REACT_CONTEXT_TYPE;
           var ContextProvider = REACT_PROVIDER_TYPE;
           var Element = REACT_ELEMENT_TYPE;
-          var ForwardRef4 = REACT_FORWARD_REF_TYPE;
+          var ForwardRef5 = REACT_FORWARD_REF_TYPE;
           var Fragment = REACT_FRAGMENT_TYPE;
           var Lazy = REACT_LAZY_TYPE;
           var Memo = REACT_MEMO_TYPE;
@@ -20542,7 +20542,7 @@ For more info, visit https://reactjs.org/link/mock-scheduler`);
           exports.ContextConsumer = ContextConsumer;
           exports.ContextProvider = ContextProvider;
           exports.Element = Element;
-          exports.ForwardRef = ForwardRef4;
+          exports.ForwardRef = ForwardRef5;
           exports.Fragment = Fragment;
           exports.Lazy = Lazy;
           exports.Memo = Memo;
@@ -21195,7 +21195,7 @@ For more info, visit https://reactjs.org/link/mock-scheduler`);
       if (true) {
         (function() {
           "use strict";
-          var React14 = require_react();
+          var React15 = require_react();
           var _assign = require_object_assign();
           var REACT_ELEMENT_TYPE = 60103;
           var REACT_PORTAL_TYPE = 60106;
@@ -21252,7 +21252,7 @@ For more info, visit https://reactjs.org/link/mock-scheduler`);
             }
             return null;
           }
-          var ReactSharedInternals = React14.__SECRET_INTERNALS_DO_NOT_USE_OR_YOU_WILL_BE_FIRED;
+          var ReactSharedInternals = React15.__SECRET_INTERNALS_DO_NOT_USE_OR_YOU_WILL_BE_FIRED;
           function error(format) {
             {
               for (var _len2 = arguments.length, args = new Array(_len2 > 1 ? _len2 - 1 : 0), _key2 = 1; _key2 < _len2; _key2++) {
@@ -22143,7 +22143,7 @@ For more info, visit https://reactjs.org/link/mock-scheduler`);
           var ContextConsumer = REACT_CONTEXT_TYPE;
           var ContextProvider = REACT_PROVIDER_TYPE;
           var Element = REACT_ELEMENT_TYPE;
-          var ForwardRef4 = REACT_FORWARD_REF_TYPE;
+          var ForwardRef5 = REACT_FORWARD_REF_TYPE;
           var Fragment = REACT_FRAGMENT_TYPE;
           var Lazy = REACT_LAZY_TYPE;
           var Memo = REACT_MEMO_TYPE;
@@ -22207,7 +22207,7 @@ For more info, visit https://reactjs.org/link/mock-scheduler`);
           exports.ContextConsumer = ContextConsumer;
           exports.ContextProvider = ContextProvider;
           exports.Element = Element;
-          exports.ForwardRef = ForwardRef4;
+          exports.ForwardRef = ForwardRef5;
           exports.Fragment = Fragment;
           exports.Lazy = Lazy;
           exports.Memo = Memo;
@@ -26480,17 +26480,42 @@ printXML (Text text) = text
   };
   var TypeSig_default = StringTypeSig2;
 
+  // node_modules/@heroicons/react/outline/esm/PlusIcon.js
+  var React9 = __toESM(require_react(), 1);
+  function PlusIcon(props, svgRef) {
+    return /* @__PURE__ */ React9.createElement("svg", Object.assign({
+      xmlns: "http://www.w3.org/2000/svg",
+      fill: "none",
+      viewBox: "0 0 24 24",
+      strokeWidth: 2,
+      stroke: "currentColor",
+      "aria-hidden": "true",
+      ref: svgRef
+    }, props), /* @__PURE__ */ React9.createElement("path", {
+      strokeLinecap: "round",
+      strokeLinejoin: "round",
+      d: "M12 4v16m8-8H4"
+    }));
+  }
+  var ForwardRef4 = React9.forwardRef(PlusIcon);
+  var PlusIcon_default = ForwardRef4;
+
   // TabReport.jsx
   var TabReport = () => {
+    return /* @__PURE__ */ import_react11.default.createElement("div", {
+      className: "p-4 bg-gray-200"
+    }, /* @__PURE__ */ import_react11.default.createElement(Summary, null), /* @__PURE__ */ import_react11.default.createElement(Message, null), /* @__PURE__ */ import_react11.default.createElement(ReleventTerms, null));
+  };
+  var TabList = () => {
     const dispatch = useDispatch();
     let context = useSelector(path_default(["debugger", "context"]));
     let traverseId = useSelector(path_default(["debugger", "currentTraverseId"]));
     const multipleExps = useSelector(path_default(["debugger", "multipleExps"]));
     const [scrollProgress, setScrollProgress] = (0, import_react11.useState)(0);
     return /* @__PURE__ */ import_react11.default.createElement("div", {
-      className: "p-4"
-    }, /* @__PURE__ */ import_react11.default.createElement("div", {
-      className: "bg-gray-200 p1 rounded-2xl flex cursor-pointer",
+      className: "ml-3 mt-3 bg-blue-100 rounded-2xl"
+    }, /* @__PURE__ */ import_react11.default.createElement(Expandable, null, /* @__PURE__ */ import_react11.default.createElement("div", {
+      className: "flex cursor-pointer px-4",
       onWheel: (e3) => {
         setScrollProgress(scrollProgress + clamp_default(-3, 3, e3.deltaY));
         console.log(scrollProgress);
@@ -26507,7 +26532,7 @@ printXML (Text text) = text
       steps: c3.contextSteps,
       exp: c3.contextExp,
       active: c3.contextSteps.find(pipe(nth_default(0), equals_default(traverseId)))[2]
-    })) : null), /* @__PURE__ */ import_react11.default.createElement(Message, null), /* @__PURE__ */ import_react11.default.createElement(ReleventTerms, null));
+    })) : null)));
   };
   var Tab = ({ active = false, steps, exp }) => {
     let dispatch = useDispatch();
@@ -26547,15 +26572,30 @@ printXML (Text text) = text
       className: "w-5 h-5 leading-5 flex justify-center cursor-pointer rounded-full text-md mx-0.5 " + face
     }, step + 1);
   };
+  var Summary = () => {
+    let contextItem = useSelector((state) => state.debugger.currentContextItem);
+    return contextItem === null ? null : /* @__PURE__ */ import_react11.default.createElement(Expandable, null, /* @__PURE__ */ import_react11.default.createElement("div", {
+      className: "mb-5 bg-white p-3"
+    }, /* @__PURE__ */ import_react11.default.createElement("div", {
+      className: "text-md"
+    }, /* @__PURE__ */ import_react11.default.createElement("div", null, "It's possible to infer two conflicting types for the expression", /* @__PURE__ */ import_react11.default.createElement("span", {
+      className: "code ml-2 px-1 rounded-md bg-gray-700 text-white inline-block not-italic"
+    }, contextItem["contextExp"]))), /* @__PURE__ */ import_react11.default.createElement(TabList, null)));
+  };
+  var Expandable = ({ children }) => {
+    let size = 25;
+    return /* @__PURE__ */ import_react11.default.createElement("div", {
+      className: "relative"
+    }, children, /* @__PURE__ */ import_react11.default.createElement("div", {
+      className: "cursor-pointer bg-yellow-200 rounded-full z-10 absolute border",
+      style: { width: size, height: size, top: `calc(50% - ${size / 2}px)`, left: -size / 2 }
+    }, /* @__PURE__ */ import_react11.default.createElement(PlusIcon_default, null)));
+  };
   var Message = () => {
     let contextItem = useSelector((state) => state.debugger.currentContextItem);
     return contextItem === null ? null : /* @__PURE__ */ import_react11.default.createElement("div", {
       className: "mb-5"
     }, /* @__PURE__ */ import_react11.default.createElement("div", {
-      className: "text-md my-2 w-full"
-    }, /* @__PURE__ */ import_react11.default.createElement("div", null, "It's possible to infer two conflicting types for the expression", /* @__PURE__ */ import_react11.default.createElement("span", {
-      className: "code ml-2 px-1 rounded-md bg-gray-700 text-white inline-block not-italic"
-    }, contextItem["contextExp"]), ":")), /* @__PURE__ */ import_react11.default.createElement("div", {
       className: "my-1 "
     }, /* @__PURE__ */ import_react11.default.createElement("span", {
       className: "inline-block mr-1"
