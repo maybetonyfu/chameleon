@@ -7,11 +7,6 @@ import * as R from "ramda"
 
 const MenuBar = () => {
     const dispatch = useDispatch()
-    const deductionStpe = useSelector(R.path(['debugger', 'debuggingSteps']))
-    const multipleExps = useSelector(R.path(['debugger', 'multipleExps']))
-
-    const steps = useSelector(R.path(['debugger', 'steps']))
-    const middleStep = Math.floor(steps.length / 2)
 
     useEffect(() => {
         dispatch(setTask(1));
@@ -71,31 +66,15 @@ const MenuBar = () => {
             </button>
             <a href="/tutorial" target={"_blank"}
                 className='bg-gray-300 px-4 py-1 rounded-md mx-2 flex h-8 justify-center items-center'
->
+            >
                 <BookOpenIcon className="h-4 w-4 mr-1"></BookOpenIcon>
                 Tutorial
-</a>
+            </a>
 
         </div>
 
         <div className="flex items-center px-2">
-            <div className="mr-1">Debugging Step:</div>
-            <div className="ml-1 mr-2">
-                <Toggle active={deductionStpe} onClick={_ => { 
-                    if (!multipleExps && !deductionStpe) dispatch(toggleMultileExpThunk())
-                    dispatch(toggleDebuggerStpes()) 
-                }}></Toggle>
-            </div>
-
-            <div className="mr-1">Multiple Expressions:</div>
-            <div className="ml-1 mr-2">
-                <Toggle active={multipleExps} onClick={_ => {
-                    if (multipleExps && deductionStpe) dispatch(toggleDebuggerStpes())
-                    dispatch(toggleMultileExpThunk())
-                }}></Toggle>
-            </div>
         </div>
-
     </div>
 }
 

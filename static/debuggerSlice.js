@@ -55,6 +55,7 @@ const initialState = {
   longestLine: 0,
   currentTraverseId: null,
   currentContextItem: null,
+  highlightFilter: [],
   steps: [],
   context: [],
   numOfSteps: 0,
@@ -68,8 +69,8 @@ const initialState = {
   mode: editorModes.normal,
   widgets: [],
   highlights: [],
-  debuggingSteps: true,
-  multipleExps: true,
+  debuggingSteps: false,
+  multipleExps: false,
 };
 
 const { actions, reducer } = createSlice({
@@ -83,12 +84,19 @@ const { actions, reducer } = createSlice({
     setText(state, action) {
       state.text = action.payload;
     },
+    showOnlyMark1 (state) {
+      state.highlightFilter = ['marker1']
+    },
+    showOnlyMark2 (state) {
+      state.highlightFilter = ['marker2']
+    },
+    showBoth (state) {
+      state.highlightFilter = []
+    },
     setTask(state, action) {
       if (action.payload < 0 || action.payload > tasks.length) return state;
       state.currentTaskNum = action.payload;
       state.text = tasks[action.payload];
-      console.log(tasks[action.payload]);
-      // state.longestLine = .split('\n').map(line => line.split('').length).sort().reverse()[0]
       state.longestLine = R.pipe(
         R.split('\n'),
         R.map(R.split('')),
@@ -158,7 +166,7 @@ const { actions, reducer } = createSlice({
       state.currentContextItem = currentContextItem;
       state.currentTraverseId = currentTraverseId;
     },
-    nextStep(state, action) {
+    nextStep(state) {
       if (state.currentStepNum === null) return state;
       if (state.currentStepNum >= state.numOfSteps - 1) return state;
 
@@ -191,7 +199,7 @@ const { actions, reducer } = createSlice({
       if (action.payload.tag === 'ChTypeError') {
         let steps = action.payload.steps;
         let context = action.payload.contextTable;
-        let currentStepNum = 0;
+        let currentStepNum = Math.floor(steps.length/2);
         let { highlights, widgets } = convertStep(
           steps[currentStepNum],
           currentStepNum,
@@ -267,6 +275,9 @@ export const {
   resetHighlights,
   toggleDebuggerStpes,
   toggleMultipleExps,
+  showOnlyMark1,
+  showOnlyMark2,
+  showBoth
 } = actions;
 export default reducer;
 

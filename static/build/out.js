@@ -495,7 +495,7 @@
             }
             return element;
           };
-          function createElement5(type3, config, children) {
+          function createElement6(type3, config, children) {
             var propName;
             var props = {};
             var key = null;
@@ -932,7 +932,7 @@
             }
             return lazyType;
           }
-          function forwardRef5(render) {
+          function forwardRef6(render) {
             {
               if (render != null && render.$$typeof === REACT_MEMO_TYPE) {
                 error("forwardRef requires a render function but received a `memo` component. Instead of forwardRef(memo(...)), use memo(forwardRef(...)).");
@@ -1543,7 +1543,7 @@
                 error("React.createElement: type is invalid -- expected a string (for built-in components) or a class/function (for composite components) but got: %s.%s", typeString, info);
               }
             }
-            var element = createElement5.apply(this, arguments);
+            var element = createElement6.apply(this, arguments);
             if (element == null) {
               return element;
             }
@@ -1616,7 +1616,7 @@
           exports.createElement = createElement$1;
           exports.createFactory = createFactory;
           exports.createRef = createRef;
-          exports.forwardRef = forwardRef5;
+          exports.forwardRef = forwardRef6;
           exports.isValidElement = isValidElement;
           exports.lazy = lazy;
           exports.memo = memo;
@@ -2437,11 +2437,11 @@
       if (true) {
         (function() {
           "use strict";
-          var React15 = require_react();
+          var React16 = require_react();
           var _assign = require_object_assign();
           var Scheduler = require_scheduler();
           var tracing = require_tracing();
-          var ReactSharedInternals = React15.__SECRET_INTERNALS_DO_NOT_USE_OR_YOU_WILL_BE_FIRED;
+          var ReactSharedInternals = React16.__SECRET_INTERNALS_DO_NOT_USE_OR_YOU_WILL_BE_FIRED;
           function warn(format) {
             {
               for (var _len = arguments.length, args = new Array(_len > 1 ? _len - 1 : 0), _key = 1; _key < _len; _key++) {
@@ -2473,7 +2473,7 @@
               Function.prototype.apply.call(console[level], console, argsWithFormat);
             }
           }
-          if (!React15) {
+          if (!React16) {
             {
               throw Error("ReactDOM was loaded before React. Make sure you load the React package before loading ReactDOM.");
             }
@@ -2489,7 +2489,7 @@
           var Mode = 8;
           var ContextConsumer = 9;
           var ContextProvider = 10;
-          var ForwardRef5 = 11;
+          var ForwardRef6 = 11;
           var Profiler = 12;
           var SuspenseComponent = 13;
           var MemoComponent = 14;
@@ -3269,7 +3269,7 @@
               case IndeterminateComponent:
               case SimpleMemoComponent:
                 return describeFunctionComponentFrame(fiber.type);
-              case ForwardRef5:
+              case ForwardRef6:
                 return describeFunctionComponentFrame(fiber.type.render);
               case Block:
                 return describeFunctionComponentFrame(fiber.type._render);
@@ -3689,7 +3689,7 @@
           var didWarnInvalidChild = false;
           function flattenChildren(children) {
             var content = "";
-            React15.Children.forEach(children, function(child) {
+            React16.Children.forEach(children, function(child) {
               if (child == null) {
                 return;
               }
@@ -3700,7 +3700,7 @@
           function validateProps(element, props) {
             {
               if (typeof props.children === "object" && props.children !== null) {
-                React15.Children.forEach(props.children, function(child) {
+                React16.Children.forEach(props.children, function(child) {
                   if (child == null) {
                     return;
                   }
@@ -8454,7 +8454,7 @@
               }
             }
           }
-          function createElement5(type3, props, rootContainerElement, parentNamespace) {
+          function createElement6(type3, props, rootContainerElement, parentNamespace) {
             var isCustomComponentTag;
             var ownerDocument = getOwnerDocumentFromRootContainer(rootContainerElement);
             var domElement;
@@ -9331,7 +9331,7 @@
               }
               parentNamespace = hostContextDev.namespace;
             }
-            var domElement = createElement5(type3, props, rootContainerInstance, parentNamespace);
+            var domElement = createElement6(type3, props, rootContainerInstance, parentNamespace);
             precacheFiberNode(internalInstanceHandle, domElement);
             updateFiberProps(domElement, props);
             return domElement;
@@ -10893,7 +10893,7 @@
           }
           var fakeInternalInstance = {};
           var isArray = Array.isArray;
-          var emptyRefsObject = new React15.Component().refs;
+          var emptyRefsObject = new React16.Component().refs;
           var didWarnAboutStateAssignmentForComponent;
           var didWarnAboutUninitializedState;
           var didWarnAboutGetSnapshotBeforeUpdateWithoutDidUpdate;
@@ -12150,7 +12150,7 @@
                   }
                   case Block:
                   case FunctionComponent:
-                  case ForwardRef5:
+                  case ForwardRef6:
                   case SimpleMemoComponent: {
                     {
                       {
@@ -14742,7 +14742,7 @@
                 child = updateClassComponent(null, workInProgress2, Component, resolvedProps, renderLanes2);
                 return child;
               }
-              case ForwardRef5: {
+              case ForwardRef6: {
                 {
                   workInProgress2.type = Component = resolveForwardRefForHotReloading(Component);
                 }
@@ -15635,7 +15635,7 @@
                 return updateSuspenseComponent(current2, workInProgress2, renderLanes2);
               case HostPortal:
                 return updatePortalComponent(current2, workInProgress2, renderLanes2);
-              case ForwardRef5: {
+              case ForwardRef6: {
                 var type3 = workInProgress2.type;
                 var _unresolvedProps2 = workInProgress2.pendingProps;
                 var _resolvedProps2 = workInProgress2.elementType === type3 ? _unresolvedProps2 : resolveDefaultProps(type3, _unresolvedProps2);
@@ -15807,7 +15807,7 @@
               case LazyComponent:
               case SimpleMemoComponent:
               case FunctionComponent:
-              case ForwardRef5:
+              case ForwardRef6:
               case Fragment:
               case Mode:
               case Profiler:
@@ -16452,7 +16452,7 @@
           function commitBeforeMutationLifeCycles(current2, finishedWork) {
             switch (finishedWork.tag) {
               case FunctionComponent:
-              case ForwardRef5:
+              case ForwardRef6:
               case SimpleMemoComponent:
               case Block: {
                 return;
@@ -16573,7 +16573,7 @@
           function commitLifeCycles(finishedRoot, current2, finishedWork, committedLanes) {
             switch (finishedWork.tag) {
               case FunctionComponent:
-              case ForwardRef5:
+              case ForwardRef6:
               case SimpleMemoComponent:
               case Block: {
                 {
@@ -16774,7 +16774,7 @@
             onCommitUnmount(current2);
             switch (current2.tag) {
               case FunctionComponent:
-              case ForwardRef5:
+              case ForwardRef6:
               case MemoComponent:
               case SimpleMemoComponent:
               case Block: {
@@ -17082,7 +17082,7 @@
           function commitWork(current2, finishedWork) {
             switch (finishedWork.tag) {
               case FunctionComponent:
-              case ForwardRef5:
+              case ForwardRef6:
               case MemoComponent:
               case SimpleMemoComponent:
               case Block: {
@@ -18637,7 +18637,7 @@
                 return;
               }
               var tag = fiber.tag;
-              if (tag !== IndeterminateComponent && tag !== HostRoot && tag !== ClassComponent && tag !== FunctionComponent && tag !== ForwardRef5 && tag !== MemoComponent && tag !== SimpleMemoComponent && tag !== Block) {
+              if (tag !== IndeterminateComponent && tag !== HostRoot && tag !== ClassComponent && tag !== FunctionComponent && tag !== ForwardRef6 && tag !== MemoComponent && tag !== SimpleMemoComponent && tag !== Block) {
                 return;
               }
               var componentName = getComponentName(fiber.type) || "ReactComponent";
@@ -18666,7 +18666,7 @@
           function warnAboutUpdateOnUnmountedFiberInDEV(fiber) {
             {
               var tag = fiber.tag;
-              if (tag !== HostRoot && tag !== ClassComponent && tag !== FunctionComponent && tag !== ForwardRef5 && tag !== MemoComponent && tag !== SimpleMemoComponent && tag !== Block) {
+              if (tag !== HostRoot && tag !== ClassComponent && tag !== FunctionComponent && tag !== ForwardRef6 && tag !== MemoComponent && tag !== SimpleMemoComponent && tag !== Block) {
                 return;
               }
               if ((fiber.flags & PassiveUnmountPendingDev) !== NoFlags) {
@@ -18736,7 +18736,7 @@
               if (isRendering && (executionContext & RenderContext) !== NoContext && !getIsUpdatingOpaqueValueInRenderPhaseInDEV()) {
                 switch (fiber.tag) {
                   case FunctionComponent:
-                  case ForwardRef5:
+                  case ForwardRef6:
                   case SimpleMemoComponent: {
                     var renderingComponentName = workInProgress && getComponentName(workInProgress.type) || "Unknown";
                     var dedupeKey = renderingComponentName;
@@ -18991,7 +18991,7 @@ For more info, visit https://reactjs.org/link/mock-scheduler`);
                   }
                   break;
                 }
-                case ForwardRef5: {
+                case ForwardRef6: {
                   if ($$typeofNextType === REACT_FORWARD_REF_TYPE) {
                     needsCompareFamilies = true;
                   } else if ($$typeofNextType === REACT_LAZY_TYPE) {
@@ -19067,7 +19067,7 @@ For more info, visit https://reactjs.org/link/mock-scheduler`);
                 case ClassComponent:
                   candidateType = type3;
                   break;
-                case ForwardRef5:
+                case ForwardRef6:
                   candidateType = type3.render;
                   break;
               }
@@ -19129,7 +19129,7 @@ For more info, visit https://reactjs.org/link/mock-scheduler`);
                 case ClassComponent:
                   candidateType = type3;
                   break;
-                case ForwardRef5:
+                case ForwardRef6:
                   candidateType = type3.render;
                   break;
               }
@@ -19278,7 +19278,7 @@ For more info, visit https://reactjs.org/link/mock-scheduler`);
             } else if (Component !== void 0 && Component !== null) {
               var $$typeof = Component.$$typeof;
               if ($$typeof === REACT_FORWARD_REF_TYPE) {
-                return ForwardRef5;
+                return ForwardRef6;
               }
               if ($$typeof === REACT_MEMO_TYPE) {
                 return MemoComponent;
@@ -19342,7 +19342,7 @@ For more info, visit https://reactjs.org/link/mock-scheduler`);
                 case ClassComponent:
                   workInProgress2.type = resolveClassForHotReloading(current2.type);
                   break;
-                case ForwardRef5:
+                case ForwardRef6:
                   workInProgress2.type = resolveForwardRefForHotReloading(current2.type);
                   break;
               }
@@ -19452,7 +19452,7 @@ For more info, visit https://reactjs.org/link/mock-scheduler`);
                           fiberTag = ContextConsumer;
                           break getTag;
                         case REACT_FORWARD_REF_TYPE:
-                          fiberTag = ForwardRef5;
+                          fiberTag = ForwardRef6;
                           {
                             resolvedType = resolveForwardRefForHotReloading(resolvedType);
                           }
@@ -20483,7 +20483,7 @@ For more info, visit https://reactjs.org/link/mock-scheduler`);
           var ContextConsumer = REACT_CONTEXT_TYPE;
           var ContextProvider = REACT_PROVIDER_TYPE;
           var Element = REACT_ELEMENT_TYPE;
-          var ForwardRef5 = REACT_FORWARD_REF_TYPE;
+          var ForwardRef6 = REACT_FORWARD_REF_TYPE;
           var Fragment = REACT_FRAGMENT_TYPE;
           var Lazy = REACT_LAZY_TYPE;
           var Memo = REACT_MEMO_TYPE;
@@ -20542,7 +20542,7 @@ For more info, visit https://reactjs.org/link/mock-scheduler`);
           exports.ContextConsumer = ContextConsumer;
           exports.ContextProvider = ContextProvider;
           exports.Element = Element;
-          exports.ForwardRef = ForwardRef5;
+          exports.ForwardRef = ForwardRef6;
           exports.Fragment = Fragment;
           exports.Lazy = Lazy;
           exports.Memo = Memo;
@@ -21195,7 +21195,7 @@ For more info, visit https://reactjs.org/link/mock-scheduler`);
       if (true) {
         (function() {
           "use strict";
-          var React15 = require_react();
+          var React16 = require_react();
           var _assign = require_object_assign();
           var REACT_ELEMENT_TYPE = 60103;
           var REACT_PORTAL_TYPE = 60106;
@@ -21252,7 +21252,7 @@ For more info, visit https://reactjs.org/link/mock-scheduler`);
             }
             return null;
           }
-          var ReactSharedInternals = React15.__SECRET_INTERNALS_DO_NOT_USE_OR_YOU_WILL_BE_FIRED;
+          var ReactSharedInternals = React16.__SECRET_INTERNALS_DO_NOT_USE_OR_YOU_WILL_BE_FIRED;
           function error(format) {
             {
               for (var _len2 = arguments.length, args = new Array(_len2 > 1 ? _len2 - 1 : 0), _key2 = 1; _key2 < _len2; _key2++) {
@@ -22143,7 +22143,7 @@ For more info, visit https://reactjs.org/link/mock-scheduler`);
           var ContextConsumer = REACT_CONTEXT_TYPE;
           var ContextProvider = REACT_PROVIDER_TYPE;
           var Element = REACT_ELEMENT_TYPE;
-          var ForwardRef5 = REACT_FORWARD_REF_TYPE;
+          var ForwardRef6 = REACT_FORWARD_REF_TYPE;
           var Fragment = REACT_FRAGMENT_TYPE;
           var Lazy = REACT_LAZY_TYPE;
           var Memo = REACT_MEMO_TYPE;
@@ -22207,7 +22207,7 @@ For more info, visit https://reactjs.org/link/mock-scheduler`);
           exports.ContextConsumer = ContextConsumer;
           exports.ContextProvider = ContextProvider;
           exports.Element = Element;
-          exports.ForwardRef = ForwardRef5;
+          exports.ForwardRef = ForwardRef6;
           exports.Fragment = Fragment;
           exports.Lazy = Lazy;
           exports.Memo = Memo;
@@ -25005,6 +25005,47 @@ printXML (Text text) = text
   var reduce = /* @__PURE__ */ _curry3(_reduce);
   var reduce_default = reduce;
 
+  // node_modules/ramda/es/internal/_xany.js
+  var XAny = /* @__PURE__ */ function() {
+    function XAny2(f3, xf) {
+      this.xf = xf;
+      this.f = f3;
+      this.any = false;
+    }
+    XAny2.prototype["@@transducer/init"] = xfBase_default.init;
+    XAny2.prototype["@@transducer/result"] = function(result) {
+      if (!this.any) {
+        result = this.xf["@@transducer/step"](result, false);
+      }
+      return this.xf["@@transducer/result"](result);
+    };
+    XAny2.prototype["@@transducer/step"] = function(result, input) {
+      if (this.f(input)) {
+        this.any = true;
+        result = _reduced(this.xf["@@transducer/step"](result, true));
+      }
+      return result;
+    };
+    return XAny2;
+  }();
+  var _xany = /* @__PURE__ */ _curry2(function _xany2(f3, xf) {
+    return new XAny(f3, xf);
+  });
+  var xany_default = _xany;
+
+  // node_modules/ramda/es/any.js
+  var any = /* @__PURE__ */ _curry2(/* @__PURE__ */ _dispatchable(["any"], xany_default, function any2(fn2, list) {
+    var idx = 0;
+    while (idx < list.length) {
+      if (fn2(list[idx])) {
+        return true;
+      }
+      idx += 1;
+    }
+    return false;
+  }));
+  var any_default = any;
+
   // node_modules/ramda/es/internal/_assoc.js
   function _assoc(prop3, val, obj) {
     if (isInteger_default(prop3) && isArray_default(obj)) {
@@ -25506,6 +25547,10 @@ printXML (Text text) = text
   }));
   var find_default = find;
 
+  // node_modules/ramda/es/includes.js
+  var includes = /* @__PURE__ */ _curry2(_includes);
+  var includes_default = includes;
+
   // node_modules/ramda/es/invoker.js
   var invoker = /* @__PURE__ */ _curry2(function invoker2(arity, method) {
     return curryN_default(arity + 1, function() {
@@ -25857,6 +25902,7 @@ printXML (Text text) = text
     longestLine: 0,
     currentTraverseId: null,
     currentContextItem: null,
+    highlightFilter: [],
     steps: [],
     context: [],
     numOfSteps: 0,
@@ -25870,8 +25916,8 @@ printXML (Text text) = text
     mode: editorModes.normal,
     widgets: [],
     highlights: [],
-    debuggingSteps: true,
-    multipleExps: true
+    debuggingSteps: false,
+    multipleExps: false
   };
   var { actions, reducer } = createSlice({
     name: "editor",
@@ -25884,12 +25930,20 @@ printXML (Text text) = text
       setText(state, action) {
         state.text = action.payload;
       },
+      showOnlyMark1(state) {
+        state.highlightFilter = ["marker1"];
+      },
+      showOnlyMark2(state) {
+        state.highlightFilter = ["marker2"];
+      },
+      showBoth(state) {
+        state.highlightFilter = [];
+      },
       setTask(state, action) {
         if (action.payload < 0 || action.payload > code_default.length)
           return state;
         state.currentTaskNum = action.payload;
         state.text = code_default[action.payload];
-        console.log(code_default[action.payload]);
         state.longestLine = pipe(split_default("\n"), map_default(split_default("")), map_default(length_default), sort_default(subtract_default), reverse_default, head_default)(code_default[action.payload]);
       },
       setStep(state, action) {
@@ -25934,7 +25988,7 @@ printXML (Text text) = text
         state.currentContextItem = currentContextItem;
         state.currentTraverseId = currentTraverseId;
       },
-      nextStep(state, action) {
+      nextStep(state) {
         if (state.currentStepNum === null)
           return state;
         if (state.currentStepNum >= state.numOfSteps - 1)
@@ -25959,7 +26013,7 @@ printXML (Text text) = text
         if (action.payload.tag === "ChTypeError") {
           let steps = action.payload.steps;
           let context = action.payload.contextTable;
-          let currentStepNum = 0;
+          let currentStepNum = Math.floor(steps.length / 2);
           let { highlights, widgets } = convertStep(steps[currentStepNum], currentStepNum, state.longestLine);
           let currentTraverseId = steps[currentStepNum].stepId;
           state.context = context;
@@ -26016,7 +26070,10 @@ printXML (Text text) = text
     toNormalMode,
     resetHighlights,
     toggleDebuggerStpes,
-    toggleMultipleExps
+    toggleMultipleExps,
+    showOnlyMark1,
+    showOnlyMark2,
+    showBoth
   } = actions;
   var debuggerSlice_default = reducer;
   function convertLocation({
@@ -26288,7 +26345,7 @@ printXML (Text text) = text
   var Editor = () => {
     const mode = useSelector(path_default(["debugger", "mode"]));
     return /* @__PURE__ */ import_react9.default.createElement("div", {
-      className: "code tracking-wider flex-grow p-2"
+      className: "code tracking-wider flex-grow p-2 h-full"
     }, (() => {
       if (mode === editorModes.edit) {
         return /* @__PURE__ */ import_react9.default.createElement(EditorEditMode, null);
@@ -26351,6 +26408,9 @@ printXML (Text text) = text
     }, text));
   };
   var Widget = ({ styles, classes, content }) => {
+    const highlightFilter = useSelector(path_default(["debugger", "highlightFilter"]));
+    if (highlightFilter.length !== 0)
+      return null;
     if (content.type === "annotation") {
       if (content.direction === "LR") {
         return /* @__PURE__ */ import_react9.default.createElement("div", {
@@ -26392,7 +26452,8 @@ printXML (Text text) = text
   };
   var Highlighter = ({ highlight, line, ch }) => {
     const deductionSteps = useSelector(path_default(["debugger", "debuggingSteps"]));
-    const resetBorder = deductionSteps ? "" : " border-t-0 border-b-0 border-r-0 border-l-0";
+    const highlightFilter = useSelector(path_default(["debugger", "highlightFilter"]));
+    const borderResetter = deductionSteps ? {} : { borderWidth: 0 };
     let classes = highlight.marker.shared;
     if (equals_default(highlight.from, { line, ch })) {
       classes = [...classes, ...highlight.marker.start];
@@ -26400,8 +26461,10 @@ printXML (Text text) = text
     if (equals_default(highlight.to, { line, ch: ch + 1 })) {
       classes = [...classes, ...highlight.marker.end];
     }
+    classes = any_default((f3) => includes_default(f3, classes))(highlightFilter) ? [] : classes;
     return /* @__PURE__ */ import_react9.default.createElement("div", {
-      className: "absolute " + classes.join(" ") + resetBorder
+      className: "absolute " + classes.join(" "),
+      style: borderResetter
     });
   };
   var Editor_default = App;
@@ -26480,9 +26543,9 @@ printXML (Text text) = text
   };
   var TypeSig_default = StringTypeSig2;
 
-  // node_modules/@heroicons/react/outline/esm/PlusIcon.js
+  // node_modules/@heroicons/react/outline/esm/MinusIcon.js
   var React9 = __toESM(require_react(), 1);
-  function PlusIcon(props, svgRef) {
+  function MinusIcon(props, svgRef) {
     return /* @__PURE__ */ React9.createElement("svg", Object.assign({
       xmlns: "http://www.w3.org/2000/svg",
       fill: "none",
@@ -26494,16 +26557,36 @@ printXML (Text text) = text
     }, props), /* @__PURE__ */ React9.createElement("path", {
       strokeLinecap: "round",
       strokeLinejoin: "round",
+      d: "M20 12H4"
+    }));
+  }
+  var ForwardRef4 = React9.forwardRef(MinusIcon);
+  var MinusIcon_default = ForwardRef4;
+
+  // node_modules/@heroicons/react/outline/esm/PlusIcon.js
+  var React10 = __toESM(require_react(), 1);
+  function PlusIcon(props, svgRef) {
+    return /* @__PURE__ */ React10.createElement("svg", Object.assign({
+      xmlns: "http://www.w3.org/2000/svg",
+      fill: "none",
+      viewBox: "0 0 24 24",
+      strokeWidth: 2,
+      stroke: "currentColor",
+      "aria-hidden": "true",
+      ref: svgRef
+    }, props), /* @__PURE__ */ React10.createElement("path", {
+      strokeLinecap: "round",
+      strokeLinejoin: "round",
       d: "M12 4v16m8-8H4"
     }));
   }
-  var ForwardRef4 = React9.forwardRef(PlusIcon);
-  var PlusIcon_default = ForwardRef4;
+  var ForwardRef5 = React10.forwardRef(PlusIcon);
+  var PlusIcon_default = ForwardRef5;
 
   // TabReport.jsx
   var TabReport = () => {
     return /* @__PURE__ */ import_react11.default.createElement("div", {
-      className: "p-4 bg-gray-200"
+      className: "p-4 bg-gray-200 h-full"
     }, /* @__PURE__ */ import_react11.default.createElement(Summary, null), /* @__PURE__ */ import_react11.default.createElement(Message, null), /* @__PURE__ */ import_react11.default.createElement(ReleventTerms, null));
   };
   var TabList = () => {
@@ -26511,18 +26594,32 @@ printXML (Text text) = text
     let context = useSelector(path_default(["debugger", "context"]));
     let traverseId = useSelector(path_default(["debugger", "currentTraverseId"]));
     const multipleExps = useSelector(path_default(["debugger", "multipleExps"]));
+    const debuggingSteps = useSelector(path_default(["debugger", "debuggingSteps"]));
     const [scrollProgress, setScrollProgress] = (0, import_react11.useState)(0);
     return /* @__PURE__ */ import_react11.default.createElement("div", {
-      className: "ml-3 mt-3 bg-blue-100 rounded-2xl"
-    }, /* @__PURE__ */ import_react11.default.createElement(Expandable, null, /* @__PURE__ */ import_react11.default.createElement("div", {
-      className: "flex cursor-pointer px-4",
+      className: "mt-3 rounded-2xl",
+      style: { backgroundColor: "rgb(249, 249, 249)", boxShadow: "inset 5px 5px 70px -4px rgba(0,0,0,0.1)" }
+    }, /* @__PURE__ */ import_react11.default.createElement(Expandable, {
+      opened: debuggingSteps,
+      hint: debuggingSteps ? "Hide debugging steps" : "Expand to see debugging steps",
+      onOpen: (_3) => {
+        if (!debuggingSteps)
+          dispatch(toggleDebuggerStpes());
+      },
+      onClose: (_3) => {
+        if (debuggingSteps)
+          dispatch(toggleDebuggerStpes());
+      }
+    }, /* @__PURE__ */ import_react11.default.createElement("div", {
+      className: "flex cursor-pointer",
       onWheel: (e3) => {
-        setScrollProgress(scrollProgress + clamp_default(-3, 3, e3.deltaY));
-        console.log(scrollProgress);
-        if (scrollProgress > 100) {
+        let progress = clamp_default(-1.5, 1.5, Math.sign(e3.deltaY) * Math.log2(Math.abs(e3.deltaY)));
+        setScrollProgress(scrollProgress + progress);
+        console.log(progress);
+        if (scrollProgress > 30) {
           dispatch(nextStep());
           setScrollProgress(0);
-        } else if (scrollProgress < -100) {
+        } else if (scrollProgress < -30) {
           dispatch(prevStep());
           setScrollProgress(0);
         }
@@ -26541,7 +26638,7 @@ printXML (Text text) = text
     let tabDefaultStep = tabReleventSteps[Math.round(tabReleventSteps.length / 2) - 1][3];
     return /* @__PURE__ */ import_react11.default.createElement("div", {
       onClick: (_3) => dispatch(setStep(tabDefaultStep)),
-      className: "p-2 rounded-2xl inline-block w-max m-1 " + (active ? "bg-gray-900" : "bg-white")
+      className: "p-2 rounded-2xl inline-block w-max m-1 " + (active ? "bg-gray-900 shadow-lg" : "bg-white")
     }, /* @__PURE__ */ import_react11.default.createElement("div", {
       className: "text-2xl mr-8 " + (active ? "text-white" : "text-gray-800")
     }, exp), deductionStpe ? /* @__PURE__ */ import_react11.default.createElement(TabSteps, {
@@ -26569,65 +26666,103 @@ printXML (Text text) = text
         e3.stopPropagation();
         dispatch(setStep(step));
       },
+      onMouseEnter: (_3) => {
+        dispatch(setStep(step));
+      },
       className: "w-5 h-5 leading-5 flex justify-center cursor-pointer rounded-full text-md mx-0.5 " + face
     }, step + 1);
   };
   var Summary = () => {
     let contextItem = useSelector((state) => state.debugger.currentContextItem);
-    return contextItem === null ? null : /* @__PURE__ */ import_react11.default.createElement(Expandable, null, /* @__PURE__ */ import_react11.default.createElement("div", {
-      className: "mb-5 bg-white p-3"
+    const multipleExps = useSelector(path_default(["debugger", "multipleExps"]));
+    const debuggingSteps = useSelector(path_default(["debugger", "debuggingSteps"]));
+    const dispatch = useDispatch();
+    return contextItem === null ? null : /* @__PURE__ */ import_react11.default.createElement(Expandable, {
+      hint: debuggingSteps ? "Hide other uncertain expressions" : "Expand to see a list of uncertain expressions",
+      opened: multipleExps,
+      onOpen: (_3) => {
+        if (!multipleExps) {
+          dispatch(toggleMultipleExps());
+        }
+      },
+      onClose: (_3) => {
+        if (multipleExps) {
+          dispatch(toggleMultipleExps());
+        }
+        if (debuggingSteps)
+          dispatch(toggleDebuggerStpes());
+      }
     }, /* @__PURE__ */ import_react11.default.createElement("div", {
-      className: "text-md"
-    }, /* @__PURE__ */ import_react11.default.createElement("div", null, "It's possible to infer two conflicting types for the expression", /* @__PURE__ */ import_react11.default.createElement("span", {
+      className: "mb-5 bg-white p-3 pl-4  rounded-lg"
+    }, /* @__PURE__ */ import_react11.default.createElement("div", {
+      className: "text-md mr-3"
+    }, "It's possible to infer two conflicting types for the expression", /* @__PURE__ */ import_react11.default.createElement("span", {
       className: "code ml-2 px-1 rounded-md bg-gray-700 text-white inline-block not-italic"
-    }, contextItem["contextExp"]))), /* @__PURE__ */ import_react11.default.createElement(TabList, null)));
+    }, contextItem["contextExp"])), multipleExps ? /* @__PURE__ */ import_react11.default.createElement(TabList, null) : /* @__PURE__ */ import_react11.default.createElement("div", {
+      className: "mt-2 italic text-xs"
+    }, "Expand to see a full list of uncertain expressions")));
   };
-  var Expandable = ({ children }) => {
+  var Expandable = ({ opened, children, onOpen, onClose, hint }) => {
     let size = 25;
     return /* @__PURE__ */ import_react11.default.createElement("div", {
       className: "relative"
     }, children, /* @__PURE__ */ import_react11.default.createElement("div", {
-      className: "cursor-pointer bg-yellow-200 rounded-full z-10 absolute border",
-      style: { width: size, height: size, top: `calc(50% - ${size / 2}px)`, left: -size / 2 }
-    }, /* @__PURE__ */ import_react11.default.createElement(PlusIcon_default, null)));
+      onClick: (_3) => opened ? onClose() : onOpen(),
+      className: "cursor-pointer rounded-full z-10 absolute border border-gray-300 hint--bottom-left  ",
+      "aria-label": hint,
+      style: { width: size, height: size, top: 5, right: 5 }
+    }, opened ? /* @__PURE__ */ import_react11.default.createElement(MinusIcon_default, null) : /* @__PURE__ */ import_react11.default.createElement(PlusIcon_default, null)));
   };
   var Message = () => {
     let contextItem = useSelector((state) => state.debugger.currentContextItem);
-    return contextItem === null ? null : /* @__PURE__ */ import_react11.default.createElement("div", {
-      className: "mb-5"
+    let dispatch = useDispatch();
+    return contextItem === null ? null : /* @__PURE__ */ import_react11.default.createElement(import_react11.default.Fragment, null, /* @__PURE__ */ import_react11.default.createElement("div", {
+      className: "font-medium"
+    }, "Conflicting types"), /* @__PURE__ */ import_react11.default.createElement("div", {
+      className: "mb-5 p-2 mt-2 bg-white rounded-lg"
     }, /* @__PURE__ */ import_react11.default.createElement("div", {
-      className: "my-1 "
-    }, /* @__PURE__ */ import_react11.default.createElement("span", {
-      className: "inline-block mr-1"
-    }, "Possible type 1: "), /* @__PURE__ */ import_react11.default.createElement("span", {
+      className: "mb-1"
+    }, /* @__PURE__ */ import_react11.default.createElement("div", {
+      className: "mb-2 text-sm font-medium"
+    }, "Possible type 1"), /* @__PURE__ */ import_react11.default.createElement("div", {
+      className: "inline-block mr-1 code"
+    }, contextItem.contextExp, "::"), /* @__PURE__ */ import_react11.default.createElement("span", {
+      onMouseEnter: (_3) => dispatch(showOnlyMark1()),
+      onMouseLeave: (_3) => dispatch(showBoth()),
       className: "code groupMarkerB rounded-sm px-0.5 cursor-pointer"
     }, /* @__PURE__ */ import_react11.default.createElement(TypeSig_default, {
       simple: contextItem.contextType1SimpleString,
       full: contextItem.contextType1String
-    }))), /* @__PURE__ */ import_react11.default.createElement("div", {
+    })), /* @__PURE__ */ import_react11.default.createElement("div", {
       className: "text-xs italic"
-    }, "Infered from the orange highlights on the left side"), /* @__PURE__ */ import_react11.default.createElement("div", {
-      className: "mb-1 mt-3"
-    }, /* @__PURE__ */ import_react11.default.createElement("span", {
-      className: "inline-block mr-1"
-    }, "Possible type 2: "), /* @__PURE__ */ import_react11.default.createElement("span", {
+    }, "Infered from the orange highlights on the left side")), /* @__PURE__ */ import_react11.default.createElement("hr", {
+      className: "-ml-2 -mr-2"
+    }), /* @__PURE__ */ import_react11.default.createElement("div", {
+      className: "my-1"
+    }, /* @__PURE__ */ import_react11.default.createElement("div", {
+      className: "mb-2 text-sm font-medium"
+    }, "Possible type 2"), /* @__PURE__ */ import_react11.default.createElement("span", {
+      className: "inline-block mr-1 code"
+    }, contextItem.contextExp, "::"), /* @__PURE__ */ import_react11.default.createElement("span", {
+      onMouseEnter: (_3) => dispatch(showOnlyMark2()),
+      onMouseLeave: (_3) => dispatch(showBoth()),
       className: "code groupMarkerA rounded-sm px-0.5 cursor-pointer"
     }, /* @__PURE__ */ import_react11.default.createElement(TypeSig_default, {
       simple: contextItem.contextType2SimpleString,
       full: contextItem.contextType2String
-    }))), /* @__PURE__ */ import_react11.default.createElement("div", {
+    })), /* @__PURE__ */ import_react11.default.createElement("div", {
       className: "text-xs italic"
-    }, "Infered from the blue highlights on the left side"));
+    }, "Infered from the blue highlights on the left side"))));
   };
   var ReleventTerms = () => {
     let context = useSelector(path_default(["debugger", "context"]));
     let currentContextItem = useSelector(path_default(["debugger", "currentContextItem"]));
     let releventContext = context.filter((c3) => c3.contextExp !== currentContextItem.contextExp);
     return /* @__PURE__ */ import_react11.default.createElement("div", {
-      className: "p-2 rounded-lg bg-gray-200"
-    }, /* @__PURE__ */ import_react11.default.createElement("div", {
       className: ""
-    }, "Relevent type information:"), releventContext.map((c3, i3) => /* @__PURE__ */ import_react11.default.createElement(ReleventItem, {
+    }, /* @__PURE__ */ import_react11.default.createElement("div", {
+      className: "font-medium"
+    }, "Relevant type information"), releventContext.map((c3, i3) => /* @__PURE__ */ import_react11.default.createElement(ReleventItem, {
       item: c3,
       key: i3
     })), defaultTo_default([])(prop_default("contextGlobals", currentContextItem)).map(([exp, type3], i3) => /* @__PURE__ */ import_react11.default.createElement(GlobalTypeHints, {
@@ -26661,7 +26796,7 @@ printXML (Text text) = text
     let tabReleventSteps = item.contextSteps.map((step, i3) => [...step, i3]).filter(nth_default(2));
     let tabDefaultStep = tabReleventSteps[Math.round(tabReleventSteps.length / 2) - 1][3];
     return /* @__PURE__ */ import_react11.default.createElement("div", {
-      className: "flex flex-col my-1.5 bg-white p-1 rounded-md"
+      className: "flex flex-col my-1.5 bg-white p-2 rounded-md"
     }, /* @__PURE__ */ import_react11.default.createElement("div", {
       className: "flex justify-between"
     }, /* @__PURE__ */ import_react11.default.createElement("div", {
@@ -26671,14 +26806,18 @@ printXML (Text text) = text
     }, item.contextExp), /* @__PURE__ */ import_react11.default.createElement("div", {
       className: "code mx-0.5"
     }, "::"), /* @__PURE__ */ import_react11.default.createElement("div", {
-      className: "code px-0.5 rounded-sm  " + (affinity === "L" ? "marker2" : "marker1")
+      onMouseEnter: (_3) => affinity === "L" ? dispatch(showOnlyMark1()) : dispatch(showOnlyMark2()),
+      onMouseLeave: (_3) => dispatch(showBoth()),
+      className: "code px-0.5 rounded-sm cursor-pointer " + (affinity === "L" ? "marker2" : "marker1")
     }, type3)), multipleExps ? /* @__PURE__ */ import_react11.default.createElement("div", {
       className: "bg-white p-1 rounded-md flex items-center"
-    }, /* @__PURE__ */ import_react11.default.createElement("div", null, "Looks wrong? "), /* @__PURE__ */ import_react11.default.createElement("button", {
+    }, /* @__PURE__ */ import_react11.default.createElement("div", {
+      className: "text-sm text-gray-500"
+    }, "Looks wrong? "), /* @__PURE__ */ import_react11.default.createElement("button", {
       onClick: (_3) => dispatch(setStep(tabDefaultStep)),
-      className: "bg-gray-900 text-white rounded-lg px-2 py-1 mx-1"
+      className: "border border-gray-300 rounded-sm px-2 py-1 mr-1 ml-2"
     }, "Inspect")) : null), /* @__PURE__ */ import_react11.default.createElement("div", {
-      className: "ml-1 text-sm italic"
+      className: "text-xs italic"
     }, " Inferred from ", origin, " "));
   };
   var TabReport_default = TabReport;
@@ -26688,7 +26827,9 @@ printXML (Text text) = text
     let wellTyped = useSelector((state) => state.debugger.wellTyped);
     let loadError = useSelector((state) => state.debugger.loadError);
     let parseError = useSelector((state) => state.debugger.parseError);
-    return /* @__PURE__ */ import_react12.default.createElement("div", null, (() => {
+    return /* @__PURE__ */ import_react12.default.createElement("div", {
+      className: "h-full bg-gray-200"
+    }, (() => {
       if (wellTyped) {
         return /* @__PURE__ */ import_react12.default.createElement("div", {
           className: "p-4 flex items-center"
@@ -26737,34 +26878,10 @@ printXML (Text text) = text
 
   // Toggle.jsx
   var import_react13 = __toESM(require_react());
-  var Toggle = ({ active, onClick }) => {
-    return /* @__PURE__ */ import_react13.default.createElement("div", {
-      className: "py-2 flex items-center"
-    }, /* @__PURE__ */ import_react13.default.createElement("span", {
-      onClick,
-      className: `
-        switch-button
-        flex
-        w-10
-        h-6
-        rounded-full
-        items-center
-        px-1
-        cursor-pointer
-      ` + (active ? "flex-row-reverse bg-green-400" : "bg-gray-500")
-    }, /* @__PURE__ */ import_react13.default.createElement("span", {
-      className: "block h-4 w-4 rounded-full " + (active ? "bg-gray-600" : "bg-gray-100")
-    })));
-  };
-  var Toggle_default = Toggle;
 
   // MenuBar.jsx
   var MenuBar = () => {
     const dispatch = useDispatch();
-    const deductionStpe = useSelector(path_default(["debugger", "debuggingSteps"]));
-    const multipleExps = useSelector(path_default(["debugger", "multipleExps"]));
-    const steps = useSelector(path_default(["debugger", "steps"]));
-    const middleStep = Math.floor(steps.length / 2);
     (0, import_react14.useEffect)(() => {
       dispatch(setTask(1));
       dispatch(typeCheckThunk());
@@ -26865,29 +26982,7 @@ printXML (Text text) = text
       className: "h-4 w-4 mr-1"
     }), "Tutorial")), /* @__PURE__ */ import_react14.default.createElement("div", {
       className: "flex items-center px-2"
-    }, /* @__PURE__ */ import_react14.default.createElement("div", {
-      className: "mr-1"
-    }, "Debugging Step:"), /* @__PURE__ */ import_react14.default.createElement("div", {
-      className: "ml-1 mr-2"
-    }, /* @__PURE__ */ import_react14.default.createElement(Toggle_default, {
-      active: deductionStpe,
-      onClick: (_3) => {
-        if (!multipleExps && !deductionStpe)
-          dispatch(toggleMultileExpThunk());
-        dispatch(toggleDebuggerStpes());
-      }
-    })), /* @__PURE__ */ import_react14.default.createElement("div", {
-      className: "mr-1"
-    }, "Multiple Expressions:"), /* @__PURE__ */ import_react14.default.createElement("div", {
-      className: "ml-1 mr-2"
-    }, /* @__PURE__ */ import_react14.default.createElement(Toggle_default, {
-      active: multipleExps,
-      onClick: (_3) => {
-        if (multipleExps && deductionStpe)
-          dispatch(toggleDebuggerStpes());
-        dispatch(toggleMultileExpThunk());
-      }
-    }))));
+    }));
   };
   var MenuBar_default = MenuBar;
 

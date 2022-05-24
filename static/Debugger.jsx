@@ -17,7 +17,7 @@ const Debugger = () => {
   let loadError = useSelector(state => state.debugger.loadError);
   let parseError = useSelector(state => state.debugger.parseError);
   return (
-    <div>
+    <div className="h-full bg-gray-200">
       {(() => {
         if (wellTyped) {
           return <div className="p-4 flex items-center">

@@ -1,17 +1,15 @@
-import React, {useState} from 'react'
+import React, { useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import * as R from "ramda"
 import TypeSig from "./TypeSig"
-import {PlusIcon} from "@heroicons/react/outline"
-
-import { nextStep, prevStep, setStep } from "./debuggerSlice"
+import { PlusIcon, MinusIcon } from "@heroicons/react/outline"
+import { nextStep, prevStep, setStep, toggleDebuggerStpes, toggleMultipleExps, showOnlyMark1, showOnlyMark2, showBoth } from "./debuggerSlice"
 
 const TabReport = () => {
 
     return (
-        <div className='p-4 bg-gray-200'>
+        <div className='p-4 bg-gray-200 h-full'>
             <Summary></Summary>
-
             <Message></Message>
             <ReleventTerms></ReleventTerms>
         </div>
@@ -23,31 +21,44 @@ const TabList = () => {
     let context = useSelector(R.path(['debugger', 'context']))
     let traverseId = useSelector(R.path(['debugger', 'currentTraverseId']))
     const multipleExps = useSelector(R.path(['debugger', 'multipleExps']))
-    const [scrollProgress, setScrollProgress] = useState(0)
-    return <div className='ml-3 mt-3 bg-blue-100 rounded-2xl'>
-        <Expandable>
-                    <div className='flex cursor-pointer px-4' onWheel={e => {
-                        setScrollProgress(scrollProgress + R.clamp(-3, 3, e.deltaY))
-                        console.log(scrollProgress)
-                        if (scrollProgress > 100) {
-                            dispatch(nextStep())
-                            setScrollProgress(0)
-                        } else if (scrollProgress < -100) {
-                            dispatch(prevStep())
-                            setScrollProgress(0)
-                        }
+    const debuggingSteps = useSelector(R.path(['debugger', 'debuggingSteps']))
 
-                    }}>
-                    {
-                        multipleExps ? context.map((c, i) => <Tab
-                            key={i}
-                            steps={c.contextSteps}
-                            exp={c.contextExp}
-                            active={c.contextSteps.find(R.pipe(R.nth(0), R.equals(traverseId)))[2]}></Tab>) : null
-                    }
-                </div>
+    const [scrollProgress, setScrollProgress] = useState(0)
+    return <div className='mt-3 rounded-2xl' style={{ backgroundColor: 'rgb(249, 249, 249)', boxShadow: 'inset 5px 5px 70px -4px rgba(0,0,0,0.1)' }}>
+        <Expandable opened={debuggingSteps}
+            hint={debuggingSteps ? "Hide debugging steps" : "Expand to see debugging steps"}
+            onOpen={_ => {
+                if (!debuggingSteps) dispatch(toggleDebuggerStpes())
+
+            }}
+            onClose={_ => {
+                if (debuggingSteps) dispatch(toggleDebuggerStpes())
+            }}
+
+        >
+            <div className='flex cursor-pointer' onWheel={e => {
+                let progress = R.clamp(-1.5, 1.5, Math.sign(e.deltaY) * (Math.log2(Math.abs(e.deltaY))))
+                setScrollProgress(scrollProgress + progress)
+                console.log(progress)
+                if (scrollProgress > 30) {
+                    dispatch(nextStep())
+                    setScrollProgress(0)
+                } else if (scrollProgress < -30) {
+                    dispatch(prevStep())
+                    setScrollProgress(0)
+                }
+
+            }}>
+                {
+                    multipleExps ? context.map((c, i) => <Tab
+                        key={i}
+                        steps={c.contextSteps}
+                        exp={c.contextExp}
+                        active={c.contextSteps.find(R.pipe(R.nth(0), R.equals(traverseId)))[2]}></Tab>) : null
+                }
+            </div>
         </Expandable>
-    </div> 
+    </div>
 }
 const Tab = ({ active = false, steps, exp }) => {
     let dispatch = useDispatch()
@@ -59,7 +70,7 @@ const Tab = ({ active = false, steps, exp }) => {
     return (
         <div
             onClick={_ => dispatch(setStep(tabDefaultStep))}
-            className={'p-2 rounded-2xl inline-block w-max m-1 ' + (active ? 'bg-gray-900' : 'bg-white')} >
+            className={'p-2 rounded-2xl inline-block w-max m-1 ' + (active ? 'bg-gray-900 shadow-lg' : 'bg-white')} >
             <div className={'text-2xl mr-8 ' + (active ? 'text-white' : 'text-gray-800')} >{exp}</div>
             {deductionStpe ?
                 <TabSteps
@@ -89,6 +100,7 @@ const TabStep = ({ active = false, step, traverseId }) => {
     return (
         <button
             onClick={e => { e.stopPropagation(); dispatch(setStep(step)) }}
+            onMouseEnter={_ => {  dispatch(setStep(step)) }}
             className={
                 'w-5 h-5 leading-5 flex justify-center cursor-pointer rounded-full text-md mx-0.5 '
                 + face}>
@@ -99,31 +111,54 @@ const TabStep = ({ active = false, step, traverseId }) => {
 
 const Summary = () => {
     let contextItem = useSelector(state => state.debugger.currentContextItem);
+    const multipleExps = useSelector(R.path(['debugger', 'multipleExps']))
+    const debuggingSteps = useSelector(R.path(['debugger', 'debuggingSteps']))
+
+    const dispatch = useDispatch()
     return contextItem === null ? null : (
-        <Expandable>
-                <div className='mb-5 bg-white p-3'>
-                    <div className='text-md'>
-                        <div>
-                            It's possible to infer two conflicting types for the expression
-                            <span className='code ml-2 px-1 rounded-md bg-gray-700 text-white inline-block not-italic'>
-                                {contextItem['contextExp']}
-                            </span>
-                        </div>
-                    </div>
-                    <TabList></TabList>
-        </div>
+        <Expandable 
+            hint={debuggingSteps ? "Hide other uncertain expressions" : "Expand to see a list of uncertain expressions"}
+            opened={multipleExps}
+            onOpen={_ => {
+                if (!multipleExps) {
+                    dispatch(toggleMultipleExps())
+                }
+            }}
+            onClose={_ => {
+                if (multipleExps) {
+                    dispatch(toggleMultipleExps())
+                }
+                if (debuggingSteps) dispatch(toggleDebuggerStpes())
+
+            }}
+        >
+            <div className='mb-5 bg-white p-3 pl-4  rounded-lg'>
+                <div className='text-md mr-3'>
+                        It's possible to infer two conflicting types for the expression
+                        <span className='code ml-2 px-1 rounded-md bg-gray-700 text-white inline-block not-italic'>
+                            {contextItem['contextExp']}
+                        </span>
+                </div>
+               
+                {multipleExps ? <TabList></TabList> : <div className='mt-2 italic text-xs'>Expand to see a full list of uncertain expressions</div>}
+            </div>
         </Expandable>
     )
 }
 
-const Expandable = ({children}) => {
-    let size=25
+const Expandable = ({ opened, children, onOpen, onClose, hint }) => {
+    let size = 25
     return <div className='relative'>
         {children}
-        <div className='cursor-pointer bg-yellow-200 rounded-full z-10 absolute border' 
-            style={{width: size, height : size, top: `calc(50% - ${size/2}px)`, left: -size/2}} >
-                <PlusIcon></PlusIcon>
+        <div 
+            onClick={_ => opened ? onClose() : onOpen()}
+            className='cursor-pointer rounded-full z-10 absolute border border-gray-300 hint--bottom-left  '
+            aria-label={hint}
+            style={{ width: size, height: size, top: 5, right: 5 }} >
+            {opened ? <MinusIcon /> : <PlusIcon />}
+
         </div>
+
     </div>
 }
 
@@ -131,39 +166,43 @@ const Expandable = ({children}) => {
 
 const Message = () => {
     let contextItem = useSelector(state => state.debugger.currentContextItem);
+    let dispatch=useDispatch()
     return contextItem === null ? null : (
-        <div className='mb-5'>
-            {/* <div className='text-md my-2 w-full'>
-                <div>It's possible to infer two conflicting types for the expression
-                    <span className='code ml-2 px-1 rounded-md bg-gray-700 text-white inline-block not-italic'>
-                        {contextItem['contextExp']}
-                    </span>:
-                </div>
-            </div> */}
-
-            <div className='my-1 '>
-                <span className='inline-block mr-1'>Possible type 1: </span>
-                <span className='code groupMarkerB rounded-sm px-0.5 cursor-pointer'>
+        <>
+        <div className='font-medium'>Conflicting types</div>
+        <div className='mb-5 p-2 mt-2 bg-white rounded-lg'>
+            <div className='mb-1'>
+                <div className='mb-2 text-sm font-medium'>Possible type 1</div>
+                <div className='inline-block mr-1 code'>{contextItem.contextExp}::</div>
+                <span 
+                    onMouseEnter={_ => dispatch(showOnlyMark1())}
+                    onMouseLeave={ _ => dispatch(showBoth())}
+                    className='code groupMarkerB rounded-sm px-0.5 cursor-pointer'>
                     <TypeSig
                         simple={contextItem.contextType1SimpleString}
                         full={contextItem.contextType1String}
                     ></TypeSig>
                 </span>
+                <div className='text-xs italic'>Infered from the orange highlights on the left side</div>
             </div>
-            <div className='text-xs italic'>Infered from the orange highlights on the left side</div>
-
-            <div className='mb-1 mt-3'>
-                <span className='inline-block mr-1'>Possible type 2: </span>
-                <span className='code groupMarkerA rounded-sm px-0.5 cursor-pointer'>
+            <hr className='-ml-2 -mr-2'></hr>
+            <div className='my-1'>
+                <div className='mb-2 text-sm font-medium'>Possible type 2</div>
+                <span className='inline-block mr-1 code'>{contextItem.contextExp}::</span>
+                <span 
+                    onMouseEnter={_ => dispatch(showOnlyMark2())}
+                    onMouseLeave={ _ => dispatch(showBoth())}
+                    className='code groupMarkerA rounded-sm px-0.5 cursor-pointer'>
                     <TypeSig
                         simple={contextItem.contextType2SimpleString}
                         full={contextItem.contextType2String}
                     ></TypeSig>
                 </span>
+                <div className='text-xs italic'>Infered from the blue highlights on the left side</div>
             </div>
-            <div className='text-xs italic'>Infered from the blue highlights on the left side</div>
 
         </div>
+        </>
     );
 };
 
@@ -173,8 +212,8 @@ const ReleventTerms = () => {
     let releventContext = context.filter(c => c.contextExp !== currentContextItem.contextExp)
 
     return (
-        <div className='p-2 rounded-lg bg-gray-200'>
-            <div className=''>Relevent type information:</div>
+        <div className=''>
+            <div className='font-medium'>Relevant type information</div>
             {releventContext.map((c, i) => <ReleventItem item={c} key={i}></ReleventItem>)}
             {R.defaultTo([])(R.prop('contextGlobals', currentContextItem)).map(([exp, type], i) => <GlobalTypeHints exp={exp} type={type} key={i}></GlobalTypeHints>)}
         </div>
@@ -212,25 +251,28 @@ const ReleventItem = ({ item }) => {
         .filter(R.nth(2))
     let tabDefaultStep = tabReleventSteps[Math.round(tabReleventSteps.length / 2) - 1][3]
     return (
-        <div className='flex flex-col my-1.5 bg-white p-1 rounded-md'>
+        <div className='flex flex-col my-1.5 bg-white p-2 rounded-md'>
             <div className='flex justify-between'>
                 <div className='flex items-center'>
                     <div className='code'>{item.contextExp}</div>
                     <div className='code mx-0.5'>::</div>
-                    <div className={'code px-0.5 rounded-sm  ' + (affinity === 'L' ? 'marker2' : 'marker1')}>{type}</div>
+                    <div
+                        onMouseEnter={_ => affinity === 'L' ? dispatch(showOnlyMark1()) : dispatch(showOnlyMark2()) } 
+                        onMouseLeave={_ => dispatch(showBoth())}
+                        className={'code px-0.5 rounded-sm cursor-pointer ' + (affinity === 'L' ? 'marker2' : 'marker1')}>{type}</div>
                 </div>
                 {multipleExps ? (
                     <div className='bg-white p-1 rounded-md flex items-center'>
 
-                        <div>Looks wrong? </div>
+                        <div className='text-sm text-gray-500'>Looks wrong? </div>
                         <button
                             onClick={_ => dispatch(setStep(tabDefaultStep))}
-                            className="bg-gray-900 text-white rounded-lg px-2 py-1 mx-1">Inspect</button>
+                            className="border border-gray-300 rounded-sm px-2 py-1 mr-1 ml-2">Inspect</button>
                     </div>
                 ) : null}
 
             </div>
-            <div className='ml-1 text-sm italic'> Inferred from {origin} </div>
+            <div className='text-xs italic'> Inferred from {origin} </div>
 
         </div>
     )

@@ -5,6 +5,10 @@
     --colorB-lighter: #FFD4C3;
 }
 
+body {
+	font-family: 'IBM Plex Sans', sans-serif;
+}
+
 .markerA {
     /* background-color: var(--colorA); */
     /* border: solid 2px var(--colorA); */

@@ -15,7 +15,7 @@ const App = () => {
 const Editor = () => {
   const mode = useSelector(R.path(['debugger', 'mode']));
   return (
-    <div className='code tracking-wider flex-grow p-2'>
+    <div className='code tracking-wider flex-grow p-2 h-full'>
       {(() => {
         if (mode === editorModes.edit) {
           return <EditorEditMode></EditorEditMode>;
@@ -98,6 +98,8 @@ const Cell = ({ text, line, ch }) => {
 };
 
 const Widget = ({ styles, classes, content }) => {
+  const highlightFilter = useSelector(R.path(['debugger', 'highlightFilter']))
+  if (highlightFilter.length !== 0) return null
   if (content.type === 'annotation') {
     // this is very cluncky
     if (content.direction === 'LR') {
@@ -134,7 +136,10 @@ const Widget = ({ styles, classes, content }) => {
 
 const Highlighter = ({ highlight, line, ch }) => {
   const deductionSteps = useSelector(R.path(['debugger', 'debuggingSteps']))
-  const resetBorder = deductionSteps ? '' :' border-t-0 border-b-0 border-r-0 border-l-0'
+  const highlightFilter = useSelector(R.path(['debugger', 'highlightFilter']))
+
+  const borderResetter = deductionSteps ? {} : {borderWidth: 0}
+
   let classes = highlight.marker.shared;
   if (R.equals(highlight.from, { line, ch })) {
     classes = [...classes, ...highlight.marker.start];
@@ -142,7 +147,9 @@ const Highlighter = ({ highlight, line, ch }) => {
   if (R.equals(highlight.to, { line, ch: ch + 1 })) {
     classes = [...classes, ...highlight.marker.end];
   }
-  return <div className={'absolute ' + classes.join(' ') + resetBorder}></div>;
+  
+  classes = R.any(f => R.includes(f, classes))(highlightFilter) ? [] : classes 
+  return <div className={'absolute ' + classes.join(' ')} style={borderResetter}></div>;
 };
 
 export default App
