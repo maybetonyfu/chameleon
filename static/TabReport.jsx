@@ -116,6 +116,7 @@ const Summary = () => {
 
     const dispatch = useDispatch()
     return contextItem === null ? null : (
+        <>
         <Expandable 
             hint={debuggingSteps ? "Hide other uncertain expressions" : "Expand to see a list of uncertain expressions"}
             opened={multipleExps}
@@ -143,6 +144,7 @@ const Summary = () => {
                 {multipleExps ? <TabList></TabList> : <div className='mt-2 italic text-xs'>Expand to see a full list of uncertain expressions</div>}
             </div>
         </Expandable>
+        </>
     )
 }
 

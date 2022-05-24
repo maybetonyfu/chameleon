@@ -138,7 +138,7 @@ const Highlighter = ({ highlight, line, ch }) => {
   const deductionSteps = useSelector(R.path(['debugger', 'debuggingSteps']))
   const highlightFilter = useSelector(R.path(['debugger', 'highlightFilter']))
 
-  const borderResetter = deductionSteps ? {} : {borderWidth: 0}
+  const borderResetter = deductionSteps && (highlightFilter.length === 0) ? {} : {borderWidth: 0}
 
   let classes = highlight.marker.shared;
   if (R.equals(highlight.from, { line, ch })) {
@@ -148,7 +148,7 @@ const Highlighter = ({ highlight, line, ch }) => {
     classes = [...classes, ...highlight.marker.end];
   }
   
-  classes = R.any(f => R.includes(f, classes))(highlightFilter) ? [] : classes 
+  classes = R.any(f => R.includes(f, classes))(highlightFilter) ? [] : classes
   return <div className={'absolute ' + classes.join(' ')} style={borderResetter}></div>;
 };
 

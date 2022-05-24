@@ -26453,7 +26453,7 @@ printXML (Text text) = text
   var Highlighter = ({ highlight, line, ch }) => {
     const deductionSteps = useSelector(path_default(["debugger", "debuggingSteps"]));
     const highlightFilter = useSelector(path_default(["debugger", "highlightFilter"]));
-    const borderResetter = deductionSteps ? {} : { borderWidth: 0 };
+    const borderResetter = deductionSteps && highlightFilter.length === 0 ? {} : { borderWidth: 0 };
     let classes = highlight.marker.shared;
     if (equals_default(highlight.from, { line, ch })) {
       classes = [...classes, ...highlight.marker.start];
@@ -26677,7 +26677,7 @@ printXML (Text text) = text
     const multipleExps = useSelector(path_default(["debugger", "multipleExps"]));
     const debuggingSteps = useSelector(path_default(["debugger", "debuggingSteps"]));
     const dispatch = useDispatch();
-    return contextItem === null ? null : /* @__PURE__ */ import_react11.default.createElement(Expandable, {
+    return contextItem === null ? null : /* @__PURE__ */ import_react11.default.createElement(import_react11.default.Fragment, null, /* @__PURE__ */ import_react11.default.createElement(Expandable, {
       hint: debuggingSteps ? "Hide other uncertain expressions" : "Expand to see a list of uncertain expressions",
       opened: multipleExps,
       onOpen: (_3) => {
@@ -26700,7 +26700,7 @@ printXML (Text text) = text
       className: "code ml-2 px-1 rounded-md bg-gray-700 text-white inline-block not-italic"
     }, contextItem["contextExp"])), multipleExps ? /* @__PURE__ */ import_react11.default.createElement(TabList, null) : /* @__PURE__ */ import_react11.default.createElement("div", {
       className: "mt-2 italic text-xs"
-    }, "Expand to see a full list of uncertain expressions")));
+    }, "Expand to see a full list of uncertain expressions"))));
   };
   var Expandable = ({ opened, children, onOpen, onClose, hint }) => {
     let size = 25;
