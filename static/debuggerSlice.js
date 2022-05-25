@@ -30,16 +30,18 @@ export let typeCheckThunk = createAsyncThunk(
   },
 );
 
-export let toggleMultileExpThunk = createAsyncThunk('multipleExpThunk',
-  async (_, { dispatch , getState}) => {
+export let toggleMultileExpThunk = createAsyncThunk(
+  'multipleExpThunk',
+  async (_, { dispatch, getState }) => {
     let state = getState();
-    let newStep = Math.floor(state.debugger.steps.length / 2)
+    let newStep = Math.floor(state.debugger.steps.length / 2);
     if (state.debugger.multipleExps) {
-      dispatch(setStep(newStep))
+      dispatch(setStep(newStep));
     }
     dispatch(toggleMultipleExps());
-    return null
-  })
+    return null;
+  },
+);
 
 export let switchTaskThunk = createAsyncThunk(
   'switchTask',
@@ -55,6 +57,7 @@ const initialState = {
   longestLine: 0,
   currentTraverseId: null,
   currentContextItem: null,
+  pinnedStep: 0,
   highlightFilter: [],
   steps: [],
   context: [],
@@ -84,14 +87,14 @@ const { actions, reducer } = createSlice({
     setText(state, action) {
       state.text = action.payload;
     },
-    showOnlyMark1 (state) {
-      state.highlightFilter = ['marker1']
+    showOnlyMark1(state) {
+      state.highlightFilter = ['marker1'];
     },
-    showOnlyMark2 (state) {
-      state.highlightFilter = ['marker2']
+    showOnlyMark2(state) {
+      state.highlightFilter = ['marker2'];
     },
-    showBoth (state) {
-      state.highlightFilter = []
+    showBoth(state) {
+      state.highlightFilter = [];
     },
     setTask(state, action) {
       if (action.payload < 0 || action.payload > tasks.length) return state;
@@ -135,11 +138,37 @@ const { actions, reducer } = createSlice({
       state.currentContextItem = currentContextItem;
       state.currentTraverseId = currentTraverseId;
     },
+    lockStep(state, action) {
+      if (state.currentStepNum === null) return state;
+      if (action.payload > state.numOfSteps - 1 || action.payload < 0)
+        return state;
+      let currentStepNum = action.payload;
+      let { highlights, widgets } = convertStep(
+        state.steps[currentStepNum],
+        currentStepNum,
+        state.longestLine,
+      );
+      let currentTraverseId = state.steps[currentStepNum].stepId;
+      let currentContextItem = getCurrentActiveContext(
+        state.context,
+        currentTraverseId,
+      );
+      state.currentStepNum = currentStepNum;
+      state.highlights = [
+        ...highlights,
+        ...getPrevLocs(state.steps, currentStepNum),
+        ...getNextLocs(state.steps, currentStepNum),
+      ];
+      state.widgets = widgets;
+      state.currentContextItem = currentContextItem;
+      state.currentTraverseId = currentTraverseId;
+      state.pinnedStep = action.payload;
+    },
     resetHighlights(state) {
       state.highlights = [];
       state.widgets = [];
     },
-    prevStep(state, action) {
+    prevStep(state) {
       if (state.currentStepNum === null) return state;
       if (state.currentStepNum <= 0) return state;
 
@@ -199,7 +228,7 @@ const { actions, reducer } = createSlice({
       if (action.payload.tag === 'ChTypeError') {
         let steps = action.payload.steps;
         let context = action.payload.contextTable;
-        let currentStepNum = Math.floor(steps.length/2);
+        let currentStepNum = Math.floor(steps.length / 2);
         let { highlights, widgets } = convertStep(
           steps[currentStepNum],
           currentStepNum,
@@ -217,6 +246,7 @@ const { actions, reducer } = createSlice({
         state.numOfSteps = steps.length;
         state.numOfContextRows = context.length;
         state.currentStepNum = currentStepNum;
+        state.pinnedStep = currentStepNum;
         state.currentTraverseId = currentTraverseId;
         state.currentContextItem = getCurrentActiveContext(
           context,
@@ -268,6 +298,7 @@ export const {
   setStep,
   prevStep,
   nextStep,
+  lockStep,
   setTask,
   setText,
   toEditMode,
@@ -277,7 +308,7 @@ export const {
   toggleMultipleExps,
   showOnlyMark1,
   showOnlyMark2,
-  showBoth
+  showBoth,
 } = actions;
 export default reducer;
 
@@ -330,7 +361,7 @@ function getNextLocs(steps, currentNum) {
 }
 
 function convertStep(step, stepNum, offset) {
-  let reason = step['explanation']
+  let reason = step['explanation'];
   let direction = step['order'];
   let rangeA = convertLocation(step['stepA']);
   let rangeB = convertLocation(step['stepB']);

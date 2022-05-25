@@ -1,9 +1,8 @@
 import React, { useEffect } from "react"
-import { useDispatch, useSelector } from "react-redux"
+import { useDispatch } from "react-redux"
 import { toEditMode, toNormalMode, switchTaskThunk, typeCheckThunk, setTask, toggleDebuggerStpes, toggleMultileExpThunk, setStep } from "./debuggerSlice"
 import { PencilAltIcon, EyeIcon, BookOpenIcon } from "@heroicons/react/solid"
-import Toggle from "./Toggle"
-import * as R from "ramda"
+
 
 const MenuBar = () => {
     const dispatch = useDispatch()
