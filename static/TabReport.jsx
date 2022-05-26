@@ -95,17 +95,17 @@ const Tab = ({ active = false, steps, exp }) => {
   let hovering = steps.find(R.pipe(R.nth(0), R.equals(traverseId)))[2];
   let face;
   if (active) {
-    face = 'bg-gray-900 border-gray-900 border';
+    face = 'bg-gray-900 border-gray-900 border active:bg-gray-600';
   } else if (deductionSteps && !active) {
-    face = 'bg-white border ';
+    face = 'bg-white border active:bg-gray-200 ';
   } else if (!deductionSteps && !active && hovering) {
-    face = 'bg-white border-dashed border border-black';
+    face = 'bg-white active:bg-gray-200 border-dashed border border-black';
   } else if (!deductionSteps && !active && !hovering) {
-    face = 'bg-white border ';
+    face = 'bg-white active:bg-gray-200 border ';
   }
   return (
     <div
-      className={'flex flex-col w-max m-1 px-2 py-1 rounded-lg active:bg-gray-100 active:text-black ' + face}
+      className={face + ' flex flex-col w-max m-1 px-2 py-1 rounded-lg '}
       style={{ minWidth: 80 }}
       onClick={_ => dispatch(lockStep(tabDefaultStep))}
       onMouseEnter={_ =>
@@ -243,8 +243,8 @@ const Summary = () => {
               className={
                 'code ml-2 px-1 rounded-md  inline-block not-italic cursor-pointer ' +
                 (pinned
-                  ? 'border border-gray-700 bg-gray-700 text-white'
-                  : 'border border-black border-dashed')
+                  ? 'border border-gray-700 bg-gray-700 text-white hover:bg-gray-600'
+                  : 'border border-black border-dashed hover:bg-gray-100')
               }
             >
               {contextItem['contextExp']}

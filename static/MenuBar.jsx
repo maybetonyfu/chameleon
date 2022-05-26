@@ -1,18 +1,23 @@
 import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import * as R from "ramda"
+import * as R from 'ramda';
 import {
   toEditMode,
   toNormalMode,
   switchTaskThunk,
   typeCheckThunk,
   setTask,
-  toggleDebuggerStpes,
-  toggleMultileExpThunk,
-  setStep,
+  nextStep,
+  prevStep,
   editorModes,
 } from './debuggerSlice';
-import { PencilAltIcon, EyeIcon, BookOpenIcon } from '@heroicons/react/solid';
+import {
+  PencilAltIcon,
+  EyeIcon,
+  BookOpenIcon,
+  ChevronDoubleLeftIcon,
+  ChevronDoubleRightIcon,
+} from '@heroicons/react/solid';
 
 const MenuBar = () => {
   const dispatch = useDispatch();
@@ -124,6 +129,18 @@ const MenuBar = () => {
           <BookOpenIcon className='h-4 w-4 mr-1'></BookOpenIcon>
           Tutorial
         </a>
+        <button
+          className='bg-gray-300 px-2 py-1 mx-1'
+          onClick={_ => dispatch(nextStep())}
+        >
+          <ChevronDoubleLeftIcon className='h-4 w-4 mr-1'></ChevronDoubleLeftIcon>
+        </button>
+        <button
+          className='bg-gray-300 px-2 py-1 mx-1'
+          onClick={_ => dispatch(prevStep())}
+        >
+          <ChevronDoubleRightIcon className='h-4 w-4 mr-1'></ChevronDoubleRightIcon>
+        </button>
       </div>
 
       <div className='flex items-center px-2'></div>

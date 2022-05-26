@@ -189,7 +189,7 @@ const { actions, reducer } = createSlice({
         state.context,
         currentTraverseId,
       );
-
+      state.pinnedStep = currentStepNum;
       state.currentStepNum = currentStepNum;
       state.highlights = [
         ...highlights,
@@ -212,6 +212,8 @@ const { actions, reducer } = createSlice({
         currentStepNum,
         state.longestLine,
       );
+
+      state.pinnedStep = currentStepNum;
       let currentTraverseId = state.steps[currentStepNum].stepId;
       let currentContextItem = getCurrentActiveContext(
         state.context,
