@@ -130,16 +130,18 @@ const MenuBar = () => {
           Tutorial
         </a>
         <button
-          className='bg-gray-300 px-2 py-1 mx-1'
+          aria-label='Previous step (Arrow key left)'
+          className='bg-gray-700 hover:bg-gray-800 active:bg-gray-900 px-2 py-1 mx-0.5 h-8 rounded-md flex justify-center items-center hint--bottom'
           onClick={_ => dispatch(nextStep())}
         >
-          <ChevronDoubleLeftIcon className='h-4 w-4 mr-1'></ChevronDoubleLeftIcon>
+          <ChevronDoubleLeftIcon className='h-4 w-4 text-white'></ChevronDoubleLeftIcon> 
         </button>
         <button
-          className='bg-gray-300 px-2 py-1 mx-1'
+          aria-label='Next step (Arrow key right)'
+          className='bg-gray-700 hover:bg-gray-800 active:bg-gray-900 px-2 py-1 mx-0.5 h-8 rounded-md flex justify-center items-center hint--bottom'
           onClick={_ => dispatch(prevStep())}
         >
-          <ChevronDoubleRightIcon className='h-4 w-4 mr-1'></ChevronDoubleRightIcon>
+          <ChevronDoubleRightIcon className='h-4 w-4 text-white'></ChevronDoubleRightIcon>
         </button>
       </div>
 

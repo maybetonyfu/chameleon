@@ -27103,15 +27103,17 @@ printXML (Text text) = text
     }, /* @__PURE__ */ import_react13.default.createElement(BookOpenIcon_default, {
       className: "h-4 w-4 mr-1"
     }), "Tutorial"), /* @__PURE__ */ import_react13.default.createElement("button", {
-      className: "bg-gray-300 px-2 py-1 mx-1",
+      "aria-label": "Previous step (Arrow key left)",
+      className: "bg-gray-700 hover:bg-gray-800 active:bg-gray-900 px-2 py-1 mx-0.5 h-8 rounded-md flex justify-center items-center hint--bottom",
       onClick: (_3) => dispatch(nextStep())
     }, /* @__PURE__ */ import_react13.default.createElement(ChevronDoubleLeftIcon_default, {
-      className: "h-4 w-4 mr-1"
+      className: "h-4 w-4 text-white"
     })), /* @__PURE__ */ import_react13.default.createElement("button", {
-      className: "bg-gray-300 px-2 py-1 mx-1",
+      "aria-label": "Next step (Arrow key right)",
+      className: "bg-gray-700 hover:bg-gray-800 active:bg-gray-900 px-2 py-1 mx-0.5 h-8 rounded-md flex justify-center items-center hint--bottom",
       onClick: (_3) => dispatch(prevStep())
     }, /* @__PURE__ */ import_react13.default.createElement(ChevronDoubleRightIcon_default, {
-      className: "h-4 w-4 mr-1"
+      className: "h-4 w-4 text-white"
     }))), /* @__PURE__ */ import_react13.default.createElement("div", {
       className: "flex items-center px-2"
     }));
