@@ -7,6 +7,7 @@ import {
   makeHighlightB,
   makeHighlight,
   doesRangeSurround,
+  convertLocation,
 } from './util';
 
 export const editorModes = {
@@ -58,7 +59,7 @@ const initialState = {
   currentTraverseId: null,
   currentContextItem: null,
   pinnedStep: 0,
-  highlightFilter: [],
+  highlightFilter: ['markerDefination'],
   steps: [],
   context: [],
   numOfSteps: 0,
@@ -88,13 +89,16 @@ const { actions, reducer } = createSlice({
       state.text = action.payload;
     },
     showOnlyMark1(state) {
-      state.highlightFilter = ['marker1'];
+      state.highlightFilter = ['marker1', 'markerDefination'];
     },
     showOnlyMark2(state) {
-      state.highlightFilter = ['marker2'];
+      state.highlightFilter = ['marker2', 'markerDefination'];
     },
     showBoth(state) {
-      state.highlightFilter = [];
+      state.highlightFilter = ['markerDefination'];
+    },
+    showDefination(state) {
+      state.highlightFilter = ['marker1', 'marker2'];
     },
     setTask(state, action) {
       if (action.payload < 0 || action.payload > tasks.length) return state;
@@ -132,6 +136,7 @@ const { actions, reducer } = createSlice({
         ...highlights,
         ...getPrevLocs(state.steps, currentStepNum),
         ...getNextLocs(state.steps, currentStepNum),
+        getDefinitionHighlight(currentContextItem),
       ];
       state.widgets = widgets;
 
@@ -158,6 +163,7 @@ const { actions, reducer } = createSlice({
         ...highlights,
         ...getPrevLocs(state.steps, currentStepNum),
         ...getNextLocs(state.steps, currentStepNum),
+        getDefinitionHighlight(currentContextItem),
       ];
       state.widgets = widgets;
       state.currentContextItem = currentContextItem;
@@ -189,6 +195,7 @@ const { actions, reducer } = createSlice({
         ...highlights,
         ...getPrevLocs(state.steps, currentStepNum),
         ...getNextLocs(state.steps, currentStepNum),
+        getDefinitionHighlight(currentContextItem),
       ];
       state.widgets = widgets;
 
@@ -216,6 +223,7 @@ const { actions, reducer } = createSlice({
         ...highlights,
         ...getPrevLocs(state.steps, currentStepNum),
         ...getNextLocs(state.steps, currentStepNum),
+        getDefinitionHighlight(currentContextItem),
       ];
       state.widgets = widgets;
 
@@ -237,10 +245,15 @@ const { actions, reducer } = createSlice({
         let currentTraverseId = steps[currentStepNum].stepId;
         state.context = context;
         state.steps = steps;
+        state.currentContextItem = getCurrentActiveContext(
+          context,
+          currentTraverseId,
+        );
         state.highlights = [
           ...highlights,
           ...getPrevLocs(steps, currentStepNum),
           ...getNextLocs(steps, currentStepNum),
+          getDefinitionHighlight(state.currentContextItem),
         ];
         state.widgets = widgets;
         state.numOfSteps = steps.length;
@@ -248,10 +261,6 @@ const { actions, reducer } = createSlice({
         state.currentStepNum = currentStepNum;
         state.pinnedStep = currentStepNum;
         state.currentTraverseId = currentTraverseId;
-        state.currentContextItem = getCurrentActiveContext(
-          context,
-          currentTraverseId,
-        );
 
         state.parseError = null;
         state.loadError = null;
@@ -309,21 +318,11 @@ export const {
   showOnlyMark1,
   showOnlyMark2,
   showBoth,
+  showDefination,
 } = actions;
 export default reducer;
 
 // Step and context related convenient functions
-function convertLocation({
-  srcSpanEndLine,
-  srcSpanEndColumn,
-  srcSpanStartColumn,
-  srcSpanStartLine,
-}) {
-  return {
-    from: { line: srcSpanStartLine - 1, ch: srcSpanStartColumn - 1 },
-    to: { line: srcSpanEndLine - 1, ch: srcSpanEndColumn - 1 },
-  };
-}
 
 function getCurrentActiveContext(contexts, currentTraverseId) {
   let item = contexts.find(c => {
@@ -332,6 +331,12 @@ function getCurrentActiveContext(contexts, currentTraverseId) {
     );
   });
   return item === undefined ? null : item;
+}
+
+function getDefinitionHighlight(ctxItm) {
+  console.log(ctxItm);
+  let definitionBlock = convertLocation(ctxItm.contextDefinedIn);
+  return makeHighlight(definitionBlock, 'markerDefination');
 }
 
 function getPrevLocs(steps, currentNum) {

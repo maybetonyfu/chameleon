@@ -12,6 +12,7 @@ import {
   toggleMultipleExps,
   showOnlyMark1,
   showOnlyMark2,
+  showDefination,
   showBoth,
 } from './debuggerSlice';
 
@@ -39,9 +40,10 @@ const TabList = () => {
   return (
     <div
       className={
-        'h-20  shadow-sm bg-gray-100 pl-10 flex items-center  ' +
+        'h-20  shadow-sm bg-gray-100 flex items-center  ' +
         (multipleExps ? 'rounded-b-lg' : '')
       }
+      style={{paddingLeft: 40 }}
     >
       <div
         className={'flex items-center cursor-pointer '}
@@ -207,7 +209,11 @@ const Summary = () => {
         >
           <div className='text-md mr-3'>
             It's possible to infer two conflicting types for the expression
-            <span className='code ml-2 px-1 rounded-md bg-gray-700 text-white inline-block not-italic cursor-pointer'>
+            <span
+              onMouseEnter={_ => dispatch(showDefination())}
+              onMouseLeave={_ => dispatch(showBoth())}
+
+              className='code ml-2 px-1 rounded-md bg-gray-700 text-white inline-block not-italic cursor-pointer'>
               {contextItem['contextExp']}
             </span>
           </div>
@@ -216,7 +222,7 @@ const Summary = () => {
       {multipleExps ? (
         <Expandable
           opened={debuggingSteps}
-          level={2}
+          left={5}
           hint={
             debuggingSteps
               ? 'Hide debugging steps'
@@ -236,20 +242,20 @@ const Summary = () => {
   );
 };
 
-const Expandable = ({ opened, children, onOpen, onClose, hint, level = 1 }) => {
+const Expandable = ({ opened, children, onOpen, onClose, hint, left = 5 }) => {
   let size = 25;
   return (
     <div className='relative'>
       {children}
       <div
         onClick={_ => (opened ? onClose() : onOpen())}
-        className='cursor-pointer rounded-full z-10 absolute border border-gray-300 hint--bottom  '
+        className='cursor-pointer rounded-full z-10 absolute border border-gray-300 hint--bottom'
         aria-label={hint}
         style={{
           width: size,
           height: size,
           top: `calc(50% - ${size / 2}px)`,
-          left: 5 + (level - 1) * 20,
+          left,
         }}
       >
         {opened ? <ChevronDownIcon /> : <ChevronRightIcon />}

@@ -37,7 +37,8 @@ data ChContext = ChContext
     contextType2String :: String,
     contextType2SimpleString :: String,
     contextSteps :: [((Int, Int), Affinity, Bool)],
-    contextGlobals :: [[String]]
+    contextGlobals :: [[String]],
+    contextDefinedIn :: SrcSpan
   }
   deriving (Show, Generic)
 
@@ -71,7 +72,8 @@ processFile text =
               (goals, solvestate) = runState (matchTerm Unit hModule) (n, mergedScope, filedOrderings, [])
               goals' = zipWith (\g n -> g {goalNum = n}) goals [0 ..]
               res = runGoalNWithState ks 1 (conjN (map unlabel (goals' ++ goals' ++ goals')))
-           in if not . null . view _4 $ solvestate
+           in
+              if not . null . view _4 $ solvestate
                 then ChLoadError (nub . view _4 $ solvestate)
                 else
                   if null res
@@ -112,7 +114,7 @@ processFile text =
                                         --       ++ "\n\nnames : "
                                         --       ++ unlines names'
                                         --       ++ "\n\n"
-                                        --   ) $ 
+                                        --   ) $
                                           typings ks names mss
                                       newNames = typings ks names' mss
                                       chooseConcrete a b old new =
@@ -145,10 +147,9 @@ processFile text =
                                   let (leftmost, rightmost) = polarEnds concrete
                                       (leftmostSimp, rightmostSimp) = polarEnds simplified
                                       -- globals in the scope
-                                      scpId = (read . reverse . takeWhile (/= '.') . reverse $ name) :: Int
-                                      scope = find ((== scpId) . scopeId) mergedScope
-                                      _used = if isNothing scope then [] else use (fromJust scope)
-                                      usedBuiltInScopes = filter (\scp -> 
+                                      scope = findScopeByName mergedScope name
+                                      _used = maybe [] use scope
+                                      usedBuiltInScopes = filter (\scp ->
                                         scopeType scp /= TypeScope
                                         && any (`elem` _used) (generate scp)) builtInScopes
                                       usedBuilltInNames = concatMap (\scp -> map (++ ('.' : show (scopeId scp))) (generate scp)) usedBuiltInScopes
@@ -184,6 +185,7 @@ processFile text =
                                         (toSig rightmostSimp)
                                         normalizedSides
                                         nameTypePairs
+                                        (toSrcSpan (maybe Global definedIn scope))
                               )
                               relevent
                           contextTableSorted = sortOn (fromJust . findIndex ((== M) . view _2) . contextSteps) contextTable

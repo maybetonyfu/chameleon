@@ -64,6 +64,10 @@ fn = srcSpanFilename . sp
 noSpan :: SrcSpan
 noSpan = sp noSrcSpan
 
+toSrcSpan :: ScopeRange -> SrcSpan
+toSrcSpan Global = noSpan
+toSrcSpan (Normal x) = x
+
 getId :: State Int Int
 getId = do
   n <- get
@@ -600,6 +604,11 @@ smallestBoundingScope scopes scpType v sp =
 uniqueNameFromBinding :: [Scope] -> Maybe ScopeType -> String -> SrcSpan -> String
 uniqueNameFromBinding scopes scpType v sp =
   uniqueName (scopeId . fromJust $ smallestBoundingScope scopes scpType v sp) v
+
+findScopeByName :: [Scope] -> String -> Maybe Scope
+findScopeByName scopes name =
+  let scpId = (read . reverse . takeWhile (/= '.') . reverse $ name) :: Int
+  in find ((== scpId) . scopeId) scopes
 
 parentScopesUntil :: Scope -> [Scope] -> Int -> [Scope]
 parentScopesUntil scp scopes n =

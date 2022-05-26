@@ -5,6 +5,18 @@ export const unAlias = str => {
 export const within = (point, { from, to }) =>
   pointAfterInclusive(point, from) && pointBeforeExclusive(point, to);
 
+export function convertLocation({
+  srcSpanEndLine,
+  srcSpanEndColumn,
+  srcSpanStartColumn,
+  srcSpanStartLine,
+}) {
+  return {
+    from: { line: srcSpanStartLine - 1, ch: srcSpanStartColumn - 1 },
+    to: { line: srcSpanEndLine - 1, ch: srcSpanEndColumn - 1 },
+  };
+}
+
 export const pointBeforeInclusive = (point1, point2) => {
   if (point1.line < point2.line) {
     return true;
@@ -241,7 +253,7 @@ export const partitionBy = (array, fun) => {
   return Object.values(res)
 }
 
-// z-index order: text >  bottom bar >= BorderBoxChild > BorderBoxParent > topBar > normalBoxParent > normalBoxChild 
+// z-index order: text >  bottom bar >= BorderBoxChild > BorderBoxParent > topBar > normalBoxParent > normalBoxChild
 //                 50        40            40                   30           20         10              0
 export const makeParentHighlightB = (range, m) => {
   return {

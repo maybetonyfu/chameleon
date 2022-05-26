@@ -25664,6 +25664,17 @@ printXML (Text text) = text
     return str.replaceAll("[Char]", "String");
   };
   var within = (point, { from, to }) => pointAfterInclusive(point, from) && pointBeforeExclusive(point, to);
+  function convertLocation({
+    srcSpanEndLine,
+    srcSpanEndColumn,
+    srcSpanStartColumn,
+    srcSpanStartLine
+  }) {
+    return {
+      from: { line: srcSpanStartLine - 1, ch: srcSpanStartColumn - 1 },
+      to: { line: srcSpanEndLine - 1, ch: srcSpanEndColumn - 1 }
+    };
+  }
   var pointBeforeInclusive = (point1, point2) => {
     if (point1.line < point2.line) {
       return true;
@@ -25903,7 +25914,7 @@ printXML (Text text) = text
     currentTraverseId: null,
     currentContextItem: null,
     pinnedStep: 0,
-    highlightFilter: [],
+    highlightFilter: ["markerDefination"],
     steps: [],
     context: [],
     numOfSteps: 0,
@@ -25932,13 +25943,16 @@ printXML (Text text) = text
         state.text = action.payload;
       },
       showOnlyMark1(state) {
-        state.highlightFilter = ["marker1"];
+        state.highlightFilter = ["marker1", "markerDefination"];
       },
       showOnlyMark2(state) {
-        state.highlightFilter = ["marker2"];
+        state.highlightFilter = ["marker2", "markerDefination"];
       },
       showBoth(state) {
-        state.highlightFilter = [];
+        state.highlightFilter = ["markerDefination"];
+      },
+      showDefination(state) {
+        state.highlightFilter = ["marker1", "marker2"];
       },
       setTask(state, action) {
         if (action.payload < 0 || action.payload > code_default.length)
@@ -25960,7 +25974,8 @@ printXML (Text text) = text
         state.highlights = [
           ...highlights,
           ...getPrevLocs(state.steps, currentStepNum),
-          ...getNextLocs(state.steps, currentStepNum)
+          ...getNextLocs(state.steps, currentStepNum),
+          getDefinitionHighlight(currentContextItem)
         ];
         state.widgets = widgets;
         state.currentContextItem = currentContextItem;
@@ -25979,7 +25994,8 @@ printXML (Text text) = text
         state.highlights = [
           ...highlights,
           ...getPrevLocs(state.steps, currentStepNum),
-          ...getNextLocs(state.steps, currentStepNum)
+          ...getNextLocs(state.steps, currentStepNum),
+          getDefinitionHighlight(currentContextItem)
         ];
         state.widgets = widgets;
         state.currentContextItem = currentContextItem;
@@ -26003,7 +26019,8 @@ printXML (Text text) = text
         state.highlights = [
           ...highlights,
           ...getPrevLocs(state.steps, currentStepNum),
-          ...getNextLocs(state.steps, currentStepNum)
+          ...getNextLocs(state.steps, currentStepNum),
+          getDefinitionHighlight(currentContextItem)
         ];
         state.widgets = widgets;
         state.currentContextItem = currentContextItem;
@@ -26022,7 +26039,8 @@ printXML (Text text) = text
         state.highlights = [
           ...highlights,
           ...getPrevLocs(state.steps, currentStepNum),
-          ...getNextLocs(state.steps, currentStepNum)
+          ...getNextLocs(state.steps, currentStepNum),
+          getDefinitionHighlight(currentContextItem)
         ];
         state.widgets = widgets;
         state.currentContextItem = currentContextItem;
@@ -26039,10 +26057,12 @@ printXML (Text text) = text
           let currentTraverseId = steps[currentStepNum].stepId;
           state.context = context;
           state.steps = steps;
+          state.currentContextItem = getCurrentActiveContext(context, currentTraverseId);
           state.highlights = [
             ...highlights,
             ...getPrevLocs(steps, currentStepNum),
-            ...getNextLocs(steps, currentStepNum)
+            ...getNextLocs(steps, currentStepNum),
+            getDefinitionHighlight(state.currentContextItem)
           ];
           state.widgets = widgets;
           state.numOfSteps = steps.length;
@@ -26050,7 +26070,6 @@ printXML (Text text) = text
           state.currentStepNum = currentStepNum;
           state.pinnedStep = currentStepNum;
           state.currentTraverseId = currentTraverseId;
-          state.currentContextItem = getCurrentActiveContext(context, currentTraverseId);
           state.parseError = null;
           state.loadError = null;
           state.wellTyped = false;
@@ -26096,25 +26115,20 @@ printXML (Text text) = text
     toggleMultipleExps,
     showOnlyMark1,
     showOnlyMark2,
-    showBoth
+    showBoth,
+    showDefination
   } = actions;
   var debuggerSlice_default = reducer;
-  function convertLocation({
-    srcSpanEndLine,
-    srcSpanEndColumn,
-    srcSpanStartColumn,
-    srcSpanStartLine
-  }) {
-    return {
-      from: { line: srcSpanStartLine - 1, ch: srcSpanStartColumn - 1 },
-      to: { line: srcSpanEndLine - 1, ch: srcSpanEndColumn - 1 }
-    };
-  }
   function getCurrentActiveContext(contexts, currentTraverseId) {
     let item = contexts.find((c3) => {
       return nth_default(2)(c3.contextSteps.find((x2) => equals_default(nth_default(0, x2), currentTraverseId)));
     });
     return item === void 0 ? null : item;
+  }
+  function getDefinitionHighlight(ctxItm) {
+    console.log(ctxItm);
+    let definitionBlock = convertLocation(ctxItm.contextDefinedIn);
+    return makeHighlight(definitionBlock, "markerDefination");
   }
   function getPrevLocs(steps, currentNum) {
     if (steps.length === 0)
@@ -26432,7 +26446,7 @@ printXML (Text text) = text
   };
   var Widget = ({ styles, classes, content }) => {
     const highlightFilter = useSelector(path_default(["debugger", "highlightFilter"]));
-    if (highlightFilter.length !== 0)
+    if (highlightFilter.includes["marker1"] && highlightFilter.includes["marker2"])
       return null;
     if (content.type === "annotation") {
       if (content.direction === "LR") {
@@ -26622,7 +26636,8 @@ printXML (Text text) = text
     const multipleExps = useSelector(path_default(["debugger", "multipleExps"]));
     const [scrollProgress, setScrollProgress] = (0, import_react11.useState)(0);
     return /* @__PURE__ */ import_react11.default.createElement("div", {
-      className: "h-20  shadow-sm bg-gray-100 pl-10 flex items-center  " + (multipleExps ? "rounded-b-lg" : "")
+      className: "h-20  shadow-sm bg-gray-100 flex items-center  " + (multipleExps ? "rounded-b-lg" : ""),
+      style: { paddingLeft: 40 }
     }, /* @__PURE__ */ import_react11.default.createElement("div", {
       className: "flex items-center cursor-pointer ",
       onWheel: (e3) => {
@@ -26728,10 +26743,12 @@ printXML (Text text) = text
     }, /* @__PURE__ */ import_react11.default.createElement("div", {
       className: "text-md mr-3"
     }, "It's possible to infer two conflicting types for the expression", /* @__PURE__ */ import_react11.default.createElement("span", {
+      onMouseEnter: (_3) => dispatch(showDefination()),
+      onMouseLeave: (_3) => dispatch(showBoth()),
       className: "code ml-2 px-1 rounded-md bg-gray-700 text-white inline-block not-italic cursor-pointer"
     }, contextItem["contextExp"])))), multipleExps ? /* @__PURE__ */ import_react11.default.createElement(Expandable, {
       opened: debuggingSteps,
-      level: 2,
+      left: 5,
       hint: debuggingSteps ? "Hide debugging steps" : "Expand to see debugging steps",
       onOpen: (_3) => {
         if (!debuggingSteps)
@@ -26743,19 +26760,19 @@ printXML (Text text) = text
       }
     }, /* @__PURE__ */ import_react11.default.createElement(TabList, null)) : null);
   };
-  var Expandable = ({ opened, children, onOpen, onClose, hint, level = 1 }) => {
+  var Expandable = ({ opened, children, onOpen, onClose, hint, left = 5 }) => {
     let size = 25;
     return /* @__PURE__ */ import_react11.default.createElement("div", {
       className: "relative"
     }, children, /* @__PURE__ */ import_react11.default.createElement("div", {
       onClick: (_3) => opened ? onClose() : onOpen(),
-      className: "cursor-pointer rounded-full z-10 absolute border border-gray-300 hint--bottom  ",
+      className: "cursor-pointer rounded-full z-10 absolute border border-gray-300 hint--bottom",
       "aria-label": hint,
       style: {
         width: size,
         height: size,
         top: `calc(50% - ${size / 2}px)`,
-        left: 5 + (level - 1) * 20
+        left
       }
     }, opened ? /* @__PURE__ */ import_react11.default.createElement(ChevronDownIcon_default, null) : /* @__PURE__ */ import_react11.default.createElement(ChevronRightIcon_default, null)));
   };

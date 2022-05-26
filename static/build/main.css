@@ -105,8 +105,8 @@ body {
 }
 
 .arrow-right {
-    width: 0; 
-    height: 0; 
+    width: 0;
+    height: 0;
     border-top: 5px solid transparent;
     border-bottom: 5px solid transparent;
     border-left: 5px solid white;
@@ -174,7 +174,7 @@ body {
 }
 
 .sideB {
-    background: var(--colorB); 
+    background: var(--colorB);
 }
 
 .sideAB {
@@ -439,3 +439,10 @@ body {
 .marker2 {
     background-color: var(--colorB-lighter);
 }
+
+.markerDefination {
+    /* background-color: var(--color-cerulean-2);
+	 */
+	 background-color: rgb(204, 204, 204);
+}
+

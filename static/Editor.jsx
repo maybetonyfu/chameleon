@@ -99,7 +99,7 @@ const Cell = ({ text, line, ch }) => {
 
 const Widget = ({ styles, classes, content }) => {
   const highlightFilter = useSelector(R.path(['debugger', 'highlightFilter']))
-  if (highlightFilter.length !== 0) return null
+  if (highlightFilter.includes['marker1'] && highlightFilter.includes['marker2']) return null
   if (content.type === 'annotation') {
     // this is very cluncky
     if (content.direction === 'LR') {
@@ -147,7 +147,7 @@ const Highlighter = ({ highlight, line, ch }) => {
   if (R.equals(highlight.to, { line, ch: ch + 1 })) {
     classes = [...classes, ...highlight.marker.end];
   }
-  
+
   classes = R.any(f => R.includes(f, classes))(highlightFilter) ? [] : classes
   return <div className={'absolute ' + classes.join(' ')} style={borderResetter}></div>;
 };
