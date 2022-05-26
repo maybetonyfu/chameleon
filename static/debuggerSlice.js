@@ -334,7 +334,6 @@ function getCurrentActiveContext(contexts, currentTraverseId) {
 }
 
 function getDefinitionHighlight(ctxItm) {
-  console.log(ctxItm);
   let definitionBlock = convertLocation(ctxItm.contextDefinedIn);
   return makeHighlight(definitionBlock, 'markerDefination');
 }

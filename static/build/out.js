@@ -24448,12 +24448,17 @@ For more info, visit https://reactjs.org/link/mock-scheduler`);
   N();
 
   // code.js
+  var intro = (n3) => `x :: Bool
+x = y
+
+y = 2
+`;
   var constAndTuple = (n3) => `module Task${n3} where
 
 x :: (Int, Bool)
 x = (3, y)
 
-const :: a -> b -> a 
+const :: a -> b -> a
 const a b = a
 
 y = const 0 True
@@ -24463,13 +24468,6 @@ y = const 0 True
 incr n = n + 1
 fun True c = incr c
 fun a x = a
-`;
-  var mostBasic = (n3) => `module Task${n3} where
-
-x y = 
-  case y of
-    Nothing -> Just 0
-    Just n -> n * 2
 `;
   var ifelse = (n3) => `module Task${n3} where
 u = 0
@@ -24488,29 +24486,29 @@ w = d (t i) (f i) b
   var uconandvcon = (n3) => `module Task${n3} where
 
 data V = VCon String
-data U = UCon Bool Int (Int, Int) 
+data U = UCon Bool Int (Int, Int)
 
 u :: U -> V
-u (UCon x y j) = 
-  if x 
-    then j 
+u (UCon x y j) =
+  if x
+    then j
     else fst y + snd y
 
 `;
   var quicksort = (n3) => `module Task${n3} where
 
-quick :: [Int] -> [Int] 
-quick []   = [] 
-quick (x:xs)= 
+quick :: [Int] -> [Int]
+quick []   = []
+quick (x:xs)=
  let littlebigs = split xs
- in 
-   quick (fst littlebigs) 
-    ++ [x] 
+ in
+   quick (fst littlebigs)
+    ++ [x]
     ++  quick (snd littlebigs)
 
 split [] _ result = result
-split (x:xs) n (littles, bigs) = 
-  if x < n 
+split (x:xs) n (littles, bigs) =
+  if x < n
     then split xs n (x:littles, bigs)
     else split xs n (littles, x:bigs)
 `;
@@ -24530,16 +24528,16 @@ getPart :: XML -> Part
 getPart (XML pos part) = part
 
 
-printXML (Element name [attributs] xmls) = 
-  "<" ++ name ++ ">" 
-  ++ mconcat (map printXML xmls) 
-  ++ "</" ++ name ++ ">" 
+printXML (Element name [attributs] xmls) =
+  "<" ++ name ++ ">"
+  ++ mconcat (map printXML xmls)
+  ++ "</" ++ name ++ ">"
 printXML (Text text) = text
 
 
 `;
   var examples = [
-    mostBasic,
+    intro,
     ifelse,
     constAndTuple,
     inc,
@@ -25794,14 +25792,13 @@ printXML (Text text) = text
     }
   }
   function boxStyles(topElem, bottomElem, color, offset) {
-    console.log();
     const downwardBarHeight = 0.28;
     const annotationWidth = 18;
     const annotationHeight = 1.25;
     const chWidth = 0.625;
     const chHeight = 1.5;
     const lineColor = "#666666";
-    const stepAsideDistance = offset * chWidth + 15;
+    const stepAsideDistance = offset * chWidth + 10;
     const styleTop = {
       background: color ? "var(--color-azure-3)" : "transparent",
       opacity: color ? 0.5 : 1,
@@ -26126,7 +26123,6 @@ printXML (Text text) = text
     return item === void 0 ? null : item;
   }
   function getDefinitionHighlight(ctxItm) {
-    console.log(ctxItm);
     let definitionBlock = convertLocation(ctxItm.contextDefinedIn);
     return makeHighlight(definitionBlock, "markerDefination");
   }
@@ -26446,7 +26442,14 @@ printXML (Text text) = text
   };
   var Widget = ({ styles, classes, content }) => {
     const highlightFilter = useSelector(path_default(["debugger", "highlightFilter"]));
-    if (highlightFilter.includes["marker1"] && highlightFilter.includes["marker2"])
+    const numOfSteps = useSelector(path_default(["debugger", "numOfSteps"]));
+    const pinnedStep = useSelector(path_default(["debugger", "pinnedStep"]));
+    const stepLabelFace = pinnedStep === content.step ? "bg-green-400 text-black border-green-400 border bg-green-400" : "bg-gray-200 border border-dashed border-black";
+    if (highlightFilter.includes("marker1") && !highlightFilter.includes("marker2"))
+      return null;
+    if (highlightFilter.includes("marker2") && !highlightFilter.includes("marker1"))
+      return null;
+    if (highlightFilter.includes("marker2") && highlightFilter.includes("marker1") && !highlightFilter.includes("markerDefinition"))
       return null;
     if (content.type === "annotation") {
       if (content.direction === "LR") {
@@ -26460,8 +26463,8 @@ printXML (Text text) = text
         }), /* @__PURE__ */ import_react9.default.createElement("span", {
           className: "ml-1 text-gray-500"
         }, "(step"), /* @__PURE__ */ import_react9.default.createElement("span", {
-          className: "bg-green-400 text-black inline-block w-4 h-4 text-xs rounded-full"
-        }, content.step + 1), /* @__PURE__ */ import_react9.default.createElement("span", {
+          className: "text-black inline-block w-4 h-4 text-xs rounded-full " + stepLabelFace
+        }, numOfSteps - content.step), /* @__PURE__ */ import_react9.default.createElement("span", {
           className: "text-gray-500"
         }, ")"));
       } else {
@@ -26475,8 +26478,8 @@ printXML (Text text) = text
         }), /* @__PURE__ */ import_react9.default.createElement("span", {
           className: "ml-1 text-gray-500"
         }, "(step"), /* @__PURE__ */ import_react9.default.createElement("span", {
-          className: "bg-green-400 text-black inline-block w-4 h-4 text-xs rounded-full"
-        }, content.step + 1), /* @__PURE__ */ import_react9.default.createElement("span", {
+          className: "text-black inline-block w-4 h-4 text-xs rounded-full " + stepLabelFace
+        }, numOfSteps - content.step), /* @__PURE__ */ import_react9.default.createElement("span", {
           className: "text-gray-500"
         }, ")"));
       }
@@ -26629,17 +26632,16 @@ printXML (Text text) = text
   var TabList = () => {
     const dispatch = useDispatch();
     let context = useSelector(path_default(["debugger", "context"]));
-    let traverseId = useSelector(path_default(["debugger", "currentTraverseId"]));
     let steps = useSelector(path_default(["debugger", "steps"]));
     let pinnedStep = useSelector(path_default(["debugger", "pinnedStep"]));
     let pinnedTraverseId = steps[pinnedStep].stepId;
     const multipleExps = useSelector(path_default(["debugger", "multipleExps"]));
     const [scrollProgress, setScrollProgress] = (0, import_react11.useState)(0);
     return /* @__PURE__ */ import_react11.default.createElement("div", {
-      className: "h-20  shadow-sm bg-gray-100 flex items-center  " + (multipleExps ? "rounded-b-lg" : ""),
+      className: "h-20  shadow-sm bg-gray-100 flex items-center   " + (multipleExps ? "rounded-b-lg" : ""),
       style: { paddingLeft: 40 }
     }, /* @__PURE__ */ import_react11.default.createElement("div", {
-      className: "flex items-center cursor-pointer ",
+      className: "flex items-center cursor-pointer flex-row-reverse justify-end ",
       onWheel: (e3) => {
         let progress = clamp_default(-1.5, 1.5, Math.sign(e3.deltaY) * Math.log2(Math.abs(e3.deltaY)));
         setScrollProgress(scrollProgress + progress);
@@ -26661,16 +26663,31 @@ printXML (Text text) = text
   };
   var Tab = ({ active = false, steps, exp }) => {
     let dispatch = useDispatch();
-    const deductionStpe = useSelector(path_default(["debugger", "debuggingSteps"]));
+    const deductionSteps = useSelector(path_default(["debugger", "debuggingSteps"]));
+    let pinnedStep = useSelector(path_default(["debugger", "pinnedStep"]));
+    let traverseId = useSelector(path_default(["debugger", "currentTraverseId"]));
     let tabReleventSteps = steps.map((step, i3) => [...step, i3]).filter(nth_default(2));
     let tabDefaultStep = tabReleventSteps[Math.round(tabReleventSteps.length / 2) - 1][3];
+    let hovering = steps.find(pipe(nth_default(0), equals_default(traverseId)))[2];
+    let face;
+    if (active) {
+      face = "bg-gray-900 border-gray-900 border";
+    } else if (deductionSteps && !active) {
+      face = "bg-white border ";
+    } else if (!deductionSteps && !active && hovering) {
+      face = "bg-white border-dashed border border-black";
+    } else if (!deductionSteps && !active && !hovering) {
+      face = "bg-white border ";
+    }
     return /* @__PURE__ */ import_react11.default.createElement("div", {
-      className: "flex flex-col w-max m-1 px-2 py-1 rounded-lg " + (active ? "bg-gray-900" : "bg-white border"),
+      className: "flex flex-col w-max m-1 px-2 py-1 rounded-lg active:bg-gray-100 active:text-black " + face,
       style: { minWidth: 80 },
-      onClick: (_3) => dispatch(lockStep(tabDefaultStep))
+      onClick: (_3) => dispatch(lockStep(tabDefaultStep)),
+      onMouseEnter: (_3) => deductionSteps ? null : dispatch(setStep(tabDefaultStep)),
+      onMouseLeave: (_3) => deductionSteps ? null : dispatch(setStep(pinnedStep))
     }, /* @__PURE__ */ import_react11.default.createElement("div", {
-      className: " rounded-t-2xl inline-block w-full h-10 leading-10 text-xl code " + (active ? "text-white" : "text-gray-800")
-    }, exp), deductionStpe ? /* @__PURE__ */ import_react11.default.createElement("div", {
+      className: " rounded-t-2xl inline-block w-full h-10 leading-10 text-xl code select-none " + (active ? "text-white" : "text-gray-800")
+    }, exp), deductionSteps ? /* @__PURE__ */ import_react11.default.createElement("div", {
       className: "w-full h-6"
     }, /* @__PURE__ */ import_react11.default.createElement(TabSteps, {
       steps: tabReleventSteps,
@@ -26679,7 +26696,7 @@ printXML (Text text) = text
   };
   var TabSteps = ({ active = false, steps }) => {
     return /* @__PURE__ */ import_react11.default.createElement("div", {
-      className: "flex "
+      className: "flex flex-row-reverse justify-end "
     }, steps.map((step) => /* @__PURE__ */ import_react11.default.createElement(TabStep, {
       active,
       key: step[3],
@@ -26689,6 +26706,7 @@ printXML (Text text) = text
   };
   var TabStep = ({ active = false, step, traverseId }) => {
     let dispatch = useDispatch();
+    let numOfSteps = useSelector(path_default(["debugger", "numOfSteps"]));
     let currentTraverseId = useSelector(path_default(["debugger", "currentTraverseId"]));
     let pinnedStep = useSelector(path_default(["debugger", "pinnedStep"]));
     let stepping = equals_default(currentTraverseId, traverseId);
@@ -26697,9 +26715,9 @@ printXML (Text text) = text
     if (active && pinned) {
       face = "bg-green-400 text-black";
     } else if (stepping && active) {
-      face = "bg-green-200 text-black";
+      face = "bg-gray-600 border-dashed border border-white text-white";
     } else if (stepping && !active) {
-      face = "bg-green-300 text-black border";
+      face = "border-dashed bg-gray-200 text-black border-black border";
     } else if (active) {
       face = "bg-gray-400 text-black";
     } else if (!active) {
@@ -26715,13 +26733,16 @@ printXML (Text text) = text
       },
       onMouseLeave: (_3) => dispatch(setStep(pinnedStep))
     }, /* @__PURE__ */ import_react11.default.createElement("div", {
-      className: "w-5 h-5 leading-5 flex justify-center cursor-pointer rounded-full text-md mx-0.5 " + face
-    }, step + 1));
+      className: "w-5 h-5 leading-5 flex justify-center  cursor-pointer rounded-full text-md mx-0.5 " + face
+    }, numOfSteps - step));
   };
   var Summary = () => {
     let contextItem = useSelector((state) => state.debugger.currentContextItem);
     const multipleExps = useSelector(path_default(["debugger", "multipleExps"]));
     const debuggingSteps = useSelector(path_default(["debugger", "debuggingSteps"]));
+    const steps = useSelector(path_default(["debugger", "steps"]));
+    const pinnedStep = useSelector(path_default(["debugger", "pinnedStep"]));
+    const pinned = steps.length === 0 ? true : contextItem.contextSteps.find(pipe(nth_default(0), equals_default(steps[pinnedStep].stepId)))[2];
     const dispatch = useDispatch();
     return contextItem === null ? null : /* @__PURE__ */ import_react11.default.createElement(import_react11.default.Fragment, null, /* @__PURE__ */ import_react11.default.createElement(Expandable, {
       hint: debuggingSteps ? "Hide other uncertain expressions" : "Expand to see a list of uncertain expressions",
@@ -26741,11 +26762,11 @@ printXML (Text text) = text
     }, /* @__PURE__ */ import_react11.default.createElement("div", {
       className: "bg-white p-3 pl-8 shadow-sm rounded-t-lg " + (multipleExps ? "" : "rounded-b-lg")
     }, /* @__PURE__ */ import_react11.default.createElement("div", {
-      className: "text-md mr-3"
-    }, "It's possible to infer two conflicting types for the expression", /* @__PURE__ */ import_react11.default.createElement("span", {
+      className: "text-md"
+    }, "The following expression can have two conflicting types", /* @__PURE__ */ import_react11.default.createElement("span", {
       onMouseEnter: (_3) => dispatch(showDefination()),
       onMouseLeave: (_3) => dispatch(showBoth()),
-      className: "code ml-2 px-1 rounded-md bg-gray-700 text-white inline-block not-italic cursor-pointer"
+      className: "code ml-2 px-1 rounded-md  inline-block not-italic cursor-pointer " + (pinned ? "border border-gray-700 bg-gray-700 text-white" : "border border-black border-dashed")
     }, contextItem["contextExp"])))), multipleExps ? /* @__PURE__ */ import_react11.default.createElement(Expandable, {
       opened: debuggingSteps,
       left: 5,
@@ -26782,9 +26803,9 @@ printXML (Text text) = text
     return contextItem === null ? null : /* @__PURE__ */ import_react11.default.createElement(import_react11.default.Fragment, null, /* @__PURE__ */ import_react11.default.createElement("div", {
       className: "font-medium mt-5"
     }, "Conflicting types"), /* @__PURE__ */ import_react11.default.createElement("div", {
-      className: "mb-5 p-2 mt-2 bg-white rounded-lg shadow-sm"
+      className: "mb-5 mt-2 shadow-sm"
     }, /* @__PURE__ */ import_react11.default.createElement("div", {
-      className: "mb-1 cursor-pointer",
+      className: "cursor-pointer hover:bg-gray-100 rounded-t-md bg-white p-2",
       onMouseEnter: (_3) => dispatch(showOnlyMark1()),
       onMouseLeave: (_3) => dispatch(showBoth())
     }, /* @__PURE__ */ import_react11.default.createElement("div", {
@@ -26799,9 +26820,9 @@ printXML (Text text) = text
     })), /* @__PURE__ */ import_react11.default.createElement("div", {
       className: "text-xs italic"
     }, "Infered from the orange highlights on the left side")), /* @__PURE__ */ import_react11.default.createElement("hr", {
-      className: "-ml-2 -mr-2"
+      className: ""
     }), /* @__PURE__ */ import_react11.default.createElement("div", {
-      className: "my-1 cursor-pointer",
+      className: "cursor-pointer hover:bg-gray-100 rounded-b-md bg-white p-2",
       onMouseEnter: (_3) => dispatch(showOnlyMark2()),
       onMouseLeave: (_3) => dispatch(showBoth())
     }, /* @__PURE__ */ import_react11.default.createElement("div", {
@@ -26859,7 +26880,7 @@ printXML (Text text) = text
     let tabReleventSteps = item.contextSteps.map((step, i3) => [...step, i3]).filter(nth_default(2));
     let tabDefaultStep = tabReleventSteps[Math.round(tabReleventSteps.length / 2) - 1][3];
     return /* @__PURE__ */ import_react11.default.createElement("div", {
-      className: "flex flex-col my-1.5 bg-white p-2 rounded-md cursor-pointer shadow-sm",
+      className: "flex flex-col my-1.5 bg-white p-2 rounded-md cursor-pointer shadow-sm hover:bg-gray-100",
       onMouseEnter: (_3) => affinity === "L" ? dispatch(showOnlyMark1()) : dispatch(showOnlyMark2()),
       onMouseLeave: (_3) => dispatch(showBoth())
     }, /* @__PURE__ */ import_react11.default.createElement("div", {
@@ -26873,12 +26894,12 @@ printXML (Text text) = text
     }, "::"), /* @__PURE__ */ import_react11.default.createElement("div", {
       className: "code px-0.5 rounded-sm " + (affinity === "L" ? "marker2" : "marker1")
     }, type3)), multipleExps ? /* @__PURE__ */ import_react11.default.createElement("div", {
-      className: "bg-white p-1 rounded-md flex items-center"
+      className: "flex items-center"
     }, /* @__PURE__ */ import_react11.default.createElement("div", {
       className: "text-sm text-gray-500"
     }, "Looks wrong? "), /* @__PURE__ */ import_react11.default.createElement("button", {
-      onClick: (_3) => dispatch(setStep(tabDefaultStep)),
-      className: "border border-gray-300 rounded-sm px-2 py-1 mr-1 ml-2"
+      onClick: (_3) => dispatch(lockStep(tabDefaultStep)),
+      className: "border border-gray-300 rounded-sm px-2 py-1 mr-1 ml-2 bg-white active:bg-gray-200 hover:bg-gray-100 shadow-sm"
     }, "Inspect")) : null), /* @__PURE__ */ import_react11.default.createElement("div", {
       className: "text-xs italic"
     }, " Inferred from ", origin, " "));
@@ -26940,6 +26961,7 @@ printXML (Text text) = text
   var import_react13 = __toESM(require_react());
   var MenuBar = () => {
     const dispatch = useDispatch();
+    const mode = useSelector(path_default(["debugger", "mode"]));
     (0, import_react13.useEffect)(() => {
       dispatch(setTask(1));
       dispatch(typeCheckThunk());
@@ -27019,12 +27041,12 @@ printXML (Text text) = text
       value: 6
     }, "Example 7"), /* @__PURE__ */ import_react13.default.createElement("option", {
       value: 7
-    }, "Example 8")), /* @__PURE__ */ import_react13.default.createElement("button", {
+    }, "Example 8")), mode === editorModes.normal ? /* @__PURE__ */ import_react13.default.createElement("button", {
       className: "bg-gray-300 px-4 py-1 rounded-md mx-2 flex h-8 justify-center items-center",
       onClick: (_3) => dispatch(toEditMode())
     }, /* @__PURE__ */ import_react13.default.createElement(PencilAltIcon_default, {
       className: "h-4 w-4 mr-1"
-    }), "Edit code"), /* @__PURE__ */ import_react13.default.createElement("button", {
+    }), "Edit code") : /* @__PURE__ */ import_react13.default.createElement("button", {
       className: "bg-gray-300 px-4 py-1 rounded-md mx-2 flex h-8 justify-center items-center",
       onClick: (_3) => {
         dispatch(toNormalMode());

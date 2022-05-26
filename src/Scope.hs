@@ -301,6 +301,7 @@ instance HasScopes Match where
     argScopeId <- getId
     (names, scopes) <- getScopes (normal l) argScopeId rhs
     let argNames = nub $ concatMap patternVarNames pats
+        argSpan = normal . foldr1 combSpanInfo . map ann $ pats
         funName = getName name
         use' = names \\ (funName : argNames)
         funScope =
@@ -320,7 +321,7 @@ instance HasScopes Match where
             { scopeId = argScopeId,
               scopeType = ArgScope,
               effectiveIn = normal l,
-              definedIn = normal l,
+              definedIn = argSpan,
               generate = argNames,
               use = names \\ (funName : argNames),
               parentScope = funScopeId,

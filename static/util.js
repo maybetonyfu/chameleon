@@ -181,14 +181,13 @@ export function drawAnnotations(rangeA, rangeB, reason, step, direction, offset)
 }
 
 function boxStyles(topElem, bottomElem, color, offset) {
-  console.log()
   const downwardBarHeight = 0.28;
   const annotationWidth = 18;
   const annotationHeight = 1.25;
   const chWidth = 0.625;
   const chHeight = 1.5;
   const lineColor = '#666666';
-  const stepAsideDistance = offset * chWidth + 15;
+  const stepAsideDistance = offset * chWidth + 10
   const styleTop = {
     background: color ? 'var(--color-azure-3)' : 'transparent',
     opacity: color ? 0.5 : 1,

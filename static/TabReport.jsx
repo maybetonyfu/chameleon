@@ -29,7 +29,6 @@ const TabReport = () => {
 const TabList = () => {
   const dispatch = useDispatch();
   let context = useSelector(R.path(['debugger', 'context']));
-  let traverseId = useSelector(R.path(['debugger', 'currentTraverseId']));
   let steps = useSelector(R.path(['debugger', 'steps']));
 
   let pinnedStep = useSelector(R.path(['debugger', 'pinnedStep']));
@@ -40,13 +39,15 @@ const TabList = () => {
   return (
     <div
       className={
-        'h-20  shadow-sm bg-gray-100 flex items-center  ' +
+        'h-20  shadow-sm bg-gray-100 flex items-center   ' +
         (multipleExps ? 'rounded-b-lg' : '')
       }
-      style={{paddingLeft: 40 }}
+      style={{ paddingLeft: 40 }}
     >
       <div
-        className={'flex items-center cursor-pointer '}
+        className={
+          'flex items-center cursor-pointer flex-row-reverse justify-end '
+        }
         onWheel={e => {
           let progress = R.clamp(
             -1.5,
@@ -84,28 +85,45 @@ const TabList = () => {
 };
 const Tab = ({ active = false, steps, exp }) => {
   let dispatch = useDispatch();
-  const deductionStpe = useSelector(R.path(['debugger', 'debuggingSteps']));
+  const deductionSteps = useSelector(R.path(['debugger', 'debuggingSteps']));
+  let pinnedStep = useSelector(R.path(['debugger', 'pinnedStep']));
+  let traverseId = useSelector(R.path(['debugger', 'currentTraverseId']));
+
   let tabReleventSteps = steps.map((step, i) => [...step, i]).filter(R.nth(2));
   let tabDefaultStep =
     tabReleventSteps[Math.round(tabReleventSteps.length / 2) - 1][3];
+  let hovering = steps.find(R.pipe(R.nth(0), R.equals(traverseId)))[2];
+  let face;
+  if (active) {
+    face = 'bg-gray-900 border-gray-900 border';
+  } else if (deductionSteps && !active) {
+    face = 'bg-white border ';
+  } else if (!deductionSteps && !active && hovering) {
+    face = 'bg-white border-dashed border border-black';
+  } else if (!deductionSteps && !active && !hovering) {
+    face = 'bg-white border ';
+  }
   return (
     <div
-      className={
-        'flex flex-col w-max m-1 px-2 py-1 rounded-lg ' +
-        (active ? 'bg-gray-900' : 'bg-white border')
-      }
+      className={'flex flex-col w-max m-1 px-2 py-1 rounded-lg active:bg-gray-100 active:text-black ' + face}
       style={{ minWidth: 80 }}
       onClick={_ => dispatch(lockStep(tabDefaultStep))}
+      onMouseEnter={_ =>
+        deductionSteps ? null : dispatch(setStep(tabDefaultStep))
+      }
+      onMouseLeave={_ =>
+        deductionSteps ? null : dispatch(setStep(pinnedStep))
+      }
     >
       <div
         className={
-          ' rounded-t-2xl inline-block w-full h-10 leading-10 text-xl code ' +
+          ' rounded-t-2xl inline-block w-full h-10 leading-10 text-xl code select-none ' +
           (active ? 'text-white' : 'text-gray-800')
         }
       >
         {exp}
       </div>
-      {deductionStpe ? (
+      {deductionSteps ? (
         <div className={'w-full h-6'}>
           <TabSteps steps={tabReleventSteps} active={active}></TabSteps>
         </div>
@@ -116,7 +134,7 @@ const Tab = ({ active = false, steps, exp }) => {
 
 const TabSteps = ({ active = false, steps }) => {
   return (
-    <div className='flex '>
+    <div className='flex flex-row-reverse justify-end '>
       {steps.map(step => (
         <TabStep
           active={active}
@@ -131,6 +149,7 @@ const TabSteps = ({ active = false, steps }) => {
 
 const TabStep = ({ active = false, step, traverseId }) => {
   let dispatch = useDispatch();
+  let numOfSteps = useSelector(R.path(['debugger', 'numOfSteps']));
   let currentTraverseId = useSelector(
     R.path(['debugger', 'currentTraverseId']),
   );
@@ -142,9 +161,9 @@ const TabStep = ({ active = false, step, traverseId }) => {
   if (active && pinned) {
     face = 'bg-green-400 text-black';
   } else if (stepping && active) {
-    face = 'bg-green-200 text-black';
+    face = 'bg-gray-600 border-dashed border border-white text-white';
   } else if (stepping && !active) {
-    face = 'bg-green-300 text-black border';
+    face = 'border-dashed bg-gray-200 text-black border-black border';
   } else if (active) {
     face = 'bg-gray-400 text-black';
   } else if (!active) {
@@ -164,11 +183,11 @@ const TabStep = ({ active = false, step, traverseId }) => {
     >
       <div
         className={
-          'w-5 h-5 leading-5 flex justify-center cursor-pointer rounded-full text-md mx-0.5 ' +
+          'w-5 h-5 leading-5 flex justify-center  cursor-pointer rounded-full text-md mx-0.5 ' +
           face
         }
       >
-        {step + 1}
+        {numOfSteps - step}
       </div>
     </button>
   );
@@ -178,6 +197,15 @@ const Summary = () => {
   let contextItem = useSelector(state => state.debugger.currentContextItem);
   const multipleExps = useSelector(R.path(['debugger', 'multipleExps']));
   const debuggingSteps = useSelector(R.path(['debugger', 'debuggingSteps']));
+  const steps = useSelector(R.path(['debugger', 'steps']));
+  const pinnedStep = useSelector(R.path(['debugger', 'pinnedStep']));
+
+  const pinned =
+    steps.length === 0
+      ? true
+      : contextItem.contextSteps.find(
+          R.pipe(R.nth(0), R.equals(steps[pinnedStep].stepId)),
+        )[2];
 
   const dispatch = useDispatch();
   return contextItem === null ? null : (
@@ -207,13 +235,18 @@ const Summary = () => {
             (multipleExps ? '' : 'rounded-b-lg')
           }
         >
-          <div className='text-md mr-3'>
-            It's possible to infer two conflicting types for the expression
+          <div className='text-md'>
+            The following expression can have two conflicting types
             <span
               onMouseEnter={_ => dispatch(showDefination())}
               onMouseLeave={_ => dispatch(showBoth())}
-
-              className='code ml-2 px-1 rounded-md bg-gray-700 text-white inline-block not-italic cursor-pointer'>
+              className={
+                'code ml-2 px-1 rounded-md  inline-block not-italic cursor-pointer ' +
+                (pinned
+                  ? 'border border-gray-700 bg-gray-700 text-white'
+                  : 'border border-black border-dashed')
+              }
+            >
               {contextItem['contextExp']}
             </span>
           </div>
@@ -270,9 +303,9 @@ const Message = () => {
   return contextItem === null ? null : (
     <>
       <div className='font-medium mt-5'>Conflicting types</div>
-      <div className='mb-5 p-2 mt-2 bg-white rounded-lg shadow-sm'>
+      <div className='mb-5 mt-2 shadow-sm'>
         <div
-          className='mb-1 cursor-pointer'
+          className='cursor-pointer hover:bg-gray-100 rounded-t-md bg-white p-2'
           onMouseEnter={_ => dispatch(showOnlyMark1())}
           onMouseLeave={_ => dispatch(showBoth())}
         >
@@ -290,9 +323,9 @@ const Message = () => {
             Infered from the orange highlights on the left side
           </div>
         </div>
-        <hr className='-ml-2 -mr-2'></hr>
+        <hr className=''></hr>
         <div
-          className='my-1 cursor-pointer'
+          className='cursor-pointer hover:bg-gray-100 rounded-b-md bg-white p-2'
           onMouseEnter={_ => dispatch(showOnlyMark2())}
           onMouseLeave={_ => dispatch(showBoth())}
         >
@@ -373,7 +406,7 @@ const ReleventItem = ({ item }) => {
     tabReleventSteps[Math.round(tabReleventSteps.length / 2) - 1][3];
   return (
     <div
-      className='flex flex-col my-1.5 bg-white p-2 rounded-md cursor-pointer shadow-sm'
+      className='flex flex-col my-1.5 bg-white p-2 rounded-md cursor-pointer shadow-sm hover:bg-gray-100'
       onMouseEnter={_ =>
         affinity === 'L' ? dispatch(showOnlyMark1()) : dispatch(showOnlyMark2())
       }
@@ -393,11 +426,11 @@ const ReleventItem = ({ item }) => {
           </div>
         </div>
         {multipleExps ? (
-          <div className='bg-white p-1 rounded-md flex items-center'>
+          <div className='flex items-center'>
             <div className='text-sm text-gray-500'>Looks wrong? </div>
             <button
-              onClick={_ => dispatch(setStep(tabDefaultStep))}
-              className='border border-gray-300 rounded-sm px-2 py-1 mr-1 ml-2'
+              onClick={_ => dispatch(lockStep(tabDefaultStep))}
+              className='border border-gray-300 rounded-sm px-2 py-1 mr-1 ml-2 bg-white active:bg-gray-200 hover:bg-gray-100 shadow-sm'
             >
               Inspect
             </button>

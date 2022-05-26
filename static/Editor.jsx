@@ -99,7 +99,14 @@ const Cell = ({ text, line, ch }) => {
 
 const Widget = ({ styles, classes, content }) => {
   const highlightFilter = useSelector(R.path(['debugger', 'highlightFilter']))
-  if (highlightFilter.includes['marker1'] && highlightFilter.includes['marker2']) return null
+  const numOfSteps = useSelector(R.path(['debugger', 'numOfSteps']))
+  const pinnedStep = useSelector(R.path(['debugger', 'pinnedStep']))
+
+  const stepLabelFace = pinnedStep === content.step ? 'bg-green-400 text-black border-green-400 border bg-green-400' : 'bg-gray-200 border border-dashed border-black'
+  if (highlightFilter.includes('marker1') && !highlightFilter.includes('marker2')) return null
+  if (highlightFilter.includes('marker2') && !highlightFilter.includes('marker1')) return null
+  if (highlightFilter.includes('marker2') && highlightFilter.includes('marker1') && !highlightFilter.includes('markerDefinition')) return null
+
   if (content.type === 'annotation') {
     // this is very cluncky
     if (content.direction === 'LR') {
@@ -109,8 +116,8 @@ const Widget = ({ styles, classes, content }) => {
           {content.reason}
           <span className='marker2 border border-black inline-block w-2 h-2 rounded-sm ml-1'></span>
           <span className='ml-1 text-gray-500'>(step</span>
-          <span className='bg-green-400 text-black inline-block w-4 h-4 text-xs rounded-full'>
-          {content.step + 1}
+          <span className={'text-black inline-block w-4 h-4 text-xs rounded-full ' + stepLabelFace} >
+          {numOfSteps - content.step }
           </span>
           <span className='text-gray-500'>)</span>
         </div>
@@ -122,8 +129,8 @@ const Widget = ({ styles, classes, content }) => {
           {content.reason}
           <span className='marker1 border border-black inline-block w-2 h-2 rounded-sm ml-1'></span>
           <span className='ml-1 text-gray-500'>(step</span>
-          <span className='bg-green-400 text-black inline-block w-4 h-4 text-xs rounded-full'>
-            {content.step + 1}
+          <span className={'text-black inline-block w-4 h-4 text-xs rounded-full ' + stepLabelFace}>
+          {numOfSteps - content.step }
           </span>
           <span className='text-gray-500'>)</span>
         </div>

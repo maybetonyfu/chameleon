@@ -1,3 +1,9 @@
+const intro = n => `x :: Bool
+x = y
+
+y = 2
+`
+
 const exampeExtend = n => `module Task${n} where
 
 data Expr = C Int |
@@ -143,7 +149,7 @@ fromGregorian :: Year -> Month -> Int -> Maybe Day
 fromGregorian y m d = Just (Day y m d)
 
 periodAsDateSpan :: Period -> DataSpan
-periodAsDateSpan (WeekPeriod b) = 
+periodAsDateSpan (WeekPeriod b) =
   DateSpan (Just b) (Just (addDays 7 b))
 periodAsDateSpan (MonthPeriod y m) =
   let
@@ -222,7 +228,7 @@ const constAndTuple = n => `module Task${n} where
 x :: (Int, Bool)
 x = (3, y)
 
-const :: a -> b -> a 
+const :: a -> b -> a
 const a b = a
 
 y = const 0 True
@@ -237,7 +243,7 @@ fun a x = a
 
 const mostBasic = n => `module Task${n} where
 
-x y = 
+x y =
   case y of
     Nothing -> Just 0
     Just n -> n * 2
@@ -263,30 +269,30 @@ w = d (t i) (f i) b
 const uconandvcon = n => `module Task${n} where
 
 data V = VCon String
-data U = UCon Bool Int (Int, Int) 
+data U = UCon Bool Int (Int, Int)
 
 u :: U -> V
-u (UCon x y j) = 
-  if x 
-    then j 
+u (UCon x y j) =
+  if x
+    then j
     else fst y + snd y
 
 `
 
 const quicksort = n => `module Task${n} where
 
-quick :: [Int] -> [Int] 
-quick []   = [] 
-quick (x:xs)= 
+quick :: [Int] -> [Int]
+quick []   = []
+quick (x:xs)=
  let littlebigs = split xs
- in 
-   quick (fst littlebigs) 
-    ++ [x] 
+ in
+   quick (fst littlebigs)
+    ++ [x]
     ++  quick (snd littlebigs)
 
 split [] _ result = result
-split (x:xs) n (littles, bigs) = 
-  if x < n 
+split (x:xs) n (littles, bigs) =
+  if x < n
     then split xs n (x:littles, bigs)
     else split xs n (littles, x:bigs)
 `
@@ -308,16 +314,16 @@ getPart :: XML -> Part
 getPart (XML pos part) = part
 
 
-printXML (Element name [attributs] xmls) = 
-  "<" ++ name ++ ">" 
-  ++ mconcat (map printXML xmls) 
-  ++ "</" ++ name ++ ">" 
+printXML (Element name [attributs] xmls) =
+  "<" ++ name ++ ">"
+  ++ mconcat (map printXML xmls)
+  ++ "</" ++ name ++ ">"
 printXML (Text text) = text
 
 
 `
 const examples = [
-  mostBasic,
+  intro,
   ifelse,
   constAndTuple,
   inc,

@@ -29,6 +29,7 @@ main = scotty 5000 (
     >> css
     >> svg
     >> jpg
+    >> png
     >> favicon
     >> page
     )
@@ -73,6 +74,13 @@ jpg = get (regex "^.*\\.jpg") $ do
   path <- param "0"
   let filename = "static/build" `T.append` path
   setHeader "Content-Type" "image/jpeg"
+  file (T.unpack filename)
+
+png :: ScottyM ()
+png = get (regex "^.*\\.png") $ do
+  path <- param "0"
+  let filename = "static/build" `T.append` path
+  setHeader "Content-Type" "image/png"
   file (T.unpack filename)
 
 favicon :: ScottyM ()
