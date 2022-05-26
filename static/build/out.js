@@ -27004,6 +27004,7 @@ printXML (Text text) = text
   var MenuBar = () => {
     const dispatch = useDispatch();
     const mode = useSelector(path_default(["debugger", "mode"]));
+    const deductionSteps = useSelector(path_default(["debugger", "debuggingSteps"]));
     (0, import_react13.useEffect)(() => {
       dispatch(setTask(1));
       dispatch(typeCheckThunk());
@@ -27102,7 +27103,7 @@ printXML (Text text) = text
       className: "bg-gray-300 px-4 py-1 rounded-md mx-2 flex h-8 justify-center items-center"
     }, /* @__PURE__ */ import_react13.default.createElement(BookOpenIcon_default, {
       className: "h-4 w-4 mr-1"
-    }), "Tutorial"), /* @__PURE__ */ import_react13.default.createElement("button", {
+    }), "Tutorial"), deductionSteps ? /* @__PURE__ */ import_react13.default.createElement(import_react13.default.Fragment, null, /* @__PURE__ */ import_react13.default.createElement("button", {
       "aria-label": "Previous step (Arrow key left)",
       className: "bg-gray-700 hover:bg-gray-800 active:bg-gray-900 px-2 py-1 mx-0.5 h-8 rounded-md flex justify-center items-center hint--bottom",
       onClick: (_3) => dispatch(nextStep())
@@ -27114,7 +27115,7 @@ printXML (Text text) = text
       onClick: (_3) => dispatch(prevStep())
     }, /* @__PURE__ */ import_react13.default.createElement(ChevronDoubleRightIcon_default, {
       className: "h-4 w-4 text-white"
-    }))), /* @__PURE__ */ import_react13.default.createElement("div", {
+    }))) : null), /* @__PURE__ */ import_react13.default.createElement("div", {
       className: "flex items-center px-2"
     }));
   };

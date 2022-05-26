@@ -22,6 +22,8 @@ import {
 const MenuBar = () => {
   const dispatch = useDispatch();
   const mode = useSelector(R.path(['debugger', 'mode']));
+  const deductionSteps = useSelector(R.path(['debugger', 'debuggingSteps']));
+
   useEffect(() => {
     dispatch(setTask(1));
     dispatch(typeCheckThunk());
@@ -129,6 +131,8 @@ const MenuBar = () => {
           <BookOpenIcon className='h-4 w-4 mr-1'></BookOpenIcon>
           Tutorial
         </a>
+        {
+          deductionSteps ? (<>
         <button
           aria-label='Previous step (Arrow key left)'
           className='bg-gray-700 hover:bg-gray-800 active:bg-gray-900 px-2 py-1 mx-0.5 h-8 rounded-md flex justify-center items-center hint--bottom'
@@ -143,6 +147,10 @@ const MenuBar = () => {
         >
           <ChevronDoubleRightIcon className='h-4 w-4 text-white'></ChevronDoubleRightIcon>
         </button>
+          </>) : null
+
+        }
+
       </div>
 
       <div className='flex items-center px-2'></div>
