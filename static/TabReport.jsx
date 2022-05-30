@@ -67,17 +67,17 @@ const TabList = () => {
       >
         {multipleExps
           ? context.map((c, i) => (
-              <Tab
-                key={i}
-                steps={c.contextSteps}
-                exp={c.contextExp}
-                active={
-                  c.contextSteps.find(
-                    R.pipe(R.nth(0), R.equals(pinnedTraverseId)),
-                  )[2]
-                }
-              ></Tab>
-            ))
+            <Tab
+              key={i}
+              steps={c.contextSteps}
+              exp={c.contextExp}
+              active={
+                c.contextSteps.find(
+                  R.pipe(R.nth(0), R.equals(pinnedTraverseId)),
+                )[2]
+              }
+            ></Tab>
+          ))
           : null}
       </div>
     </div>
@@ -96,23 +96,27 @@ const Tab = ({ active = false, steps, exp }) => {
   let face;
   if (active) {
     face = 'bg-gray-900 border-gray-900 border active:bg-gray-600';
-  } else if (deductionSteps && !active) {
-    face = 'bg-white border active:bg-gray-200 ';
+  } else if (deductionSteps && !active && hovering) {
+    face = 'bg-white active:bg-gray-200 border-dashed border border-black';
+  } else if (deductionSteps && !active && !hovering) {
+    face = 'bg-white active:bg-gray-200 border ';
   } else if (!deductionSteps && !active && hovering) {
     face = 'bg-white active:bg-gray-200 border-dashed border border-black';
   } else if (!deductionSteps && !active && !hovering) {
     face = 'bg-white active:bg-gray-200 border ';
   }
+
+  let maxSize = deductionSteps ? { height: '4.5rem', } : { height: '3rem',transitionDelay: '75ms' }
   return (
     <div
-      className={face + ' flex flex-col w-max m-1 px-2 py-1 rounded-lg '}
-      style={{ minWidth: 80 }}
+      className={face + ' flex flex-col w-max m-1 px-2 py-1 rounded-lg duration-75'}
+      style={{ minWidth: 80, transitionProperty: 'height', ...maxSize }}
       onClick={_ => dispatch(lockStep(tabDefaultStep))}
       onMouseEnter={_ =>
-        deductionSteps ? null : dispatch(setStep(tabDefaultStep))
+        active ? null : dispatch(setStep(tabDefaultStep))
       }
       onMouseLeave={_ =>
-        deductionSteps ? null : dispatch(setStep(pinnedStep))
+         dispatch(setStep(pinnedStep))
       }
     >
       <div
@@ -123,11 +127,9 @@ const Tab = ({ active = false, steps, exp }) => {
       >
         {exp}
       </div>
-      {deductionSteps ? (
-        <div className={'w-full h-6'}>
+        <div className={' ' + (deductionSteps ? 'h-6 w-full' : 'h-0 w-0')}>
           <TabSteps steps={tabReleventSteps} active={active}></TabSteps>
         </div>
-      ) : null}
     </div>
   );
 };
@@ -153,6 +155,8 @@ const TabStep = ({ active = false, step, traverseId }) => {
   let currentTraverseId = useSelector(
     R.path(['debugger', 'currentTraverseId']),
   );
+  let deductionSteps = useSelector(R.path(['debugger', 'debuggingSteps']));
+
   let pinnedStep = useSelector(R.path(['debugger', 'pinnedStep']));
   let stepping = R.equals(currentTraverseId, traverseId);
   let pinned = pinnedStep === step;
@@ -183,8 +187,8 @@ const TabStep = ({ active = false, step, traverseId }) => {
     >
       <div
         className={
-          'w-5 h-5 leading-5 flex justify-center  cursor-pointer rounded-full text-md mx-0.5 ' +
-          face
+          'w-5 h-5 leading-5 flex justify-center  cursor-pointer rounded-full text-md mx-0.5 transition-transform ' +
+          face + (deductionSteps ? ' scale-100 delay-75' : ' scale-0')
         }
       >
         {numOfSteps - step}
@@ -204,8 +208,8 @@ const Summary = () => {
     steps.length === 0
       ? true
       : contextItem.contextSteps.find(
-          R.pipe(R.nth(0), R.equals(steps[pinnedStep].stepId)),
-        )[2];
+        R.pipe(R.nth(0), R.equals(steps[pinnedStep].stepId)),
+      )[2];
 
   const dispatch = useDispatch();
   return contextItem === null ? null : (
@@ -291,7 +295,7 @@ const Expandable = ({ opened, children, onOpen, onClose, hint, left = 5 }) => {
           left,
         }}
       >
-        {opened ? <ChevronDownIcon /> : <ChevronRightIcon />}
+        <ChevronRightIcon className={(opened ? 'rotate-90' : '') + ' transition-transform'} style={{}} />
       </div>
     </div>
   );
@@ -360,7 +364,7 @@ const ReleventTerms = () => {
   return (
     <div className=''>
       <div className='font-medium'>Relevant type information</div>
-      {releventContext.map((c, i) => (
+      {releventContext.reverse().map((c, i) => (
         <ReleventItem item={c} key={i}></ReleventItem>
       ))}
       {R.defaultTo([])(R.prop('contextGlobals', currentContextItem)).map(

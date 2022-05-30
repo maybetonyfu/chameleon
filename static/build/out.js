@@ -495,7 +495,7 @@
             }
             return element;
           };
-          function createElement8(type3, config, children) {
+          function createElement7(type3, config, children) {
             var propName;
             var props = {};
             var key = null;
@@ -932,7 +932,7 @@
             }
             return lazyType;
           }
-          function forwardRef8(render) {
+          function forwardRef7(render) {
             {
               if (render != null && render.$$typeof === REACT_MEMO_TYPE) {
                 error("forwardRef requires a render function but received a `memo` component. Instead of forwardRef(memo(...)), use memo(forwardRef(...)).");
@@ -1543,7 +1543,7 @@
                 error("React.createElement: type is invalid -- expected a string (for built-in components) or a class/function (for composite components) but got: %s.%s", typeString, info);
               }
             }
-            var element = createElement8.apply(this, arguments);
+            var element = createElement7.apply(this, arguments);
             if (element == null) {
               return element;
             }
@@ -1616,7 +1616,7 @@
           exports.createElement = createElement$1;
           exports.createFactory = createFactory;
           exports.createRef = createRef;
-          exports.forwardRef = forwardRef8;
+          exports.forwardRef = forwardRef7;
           exports.isValidElement = isValidElement;
           exports.lazy = lazy;
           exports.memo = memo;
@@ -2437,11 +2437,11 @@
       if (true) {
         (function() {
           "use strict";
-          var React17 = require_react();
+          var React16 = require_react();
           var _assign = require_object_assign();
           var Scheduler = require_scheduler();
           var tracing = require_tracing();
-          var ReactSharedInternals = React17.__SECRET_INTERNALS_DO_NOT_USE_OR_YOU_WILL_BE_FIRED;
+          var ReactSharedInternals = React16.__SECRET_INTERNALS_DO_NOT_USE_OR_YOU_WILL_BE_FIRED;
           function warn(format) {
             {
               for (var _len = arguments.length, args = new Array(_len > 1 ? _len - 1 : 0), _key = 1; _key < _len; _key++) {
@@ -2473,7 +2473,7 @@
               Function.prototype.apply.call(console[level], console, argsWithFormat);
             }
           }
-          if (!React17) {
+          if (!React16) {
             {
               throw Error("ReactDOM was loaded before React. Make sure you load the React package before loading ReactDOM.");
             }
@@ -2489,7 +2489,7 @@
           var Mode = 8;
           var ContextConsumer = 9;
           var ContextProvider = 10;
-          var ForwardRef8 = 11;
+          var ForwardRef7 = 11;
           var Profiler = 12;
           var SuspenseComponent = 13;
           var MemoComponent = 14;
@@ -3269,7 +3269,7 @@
               case IndeterminateComponent:
               case SimpleMemoComponent:
                 return describeFunctionComponentFrame(fiber.type);
-              case ForwardRef8:
+              case ForwardRef7:
                 return describeFunctionComponentFrame(fiber.type.render);
               case Block:
                 return describeFunctionComponentFrame(fiber.type._render);
@@ -3689,7 +3689,7 @@
           var didWarnInvalidChild = false;
           function flattenChildren(children) {
             var content = "";
-            React17.Children.forEach(children, function(child) {
+            React16.Children.forEach(children, function(child) {
               if (child == null) {
                 return;
               }
@@ -3700,7 +3700,7 @@
           function validateProps(element, props) {
             {
               if (typeof props.children === "object" && props.children !== null) {
-                React17.Children.forEach(props.children, function(child) {
+                React16.Children.forEach(props.children, function(child) {
                   if (child == null) {
                     return;
                   }
@@ -8454,7 +8454,7 @@
               }
             }
           }
-          function createElement8(type3, props, rootContainerElement, parentNamespace) {
+          function createElement7(type3, props, rootContainerElement, parentNamespace) {
             var isCustomComponentTag;
             var ownerDocument = getOwnerDocumentFromRootContainer(rootContainerElement);
             var domElement;
@@ -9331,7 +9331,7 @@
               }
               parentNamespace = hostContextDev.namespace;
             }
-            var domElement = createElement8(type3, props, rootContainerInstance, parentNamespace);
+            var domElement = createElement7(type3, props, rootContainerInstance, parentNamespace);
             precacheFiberNode(internalInstanceHandle, domElement);
             updateFiberProps(domElement, props);
             return domElement;
@@ -10893,7 +10893,7 @@
           }
           var fakeInternalInstance = {};
           var isArray = Array.isArray;
-          var emptyRefsObject = new React17.Component().refs;
+          var emptyRefsObject = new React16.Component().refs;
           var didWarnAboutStateAssignmentForComponent;
           var didWarnAboutUninitializedState;
           var didWarnAboutGetSnapshotBeforeUpdateWithoutDidUpdate;
@@ -12150,7 +12150,7 @@
                   }
                   case Block:
                   case FunctionComponent:
-                  case ForwardRef8:
+                  case ForwardRef7:
                   case SimpleMemoComponent: {
                     {
                       {
@@ -14742,7 +14742,7 @@
                 child = updateClassComponent(null, workInProgress2, Component, resolvedProps, renderLanes2);
                 return child;
               }
-              case ForwardRef8: {
+              case ForwardRef7: {
                 {
                   workInProgress2.type = Component = resolveForwardRefForHotReloading(Component);
                 }
@@ -15635,7 +15635,7 @@
                 return updateSuspenseComponent(current2, workInProgress2, renderLanes2);
               case HostPortal:
                 return updatePortalComponent(current2, workInProgress2, renderLanes2);
-              case ForwardRef8: {
+              case ForwardRef7: {
                 var type3 = workInProgress2.type;
                 var _unresolvedProps2 = workInProgress2.pendingProps;
                 var _resolvedProps2 = workInProgress2.elementType === type3 ? _unresolvedProps2 : resolveDefaultProps(type3, _unresolvedProps2);
@@ -15807,7 +15807,7 @@
               case LazyComponent:
               case SimpleMemoComponent:
               case FunctionComponent:
-              case ForwardRef8:
+              case ForwardRef7:
               case Fragment:
               case Mode:
               case Profiler:
@@ -16452,7 +16452,7 @@
           function commitBeforeMutationLifeCycles(current2, finishedWork) {
             switch (finishedWork.tag) {
               case FunctionComponent:
-              case ForwardRef8:
+              case ForwardRef7:
               case SimpleMemoComponent:
               case Block: {
                 return;
@@ -16573,7 +16573,7 @@
           function commitLifeCycles(finishedRoot, current2, finishedWork, committedLanes) {
             switch (finishedWork.tag) {
               case FunctionComponent:
-              case ForwardRef8:
+              case ForwardRef7:
               case SimpleMemoComponent:
               case Block: {
                 {
@@ -16774,7 +16774,7 @@
             onCommitUnmount(current2);
             switch (current2.tag) {
               case FunctionComponent:
-              case ForwardRef8:
+              case ForwardRef7:
               case MemoComponent:
               case SimpleMemoComponent:
               case Block: {
@@ -17082,7 +17082,7 @@
           function commitWork(current2, finishedWork) {
             switch (finishedWork.tag) {
               case FunctionComponent:
-              case ForwardRef8:
+              case ForwardRef7:
               case MemoComponent:
               case SimpleMemoComponent:
               case Block: {
@@ -18637,7 +18637,7 @@
                 return;
               }
               var tag = fiber.tag;
-              if (tag !== IndeterminateComponent && tag !== HostRoot && tag !== ClassComponent && tag !== FunctionComponent && tag !== ForwardRef8 && tag !== MemoComponent && tag !== SimpleMemoComponent && tag !== Block) {
+              if (tag !== IndeterminateComponent && tag !== HostRoot && tag !== ClassComponent && tag !== FunctionComponent && tag !== ForwardRef7 && tag !== MemoComponent && tag !== SimpleMemoComponent && tag !== Block) {
                 return;
               }
               var componentName = getComponentName(fiber.type) || "ReactComponent";
@@ -18666,7 +18666,7 @@
           function warnAboutUpdateOnUnmountedFiberInDEV(fiber) {
             {
               var tag = fiber.tag;
-              if (tag !== HostRoot && tag !== ClassComponent && tag !== FunctionComponent && tag !== ForwardRef8 && tag !== MemoComponent && tag !== SimpleMemoComponent && tag !== Block) {
+              if (tag !== HostRoot && tag !== ClassComponent && tag !== FunctionComponent && tag !== ForwardRef7 && tag !== MemoComponent && tag !== SimpleMemoComponent && tag !== Block) {
                 return;
               }
               if ((fiber.flags & PassiveUnmountPendingDev) !== NoFlags) {
@@ -18736,7 +18736,7 @@
               if (isRendering && (executionContext & RenderContext) !== NoContext && !getIsUpdatingOpaqueValueInRenderPhaseInDEV()) {
                 switch (fiber.tag) {
                   case FunctionComponent:
-                  case ForwardRef8:
+                  case ForwardRef7:
                   case SimpleMemoComponent: {
                     var renderingComponentName = workInProgress && getComponentName(workInProgress.type) || "Unknown";
                     var dedupeKey = renderingComponentName;
@@ -18991,7 +18991,7 @@ For more info, visit https://reactjs.org/link/mock-scheduler`);
                   }
                   break;
                 }
-                case ForwardRef8: {
+                case ForwardRef7: {
                   if ($$typeofNextType === REACT_FORWARD_REF_TYPE) {
                     needsCompareFamilies = true;
                   } else if ($$typeofNextType === REACT_LAZY_TYPE) {
@@ -19067,7 +19067,7 @@ For more info, visit https://reactjs.org/link/mock-scheduler`);
                 case ClassComponent:
                   candidateType = type3;
                   break;
-                case ForwardRef8:
+                case ForwardRef7:
                   candidateType = type3.render;
                   break;
               }
@@ -19129,7 +19129,7 @@ For more info, visit https://reactjs.org/link/mock-scheduler`);
                 case ClassComponent:
                   candidateType = type3;
                   break;
-                case ForwardRef8:
+                case ForwardRef7:
                   candidateType = type3.render;
                   break;
               }
@@ -19278,7 +19278,7 @@ For more info, visit https://reactjs.org/link/mock-scheduler`);
             } else if (Component !== void 0 && Component !== null) {
               var $$typeof = Component.$$typeof;
               if ($$typeof === REACT_FORWARD_REF_TYPE) {
-                return ForwardRef8;
+                return ForwardRef7;
               }
               if ($$typeof === REACT_MEMO_TYPE) {
                 return MemoComponent;
@@ -19342,7 +19342,7 @@ For more info, visit https://reactjs.org/link/mock-scheduler`);
                 case ClassComponent:
                   workInProgress2.type = resolveClassForHotReloading(current2.type);
                   break;
-                case ForwardRef8:
+                case ForwardRef7:
                   workInProgress2.type = resolveForwardRefForHotReloading(current2.type);
                   break;
               }
@@ -19452,7 +19452,7 @@ For more info, visit https://reactjs.org/link/mock-scheduler`);
                           fiberTag = ContextConsumer;
                           break getTag;
                         case REACT_FORWARD_REF_TYPE:
-                          fiberTag = ForwardRef8;
+                          fiberTag = ForwardRef7;
                           {
                             resolvedType = resolveForwardRefForHotReloading(resolvedType);
                           }
@@ -20483,7 +20483,7 @@ For more info, visit https://reactjs.org/link/mock-scheduler`);
           var ContextConsumer = REACT_CONTEXT_TYPE;
           var ContextProvider = REACT_PROVIDER_TYPE;
           var Element = REACT_ELEMENT_TYPE;
-          var ForwardRef8 = REACT_FORWARD_REF_TYPE;
+          var ForwardRef7 = REACT_FORWARD_REF_TYPE;
           var Fragment = REACT_FRAGMENT_TYPE;
           var Lazy = REACT_LAZY_TYPE;
           var Memo = REACT_MEMO_TYPE;
@@ -20542,7 +20542,7 @@ For more info, visit https://reactjs.org/link/mock-scheduler`);
           exports.ContextConsumer = ContextConsumer;
           exports.ContextProvider = ContextProvider;
           exports.Element = Element;
-          exports.ForwardRef = ForwardRef8;
+          exports.ForwardRef = ForwardRef7;
           exports.Fragment = Fragment;
           exports.Lazy = Lazy;
           exports.Memo = Memo;
@@ -21195,7 +21195,7 @@ For more info, visit https://reactjs.org/link/mock-scheduler`);
       if (true) {
         (function() {
           "use strict";
-          var React17 = require_react();
+          var React16 = require_react();
           var _assign = require_object_assign();
           var REACT_ELEMENT_TYPE = 60103;
           var REACT_PORTAL_TYPE = 60106;
@@ -21252,7 +21252,7 @@ For more info, visit https://reactjs.org/link/mock-scheduler`);
             }
             return null;
           }
-          var ReactSharedInternals = React17.__SECRET_INTERNALS_DO_NOT_USE_OR_YOU_WILL_BE_FIRED;
+          var ReactSharedInternals = React16.__SECRET_INTERNALS_DO_NOT_USE_OR_YOU_WILL_BE_FIRED;
           function error(format) {
             {
               for (var _len2 = arguments.length, args = new Array(_len2 > 1 ? _len2 - 1 : 0), _key2 = 1; _key2 < _len2; _key2++) {
@@ -22143,7 +22143,7 @@ For more info, visit https://reactjs.org/link/mock-scheduler`);
           var ContextConsumer = REACT_CONTEXT_TYPE;
           var ContextProvider = REACT_PROVIDER_TYPE;
           var Element = REACT_ELEMENT_TYPE;
-          var ForwardRef8 = REACT_FORWARD_REF_TYPE;
+          var ForwardRef7 = REACT_FORWARD_REF_TYPE;
           var Fragment = REACT_FRAGMENT_TYPE;
           var Lazy = REACT_LAZY_TYPE;
           var Memo = REACT_MEMO_TYPE;
@@ -22207,7 +22207,7 @@ For more info, visit https://reactjs.org/link/mock-scheduler`);
           exports.ContextConsumer = ContextConsumer;
           exports.ContextProvider = ContextProvider;
           exports.Element = Element;
-          exports.ForwardRef = ForwardRef8;
+          exports.ForwardRef = ForwardRef7;
           exports.Fragment = Fragment;
           exports.Lazy = Lazy;
           exports.Memo = Memo;
@@ -26625,9 +26625,9 @@ printXML (Text text) = text
   };
   var TypeSig_default = StringTypeSig2;
 
-  // node_modules/@heroicons/react/outline/esm/ChevronDownIcon.js
+  // node_modules/@heroicons/react/outline/esm/ChevronRightIcon.js
   var React11 = __toESM(require_react(), 1);
-  function ChevronDownIcon(props, svgRef) {
+  function ChevronRightIcon(props, svgRef) {
     return /* @__PURE__ */ React11.createElement("svg", Object.assign({
       xmlns: "http://www.w3.org/2000/svg",
       fill: "none",
@@ -26639,31 +26639,11 @@ printXML (Text text) = text
     }, props), /* @__PURE__ */ React11.createElement("path", {
       strokeLinecap: "round",
       strokeLinejoin: "round",
-      d: "M19 9l-7 7-7-7"
-    }));
-  }
-  var ForwardRef6 = React11.forwardRef(ChevronDownIcon);
-  var ChevronDownIcon_default = ForwardRef6;
-
-  // node_modules/@heroicons/react/outline/esm/ChevronRightIcon.js
-  var React12 = __toESM(require_react(), 1);
-  function ChevronRightIcon(props, svgRef) {
-    return /* @__PURE__ */ React12.createElement("svg", Object.assign({
-      xmlns: "http://www.w3.org/2000/svg",
-      fill: "none",
-      viewBox: "0 0 24 24",
-      strokeWidth: 2,
-      stroke: "currentColor",
-      "aria-hidden": "true",
-      ref: svgRef
-    }, props), /* @__PURE__ */ React12.createElement("path", {
-      strokeLinecap: "round",
-      strokeLinejoin: "round",
       d: "M9 5l7 7-7 7"
     }));
   }
-  var ForwardRef7 = React12.forwardRef(ChevronRightIcon);
-  var ChevronRightIcon_default = ForwardRef7;
+  var ForwardRef6 = React11.forwardRef(ChevronRightIcon);
+  var ChevronRightIcon_default = ForwardRef6;
 
   // TabReport.jsx
   var TabReport = () => {
@@ -26714,27 +26694,30 @@ printXML (Text text) = text
     let face;
     if (active) {
       face = "bg-gray-900 border-gray-900 border active:bg-gray-600";
-    } else if (deductionSteps && !active) {
-      face = "bg-white border active:bg-gray-200 ";
+    } else if (deductionSteps && !active && hovering) {
+      face = "bg-white active:bg-gray-200 border-dashed border border-black";
+    } else if (deductionSteps && !active && !hovering) {
+      face = "bg-white active:bg-gray-200 border ";
     } else if (!deductionSteps && !active && hovering) {
       face = "bg-white active:bg-gray-200 border-dashed border border-black";
     } else if (!deductionSteps && !active && !hovering) {
       face = "bg-white active:bg-gray-200 border ";
     }
+    let maxSize = deductionSteps ? { height: "4.5rem" } : { height: "3rem", transitionDelay: "75ms" };
     return /* @__PURE__ */ import_react11.default.createElement("div", {
-      className: face + " flex flex-col w-max m-1 px-2 py-1 rounded-lg ",
-      style: { minWidth: 80 },
+      className: face + " flex flex-col w-max m-1 px-2 py-1 rounded-lg duration-75",
+      style: { minWidth: 80, transitionProperty: "height", ...maxSize },
       onClick: (_3) => dispatch(lockStep(tabDefaultStep)),
-      onMouseEnter: (_3) => deductionSteps ? null : dispatch(setStep(tabDefaultStep)),
-      onMouseLeave: (_3) => deductionSteps ? null : dispatch(setStep(pinnedStep))
+      onMouseEnter: (_3) => active ? null : dispatch(setStep(tabDefaultStep)),
+      onMouseLeave: (_3) => dispatch(setStep(pinnedStep))
     }, /* @__PURE__ */ import_react11.default.createElement("div", {
       className: " rounded-t-2xl inline-block w-full h-10 leading-10 text-xl code select-none " + (active ? "text-white" : "text-gray-800")
-    }, exp), deductionSteps ? /* @__PURE__ */ import_react11.default.createElement("div", {
-      className: "w-full h-6"
+    }, exp), /* @__PURE__ */ import_react11.default.createElement("div", {
+      className: " " + (deductionSteps ? "h-6 w-full" : "h-0 w-0")
     }, /* @__PURE__ */ import_react11.default.createElement(TabSteps, {
       steps: tabReleventSteps,
       active
-    })) : null);
+    })));
   };
   var TabSteps = ({ active = false, steps }) => {
     return /* @__PURE__ */ import_react11.default.createElement("div", {
@@ -26750,6 +26733,7 @@ printXML (Text text) = text
     let dispatch = useDispatch();
     let numOfSteps = useSelector(path_default(["debugger", "numOfSteps"]));
     let currentTraverseId = useSelector(path_default(["debugger", "currentTraverseId"]));
+    let deductionSteps = useSelector(path_default(["debugger", "debuggingSteps"]));
     let pinnedStep = useSelector(path_default(["debugger", "pinnedStep"]));
     let stepping = equals_default(currentTraverseId, traverseId);
     let pinned = pinnedStep === step;
@@ -26775,7 +26759,7 @@ printXML (Text text) = text
       },
       onMouseLeave: (_3) => dispatch(setStep(pinnedStep))
     }, /* @__PURE__ */ import_react11.default.createElement("div", {
-      className: "w-5 h-5 leading-5 flex justify-center  cursor-pointer rounded-full text-md mx-0.5 " + face
+      className: "w-5 h-5 leading-5 flex justify-center  cursor-pointer rounded-full text-md mx-0.5 transition-transform " + face + (deductionSteps ? " scale-100 delay-75" : " scale-0")
     }, numOfSteps - step));
   };
   var Summary = () => {
@@ -26837,7 +26821,10 @@ printXML (Text text) = text
         top: `calc(50% - ${size / 2}px)`,
         left
       }
-    }, opened ? /* @__PURE__ */ import_react11.default.createElement(ChevronDownIcon_default, null) : /* @__PURE__ */ import_react11.default.createElement(ChevronRightIcon_default, null)));
+    }, /* @__PURE__ */ import_react11.default.createElement(ChevronRightIcon_default, {
+      className: (opened ? "rotate-90" : "") + " transition-transform",
+      style: {}
+    })));
   };
   var Message = () => {
     let contextItem = useSelector((state) => state.debugger.currentContextItem);
@@ -26888,7 +26875,7 @@ printXML (Text text) = text
       className: ""
     }, /* @__PURE__ */ import_react11.default.createElement("div", {
       className: "font-medium"
-    }, "Relevant type information"), releventContext.map((c3, i3) => /* @__PURE__ */ import_react11.default.createElement(ReleventItem, {
+    }, "Relevant type information"), releventContext.reverse().map((c3, i3) => /* @__PURE__ */ import_react11.default.createElement(ReleventItem, {
       item: c3,
       key: i3
     })), defaultTo_default([])(prop_default("contextGlobals", currentContextItem)).map(([exp, type3], i3) => /* @__PURE__ */ import_react11.default.createElement(GlobalTypeHints, {
