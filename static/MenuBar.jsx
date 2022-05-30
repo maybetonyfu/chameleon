@@ -134,21 +134,20 @@ const MenuBar = () => {
         {
           deductionSteps ? (<>
         <button
-          aria-label='Previous step (Arrow key left)'
+          aria-label='Previous step (Left arrow key / k )'
           className='bg-gray-700 hover:bg-gray-800 active:bg-gray-900 px-2 py-1 mx-0.5 h-8 rounded-md flex justify-center items-center hint--bottom'
           onClick={_ => dispatch(nextStep())}
         >
           <ChevronDoubleLeftIcon className='h-4 w-4 text-white'></ChevronDoubleLeftIcon> 
         </button>
         <button
-          aria-label='Next step (Arrow key right)'
+          aria-label='Next step (Right arrow key / j)'
           className='bg-gray-700 hover:bg-gray-800 active:bg-gray-900 px-2 py-1 mx-0.5 h-8 rounded-md flex justify-center items-center hint--bottom'
           onClick={_ => dispatch(prevStep())}
         >
           <ChevronDoubleRightIcon className='h-4 w-4 text-white'></ChevronDoubleRightIcon>
         </button>
           </>) : null
-
         }
 
       </div>

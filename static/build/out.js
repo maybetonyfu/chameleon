@@ -26833,7 +26833,8 @@ printXML (Text text) = text
     }, "Conflicting types"), /* @__PURE__ */ import_react11.default.createElement("div", {
       className: "mb-5 mt-2 shadow-sm"
     }, /* @__PURE__ */ import_react11.default.createElement("div", {
-      className: "cursor-pointer hover:bg-gray-100 rounded-t-md bg-white p-2",
+      className: "cursor-pointer hover:bg-gray-100 rounded-t-md bg-white p-2 w-full hint--bottom ",
+      "aria-label": "Keyboard shortcut: Hold 1",
       onMouseEnter: (_3) => dispatch(showOnlyMark1()),
       onMouseLeave: (_3) => dispatch(showBoth())
     }, /* @__PURE__ */ import_react11.default.createElement("div", {
@@ -26850,7 +26851,8 @@ printXML (Text text) = text
     }, "Infered from the orange highlights on the left side")), /* @__PURE__ */ import_react11.default.createElement("hr", {
       className: ""
     }), /* @__PURE__ */ import_react11.default.createElement("div", {
-      className: "cursor-pointer hover:bg-gray-100 rounded-b-md bg-white p-2",
+      className: "cursor-pointer hover:bg-gray-100 rounded-b-md bg-white p-2 w-full hint--bottom ",
+      "aria-label": "Keyboard shortcut: Hold 2",
       onMouseEnter: (_3) => dispatch(showOnlyMark2()),
       onMouseLeave: (_3) => dispatch(showBoth())
     }, /* @__PURE__ */ import_react11.default.createElement("div", {
@@ -27090,13 +27092,13 @@ printXML (Text text) = text
     }, /* @__PURE__ */ import_react13.default.createElement(BookOpenIcon_default, {
       className: "h-4 w-4 mr-1"
     }), "Tutorial"), deductionSteps ? /* @__PURE__ */ import_react13.default.createElement(import_react13.default.Fragment, null, /* @__PURE__ */ import_react13.default.createElement("button", {
-      "aria-label": "Previous step (Arrow key left)",
+      "aria-label": "Previous step (Left arrow key / k )",
       className: "bg-gray-700 hover:bg-gray-800 active:bg-gray-900 px-2 py-1 mx-0.5 h-8 rounded-md flex justify-center items-center hint--bottom",
       onClick: (_3) => dispatch(nextStep())
     }, /* @__PURE__ */ import_react13.default.createElement(ChevronDoubleLeftIcon_default, {
       className: "h-4 w-4 text-white"
     })), /* @__PURE__ */ import_react13.default.createElement("button", {
-      "aria-label": "Next step (Arrow key right)",
+      "aria-label": "Next step (Right arrow key / j)",
       className: "bg-gray-700 hover:bg-gray-800 active:bg-gray-900 px-2 py-1 mx-0.5 h-8 rounded-md flex justify-center items-center hint--bottom",
       onClick: (_3) => dispatch(prevStep())
     }, /* @__PURE__ */ import_react13.default.createElement(ChevronDoubleRightIcon_default, {
@@ -27108,9 +27110,16 @@ printXML (Text text) = text
   var MenuBar_default = MenuBar;
 
   // index.jsx
+  window.addEventListener("keyup", (event) => {
+    const keyName = event.key;
+    if (keyName === "1" || keyName === "2") {
+      store_default.dispatch(showBoth());
+    }
+  });
   window.addEventListener("keydown", (event) => {
     let state = store_default.getState();
     const keyName = event.key;
+    console.log(keyName);
     if (state.debugger.mode === editorModes.normal) {
       if (keyName === "Tab") {
         event.preventDefault();
@@ -27123,11 +27132,17 @@ printXML (Text text) = text
           store_default.dispatch(toggleDebuggerStpes());
         }
       }
+      if (keyName === "1") {
+        store_default.dispatch(showOnlyMark1());
+      }
+      if (keyName === "2") {
+        store_default.dispatch(showOnlyMark2());
+      }
       if (state.debugger.debuggingSteps) {
-        if (keyName === "ArrowDown" || keyName === "ArrowRight") {
+        if (keyName === "ArrowDown" || keyName === "ArrowRight" || keyName === "j") {
           store_default.dispatch(prevStep());
         }
-        if (keyName === "ArrowUp" || keyName === "ArrowLeft") {
+        if (keyName === "ArrowUp" || keyName === "ArrowLeft" || keyName === "k") {
           store_default.dispatch(nextStep());
         }
       }

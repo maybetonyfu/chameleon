@@ -106,7 +106,7 @@ const Tab = ({ active = false, steps, exp }) => {
     face = 'bg-white active:bg-gray-200 border ';
   }
 
-  let maxSize = deductionSteps ? { height: '4.5rem', } : { height: '3rem',transitionDelay: '75ms' }
+  let maxSize = deductionSteps ? { height: '4.5rem', } : { height: '3rem', transitionDelay: '75ms' }
   return (
     <div
       className={face + ' flex flex-col w-max m-1 px-2 py-1 rounded-lg duration-75'}
@@ -116,7 +116,7 @@ const Tab = ({ active = false, steps, exp }) => {
         active ? null : dispatch(setStep(tabDefaultStep))
       }
       onMouseLeave={_ =>
-         dispatch(setStep(pinnedStep))
+        dispatch(setStep(pinnedStep))
       }
     >
       <div
@@ -127,9 +127,9 @@ const Tab = ({ active = false, steps, exp }) => {
       >
         {exp}
       </div>
-        <div className={' ' + (deductionSteps ? 'h-6 w-full' : 'h-0 w-0')}>
-          <TabSteps steps={tabReleventSteps} active={active}></TabSteps>
-        </div>
+      <div className={' ' + (deductionSteps ? 'h-6 w-full' : 'h-0 w-0')}>
+        <TabSteps steps={tabReleventSteps} active={active}></TabSteps>
+      </div>
     </div>
   );
 };
@@ -183,7 +183,7 @@ const TabStep = ({ active = false, step, traverseId }) => {
       onMouseEnter={_ => {
         dispatch(setStep(step));
       }}
-      // onMouseLeave={_ => dispatch(setStep(pinnedStep))}
+    // onMouseLeave={_ => dispatch(setStep(pinnedStep))}
     >
       <div
         className={
@@ -309,7 +309,9 @@ const Message = () => {
       <div className='font-medium mt-5'>Conflicting types</div>
       <div className='mb-5 mt-2 shadow-sm'>
         <div
-          className='cursor-pointer hover:bg-gray-100 rounded-t-md bg-white p-2'
+          className='cursor-pointer hover:bg-gray-100 rounded-t-md bg-white p-2 w-full hint--bottom '
+          aria-label="Keyboard shortcut: Hold 1"
+
           onMouseEnter={_ => dispatch(showOnlyMark1())}
           onMouseLeave={_ => dispatch(showBoth())}
         >
@@ -329,7 +331,9 @@ const Message = () => {
         </div>
         <hr className=''></hr>
         <div
-          className='cursor-pointer hover:bg-gray-100 rounded-b-md bg-white p-2'
+          className='cursor-pointer hover:bg-gray-100 rounded-b-md bg-white p-2 w-full hint--bottom '
+          aria-label="Keyboard shortcut: Hold 2"
+
           onMouseEnter={_ => dispatch(showOnlyMark2())}
           onMouseLeave={_ => dispatch(showBoth())}
         >
