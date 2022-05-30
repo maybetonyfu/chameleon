@@ -26495,7 +26495,7 @@ printXML (Text text) = text
   var Highlighter = ({ highlight, line, ch }) => {
     const deductionSteps = useSelector(path_default(["debugger", "debuggingSteps"]));
     const highlightFilter = useSelector(path_default(["debugger", "highlightFilter"]));
-    const borderResetter = deductionSteps && highlightFilter.length === 0 ? {} : { borderWidth: 0 };
+    const borderResetter = deductionSteps && equals_default(highlightFilter, ["markerDefination"]) ? {} : { borderWidth: 0 };
     let classes = highlight.marker.shared;
     if (equals_default(highlight.from, { line, ch })) {
       classes = [...classes, ...highlight.marker.start];
@@ -26756,8 +26756,7 @@ printXML (Text text) = text
       },
       onMouseEnter: (_3) => {
         dispatch(setStep(step));
-      },
-      onMouseLeave: (_3) => dispatch(setStep(pinnedStep))
+      }
     }, /* @__PURE__ */ import_react11.default.createElement("div", {
       className: "w-5 h-5 leading-5 flex justify-center  cursor-pointer rounded-full text-md mx-0.5 transition-transform " + face + (deductionSteps ? " scale-100 delay-75" : " scale-0")
     }, numOfSteps - step));
@@ -26771,7 +26770,7 @@ printXML (Text text) = text
     const pinned = steps.length === 0 ? true : contextItem.contextSteps.find(pipe(nth_default(0), equals_default(steps[pinnedStep].stepId)))[2];
     const dispatch = useDispatch();
     return contextItem === null ? null : /* @__PURE__ */ import_react11.default.createElement(import_react11.default.Fragment, null, /* @__PURE__ */ import_react11.default.createElement(Expandable, {
-      hint: debuggingSteps ? "Hide other uncertain expressions" : "Expand to see a list of uncertain expressions",
+      hint: debuggingSteps ? "Hide other uncertain expressions (Tab key)" : "Expand to see a list of uncertain expressions (Tab key)",
       opened: multipleExps,
       onOpen: (_3) => {
         if (!multipleExps) {
@@ -26796,7 +26795,7 @@ printXML (Text text) = text
     }, contextItem["contextExp"])))), multipleExps ? /* @__PURE__ */ import_react11.default.createElement(Expandable, {
       opened: debuggingSteps,
       left: 5,
-      hint: debuggingSteps ? "Hide debugging steps" : "Expand to see debugging steps",
+      hint: debuggingSteps ? "Hide debugging steps (Tab key)" : "Expand to see debugging steps (Tab key)",
       onOpen: (_3) => {
         if (!debuggingSteps)
           dispatch(toggleDebuggerStpes());
@@ -27111,13 +27110,26 @@ printXML (Text text) = text
   // index.jsx
   window.addEventListener("keydown", (event) => {
     let state = store_default.getState();
-    if (state.debugger.mode === editorModes.normal && state.debugger.debuggingSteps) {
-      const keyName = event.key;
-      if (keyName === "ArrowDown" || keyName === "ArrowRight") {
-        store_default.dispatch(prevStep());
+    const keyName = event.key;
+    if (state.debugger.mode === editorModes.normal) {
+      if (keyName === "Tab") {
+        event.preventDefault();
+        if (!state.debugger.multipleExps) {
+          store_default.dispatch(toggleMultipleExps());
+        } else if (state.debugger.multipleExps && !state.debugger.debuggingSteps) {
+          store_default.dispatch(toggleDebuggerStpes());
+        } else if (state.debugger.multipleExps && state.debugger.debuggingSteps) {
+          store_default.dispatch(toggleMultipleExps());
+          store_default.dispatch(toggleDebuggerStpes());
+        }
       }
-      if (keyName === "ArrowUp" || keyName === "ArrowLeft") {
-        store_default.dispatch(nextStep());
+      if (state.debugger.debuggingSteps) {
+        if (keyName === "ArrowDown" || keyName === "ArrowRight") {
+          store_default.dispatch(prevStep());
+        }
+        if (keyName === "ArrowUp" || keyName === "ArrowLeft") {
+          store_default.dispatch(nextStep());
+        }
       }
     }
   });

@@ -5,7 +5,9 @@ import store from './store';
 import {
   editorModes,
   nextStep,
-  prevStep
+  prevStep,
+  toggleMultipleExps,
+  toggleDebuggerStpes
 } from './debuggerSlice';
 import Splitter, { SplitDirection } from '@devbookhq/splitter'
 import Editor from "./Editor"
@@ -14,16 +16,31 @@ import MenuBar from "./MenuBar"
 
 window.addEventListener('keydown', (event) => {
   let state = store.getState()
-  if (state.debugger.mode === editorModes.normal && state.debugger.debuggingSteps) {
-    const keyName = event.key;
-    if (keyName === 'ArrowDown' || keyName === "ArrowRight") {
-      store.dispatch(prevStep())
+  const keyName = event.key;
+
+  
+  if (state.debugger.mode === editorModes.normal){
+    if (keyName === 'Tab') {
+      event.preventDefault()
+      if (!state.debugger.multipleExps) {
+        store.dispatch(toggleMultipleExps())
+      } else if (state.debugger.multipleExps && !state.debugger.debuggingSteps) {
+        store.dispatch(toggleDebuggerStpes())
+      } else if (state.debugger.multipleExps && state.debugger.debuggingSteps) {
+        store.dispatch(toggleMultipleExps())
+        store.dispatch(toggleDebuggerStpes())
+      }
     }
-    if (keyName === 'ArrowUp' || keyName === "ArrowLeft") {
-      store.dispatch(nextStep())
+
+    if (state.debugger.debuggingSteps) {
+      if (keyName === 'ArrowDown' || keyName === "ArrowRight") {
+        store.dispatch(prevStep())
+      }
+      if (keyName === 'ArrowUp' || keyName === "ArrowLeft") {
+        store.dispatch(nextStep())
+      }
     }
   }
-
 })
 
 const App = () => {

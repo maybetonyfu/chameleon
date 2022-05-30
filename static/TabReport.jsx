@@ -183,7 +183,7 @@ const TabStep = ({ active = false, step, traverseId }) => {
       onMouseEnter={_ => {
         dispatch(setStep(step));
       }}
-      onMouseLeave={_ => dispatch(setStep(pinnedStep))}
+      // onMouseLeave={_ => dispatch(setStep(pinnedStep))}
     >
       <div
         className={
@@ -217,8 +217,8 @@ const Summary = () => {
       <Expandable
         hint={
           debuggingSteps
-            ? 'Hide other uncertain expressions'
-            : 'Expand to see a list of uncertain expressions'
+            ? 'Hide other uncertain expressions (Tab key)'
+            : 'Expand to see a list of uncertain expressions (Tab key)'
         }
         opened={multipleExps}
         onOpen={_ => {
@@ -262,8 +262,8 @@ const Summary = () => {
           left={5}
           hint={
             debuggingSteps
-              ? 'Hide debugging steps'
-              : 'Expand to see debugging steps'
+              ? 'Hide debugging steps (Tab key)'
+              : 'Expand to see debugging steps (Tab key)'
           }
           onOpen={_ => {
             if (!debuggingSteps) dispatch(toggleDebuggerStpes());
