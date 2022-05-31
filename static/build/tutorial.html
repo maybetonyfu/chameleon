@@ -53,7 +53,7 @@
         <section class="step-container" x-data="{step: 0}">
             <div class="leading-8">
                 <h2 class="font-bold" id="expression-cards">Uncertain expressions and cards</h2>
-                The debugging window shows all the 'uncertain' expressions
+                One important feature of Chameleon is to show all the 'uncertain' expressions
                 as a list of
                 <button @mouseenter="step = 1" @mouseleave="step=0"
                     class="px-1 h-6 leading-6 border border-black rounded-sm ">cards</button>. Clicking on a card
@@ -63,26 +63,27 @@
                 </button>is black,
                 <button @mouseenter="step = 3" @mouseleave="step=0"
                     class="px-1 h-6 leading-6 border border-black rounded-sm">inactive ones
-                </button> are white. The
+                </button> are white. This feature can be enabled by clicking the
                 <button @mouseenter="step = 4" @mouseleave="step=0"
                     class="px-1 h-6 leading-6 border border-black rounded-sm">
-                    contents in the debugging window
-                </button> is specific to the active card.
+                    chevron button
+                </button> or pressing tab key.
             </div>
             <div class="relative border">
                 <img class="absolute" :class="assetShow(step, 0)" src="./tutorial/pngs/Card X.png">
                 <img class="absolute" :class="assetShow(step, 1)" src="./tutorial/pngs/Card Box.png">
                 <img class="absolute" :class="assetShow(step, 2)" src="./tutorial/pngs/Card Active.png">
                 <img class="absolute" :class="assetShow(step, 3)" src="./tutorial/pngs/Card Inactive.png">
-                <img class="" :class="assetShow(step, 4)" src="./tutorial/pngs/Debugging Message.png">
+                <img class="" :class="assetShow(step, 4)" src="./tutorial/pngs/Expand Level 1.png">
             </div>
         </section>
+
 
         <section class="step-container" x-data="{step : 0}">
             <div class="leading-8">
                 <h2 class="font-bold" id="possible-types">Possible types</h2>
 
-                An expression is uncertain when it can be typed in
+                An uncertain expression is an expression can be typed in
                 <button @mouseenter="step =1" @mouseleave="step=0"
                     class="px-1 h-6 leading-6 border border-black rounded-sm">
                     two different ways
@@ -140,9 +141,8 @@
                 <a class="underline text-blue-800" href="#expression-cards">active card</a> (or
                 <a class="underline text-blue-800" href="#deduction-step-ui">deduction step</a>
                 ) changes.
-                Notice the highlight of <span class="bg-gray-200 px-1 rounded-md">y</span> on
-                line 2 changes color when we switch the active card from
-                card x to
+                Notice the highlight of <span class="bg-gray-200 px-1 rounded-md">y</span>
+                 on the second line changes color when activating 
                 <button @mouseenter="step = 1" @mouseleave="step = 0"
                     class="px-1 h-6 leading-6 border border-black rounded-sm">
                     card y </button>.
@@ -173,14 +173,18 @@
                     class="px-1 h-6 leading-6 border border-black rounded-sm"> a
                     text box
                 </button>
-                showing how the two are related to one another.
+                showing how the two are related to one another. Deduction step can be enabled by clicking the second
+                <button @mouseenter="step = 4" @mouseleave="step = 0" class="px-1 h-6 leading-6 border border-black rounded-sm">
+                    chevron button</button> or pressing the tab key.
             </div>
             <div class="relative border">
                 <img class="absolute" :class="assetShow(step, 0)" src="./tutorial/pngs/Deduction Example Step 1.png">
                 <img class="absolute" :class="assetShow(step, 1)" src="./tutorial/pngs/Deduction Step UI.png">
 
                 <img class="absolute" :class="assetShow(step, 2)" src="./tutorial/pngs/Deduction Step Highlight.png">
-                <img :class="assetShow(step, 3)" src="./tutorial/pngs/Deduction Step Annotation.png" </div>
+                <img  class="absolute" :class="assetShow(step, 3)" src="./tutorial/pngs/Deduction Step Annotation.png" </div>
+                <img :class="assetShow(step, 4)" src="./tutorial/pngs/Expand Level 2.png" </div>
+
         </section>
 
         <section class="step-container" x-data="{step: 0}">
@@ -191,14 +195,14 @@
                     class="px-1 h-6 leading-6 border border-black rounded-sm">step
                     buttons</button>
                 . Clicking on
-                a step activates it. At any time there can be 0 or 1
+                a step button activates the step. There can be 0 or 1
                 <button @mouseenter="step = 2" @mouseleave="step=0"
                     class="px-1 h-6 leading-6 border border-black rounded-sm">active
                     step
                 </button> and any number of
                 <button @mouseenter="step = 3" @mouseleave="step=0"
                     class="px-1 h-6 leading-6 border border-black rounded-sm">inactive
-                    steps</button>.
+                    steps</button> associated to a card.
             </div>
             <div class="relative border">
                 <img class="absolute" :class="assetShow(step, 0)" src="./tutorial/pngs/Deduction Example Step 1.png">
@@ -212,9 +216,9 @@
         <section class="step-container" x-data="{step: 0}">
             <div class="leading-8">
                 <h2 class="font-bold" id="deduction-step-example">Deduction step (example)</h2>
-                When activating a step, some highlights may <a class="text-blue-800 underline"
+                When activating a step, some highlights <a class="text-blue-800 underline"
                     href="#color-switching">switch color</a>.
-                The message in the text box changes accordingly.
+                The message in the text box changes as well.
                 For example, activating
                 <button @mouseenter="step = 1" @mouseleave="step=0"
                     class="px-1 h-6 leading-6 border border-black rounded-sm"> step
