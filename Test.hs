@@ -1,2 +1,4 @@
-x :: Num a => a
-x = 3
+x y =
+    case y of
+        3 -> '3'
+        False -> '4'

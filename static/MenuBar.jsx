@@ -103,6 +103,8 @@ const MenuBar = () => {
           <option value={5}>Example 6</option>
           <option value={6}>Example 7</option>
           <option value={7}>Example 8</option>
+          <option value={8}>Example 9</option>
+
         </select>
         {mode === editorModes.normal ? (
           <button
@@ -138,7 +140,7 @@ const MenuBar = () => {
           className='bg-gray-700 hover:bg-gray-800 active:bg-gray-900 px-2 py-1 mx-0.5 h-8 rounded-md flex justify-center items-center hint--bottom'
           onClick={_ => dispatch(nextStep())}
         >
-          <ChevronDoubleLeftIcon className='h-4 w-4 text-white'></ChevronDoubleLeftIcon> 
+          <ChevronDoubleLeftIcon className='h-4 w-4 text-white'></ChevronDoubleLeftIcon>
         </button>
         <button
           aria-label='Next step (Right arrow key / j)'

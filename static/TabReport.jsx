@@ -326,7 +326,7 @@ const Message = () => {
             ></TypeSig>
           </span>
           <div className='text-xs italic'>
-            Infered from the orange highlights on the left side
+            Inferred from the orange highlights on the left side
           </div>
         </div>
         <hr className=''></hr>
@@ -348,7 +348,7 @@ const Message = () => {
             ></TypeSig>
           </span>
           <div className='text-xs italic'>
-            Infered from the blue highlights on the left side
+            Inferred from the blue highlights on the left side
           </div>
         </div>
       </div>

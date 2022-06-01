@@ -72,8 +72,7 @@ processFile text =
               (goals, solvestate) = runState (matchTerm Unit hModule) (n, mergedScope, filedOrderings, [])
               goals' = zipWith (\g n -> g {goalNum = n}) goals [0 ..]
               res = runGoalNWithState ks 1 (conjN (map unlabel (goals' ++ goals' ++ goals')))
-           in
-              if not . null . view _4 $ solvestate
+           in if not . null . view _4 $ solvestate
                 then ChLoadError (nub . view _4 $ solvestate)
                 else
                   if null res
@@ -115,7 +114,7 @@ processFile text =
                                         --       ++ unlines names'
                                         --       ++ "\n\n"
                                         --   ) $
-                                          typings ks names mss
+                                        typings ks names mss
                                       newNames = typings ks names' mss
                                       chooseConcrete a b old new =
                                         let result = if a `moreConcreteThan` b then a else b
@@ -149,9 +148,13 @@ processFile text =
                                       -- globals in the scope
                                       scope = findScopeByName mergedScope name
                                       _used = maybe [] use scope
-                                      usedBuiltInScopes = filter (\scp ->
-                                        scopeType scp /= TypeScope
-                                        && any (`elem` _used) (generate scp)) builtInScopes
+                                      usedBuiltInScopes =
+                                        filter
+                                          ( \scp ->
+                                              scopeType scp /= TypeScope
+                                                && any (`elem` _used) (generate scp)
+                                          )
+                                          builtInScopes
                                       usedBuilltInNames = concatMap (\scp -> map (++ ('.' : show (scopeId scp))) (generate scp)) usedBuiltInScopes
                                       usedBuilltInNormalNames = map showProperName usedBuilltInNames
                                       usedBuiltInTypes = typings ks usedBuilltInNames []
@@ -216,6 +219,9 @@ normalize sides
      in normalize $ zipWith (\side n -> if n < mIndex then set _2 L side else side) sides [0 ..]
   | otherwise = sides
 
+-- R R M M R R R R R R R R
+-- L L L L L M R R R R R R
+-- L L L L L L L L M R R R
 removeUniversal :: [Term] -> [Term]
 removeUniversal = id
 
@@ -257,10 +263,10 @@ maximalSatisfiableSubset ks mus (g : gs) =
 typings :: KanrenState -> [String] -> [LabeledGoal] -> [Term]
 typings ks names goals =
   -- trace ("\nGoals: " ++ unlines (map show goals) ++ "\n" ++ unlines names ++ "\n") $
-    let res = run1WithState ks names (conjN (map unlabel (sortOn goalNum goals ++ sortOn goalNum goals)))
-     in if null res
-          then error "typing should only accept satisfiable constraints"
-          else head res
+  let res = run1WithState ks names (conjN (map unlabel (sortOn goalNum goals ++ sortOn goalNum goals)))
+   in if null res
+        then error "typing should only accept satisfiable constraints"
+        else head res
 
 showTyping :: (String, Term) -> String
 showTyping (name, term) =

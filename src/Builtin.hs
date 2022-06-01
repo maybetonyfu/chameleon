@@ -11,7 +11,6 @@ builtin =
 mod :: Int -> Int -> Int
 mod = undefined
 
-
 div :: Int -> Int -> Int
 div = undefined
 
@@ -224,4 +223,7 @@ and = undefined
 
 or :: [Bool] -> Bool
 or = undefined
+
+(!!) :: [a] -> Int -> a
+(!!) = undefined
 |]

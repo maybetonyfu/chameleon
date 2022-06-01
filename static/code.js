@@ -1,7 +1,9 @@
-const intro = n => `x :: Bool
-x = y
+const intro = n => `module Task${n} where
 
-y = 2
+x y =
+  case y of
+    3 -> '3'
+    False -> '4'
 `
 
 const exampeExtend = n => `module Task${n} where
@@ -28,6 +30,39 @@ find v  (Env [])          = error "Unbound variable"
 find v1 (Env ((v2,e):es)) = if v1 == v2 then e else find v1 (Env es)
 
 `;
+
+const weekdayRange = n => `module Task${n} where
+
+toWeekday n =
+  ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"] !! n
+
+seperateByComma [] = ""
+seperateByComma [x] = x
+seperateByComma (x : xs) = x ++ "," ++ seperateByComma xs
+
+range xs
+  | length xs < 3 = seperateByComma xs
+  | otherwise = head xs ++ "-" ++ last xs
+
+-- dayRange :: [Int] -> [String]
+dayRange days =
+  let grouped = groupBy' (\\a b -> a + 1 == b) days
+   in map (\\x -> range (toWeekday x)) grouped
+
+-- unlike groupBy which compares any element
+-- to the first,
+-- groupBy' compares any element to the last
+-- element
+groupBy' :: (a -> a -> Bool) -> [a] -> [[a]]
+groupBy' f (x : xs) =
+  let go f (x : xs) ((a : as) : bs) =
+        if f a x
+          then go f xs ((x : a : as) : bs)
+          else go f xs ([x] : (a : as) : bs)
+      go _ [] as = reverse (map reverse as)
+   in go f xs [[x]]
+
+`
 
 const exampleJValue = n => `module Task${n} where
 
@@ -331,6 +366,7 @@ const examples = [
   uconandvcon,
   quicksort,
   printXML,
+  weekdayRange,
 ].map((ex, n) => ex(n + 1));
 
 export default examples;

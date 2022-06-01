@@ -1049,11 +1049,11 @@
             var dispatcher = resolveDispatcher();
             return dispatcher.useReducer(reducer2, initialArg, init);
           }
-          function useRef3(initialValue) {
+          function useRef4(initialValue) {
             var dispatcher = resolveDispatcher();
             return dispatcher.useRef(initialValue);
           }
-          function useEffect3(create, deps) {
+          function useEffect4(create, deps) {
             var dispatcher = resolveDispatcher();
             return dispatcher.useEffect(create, deps);
           }
@@ -1623,12 +1623,12 @@
           exports.useCallback = useCallback;
           exports.useContext = useContext5;
           exports.useDebugValue = useDebugValue2;
-          exports.useEffect = useEffect3;
+          exports.useEffect = useEffect4;
           exports.useImperativeHandle = useImperativeHandle;
           exports.useLayoutEffect = useLayoutEffect2;
           exports.useMemo = useMemo4;
           exports.useReducer = useReducer3;
-          exports.useRef = useRef3;
+          exports.useRef = useRef4;
           exports.useState = useState2;
           exports.version = ReactVersion;
         })();
@@ -24448,10 +24448,44 @@ For more info, visit https://reactjs.org/link/mock-scheduler`);
   N();
 
   // code.js
-  var intro = (n3) => `x :: Bool
-x = y
+  var intro = (n3) => `module Task${n3} where
 
-y = 2
+x y =
+  case y of
+    3 -> '3'
+    False -> '4'
+`;
+  var weekdayRange = (n3) => `module Task${n3} where
+
+toWeekday n =
+  ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"] !! n
+
+seperateByComma [] = ""
+seperateByComma [x] = x
+seperateByComma (x : xs) = x ++ "," ++ seperateByComma xs
+
+range xs
+  | length xs < 3 = seperateByComma xs
+  | otherwise = head xs ++ "-" ++ last xs
+
+-- dayRange :: [Int] -> [String]
+dayRange days =
+  let grouped = groupBy' (\\a b -> a + 1 == b) days
+   in map (\\x -> range (toWeekday x)) grouped
+
+-- unlike groupBy which compares any element
+-- to the first,
+-- groupBy' compares any element to the last
+-- element
+groupBy' :: (a -> a -> Bool) -> [a] -> [[a]]
+groupBy' f (x : xs) =
+  let go f (x : xs) ((a : as) : bs) =
+        if f a x
+          then go f xs ((x : a : as) : bs)
+          else go f xs ([x] : (a : as) : bs)
+      go _ [] as = reverse (map reverse as)
+   in go f xs [[x]]
+
 `;
   var constAndTuple = (n3) => `module Task${n3} where
 
@@ -24544,7 +24578,8 @@ printXML (Text text) = text
     intandbool,
     uconandvcon,
     quicksort,
-    printXML
+    printXML,
+    weekdayRange
   ].map((ex, n3) => ex(n3 + 1));
   var code_default = examples;
 
@@ -26392,17 +26427,25 @@ printXML (Text text) = text
   var EditorEditMode = () => {
     const text = useSelector(path_default(["debugger", "text"]));
     const dispatch = useDispatch();
+    const inputEl = (0, import_react9.useRef)(null);
+    (0, import_react9.useEffect)(() => {
+      inputEl.current.focus();
+    }, []);
     return /* @__PURE__ */ import_react9.default.createElement("textarea", {
-      className: "w-full h-full",
-      style: { resize: "none" },
+      ref: inputEl,
+      spellCheck: false,
+      className: "w-full h-full outline-none my-0.5",
+      style: { resize: "none", lineHeight: "1.62rem", fontVariantLigatures: "none" },
       onChange: (e3) => dispatch(setText(e3.target.value)),
       value: text
     });
   };
   var EditorNormerMode = () => {
     const text = useSelector(path_default(["debugger", "text"]));
+    const dispatch = useDispatch();
     return /* @__PURE__ */ import_react9.default.createElement("div", {
-      className: ""
+      className: "",
+      onClick: (_3) => dispatch(toEditMode())
     }, text.split("\n").map((t3, line) => /* @__PURE__ */ import_react9.default.createElement(Line, {
       text: t3,
       line,
@@ -26437,7 +26480,8 @@ printXML (Text text) = text
       key: wgt.key
     })))(widgets);
     return /* @__PURE__ */ import_react9.default.createElement("div", {
-      className: "inline-block w-2.5 h-6 relative"
+      className: "inline-block h-6 relative",
+      style: { width: "0.6rem" }
     }, highlighters, deductionStpe ? appliedWidgets : null, /* @__PURE__ */ import_react9.default.createElement("div", {
       className: "absolute w-full h-full z-50"
     }, text));
@@ -26848,7 +26892,7 @@ printXML (Text text) = text
       full: contextItem.contextType1String
     })), /* @__PURE__ */ import_react11.default.createElement("div", {
       className: "text-xs italic"
-    }, "Infered from the orange highlights on the left side")), /* @__PURE__ */ import_react11.default.createElement("hr", {
+    }, "Inferred from the orange highlights on the left side")), /* @__PURE__ */ import_react11.default.createElement("hr", {
       className: ""
     }), /* @__PURE__ */ import_react11.default.createElement("div", {
       className: "cursor-pointer hover:bg-gray-100 rounded-b-md bg-white p-2 w-full hint--bottom ",
@@ -26866,7 +26910,7 @@ printXML (Text text) = text
       full: contextItem.contextType2String
     })), /* @__PURE__ */ import_react11.default.createElement("div", {
       className: "text-xs italic"
-    }, "Infered from the blue highlights on the left side"))));
+    }, "Inferred from the blue highlights on the left side"))));
   };
   var ReleventTerms = () => {
     let context = useSelector(path_default(["debugger", "context"]));
@@ -27072,7 +27116,9 @@ printXML (Text text) = text
       value: 6
     }, "Example 7"), /* @__PURE__ */ import_react13.default.createElement("option", {
       value: 7
-    }, "Example 8")), mode === editorModes.normal ? /* @__PURE__ */ import_react13.default.createElement("button", {
+    }, "Example 8"), /* @__PURE__ */ import_react13.default.createElement("option", {
+      value: 8
+    }, "Example 9")), mode === editorModes.normal ? /* @__PURE__ */ import_react13.default.createElement("button", {
       className: "bg-gray-300 px-4 py-1 rounded-md mx-2 flex h-8 justify-center items-center",
       onClick: (_3) => dispatch(toEditMode())
     }, /* @__PURE__ */ import_react13.default.createElement(PencilAltIcon_default, {

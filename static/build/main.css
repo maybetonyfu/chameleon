@@ -3,6 +3,7 @@
     --colorB: #ef8a62;
     --colorA-lighter: #ADD9F2;
     --colorB-lighter: #FFD4C3;
+	font-variant-ligatures: none;
 }
 
 body {
@@ -102,6 +103,8 @@ body {
 
 .code {
     font-family: 'JetBrains Mono', monospace;
+	font-variant-ligatures: none;
+
 }
 
 .arrow-right {
