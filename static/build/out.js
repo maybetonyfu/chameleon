@@ -28517,8 +28517,9 @@ problem_1 = sum (check [1..999])
     const dispatch = useDispatch();
     const mode = useSelector(path_default(["debugger", "mode"]));
     const deductionSteps = useSelector(path_default(["debugger", "debuggingSteps"]));
+    const currentTaskNum = useSelector(path_default(["debugger", "currentTaskNum"]));
     (0, import_react13.useEffect)(() => {
-      dispatch(setTask(1));
+      dispatch(setTask(0));
       dispatch(typeCheckThunk());
     }, []);
     return /* @__PURE__ */ import_react13.default.createElement("div", {
@@ -28574,31 +28575,13 @@ problem_1 = sum (check [1..999])
     }), /* @__PURE__ */ import_react13.default.createElement("path", {
       d: "M34.015,56.47c0,4.563 3.908,8.262 8.729,8.262c4.821,-0 8.729,-3.699 8.729,-8.262l-17.458,0Z",
       style: { fill: "#486c47" }
-    }))), /* @__PURE__ */ import_react13.default.createElement("p", {
-      className: "mr-1"
-    }, "Load examples:"), /* @__PURE__ */ import_react13.default.createElement("select", {
-      defaultValue: 1,
-      onChange: (e3) => dispatch(switchTaskThunk(e3.target.value)),
-      className: "bg-gray-300 h-8 px-4 py-1 rounded-md"
-    }, /* @__PURE__ */ import_react13.default.createElement("option", {
-      value: 0
-    }, "Example 1"), /* @__PURE__ */ import_react13.default.createElement("option", {
-      value: 1
-    }, "Example 2"), /* @__PURE__ */ import_react13.default.createElement("option", {
-      value: 2
-    }, "Example 3"), /* @__PURE__ */ import_react13.default.createElement("option", {
-      value: 3
-    }, "Example 4"), /* @__PURE__ */ import_react13.default.createElement("option", {
-      value: 4
-    }, "Example 5"), /* @__PURE__ */ import_react13.default.createElement("option", {
-      value: 5
-    }, "Example 6"), /* @__PURE__ */ import_react13.default.createElement("option", {
-      value: 6
-    }, "Example 7"), /* @__PURE__ */ import_react13.default.createElement("option", {
-      value: 7
-    }, "Example 8"), /* @__PURE__ */ import_react13.default.createElement("option", {
-      value: 8
-    }, "Example 9")), mode === editorModes.normal ? /* @__PURE__ */ import_react13.default.createElement("button", {
+    }))), /* @__PURE__ */ import_react13.default.createElement("button", {
+      className: "bg-gray-300 px-4 py-1 rounded-md mx-2 flex h-8 justify-center items-center",
+      onClick: (_3) => {
+        dispatch(switchTaskThunk(currentTaskNum));
+        dispatch(toNormalMode());
+      }
+    }, "Reset problem"), mode === editorModes.normal ? /* @__PURE__ */ import_react13.default.createElement("button", {
       className: "bg-gray-300 px-4 py-1 rounded-md mx-2 flex h-8 justify-center items-center",
       onClick: (_3) => dispatch(toEditMode())
     }, /* @__PURE__ */ import_react13.default.createElement(PencilAltIcon_default, {
@@ -28676,13 +28659,44 @@ problem_1 = sum (check [1..999])
     }
   });
   var App2 = () => {
-    return /* @__PURE__ */ import_react14.default.createElement("div", {
+    let wellTyped = useSelector((state) => state.debugger.wellTyped);
+    let loadError = useSelector((state) => state.debugger.loadError);
+    let parseError = useSelector((state) => state.debugger.parseError);
+    return /* @__PURE__ */ import_react14.default.createElement(import_react14.default.Fragment, null, /* @__PURE__ */ import_react14.default.createElement(import_react_modal.default, {
+      isOpen: wellTyped,
+      className: "max-w-2xl bg-gray-100 h-80 min-w-max left-1/2 top-1/2 -translate-y-1/2 -translate-x-1/2 absolute p-6 rounded-md"
+    }, /* @__PURE__ */ import_react14.default.createElement(ModelContent, null)), /* @__PURE__ */ import_react14.default.createElement("div", {
       className: "w-full h-full flex flex-col"
     }, /* @__PURE__ */ import_react14.default.createElement(MenuBar_default, null), /* @__PURE__ */ import_react14.default.createElement("div", {
       className: "flex-grow"
     }, /* @__PURE__ */ import_react14.default.createElement(y2, {
       initialSizes: [60, 40]
-    }, /* @__PURE__ */ import_react14.default.createElement(Editor_default, null), /* @__PURE__ */ import_react14.default.createElement(Debugger_default, null))));
+    }, /* @__PURE__ */ import_react14.default.createElement(Editor_default, null), /* @__PURE__ */ import_react14.default.createElement(Debugger_default, null)))));
+  };
+  var ModelContent = () => {
+    let dispatch = useDispatch();
+    let currentTaskNum = useSelector((state) => state.debugger.currentTaskNum);
+    let numOfTasks = 9;
+    return /* @__PURE__ */ import_react14.default.createElement("div", {
+      className: "flex flex-col justify-around items-center h-full"
+    }, /* @__PURE__ */ import_react14.default.createElement("div", null, /* @__PURE__ */ import_react14.default.createElement("p", {
+      className: "text-center"
+    }, "Congratulations. You fixed the type error!"), currentTaskNum === 8 ? /* @__PURE__ */ import_react14.default.createElement("p", {
+      className: "text-center"
+    }, "Click next to leave us some feedback.") : /* @__PURE__ */ import_react14.default.createElement("p", {
+      className: "text-center"
+    }, "Click next to head over to the next challenge.")), /* @__PURE__ */ import_react14.default.createElement("button", {
+      className: "px-5 py-1 bg-green-400 rounded-md",
+      onClick: () => {
+        if (currentTaskNum === 8) {
+          window.location = "https://docs.google.com/forms/d/e/1FAIpQLSfmXyASOPW2HIK-Oqp5nELBTltKeqZjqQ0G9JFram8eUCx26A/viewform?usp=sf_link";
+          return;
+        } else {
+          dispatch(switchTaskThunk(currentTaskNum + 1));
+          dispatch(toNormalMode());
+        }
+      }
+    }, "Next"));
   };
   import_react_dom2.default.render(/* @__PURE__ */ import_react14.default.createElement(import_react14.default.StrictMode, null, /* @__PURE__ */ import_react14.default.createElement(Provider_default, {
     store: store_default

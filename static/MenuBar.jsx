@@ -24,8 +24,9 @@ const MenuBar = () => {
   const mode = useSelector(R.path(['debugger', 'mode']));
   const deductionSteps = useSelector(R.path(['debugger', 'debuggingSteps']));
 
+  const currentTaskNum = useSelector(R.path(['debugger', 'currentTaskNum']));
   useEffect(() => {
-    dispatch(setTask(1));
+    dispatch(setTask(0));
     dispatch(typeCheckThunk());
   }, []);
   return (
@@ -89,9 +90,10 @@ const MenuBar = () => {
             />
           </svg>
         </a>
-        <p className='mr-1'>Load examples:</p>
+        {/* <p className='mr-1'>Load examples:</p>
         <select
-          defaultValue={1}
+          // defaultValue={0}
+          value={currentTaskNum === null ? 0:currentTaskNum}
           onChange={e => dispatch(switchTaskThunk(e.target.value))}
           className='bg-gray-300 h-8 px-4 py-1 rounded-md'
         >
@@ -105,7 +107,16 @@ const MenuBar = () => {
           <option value={7}>Example 8</option>
           <option value={8}>Example 9</option>
 
-        </select>
+        </select> */}
+        <button
+            className='bg-gray-300 px-4 py-1 rounded-md mx-2 flex h-8 justify-center items-center'
+            onClick={_ => {
+              dispatch(switchTaskThunk(currentTaskNum));
+              dispatch(toNormalMode());
+            }}
+          >
+            Reset problem
+        </button>
         {mode === editorModes.normal ? (
           <button
             className='bg-gray-300 px-4 py-1 rounded-md mx-2 flex h-8 justify-center items-center'
