@@ -24448,74 +24448,84 @@ For more info, visit https://reactjs.org/link/mock-scheduler`);
   N();
 
   // code.js
-  var intro = (n3) => `module Task${n3} where
+  var dropEvery = (n3) => `module Task${n3} where
 
-x y =
-  case y of
-    3 -> '3'
-    False -> '4'
+divides x y = y \`mod\` x == 0
+
+
+dropEvery [] _ = []
+dropEvery (x:xs) n = dropEvery' (x:xs) n 1
+
+dropEvery' :: [Int] -> Int -> Int -> [Int]
+dropEvery' [] _ _ = []
+dropEvery' (x:xs) n i =
+    let current =
+            if n \`divides\` i
+                then []
+                else [x]
+    in current : dropEvery' xs n (i+1)
 `;
-  var weekdayRange = (n3) => `module Task${n3} where
+  var rotate = (n3) => `module Task${n3} where
+-- Rotate a list N places to the left.
 
-toWeekday n =
-  ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"] !! n
+rotate1 :: [a] -> [a]
+rotate1 x = tail x ++ [head x]
 
-seperateByComma [] = ""
-seperateByComma [x] = x
-seperateByComma (x : xs) = x ++ "," ++ seperateByComma xs
+rotate1Back :: [a] -> [a]
+rotate1Back x = last x : init x
 
-range xs
-  | length xs < 3 = seperateByComma xs
-  | otherwise = head xs ++ "-" ++ last xs
 
--- dayRange :: [Int] -> [String]
-dayRange days =
-  let grouped = groupBy' (\\a b -> a + 1 == b) days
-   in map (\\x -> range (toWeekday x)) grouped
+rotate :: [a] -> Int -> [a]
+rotate [] _ = []
+rotate x 0 = x
+rotate x y
+  | y > 0 = rotate rotate1 (y-1)
+  | otherwise = rotate rotate1Back x (y+1)
+`;
+  var insertAt = (n3) => `module Task${n3} where
 
--- unlike groupBy which compares any element
--- to the first,
--- groupBy' compares any element to the last
--- element
-groupBy' :: (a -> a -> Bool) -> [a] -> [[a]]
-groupBy' f (x : xs) =
-  let go f (x : xs) ((a : as) : bs) =
-        if f a x
-          then go f xs ((x : a : as) : bs)
-          else go f xs ([x] : (a : as) : bs)
-      go _ [] as = reverse (map reverse as)
-   in go f xs [[x]]
+-- Insert an element at a given position into a list.
+
+insertAt el lst n =
+    let accu (i, acc) x =
+            if i == n
+                then (acc ++ [el,x],i+1)
+                else (acc ++ [x],i+1)
+    in fst $ foldl accu ([],1) lst
+
 
 `;
-  var constAndTuple = (n3) => `module Task${n3} where
+  var balanceTree = (n3) => `module Task${n3} where
 
-x :: (Int, Bool)
-x = (3, y)
+data Tree a = Empty | Branch a (Tree a) (Tree a)
+leaf x = Branch x Empty Empty
 
-const :: a -> b -> a
-const a b = a
+isBalancedTree Empty = True
+isBalancedTree (Branch _ l r) =
+    (countBranches l - countBranches r) == 1
+    || (countBranches r - countBranches l) == 1
+    && isBalancedTree l && isBalancedTree r
 
-y = const 0 True
+
+countBranches Empty = 0
+countBranches (Branch _ l r) = 1 + l + r
 `;
-  var inc = (n3) => `module Task${n3} where
+  var compress = (n3) => `module Task${n3} where
+--  Eliminate consecutive duplicates of list elements.
 
-incr n = n + 1
-fun True c = incr c
-fun a x = a
-`;
-  var ifelse = (n3) => `module Task${n3} where
-u = 0
-v = 0.1
-z = True
-y = if z then u else v
-`;
-  var intandbool = (n3) => `module Task${n3} where
-t u v = if u then v else 0
-f u v = if u then 0 else v
-d f g x = f x + g x
-b = True
-i = 3
-w = d (t i) (f i) b
+compress = foldr skipDups
+
+skipDups x [] = [x]
+skipDups x acc
+   | x == head acc = acc
+   | otherwise = x : acc
+
+expect = [3,4,5,6]
+
+actual = compress [3,3,4,5,6,6]
+
+y :: Bool
+y =  expect == actual
 `;
   var uconandvcon = (n3) => `module Task${n3} where
 
@@ -24570,16 +24580,30 @@ printXML (Text text) = text
 
 
 `;
+  var euler1 = (n3) => `module Task${n3} where
+
+-- Add all the natural numbers below 1000
+-- that are multiples of 3 or 5.
+sum [] = 0
+sum [x] = x
+sum (x:xs) = x + sum xs
+
+check (x:xs)
+  | x \`mod\` 3 == 0 || x \`mod\` 5 == 0 = x + check xs
+  | otherwise = check xs
+
+problem_1 = sum (check [1..999])
+`;
   var examples = [
-    intro,
-    ifelse,
-    constAndTuple,
-    inc,
-    intandbool,
+    euler1,
+    dropEvery,
+    rotate,
+    insertAt,
+    balanceTree,
+    compress,
     uconandvcon,
     quicksort,
-    printXML,
-    weekdayRange
+    printXML
   ].map((ex, n3) => ex(n3 + 1));
   var code_default = examples;
 

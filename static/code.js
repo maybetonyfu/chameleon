@@ -6,6 +6,42 @@ x y =
     False -> '4'
 `
 
+const dropEvery = n => `module Task${n} where
+
+divides x y = y \`mod\` x == 0
+
+
+dropEvery [] _ = []
+dropEvery (x:xs) n = dropEvery' (x:xs) n 1
+
+dropEvery' :: [Int] -> Int -> Int -> [Int]
+dropEvery' [] _ _ = []
+dropEvery' (x:xs) n i =
+    let current =
+            if n \`divides\` i
+                then []
+                else [x]
+    in current : dropEvery' xs n (i+1)
+`
+
+const rotate = n => `module Task${n} where
+-- Rotate a list N places to the left.
+
+rotate1 :: [a] -> [a]
+rotate1 x = tail x ++ [head x]
+
+rotate1Back :: [a] -> [a]
+rotate1Back x = last x : init x
+
+
+rotate :: [a] -> Int -> [a]
+rotate [] _ = []
+rotate x 0 = x
+rotate x y
+  | y > 0 = rotate rotate1 (y-1)
+  | otherwise = rotate rotate1Back x (y+1)
+`
+
 const exampeExtend = n => `module Task${n} where
 
 data Expr = C Int |
@@ -258,22 +294,34 @@ validate password =
 `;
 
 
-const constAndTuple = n => `module Task${n} where
+const insertAt = n => `module Task${n} where
 
-x :: (Int, Bool)
-x = (3, y)
+-- Insert an element at a given position into a list.
 
-const :: a -> b -> a
-const a b = a
+insertAt el lst n =
+    let accu (i, acc) x =
+            if i == n
+                then (acc ++ [el,x],i+1)
+                else (acc ++ [x],i+1)
+    in fst $ foldl accu ([],1) lst
 
-y = const 0 True
+
 `
 
-const inc = n => `module Task${n} where
+const balanceTree = n => `module Task${n} where
 
-incr n = n + 1
-fun True c = incr c
-fun a x = a
+data Tree a = Empty | Branch a (Tree a) (Tree a)
+leaf x = Branch x Empty Empty
+
+isBalancedTree Empty = True
+isBalancedTree (Branch _ l r) =
+    (countBranches l - countBranches r) == 1
+    || (countBranches r - countBranches l) == 1
+    && isBalancedTree l && isBalancedTree r
+
+
+countBranches Empty = 0
+countBranches (Branch _ l r) = 1 + l + r
 `
 
 const mostBasic = n => `module Task${n} where
@@ -290,14 +338,23 @@ v = 0.1
 z = True
 y = if z then u else v
 `
+[[1,2,3,4], [4,5,6,7]] [[1,2,3,4], [5,6,7,8]]
+const compress = n => `module Task${n} where
+--  Eliminate consecutive duplicates of list elements.
 
-const intandbool = n => `module Task${n} where
-t u v = if u then v else 0
-f u v = if u then 0 else v
-d f g x = f x + g x
-b = True
-i = 3
-w = d (t i) (f i) b
+compress = foldr skipDups
+
+skipDups x [] = [x]
+skipDups x acc
+   | x == head acc = acc
+   | otherwise = x : acc
+
+expect = [3,4,5,6]
+
+actual = compress [3,3,4,5,6,6]
+
+y :: Bool
+y =  expect == actual
 `
 
 
@@ -357,16 +414,32 @@ printXML (Text text) = text
 
 
 `
+
+const euler1 = n => `module Task${n} where
+
+-- Add all the natural numbers below 1000
+-- that are multiples of 3 or 5.
+sum [] = 0
+sum [x] = x
+sum (x:xs) = x + sum xs
+
+check (x:xs)
+  | x \`mod\` 3 == 0 || x \`mod\` 5 == 0 = x + check xs
+  | otherwise = check xs
+
+problem_1 = sum (check [1..999])
+`
 const examples = [
-  intro,
-  ifelse,
-  constAndTuple,
-  inc,
-  intandbool,
+  euler1,
+  dropEvery,
+  rotate,
+  insertAt,
+  balanceTree,
+  compress,
   uconandvcon,
   quicksort,
   printXML,
-  weekdayRange,
+  // weekdayRange,
 ].map((ex, n) => ex(n + 1));
 
 export default examples;
