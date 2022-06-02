@@ -16,6 +16,10 @@ import Splitter, { SplitDirection } from '@devbookhq/splitter'
 import Editor from "./Editor"
 import Debugger from "./Debugger"
 import MenuBar from "./MenuBar"
+import Modal from 'react-modal';
+
+Modal.setAppElement('#react-root');
+
 
 window.addEventListener('keyup', (event) => {
   const keyName = event.key;
@@ -27,7 +31,6 @@ window.addEventListener('keyup', (event) => {
 window.addEventListener('keydown', (event) => {
   let state = store.getState()
   const keyName = event.key;
-  console.log(keyName)
 
   if (state.debugger.mode === editorModes.normal) {
     if (keyName === 'Tab') {
