@@ -305,3 +305,7 @@ export const makeHighlight = (range, marker) => {
     },
   };
 };
+
+export function getRandomInt(max) {
+  return Math.floor(Math.random() * max);
+}

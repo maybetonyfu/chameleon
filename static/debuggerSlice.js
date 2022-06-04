@@ -8,7 +8,25 @@ import {
   makeHighlight,
   doesRangeSurround,
   convertLocation,
+  getRandomInt
 } from './util';
+
+
+
+let debuggerOrders = [R.flatten(R.repeat(['level1', 'level2', 'level3'], 3))
+  , R.flatten(R.repeat(['level1', 'level3', 'level2'], 3))
+  , R.flatten(R.repeat(['level2', 'level1', 'level3'], 3))
+  , R.flatten(R.repeat(['level2', 'level3', 'level1'], 3))
+  , R.flatten(R.repeat(['level3', 'level1', 'level2'], 3))
+  , R.flatten(R.repeat(['level3', 'level2', 'level1'], 3))]
+
+let debuggerOrder = debuggerOrders[getRandomInt(6)]
+
+let setLevelTo = x => {
+  if (x === 'level1') return debuggingLevel1
+  if (x === 'level2') return debuggingLevel2
+  if (x === 'level3') return debuggingLevel3
+}
 
 export const editorModes = {
   edit: 0,
@@ -21,6 +39,8 @@ export let typeCheckThunk = createAsyncThunk(
     dispatch(resetHighlights());
     let state = getState();
     let text = state.debugger.text;
+    let currentTaskNum = state.debugger.currentTaskNum
+    dispatch(incrementAttemps(currentTaskNum))
     // console.log(text);
     let response = await fetch('/typecheck', {
       method: 'POST',
@@ -47,8 +67,10 @@ export let toggleMultileExpThunk = createAsyncThunk(
 export let switchTaskThunk = createAsyncThunk(
   'switchTask',
   async (n, { dispatch }) => {
+    let setLevelAction = setLevelTo(debuggerOrder[n])
     dispatch(setTask(n));
     dispatch(typeCheckThunk(null));
+    dispatch(setLevelAction())
   },
 );
 
@@ -75,6 +97,7 @@ const initialState = {
   highlights: [],
   debuggingSteps: false,
   multipleExps: false,
+  attempts: [0, 0, 0, 0, 0, 0, 0, 0, 0]
 };
 
 const { actions, reducer } = createSlice({
@@ -85,6 +108,24 @@ const { actions, reducer } = createSlice({
     toNormalMode: R.assoc('mode', editorModes.normal),
     toggleDebuggerStpes: R.modify('debuggingSteps', R.not),
     toggleMultipleExps: R.modify('multipleExps', R.not),
+    incrementAttemps(state, action) {
+      state.attempts = state.attempts.map((v, i) => i === action.payload ? v + 1 : v)
+    },
+    debuggingLevel1(state) {
+      state.debuggingSteps = false
+      state.multipleExps = false
+    },
+
+    debuggingLevel2(state) {
+      state.debuggingSteps = false
+      state.multipleExps = true
+    },
+
+    debuggingLevel3(state) {
+      state.debuggingSteps = true
+      state.multipleExps = true
+    },
+
     setText(state, action) {
       state.text = action.payload;
     },
@@ -321,6 +362,10 @@ export const {
   showOnlyMark2,
   showBoth,
   showDefination,
+  debuggingLevel1,
+  debuggingLevel2,
+  debuggingLevel3,
+  incrementAttemps,
 } = actions;
 export default reducer;
 

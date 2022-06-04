@@ -22255,7 +22255,7 @@ For more info, visit https://reactjs.org/link/mock-scheduler`);
         value: true
       });
       exports.default = findTabbableDescendants;
-      var tabbableNode = /input|select|textarea|button|object|iframe/;
+      var tabbableNode = /input|select|textarea|button|object/;
       function hidesContents(element) {
         var zeroSize = element.offsetWidth <= 0 && element.offsetHeight <= 0;
         if (zeroSize && !element.innerHTML)
@@ -26518,6 +26518,14 @@ problem_1 = sum (check [1..999])
   var reduce = /* @__PURE__ */ _curry3(_reduce);
   var reduce_default = reduce;
 
+  // node_modules/ramda/es/always.js
+  var always = /* @__PURE__ */ _curry1(function always2(val) {
+    return function() {
+      return val;
+    };
+  });
+  var always_default = always;
+
   // node_modules/ramda/es/internal/_xany.js
   var XAny = /* @__PURE__ */ function() {
     function XAny2(f3, xf) {
@@ -26604,6 +26612,31 @@ problem_1 = sum (check [1..999])
   function _isFunction(x2) {
     var type3 = Object.prototype.toString.call(x2);
     return type3 === "[object Function]" || type3 === "[object AsyncFunction]" || type3 === "[object GeneratorFunction]" || type3 === "[object AsyncGeneratorFunction]";
+  }
+
+  // node_modules/ramda/es/internal/_makeFlat.js
+  function _makeFlat(recursive) {
+    return function flatt(list) {
+      var value, jlen, j2;
+      var result = [];
+      var idx = 0;
+      var ilen = list.length;
+      while (idx < ilen) {
+        if (isArrayLike_default(list[idx])) {
+          value = recursive ? flatt(list[idx]) : list[idx];
+          j2 = 0;
+          jlen = value.length;
+          while (j2 < jlen) {
+            result[result.length] = value[j2];
+            j2 += 1;
+          }
+        } else {
+          result[result.length] = list[idx];
+        }
+        idx += 1;
+      }
+      return result;
+    };
   }
 
   // node_modules/ramda/es/clamp.js
@@ -27060,6 +27093,10 @@ problem_1 = sum (check [1..999])
   }));
   var find_default = find;
 
+  // node_modules/ramda/es/flatten.js
+  var flatten = /* @__PURE__ */ _curry1(/* @__PURE__ */ _makeFlat(true));
+  var flatten_default = flatten;
+
   // node_modules/ramda/es/includes.js
   var includes = /* @__PURE__ */ _curry2(_includes);
   var includes_default = includes;
@@ -27152,6 +27189,29 @@ problem_1 = sum (check [1..999])
     return modifyPath_default([prop3], fn2, object);
   });
   var modify_default = modify;
+
+  // node_modules/ramda/es/times.js
+  var times = /* @__PURE__ */ _curry2(function times2(fn2, n3) {
+    var len = Number(n3);
+    var idx = 0;
+    var list;
+    if (len < 0 || isNaN(len)) {
+      throw new RangeError("n must be a non-negative number");
+    }
+    list = new Array(len);
+    while (idx < len) {
+      list[idx] = fn2(idx);
+      idx += 1;
+    }
+    return list;
+  });
+  var times_default = times;
+
+  // node_modules/ramda/es/repeat.js
+  var repeat = /* @__PURE__ */ _curry2(function repeat2(value, n3) {
+    return times_default(always_default(value), n3);
+  });
+  var repeat_default = repeat;
 
   // node_modules/ramda/es/sort.js
   var sort = /* @__PURE__ */ _curry2(function sort2(comparator, list) {
@@ -27389,8 +27449,28 @@ problem_1 = sum (check [1..999])
       }
     };
   };
+  function getRandomInt(max) {
+    return Math.floor(Math.random() * max);
+  }
 
   // debuggerSlice.js
+  var debuggerOrders = [
+    flatten_default(repeat_default(["level1", "level2", "level3"], 3)),
+    flatten_default(repeat_default(["level1", "level3", "level2"], 3)),
+    flatten_default(repeat_default(["level2", "level1", "level3"], 3)),
+    flatten_default(repeat_default(["level2", "level3", "level1"], 3)),
+    flatten_default(repeat_default(["level3", "level1", "level2"], 3)),
+    flatten_default(repeat_default(["level3", "level2", "level1"], 3))
+  ];
+  var debuggerOrder = debuggerOrders[getRandomInt(6)];
+  var setLevelTo = (x2) => {
+    if (x2 === "level1")
+      return debuggingLevel1;
+    if (x2 === "level2")
+      return debuggingLevel2;
+    if (x2 === "level3")
+      return debuggingLevel3;
+  };
   var editorModes = {
     edit: 0,
     normal: 1
@@ -27399,6 +27479,8 @@ problem_1 = sum (check [1..999])
     dispatch(resetHighlights());
     let state = getState();
     let text = state.debugger.text;
+    let currentTaskNum = state.debugger.currentTaskNum;
+    dispatch(incrementAttemps(currentTaskNum));
     let response = await fetch("/typecheck", {
       method: "POST",
       body: text
@@ -27416,8 +27498,10 @@ problem_1 = sum (check [1..999])
     return null;
   });
   var switchTaskThunk = createAsyncThunk("switchTask", async (n3, { dispatch }) => {
+    let setLevelAction = setLevelTo(debuggerOrder[n3]);
     dispatch(setTask(n3));
     dispatch(typeCheckThunk(null));
+    dispatch(setLevelAction());
   });
   var initialState = {
     currentStepNum: null,
@@ -27441,7 +27525,8 @@ problem_1 = sum (check [1..999])
     widgets: [],
     highlights: [],
     debuggingSteps: false,
-    multipleExps: false
+    multipleExps: false,
+    attempts: [0, 0, 0, 0, 0, 0, 0, 0, 0]
   };
   var { actions, reducer } = createSlice({
     name: "editor",
@@ -27451,6 +27536,21 @@ problem_1 = sum (check [1..999])
       toNormalMode: assoc_default("mode", editorModes.normal),
       toggleDebuggerStpes: modify_default("debuggingSteps", not_default),
       toggleMultipleExps: modify_default("multipleExps", not_default),
+      incrementAttemps(state, action) {
+        state.attempts = state.attempts.map((v2, i3) => i3 === action.payload ? v2 + 1 : v2);
+      },
+      debuggingLevel1(state) {
+        state.debuggingSteps = false;
+        state.multipleExps = false;
+      },
+      debuggingLevel2(state) {
+        state.debuggingSteps = false;
+        state.multipleExps = true;
+      },
+      debuggingLevel3(state) {
+        state.debuggingSteps = true;
+        state.multipleExps = true;
+      },
       setText(state, action) {
         state.text = action.payload;
       },
@@ -27630,7 +27730,11 @@ problem_1 = sum (check [1..999])
     showOnlyMark1,
     showOnlyMark2,
     showBoth,
-    showDefination
+    showDefination,
+    debuggingLevel1,
+    debuggingLevel2,
+    debuggingLevel3,
+    incrementAttemps
   } = actions;
   var debuggerSlice_default = reducer;
   function getCurrentActiveContext(contexts, currentTraverseId) {
@@ -28518,9 +28622,9 @@ problem_1 = sum (check [1..999])
     const mode = useSelector(path_default(["debugger", "mode"]));
     const deductionSteps = useSelector(path_default(["debugger", "debuggingSteps"]));
     const currentTaskNum = useSelector(path_default(["debugger", "currentTaskNum"]));
+    const attempts = useSelector(path_default(["debugger", "attempts"]));
+    const currentTaskAttemps = attempts[currentTaskNum];
     (0, import_react13.useEffect)(() => {
-      dispatch(setTask(0));
-      dispatch(typeCheckThunk());
     }, []);
     return /* @__PURE__ */ import_react13.default.createElement("div", {
       className: "w-full bg-gray-100 h-10 flex justify-between"
@@ -28581,7 +28685,14 @@ problem_1 = sum (check [1..999])
         dispatch(switchTaskThunk(currentTaskNum));
         dispatch(toNormalMode());
       }
-    }, "Reset problem"), mode === editorModes.normal ? /* @__PURE__ */ import_react13.default.createElement("button", {
+    }, "Reset problem"), currentTaskAttemps > 5 ? /* @__PURE__ */ import_react13.default.createElement("button", {
+      "aria-label": "Skip this task if you are stuck on a problem for too long",
+      className: "bg-gray-300 px-4 py-1 rounded-md mx-2 flex h-8 justify-center items-center hint--bottom",
+      onClick: (_3) => {
+        dispatch(switchTaskThunk(currentTaskNum + 1));
+        dispatch(toNormalMode());
+      }
+    }, "Give up") : null, mode === editorModes.normal ? /* @__PURE__ */ import_react13.default.createElement("button", {
       className: "bg-gray-300 px-4 py-1 rounded-md mx-2 flex h-8 justify-center items-center",
       onClick: (_3) => dispatch(toEditMode())
     }, /* @__PURE__ */ import_react13.default.createElement(PencilAltIcon_default, {
@@ -28621,27 +28732,29 @@ problem_1 = sum (check [1..999])
   // index.jsx
   var import_react_modal = __toESM(require_lib());
   import_react_modal.default.setAppElement("#react-root");
+  store_default.dispatch(switchTaskThunk(0));
   window.addEventListener("keyup", (event) => {
     const keyName = event.key;
-    if (keyName === "1" || keyName === "2") {
+    let state = store_default.getState();
+    if (state.debugger.mode === editorModes.normal && (keyName === "1" || keyName === "2")) {
       store_default.dispatch(showBoth());
     }
   });
   window.addEventListener("keydown", (event) => {
     let state = store_default.getState();
     const keyName = event.key;
-    if (state.debugger.mode === editorModes.normal) {
-      if (keyName === "Tab") {
-        event.preventDefault();
-        if (!state.debugger.multipleExps) {
-          store_default.dispatch(toggleMultipleExps());
-        } else if (state.debugger.multipleExps && !state.debugger.debuggingSteps) {
-          store_default.dispatch(toggleDebuggerStpes());
-        } else if (state.debugger.multipleExps && state.debugger.debuggingSteps) {
-          store_default.dispatch(toggleMultipleExps());
-          store_default.dispatch(toggleDebuggerStpes());
-        }
+    if (keyName === "Tab") {
+      event.preventDefault();
+      if (!state.debugger.multipleExps) {
+        store_default.dispatch(toggleMultipleExps());
+      } else if (state.debugger.multipleExps && !state.debugger.debuggingSteps) {
+        store_default.dispatch(toggleDebuggerStpes());
+      } else if (state.debugger.multipleExps && state.debugger.debuggingSteps) {
+        store_default.dispatch(toggleMultipleExps());
+        store_default.dispatch(toggleDebuggerStpes());
       }
+    }
+    if (state.debugger.mode === editorModes.normal) {
       if (keyName === "1") {
         store_default.dispatch(showOnlyMark1());
       }
@@ -28660,8 +28773,6 @@ problem_1 = sum (check [1..999])
   });
   var App2 = () => {
     let wellTyped = useSelector((state) => state.debugger.wellTyped);
-    let loadError = useSelector((state) => state.debugger.loadError);
-    let parseError = useSelector((state) => state.debugger.parseError);
     return /* @__PURE__ */ import_react14.default.createElement(import_react14.default.Fragment, null, /* @__PURE__ */ import_react14.default.createElement(import_react_modal.default, {
       isOpen: wellTyped,
       className: "max-w-2xl bg-gray-100 h-80 min-w-max left-1/2 top-1/2 -translate-y-1/2 -translate-x-1/2 absolute p-6 rounded-md"
@@ -28676,7 +28787,6 @@ problem_1 = sum (check [1..999])
   var ModelContent = () => {
     let dispatch = useDispatch();
     let currentTaskNum = useSelector((state) => state.debugger.currentTaskNum);
-    let numOfTasks = 9;
     return /* @__PURE__ */ import_react14.default.createElement("div", {
       className: "flex flex-col justify-around items-center h-full"
     }, /* @__PURE__ */ import_react14.default.createElement("div", null, /* @__PURE__ */ import_react14.default.createElement("p", {
@@ -28689,7 +28799,7 @@ problem_1 = sum (check [1..999])
       className: "px-5 py-1 bg-green-400 rounded-md",
       onClick: () => {
         if (currentTaskNum === 8) {
-          window.location = "https://docs.google.com/forms/d/e/1FAIpQLSfmXyASOPW2HIK-Oqp5nELBTltKeqZjqQ0G9JFram8eUCx26A/viewform?usp=sf_link";
+          window.location = "https://forms.gle/nts9EQsrbNFAPEdv8";
           return;
         } else {
           dispatch(switchTaskThunk(currentTaskNum + 1));

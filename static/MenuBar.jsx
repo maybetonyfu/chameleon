@@ -23,12 +23,14 @@ const MenuBar = () => {
   const dispatch = useDispatch();
   const mode = useSelector(R.path(['debugger', 'mode']));
   const deductionSteps = useSelector(R.path(['debugger', 'debuggingSteps']));
-
   const currentTaskNum = useSelector(R.path(['debugger', 'currentTaskNum']));
+  const attempts = useSelector(R.path(['debugger', 'attempts']))
+
+  const currentTaskAttemps = attempts[currentTaskNum]
+
   useEffect(() => {
-    dispatch(setTask(0));
-    dispatch(typeCheckThunk());
   }, []);
+
   return (
     <div className='w-full bg-gray-100 h-10 flex justify-between'>
       <div className='flex items-center'>
@@ -109,14 +111,21 @@ const MenuBar = () => {
 
         </select> */}
         <button
-            className='bg-gray-300 px-4 py-1 rounded-md mx-2 flex h-8 justify-center items-center'
-            onClick={_ => {
-              dispatch(switchTaskThunk(currentTaskNum));
-              dispatch(toNormalMode());
-            }}
-          >
-            Reset problem
+          className='bg-gray-300 px-4 py-1 rounded-md mx-2 flex h-8 justify-center items-center'
+          onClick={_ => {
+            dispatch(switchTaskThunk(currentTaskNum));
+            dispatch(toNormalMode());
+          }}
+        >
+          Reset problem
         </button>
+        {currentTaskAttemps > 5 ? <button
+          aria-label='Skip this task if you are stuck on a problem for too long'
+          className='bg-gray-300 px-4 py-1 rounded-md mx-2 flex h-8 justify-center items-center hint--bottom'
+          onClick={_ => { dispatch(switchTaskThunk(currentTaskNum + 1)); dispatch(toNormalMode()); }}
+        >
+          Give up
+        </button> : null}
         {mode === editorModes.normal ? (
           <button
             className='bg-gray-300 px-4 py-1 rounded-md mx-2 flex h-8 justify-center items-center'
@@ -146,20 +155,20 @@ const MenuBar = () => {
         </a>
         {
           deductionSteps ? (<>
-        <button
-          aria-label='Previous step (Left arrow key / k )'
-          className='bg-gray-700 hover:bg-gray-800 active:bg-gray-900 px-2 py-1 mx-0.5 h-8 rounded-md flex justify-center items-center hint--bottom'
-          onClick={_ => dispatch(nextStep())}
-        >
-          <ChevronDoubleLeftIcon className='h-4 w-4 text-white'></ChevronDoubleLeftIcon>
-        </button>
-        <button
-          aria-label='Next step (Right arrow key / j)'
-          className='bg-gray-700 hover:bg-gray-800 active:bg-gray-900 px-2 py-1 mx-0.5 h-8 rounded-md flex justify-center items-center hint--bottom'
-          onClick={_ => dispatch(prevStep())}
-        >
-          <ChevronDoubleRightIcon className='h-4 w-4 text-white'></ChevronDoubleRightIcon>
-        </button>
+            <button
+              aria-label='Previous step (Left arrow key / k )'
+              className='bg-gray-700 hover:bg-gray-800 active:bg-gray-900 px-2 py-1 mx-0.5 h-8 rounded-md flex justify-center items-center hint--bottom'
+              onClick={_ => dispatch(nextStep())}
+            >
+              <ChevronDoubleLeftIcon className='h-4 w-4 text-white'></ChevronDoubleLeftIcon>
+            </button>
+            <button
+              aria-label='Next step (Right arrow key / j)'
+              className='bg-gray-700 hover:bg-gray-800 active:bg-gray-900 px-2 py-1 mx-0.5 h-8 rounded-md flex justify-center items-center hint--bottom'
+              onClick={_ => dispatch(prevStep())}
+            >
+              <ChevronDoubleRightIcon className='h-4 w-4 text-white'></ChevronDoubleRightIcon>
+            </button>
           </>) : null
         }
 

@@ -12,20 +12,26 @@ import {
   showOnlyMark1,
   showOnlyMark2,
   showBoth,
-  toNormalMode
+  toNormalMode,
+  debuggingLevel1,
+  debuggingLevel2,
+  debuggingLevel3
 } from './debuggerSlice';
-import Splitter, { SplitDirection } from '@devbookhq/splitter'
+import Splitter from '@devbookhq/splitter'
 import Editor from "./Editor"
 import Debugger from "./Debugger"
 import MenuBar from "./MenuBar"
 import Modal from 'react-modal';
 
+  
 Modal.setAppElement('#react-root');
-
+store.dispatch(switchTaskThunk(0));
 
 window.addEventListener('keyup', (event) => {
   const keyName = event.key;
-  if (keyName === '1' || keyName === '2') {
+  let state = store.getState()
+
+  if (state.debugger.mode === editorModes.normal && (keyName === '1' || keyName === '2')) {
     store.dispatch(showBoth())
   }
 })
@@ -33,19 +39,19 @@ window.addEventListener('keyup', (event) => {
 window.addEventListener('keydown', (event) => {
   let state = store.getState()
   const keyName = event.key;
-
-  if (state.debugger.mode === editorModes.normal) {
-    if (keyName === 'Tab') {
-      event.preventDefault()
-      if (!state.debugger.multipleExps) {
-        store.dispatch(toggleMultipleExps())
-      } else if (state.debugger.multipleExps && !state.debugger.debuggingSteps) {
-        store.dispatch(toggleDebuggerStpes())
-      } else if (state.debugger.multipleExps && state.debugger.debuggingSteps) {
-        store.dispatch(toggleMultipleExps())
-        store.dispatch(toggleDebuggerStpes())
-      }
+  if (keyName === 'Tab') {
+    event.preventDefault()
+    if (!state.debugger.multipleExps) {
+      store.dispatch(toggleMultipleExps())
+    } else if (state.debugger.multipleExps && !state.debugger.debuggingSteps) {
+      store.dispatch(toggleDebuggerStpes())
+    } else if (state.debugger.multipleExps && state.debugger.debuggingSteps) {
+      store.dispatch(toggleMultipleExps())
+      store.dispatch(toggleDebuggerStpes())
     }
+  }
+  if (state.debugger.mode === editorModes.normal) {
+
 
     if (keyName === '1') {
       store.dispatch(showOnlyMark1())
@@ -68,32 +74,30 @@ window.addEventListener('keydown', (event) => {
 
 const App = () => {
   let wellTyped = useSelector(state => state.debugger.wellTyped);
-  let loadError = useSelector(state => state.debugger.loadError);
-  let parseError = useSelector(state => state.debugger.parseError);
+
   return <>
-  <Modal
-    isOpen={wellTyped}
-    className='max-w-2xl bg-gray-100 h-80 min-w-max left-1/2 top-1/2 -translate-y-1/2 -translate-x-1/2 absolute p-6 rounded-md'
-  >
-    <ModelContent />
-  </Modal>
-  <div className='w-full h-full flex flex-col'>
-    <MenuBar></MenuBar>
-    <div className='flex-grow'>
-      <Splitter initialSizes={[60, 40]}>
-        <Editor></Editor>
-        <Debugger></Debugger>
-      </Splitter>
+    <Modal
+      isOpen={wellTyped}
+      className='max-w-2xl bg-gray-100 h-80 min-w-max left-1/2 top-1/2 -translate-y-1/2 -translate-x-1/2 absolute p-6 rounded-md'
+    >
+      <ModelContent />
+      {/* this is for study only  */}
+    </Modal>
+    <div className='w-full h-full flex flex-col'>
+      <MenuBar></MenuBar>
+      <div className='flex-grow'>
+        <Splitter initialSizes={[60, 40]}>
+          <Editor></Editor>
+          <Debugger></Debugger>
+        </Splitter>
+      </div>
     </div>
-  </div>
   </>
 }
 
 const ModelContent = () => {
   let dispatch = useDispatch();
   let currentTaskNum = useSelector(state => state.debugger.currentTaskNum);
-  let numOfTasks = 9
-
   // analytics.track(events.succeed, { taskNumber: currentTaskNum, mode });
   return (
     <div className='flex flex-col justify-around items-center h-full'>
@@ -114,14 +118,14 @@ const ModelContent = () => {
         onClick={() => {
           if (currentTaskNum === 8) {
             window.location =
-              'https://docs.google.com/forms/d/e/1FAIpQLSfmXyASOPW2HIK-Oqp5nELBTltKeqZjqQ0G9JFram8eUCx26A/viewform?usp=sf_link';
+              'https://forms.gle/nts9EQsrbNFAPEdv8';
             return;
           } else {
+   
             dispatch(switchTaskThunk(currentTaskNum + 1))
             dispatch(toNormalMode())
-
-            }
           }
+        }
         }
       >
         Next
