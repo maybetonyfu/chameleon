@@ -121,7 +121,6 @@ const ModelContent = () => {
               'https://forms.gle/nts9EQsrbNFAPEdv8';
             return;
           } else {
-   
             dispatch(switchTaskThunk(currentTaskNum + 1))
             dispatch(toNormalMode())
           }

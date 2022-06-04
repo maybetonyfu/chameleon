@@ -23,6 +23,8 @@ const MenuBar = () => {
   const dispatch = useDispatch();
   const mode = useSelector(R.path(['debugger', 'mode']));
   const deductionSteps = useSelector(R.path(['debugger', 'debuggingSteps']));
+  const multipleExps = useSelector(R.path(['debugger', 'multipleExps']));
+
   const currentTaskNum = useSelector(R.path(['debugger', 'currentTaskNum']));
   const attempts = useSelector(R.path(['debugger', 'attempts']))
 
@@ -174,7 +176,15 @@ const MenuBar = () => {
 
       </div>
 
-      <div className='flex items-center px-2'></div>
+      <div className='flex items-center px-2'>
+        <div>
+          {(() => {
+            if (!multipleExps && !deductionSteps) return "Basic Mode"
+            if (multipleExps && !deductionSteps) return "Balanced Mode"
+            if (multipleExps && deductionSteps) return "Advanced Mode"
+          })()}
+        </div>
+      </div>
     </div>
   );
 };

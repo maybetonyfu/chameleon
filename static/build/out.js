@@ -27667,7 +27667,8 @@ problem_1 = sum (check [1..999])
           let steps = action.payload.steps;
           let context = action.payload.contextTable;
           let currentStepNum = Math.floor(steps.length / 2);
-          let { highlights, widgets } = convertStep(steps[currentStepNum], currentStepNum, state.longestLine);
+          let longestLine = pipe(split_default("\n"), map_default(split_default("")), map_default(length_default), sort_default(subtract_default), reverse_default, head_default)(state.text);
+          let { highlights, widgets } = convertStep(steps[currentStepNum], currentStepNum, longestLine);
           let currentTraverseId = steps[currentStepNum].stepId;
           state.context = context;
           state.steps = steps;
@@ -27687,6 +27688,7 @@ problem_1 = sum (check [1..999])
           state.parseError = null;
           state.loadError = null;
           state.wellTyped = false;
+          state.longestLine = longestLine;
         } else if (action.payload.tag === "ChSuccess") {
           return Object.assign({}, {
             ...state,
@@ -28621,6 +28623,7 @@ problem_1 = sum (check [1..999])
     const dispatch = useDispatch();
     const mode = useSelector(path_default(["debugger", "mode"]));
     const deductionSteps = useSelector(path_default(["debugger", "debuggingSteps"]));
+    const multipleExps = useSelector(path_default(["debugger", "multipleExps"]));
     const currentTaskNum = useSelector(path_default(["debugger", "currentTaskNum"]));
     const attempts = useSelector(path_default(["debugger", "attempts"]));
     const currentTaskAttemps = attempts[currentTaskNum];
@@ -28725,7 +28728,14 @@ problem_1 = sum (check [1..999])
       className: "h-4 w-4 text-white"
     }))) : null), /* @__PURE__ */ import_react13.default.createElement("div", {
       className: "flex items-center px-2"
-    }));
+    }, /* @__PURE__ */ import_react13.default.createElement("div", null, (() => {
+      if (!multipleExps && !deductionSteps)
+        return "Basic Mode";
+      if (multipleExps && !deductionSteps)
+        return "Balanced Mode";
+      if (multipleExps && deductionSteps)
+        return "Advanced Mode";
+    })())));
   };
   var MenuBar_default = MenuBar;
 

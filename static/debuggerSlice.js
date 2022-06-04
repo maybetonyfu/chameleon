@@ -218,7 +218,6 @@ const { actions, reducer } = createSlice({
     prevStep(state) {
       if (state.currentStepNum === null) return state;
       if (state.currentStepNum <= 0) return state;
-
       let currentStepNum = state.currentStepNum - 1;
       let { highlights, widgets } = convertStep(
         state.steps[currentStepNum],
@@ -280,10 +279,19 @@ const { actions, reducer } = createSlice({
         let steps = action.payload.steps;
         let context = action.payload.contextTable;
         let currentStepNum = Math.floor(steps.length / 2);
+        let longestLine = R.pipe(
+          R.split('\n'),
+          R.map(R.split('')),
+          R.map(R.length),
+          R.sort(R.subtract),
+          R.reverse,
+          R.head,
+        )(state.text);
+
         let { highlights, widgets } = convertStep(
           steps[currentStepNum],
           currentStepNum,
-          state.longestLine,
+          longestLine,
         );
         let currentTraverseId = steps[currentStepNum].stepId;
         state.context = context;
@@ -308,6 +316,7 @@ const { actions, reducer } = createSlice({
         state.parseError = null;
         state.loadError = null;
         state.wellTyped = false;
+        state.longestLine = longestLine;
       } else if (action.payload.tag === 'ChSuccess') {
         return Object.assign(
           {},
