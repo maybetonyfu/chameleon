@@ -238,6 +238,26 @@
             </div>
         </section>
 
+        <section class="step-container" x-data="{step: 0}">
+            <div class="leading-8">
+                <h2 class="font-bold" id="deduction-step-example">Modes </h2>
+                Chameleon can be configured in three modes based on the features we illustrated before, namely
+                <button @mouseenter="step = 0" @mouseleave="step=0"
+                class="px-1 h-6 leading-6 border border-black rounded-sm"> Basic Mode</button>
+                <button @mouseenter="step = 1" @mouseleave="step=0"
+                class="px-1 h-6 leading-6 border border-black rounded-sm"> Balanced Mode</button>(basic mode with uncertain expression cards), and
+                <button @mouseenter="step = 2" @mouseleave="step=0"
+                class="px-1 h-6 leading-6 border border-black rounded-sm"> Advanced Mode</button>(balanced mode with deduction steps).
+                You will start off with different mode throughout the study. However, you are free to switch between modes at any time by pressing the 
+                tab key or click the expand buttons.
+            </div>
+            <div class="relative border">
+                <img class="absolute" :class="assetShow(step, 0)" src="./tutorial/pngs/Original.png">
+                <img class="absolute" :class="assetShow(step, 1)" src="./tutorial/pngs/Card X.png">
+                <img class="" :class="assetShow(step, 2)" src="./tutorial/pngs/Deduction Example Step 1.png">
+            </div>
+        </section>
+
         <div class="flex mb-12">
             <a href="/study" class="block bg-green-400 py-1 px-3 rounded-md text-xl">
                 Start code challenges

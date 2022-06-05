@@ -141,8 +141,8 @@ processFile text =
                             --       trace ("\nLength of Mus: " ++ show (length mus)) $
                             map
                               ( \(name, concrete, simplified) ->
-                                  trace ("\nSimlifed:" ++ name ++ ":\n" ++ unlines (map toSig simplified)) $
-                                    trace ("\nConcrete:" ++ name ++ ":\n" ++ unlines (map toSig concrete)) $
+                                  -- trace ("\nSimlifed:" ++ name ++ ":\n" ++ unlines (map toSig simplified)) $
+                                  --   trace ("\nConcrete:" ++ name ++ ":\n" ++ unlines (map toSig concrete)) $
                                   let (leftmost, rightmost) = polarEnds concrete
                                       (leftmostSimp, rightmostSimp) = polarEnds simplified
                                       -- globals in the scope
@@ -202,12 +202,24 @@ processFile text =
 polarEnds :: [Term] -> (Term, Term)
 polarEnds types
 
-  | trace ("\n Branch 0: " ++ show types) $ length (nub types) == 1 = (head (nub types), last (nub types))
-  | trace ("\n Branch 1: " ++ show types) $ head types == last types = polarEnds (init . tail $ types)
-  | trace ("\n Branch 2: " ++ show types) $  length (nub types) == 2 = (head (nub types), last (nub types))
-  | trace ("\n Branch 3: " ++ show types) $  isVar (head types) = polarEnds (tail types)
-  | trace ("\n Branch 4: " ++ show types) $  isVar (last types) = polarEnds (init types)
-  | trace ("\n Branch 5: " ++ show types) $  otherwise = (head types, last types)
+  |
+    --  trace ("\n Branch 0: " ++ show types) $ 
+     length (nub types) == 1 = (head (nub types), last (nub types))
+  |
+    --  trace ("\n Branch 1: " ++ show types) $ 
+     head types == last types = polarEnds (init . tail $ types)
+  |
+    --  trace ("\n Branch 2: " ++ show types) $ 
+      length (nub types) == 2 = (head (nub types), last (nub types))
+  |
+    --  trace ("\n Branch 3: " ++ show types) $ 
+      isVar (head types) = polarEnds (tail types)
+  |
+    --  trace ("\n Branch 4: " ++ show types) $ 
+      isVar (last types) = polarEnds (init types)
+  |
+    --  trace ("\n Branch 5: " ++ show types) $ 
+      otherwise = (head types, last types)
 
 normalize :: [(a, Affinity, b)] -> [(a, Affinity, b)]
 normalize sides
