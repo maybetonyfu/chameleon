@@ -10,7 +10,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;700;800&display=swap" rel="stylesheet">
-    <title>Tutorial | Chameleon Type Debugger</title>
+    <title>Introduction | Chameleon Type Debugger</title>
     <style>
         body {
             font-family: 'Manrope', sans-serif;
@@ -237,6 +237,31 @@
                 <img class="" :class="assetShow(step, 3)" src="./tutorial/pngs/Deduction Example Step 4.png">
             </div>
         </section>
+
+        <section class="step-container" x-data="{step: 0}">
+            <div class="leading-8">
+                <h2 class="font-bold" id="deduction-step-example">Modes </h2>
+                Chameleon can be configured in three modes based on the features we illustrated, namely,
+                basic bode,
+                <button @mouseenter="step = 1" @mouseleave="step=0"
+                class="px-1 h-6 leading-6 border border-black rounded-sm"> balanced mode</button>(basic mode with uncertain expression cards), and
+                <button @mouseenter="step = 2" @mouseleave="step=0"
+                class="px-1 h-6 leading-6 border border-black rounded-sm"> advanced mode</button>(balanced mode with deduction steps).
+                You will start off with different modes throughout the study. However, you are free to switch between modes at any time by pressing the 
+                tab key or clicking the chevron buttons.
+            </div>
+            <div class="relative border">
+                <img class="absolute" :class="assetShow(step, 0)" src="./tutorial/pngs/Original.png">
+                <img class="absolute" :class="assetShow(step, 1)" src="./tutorial/pngs/Card X.png">
+                <img class="" :class="assetShow(step, 2)" src="./tutorial/pngs/Deduction Example Step 1.png">
+            </div>
+        </section>
+
+        <div class="flex mb-12">
+            <a href="/study" class="block bg-green-400 py-1 px-3 rounded-md text-xl">
+                Start code challenges
+            </a>
+        </div>
     </main>
 </body>
 
