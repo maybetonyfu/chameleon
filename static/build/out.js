@@ -27518,6 +27518,7 @@ problem_1 = sum (check [1..999])
     prevLocs: [],
     nextLocs: [],
     currentTaskNum: null,
+    cursorPosition: 0,
     wellTyped: false,
     loadError: null,
     parseError: null,
@@ -27538,6 +27539,9 @@ problem_1 = sum (check [1..999])
       toggleMultipleExps: modify_default("multipleExps", not_default),
       incrementAttemps(state, action) {
         state.attempts = state.attempts.map((v2, i3) => i3 === action.payload ? v2 + 1 : v2);
+      },
+      setCursorPosition(state, action) {
+        state.cursorPosition = action.payload;
       },
       debuggingLevel1(state) {
         state.debuggingSteps = false;
@@ -27736,7 +27740,8 @@ problem_1 = sum (check [1..999])
     debuggingLevel1,
     debuggingLevel2,
     debuggingLevel3,
-    incrementAttemps
+    incrementAttemps,
+    setCursorPosition
   } = actions;
   var debuggerSlice_default = reducer;
   function getCurrentActiveContext(contexts, currentTraverseId) {
@@ -28012,10 +28017,13 @@ problem_1 = sum (check [1..999])
   };
   var EditorEditMode = () => {
     const text = useSelector(path_default(["debugger", "text"]));
+    const cursorPosition = useSelector(path_default(["debugger", "cursorPosition"]));
     const dispatch = useDispatch();
     const inputEl = (0, import_react9.useRef)(null);
     (0, import_react9.useEffect)(() => {
       inputEl.current.focus();
+      inputEl.current.selectionStart = cursorPosition;
+      inputEl.current.selectionEnd = cursorPosition;
     }, []);
     return /* @__PURE__ */ import_react9.default.createElement("textarea", {
       ref: inputEl,
@@ -28039,20 +28047,30 @@ problem_1 = sum (check [1..999])
     })));
   };
   var Line = ({ text, line }) => {
+    const fulltext = useSelector(path_default(["debugger", "text"]));
+    const dispatch = useDispatch();
     return /* @__PURE__ */ import_react9.default.createElement("div", {
-      className: "h-6 my-0.5"
+      className: "h-6 my-0.5 flex"
     }, text.split("").map((t3, ch) => /* @__PURE__ */ import_react9.default.createElement(Cell, {
       text: t3,
       line,
       ch,
       key: ch
-    })));
+    })), /* @__PURE__ */ import_react9.default.createElement("div", {
+      onClick: (_3) => {
+        let offset = fulltext.split("\n").filter((l3, ln2) => ln2 <= line).map((l3) => l3.length + 1).reduce((x2, y3) => x2 + y3, 0) - 1;
+        dispatch(setCursorPosition(offset));
+      },
+      className: "inline-block h-6 flex-grow cursor-text"
+    }));
   };
   var Cell = ({ text, line, ch }) => {
     const point = { line, ch };
+    const fulltext = useSelector(path_default(["debugger", "text"]));
     const highlights = useSelector(path_default(["debugger", "highlights"]));
     const widgets = useSelector(path_default(["debugger", "widgets"]));
     const deductionStpe = useSelector(path_default(["debugger", "debuggingSteps"]));
+    const dispatch = useDispatch();
     const highlighters = highlights.filter(curry_default(within)(point)).map((hl, k2) => /* @__PURE__ */ import_react9.default.createElement(Highlighter, {
       highlight: hl,
       line,
@@ -28066,6 +28084,11 @@ problem_1 = sum (check [1..999])
       key: wgt.key
     })))(widgets);
     return /* @__PURE__ */ import_react9.default.createElement("div", {
+      onClick: (_3) => {
+        let offset = fulltext.split("\n").filter((l3, ln2) => ln2 < line).map((l3) => l3.length + 1).reduce((x2, y3) => x2 + y3, 0) + ch;
+        console.log(offset);
+        dispatch(setCursorPosition(offset));
+      },
       className: "inline-block h-6 relative",
       style: { width: "0.6rem" }
     }, highlighters, deductionStpe ? appliedWidgets : null, /* @__PURE__ */ import_react9.default.createElement("div", {
@@ -28696,12 +28719,14 @@ problem_1 = sum (check [1..999])
         dispatch(toNormalMode());
       }
     }, "Give up") : null, mode === editorModes.normal ? /* @__PURE__ */ import_react13.default.createElement("button", {
-      className: "bg-gray-300 px-4 py-1 rounded-md mx-2 flex h-8 justify-center items-center",
+      "aria-label": "Press this button or click anywhere in the editor window",
+      className: "bg-gray-300 px-4 py-1 rounded-md mx-2 flex h-8 justify-center items-center hint--bottom",
       onClick: (_3) => dispatch(toEditMode())
     }, /* @__PURE__ */ import_react13.default.createElement(PencilAltIcon_default, {
       className: "h-4 w-4 mr-1"
     }), "Edit code") : /* @__PURE__ */ import_react13.default.createElement("button", {
-      className: "bg-gray-300 px-4 py-1 rounded-md mx-2 flex h-8 justify-center items-center",
+      className: "bg-gray-300 px-4 py-1 rounded-md mx-2 flex h-8 justify-center items-center hint--bottom",
+      "aria-label": "Press this button or Esc",
       onClick: (_3) => {
         dispatch(toNormalMode());
         dispatch(typeCheckThunk());
@@ -28753,6 +28778,7 @@ problem_1 = sum (check [1..999])
   window.addEventListener("keydown", (event) => {
     let state = store_default.getState();
     const keyName = event.key;
+    console.log(keyName);
     if (keyName === "Tab") {
       event.preventDefault();
       if (!state.debugger.multipleExps) {
@@ -28763,6 +28789,10 @@ problem_1 = sum (check [1..999])
         store_default.dispatch(toggleMultipleExps());
         store_default.dispatch(toggleDebuggerStpes());
       }
+    }
+    if (state.debugger.mode === editorModes.edit && keyName === "Escape") {
+      store_default.dispatch(toNormalMode());
+      store_default.dispatch(typeCheckThunk());
     }
     if (state.debugger.mode === editorModes.normal) {
       if (keyName === "1") {

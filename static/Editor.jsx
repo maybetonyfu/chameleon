@@ -1,6 +1,6 @@
 import React, { useEffect, useRef } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { editorModes, setText, toEditMode } from './debuggerSlice';
+import { editorModes, setText, toEditMode, setCursorPosition } from './debuggerSlice';
 import { within } from './util';
 import * as R from 'ramda';
 
@@ -32,10 +32,14 @@ const Editor = () => {
 
 const EditorEditMode = () => {
   const text = useSelector(R.path(['debugger', 'text']));
+  const cursorPosition = useSelector(R.path(['debugger', 'cursorPosition']))
   const dispatch = useDispatch();
   const inputEl = useRef(null);
   useEffect(() => {
     inputEl.current.focus();
+    inputEl.current.selectionStart = cursorPosition
+
+    inputEl.current.selectionEnd = cursorPosition
   }, []);
   return (
     <textarea
@@ -62,20 +66,30 @@ const EditorNormerMode = () => {
 };
 
 const Line = ({ text, line }) => {
+  const fulltext =  useSelector(R.path(['debugger', 'text']));
+  const dispatch = useDispatch()
+
   return (
-    <div className='h-6 my-0.5'>
+    <div className='h-6 my-0.5 flex'>
       {text.split('').map((t, ch) => (
         <Cell text={t} line={line} ch={ch} key={ch}></Cell>
       ))}
+      <div onClick={_ => {
+         let offset = fulltext.split('\n').filter((l, ln) => ln <= line).map(l => l.length + 1).reduce((x, y) => x + y, 0) - 1
+         dispatch(setCursorPosition(offset))
+
+      }} className='inline-block h-6 flex-grow cursor-text' ></div>
     </div>
   );
 };
 
 const Cell = ({ text, line, ch }) => {
   const point = { line, ch };
+  const fulltext =  useSelector(R.path(['debugger', 'text']));
   const highlights = useSelector(R.path(['debugger', 'highlights']));
   const widgets = useSelector(R.path(['debugger', 'widgets']));
   const deductionStpe = useSelector(R.path(['debugger', 'debuggingSteps']));
+  const dispatch = useDispatch()
   const highlighters = highlights
     .filter(R.curry(within)(point))
     .map((hl, k) => (
@@ -99,7 +113,11 @@ const Cell = ({ text, line, ch }) => {
   )(widgets);
 
   return (
-    <div className='inline-block h-6 relative' style={{ width: '0.6rem' }}>
+    <div onClick={_ => {
+      let offset = fulltext.split('\n').filter((l, ln) => ln < line).map(l => l.length + 1).reduce((x, y) => x + y, 0) + ch
+      console.log(offset)
+      dispatch(setCursorPosition(offset))
+    }} className='inline-block h-6 relative' style={{ width: '0.6rem' }}>
       {highlighters}
       {deductionStpe ? appliedWidgets : null}
       <div className='absolute w-full h-full z-50'>{text}</div>

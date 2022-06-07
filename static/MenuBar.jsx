@@ -130,14 +130,16 @@ const MenuBar = () => {
         </button> : null}
         {mode === editorModes.normal ? (
           <button
-            className='bg-gray-300 px-4 py-1 rounded-md mx-2 flex h-8 justify-center items-center'
+            aria-label='Press this button or click anywhere in the editor window'
+            className='bg-gray-300 px-4 py-1 rounded-md mx-2 flex h-8 justify-center items-center hint--bottom'
             onClick={_ => dispatch(toEditMode())}
           >
             <PencilAltIcon className='h-4 w-4 mr-1'></PencilAltIcon>Edit code
           </button>
         ) : (
           <button
-            className='bg-gray-300 px-4 py-1 rounded-md mx-2 flex h-8 justify-center items-center'
+            className='bg-gray-300 px-4 py-1 rounded-md mx-2 flex h-8 justify-center items-center hint--bottom'
+            aria-label="Press this button or Esc"
             onClick={_ => {
               dispatch(toNormalMode());
               dispatch(typeCheckThunk());

@@ -15,7 +15,8 @@ import {
   toNormalMode,
   debuggingLevel1,
   debuggingLevel2,
-  debuggingLevel3
+  debuggingLevel3,
+  typeCheckThunk
 } from './debuggerSlice';
 import Splitter from '@devbookhq/splitter'
 import Editor from "./Editor"
@@ -38,7 +39,9 @@ window.addEventListener('keyup', (event) => {
 
 window.addEventListener('keydown', (event) => {
   let state = store.getState()
+  
   const keyName = event.key;
+  console.log(keyName)
   if (keyName === 'Tab') {
     event.preventDefault()
     if (!state.debugger.multipleExps) {
@@ -49,6 +52,11 @@ window.addEventListener('keydown', (event) => {
       store.dispatch(toggleMultipleExps())
       store.dispatch(toggleDebuggerStpes())
     }
+  }
+
+  if (state.debugger.mode === editorModes.edit && keyName === 'Escape') {
+    store.dispatch(toNormalMode())
+    store.dispatch(typeCheckThunk())
   }
   if (state.debugger.mode === editorModes.normal) {
 
