@@ -353,21 +353,25 @@ expect = [3,4,5,6]
 
 actual = compress [3,3,4,5,6,6]
 
-y :: Bool
-y =  expect == actual
+test :: Bool
+test =  expect == actual
 `
 
 
 const uconandvcon = n => `module Task${n} where
 
-data V = VCon String
 data U = UCon Bool Int (Int, Int)
 
-u :: U -> V
-u (UCon x y j) =
+u (UCon x y z) =
   if x
-    then j
+    then z
     else fst y + snd y
+
+actual = u (UCon False 0 (15, 10))
+expect = 25
+
+test :: Bool
+test = actual == expect
 
 `
 

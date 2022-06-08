@@ -10,7 +10,7 @@ const store = configureStore({
     'debugger': debuggerReducer,
     // 'editor': editorReducer
   },
-  devTools: true,
+  // devTools: true,
 });
 
 export default store;

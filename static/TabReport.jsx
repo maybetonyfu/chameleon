@@ -109,8 +109,8 @@ const Tab = ({ active = false, steps, exp }) => {
   let maxSize = deductionSteps ? { height: '4.5rem', } : { height: '3rem', transitionDelay: '75ms' }
   return (
     <div
-      className={face + ' flex flex-col w-max m-1 px-2 py-1 rounded-lg duration-75'}
-      style={{ minWidth: 80, transitionProperty: 'height', ...maxSize }}
+      className={face + ' flex flex-col w-max m-1 px-2 py-1 rounded-lg'}
+      style={{ minWidth: 80 }}
       onClick={_ => dispatch(lockStep(tabDefaultStep))}
       onMouseEnter={_ =>
         active ? null : dispatch(setStep(tabDefaultStep))
@@ -183,12 +183,11 @@ const TabStep = ({ active = false, step, traverseId }) => {
       onMouseEnter={_ => {
         dispatch(setStep(step));
       }}
-    // onMouseLeave={_ => dispatch(setStep(pinnedStep))}
     >
       <div
         className={
-          'w-5 h-5 leading-5 flex justify-center  cursor-pointer rounded-full text-md mx-0.5 transition-transform ' +
-          face + (deductionSteps ? ' scale-100 delay-75' : ' scale-0')
+          'w-5 h-5 leading-5 flex justify-center  cursor-pointer rounded-full text-md mx-0.5  ' +
+          face + (deductionSteps ? ' ' : ' hidden')
         }
       >
         {numOfSteps - step}
