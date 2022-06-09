@@ -26,7 +26,7 @@ import Modal from 'react-modal';
 import mixpanel from 'mixpanel-browser';
 import { nanoid } from 'nanoid';
 
-mixpanel.init('6be6077e1d5b8de6978c65490e1666ea', { debug: true, ignore_dnt: true });
+mixpanel.init('6be6077e1d5b8de6978c65490e1666ea', { debug: true, ignore_dnt: true, api_host: "https://data.chameleon.typecheck.me" });
 
 Modal.setAppElement('#react-root');
 
