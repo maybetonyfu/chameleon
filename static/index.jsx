@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import ReactDOM from 'react-dom';
 import { Provider, useSelector, useDispatch } from 'react-redux';
 import store from './store';
@@ -16,97 +16,127 @@ import {
   debuggingLevel1,
   debuggingLevel2,
   debuggingLevel3,
-  typeCheckThunk
+  typeCheckThunk,
 } from './debuggerSlice';
-import Splitter from '@devbookhq/splitter'
-import Editor from "./Editor"
-import Debugger from "./Debugger"
-import MenuBar from "./MenuBar"
+import Splitter from '@devbookhq/splitter';
+import Editor from './Editor';
+import Debugger from './Debugger';
+import MenuBar from './MenuBar';
 import Modal from 'react-modal';
+import mixpanel from 'mixpanel-browser';
+import { nanoid } from 'nanoid';
 
-  
+mixpanel.init('6be6077e1d5b8de6978c65490e1666ea', { debug: true, ignore_dnt: true });
+
 Modal.setAppElement('#react-root');
-store.dispatch(switchTaskThunk(0));
 
-window.addEventListener('keyup', (event) => {
+let userId, userProgress;
+if (localStorage.getItem('userId') === null) {
+    userId =nanoid()
+    userProgress = -1;
+    localStorage.setItem('userId', userId);
+    localStorage.setItem('userProgress', -1);
+    mixpanel.identify(userId);
+    mixpanel.track('Start user study')
+} else {
+  userId = localStorage.getItem('userId');
+  userProgress = parseInt(localStorage.getItem('userProgress'), 10);
+  mixpanel.identify(userId);
+
+}
+
+
+store.dispatch(switchTaskThunk(userProgress + 1));
+
+window.addEventListener('keyup', event => {
   const keyName = event.key;
-  let state = store.getState()
-
-  if (state.debugger.mode === editorModes.normal && (keyName === '1' || keyName === '2')) {
-    store.dispatch(showBoth())
+  let state = store.getState();
+  if (
+    state.debugger.mode === editorModes.normal &&
+    (keyName === '1' || keyName === '2')
+  ) {
+    store.dispatch(showBoth());
   }
-})
+});
 
-window.addEventListener('keydown', (event) => {
-  let state = store.getState()
-  
+window.addEventListener('keydown', event => {
+  let state = store.getState();
   const keyName = event.key;
-  console.log(keyName)
   if (keyName === 'Tab') {
-    event.preventDefault()
+    event.preventDefault();
     if (!state.debugger.multipleExps) {
-      store.dispatch(toggleMultipleExps())
+      store.dispatch(toggleMultipleExps());
     } else if (state.debugger.multipleExps && !state.debugger.debuggingSteps) {
-      store.dispatch(toggleDebuggerStpes())
+      store.dispatch(toggleDebuggerStpes());
     } else if (state.debugger.multipleExps && state.debugger.debuggingSteps) {
-      store.dispatch(toggleMultipleExps())
-      store.dispatch(toggleDebuggerStpes())
+      store.dispatch(toggleMultipleExps());
+      store.dispatch(toggleDebuggerStpes());
     }
   }
 
   if (state.debugger.mode === editorModes.edit && keyName === 'Escape') {
-    store.dispatch(toNormalMode())
-    store.dispatch(typeCheckThunk())
+    store.dispatch(toNormalMode());
+    store.dispatch(typeCheckThunk());
   }
   if (state.debugger.mode === editorModes.normal) {
-
-
     if (keyName === '1') {
-      store.dispatch(showOnlyMark1())
+      store.dispatch(showOnlyMark1());
     }
 
     if (keyName === '2') {
-      store.dispatch(showOnlyMark2())
+      store.dispatch(showOnlyMark2());
     }
 
     if (state.debugger.debuggingSteps) {
-      if (keyName === 'ArrowDown' || keyName === "ArrowRight" || keyName === 'j') {
-        store.dispatch(prevStep())
+      if (
+        keyName === 'ArrowDown' ||
+        keyName === 'ArrowRight' ||
+        keyName === 'j'
+      ) {
+        store.dispatch(prevStep());
       }
-      if (keyName === 'ArrowUp' || keyName === "ArrowLeft" || keyName === 'k') {
-        store.dispatch(nextStep())
+      if (keyName === 'ArrowUp' || keyName === 'ArrowLeft' || keyName === 'k') {
+        store.dispatch(nextStep());
       }
     }
   }
-})
+});
 
 const App = () => {
   let wellTyped = useSelector(state => state.debugger.wellTyped);
-
-  return <>
-    <Modal
-      isOpen={wellTyped}
-      className='max-w-2xl bg-gray-100 h-80 min-w-max left-1/2 top-1/2 -translate-y-1/2 -translate-x-1/2 absolute p-6 rounded-md'
-    >
-      <ModelContent />
-      {/* this is for study only  */}
-    </Modal>
-    <div className='w-full h-full flex flex-col'>
-      <MenuBar></MenuBar>
-      <div className='flex-grow'>
-        <Splitter initialSizes={[60, 40]}>
-          <Editor></Editor>
-          <Debugger></Debugger>
-        </Splitter>
+  return (
+    <>
+      <Modal
+        isOpen={wellTyped}
+        className='max-w-2xl bg-gray-100 h-80 min-w-max left-1/2 top-1/2 -translate-y-1/2 -translate-x-1/2 absolute p-6 rounded-md'
+      >
+        <ModelContent />
+        {/* this is for study only  */}
+      </Modal>
+      <div className='w-full h-full flex flex-col'>
+        <MenuBar></MenuBar>
+        <div className='flex-grow'>
+          <Splitter initialSizes={[60, 40]}>
+            <Editor></Editor>
+            <Debugger></Debugger>
+          </Splitter>
+        </div>
       </div>
-    </div>
-  </>
-}
+    </>
+  );
+};
 
 const ModelContent = () => {
   let dispatch = useDispatch();
   let currentTaskNum = useSelector(state => state.debugger.currentTaskNum);
   // analytics.track(events.succeed, { taskNumber: currentTaskNum, mode });
+  useEffect(() => {
+    localStorage.setItem('userProgress', currentTaskNum)
+    if (currentTaskNum === 8) {
+      localStorage.removeItem('userId');
+      localStorage.removeItem('userProgress');
+    }
+  }, []);
   return (
     <div className='flex flex-col justify-around items-center h-full'>
       <div>
@@ -125,15 +155,13 @@ const ModelContent = () => {
         className='px-5 py-1 bg-green-400 rounded-md'
         onClick={() => {
           if (currentTaskNum === 8) {
-            window.location =
-              'https://forms.gle/nts9EQsrbNFAPEdv8';
+            window.location = 'https://forms.gle/nts9EQsrbNFAPEdv8';
             return;
           } else {
-            dispatch(switchTaskThunk(currentTaskNum + 1))
-            dispatch(toNormalMode())
+            dispatch(switchTaskThunk(currentTaskNum + 1));
+            dispatch(toNormalMode());
           }
-        }
-        }
+        }}
       >
         Next
       </button>
@@ -146,7 +174,6 @@ ReactDOM.render(
     <Provider store={store}>
       <App></App>
     </Provider>
-  </React.StrictMode>
-  ,
+  </React.StrictMode>,
   document.getElementById('react-root'),
 );

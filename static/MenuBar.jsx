@@ -24,14 +24,9 @@ const MenuBar = () => {
   const mode = useSelector(R.path(['debugger', 'mode']));
   const deductionSteps = useSelector(R.path(['debugger', 'debuggingSteps']));
   const multipleExps = useSelector(R.path(['debugger', 'multipleExps']));
-
   const currentTaskNum = useSelector(R.path(['debugger', 'currentTaskNum']));
   const attempts = useSelector(R.path(['debugger', 'attempts']))
-
   const currentTaskAttemps = attempts[currentTaskNum]
-
-  useEffect(() => {
-  }, []);
 
   return (
     <div className='w-full bg-gray-100 h-10 flex justify-between'>
@@ -124,7 +119,11 @@ const MenuBar = () => {
         {currentTaskAttemps > 5 ? <button
           aria-label='Skip this task if you are stuck on a problem for too long'
           className='bg-gray-300 px-4 py-1 rounded-md mx-2 flex h-8 justify-center items-center hint--bottom'
-          onClick={_ => { dispatch(switchTaskThunk(currentTaskNum + 1)); dispatch(toNormalMode()); }}
+          onClick={_ => {
+            localStorage.setItem('userProgress', currentTaskNum)
+            dispatch(switchTaskThunk(currentTaskNum + 1));
+            dispatch(toNormalMode());
+        }}
         >
           Give up
         </button> : null}
