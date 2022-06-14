@@ -15,6 +15,9 @@ import {
   showDefination,
   showBoth,
 } from './debuggerSlice';
+import mixpanel from 'mixpanel-browser';
+import { trackingAttributes } from './util'
+
 
 const TabReport = () => {
   return (
@@ -35,7 +38,6 @@ const TabList = () => {
   let pinnedTraverseId = steps[pinnedStep].stepId;
   const multipleExps = useSelector(R.path(['debugger', 'multipleExps']));
 
-  const [scrollProgress, setScrollProgress] = useState(0);
   return (
     <div
       className={
@@ -48,22 +50,7 @@ const TabList = () => {
         className={
           'flex items-center cursor-pointer flex-row-reverse justify-end '
         }
-        onWheel={e => {
-          let progress = R.clamp(
-            -1.5,
-            1.5,
-            Math.sign(e.deltaY) * Math.log2(Math.abs(e.deltaY)),
-          );
-          setScrollProgress(scrollProgress + progress);
-          console.log(progress);
-          if (scrollProgress > 30) {
-            dispatch(nextStep());
-            setScrollProgress(0);
-          } else if (scrollProgress < -30) {
-            dispatch(prevStep());
-            setScrollProgress(0);
-          }
-        }}
+
       >
         {multipleExps
           ? context.map((c, i) => (
@@ -106,7 +93,6 @@ const Tab = ({ active = false, steps, exp }) => {
     face = 'bg-white active:bg-gray-200 border ';
   }
 
-  let maxSize = deductionSteps ? { height: '4.5rem', } : { height: '3rem', transitionDelay: '75ms' }
   return (
     <div
       className={face + ' flex flex-col w-max m-1 px-2 py-1 rounded-lg'}
@@ -202,6 +188,7 @@ const Summary = () => {
   const debuggingSteps = useSelector(R.path(['debugger', 'debuggingSteps']));
   const steps = useSelector(R.path(['debugger', 'steps']));
   const pinnedStep = useSelector(R.path(['debugger', 'pinnedStep']));
+  const currentTaskNum = useSelector(R.path(['debugger', 'currentTaskNum']));
 
   const pinned =
     steps.length === 0
@@ -222,12 +209,20 @@ const Summary = () => {
         opened={multipleExps}
         onOpen={_ => {
           if (!multipleExps) {
+            mixpanel.track('Enable Multiple Exp', {
+              ...trackingAttributes('Basic mode', currentTaskNum),
+              'input type': 'mouse',
+            })
             dispatch(toggleMultipleExps());
           }
         }}
         onClose={_ => {
           if (multipleExps) {
             dispatch(toggleMultipleExps());
+            mixpanel.track('Disable Multiple Exp', {
+              ...trackingAttributes(debuggingSteps ? 'Advanced mode' : 'Balanced mode', currentTaskNum),
+              'input type': 'mouse',
+            })
           }
           if (debuggingSteps) dispatch(toggleDebuggerStpes());
         }}
@@ -265,10 +260,24 @@ const Summary = () => {
               : 'Expand to see debugging steps (Tab key)'
           }
           onOpen={_ => {
-            if (!debuggingSteps) dispatch(toggleDebuggerStpes());
+            if (!debuggingSteps) {
+              mixpanel.track('Eanble deduction step', {
+                ...trackingAttributes('Advanced mode', currentTaskNum),
+                'input type': 'mouse',
+              }
+              )
+              dispatch(toggleDebuggerStpes());
+            }
           }}
           onClose={_ => {
-            if (debuggingSteps) dispatch(toggleDebuggerStpes());
+            if (debuggingSteps) {
+              mixpanel.track('Disable deduction step',
+                {
+                  ...trackingAttributes('Balanced mode', currentTaskNum),
+                  'input type': 'mouse',
+                })
+              dispatch(toggleDebuggerStpes());
+            }
           }}
         >
           <TabList></TabList>

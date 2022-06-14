@@ -1,8 +1,8 @@
 :root {
-    --colorA: #67A9CF;
-    --colorB: #ef8a62;
-    --colorA-lighter: #ADD9F2;
-    --colorB-lighter: #FFD4C3;
+	--colorA: #67A9CF;
+	--colorB: #ef8a62;
+	--colorA-lighter: #ADD9F2;
+	--colorB-lighter: #FFD4C3;
 	font-variant-ligatures: none;
 }
 
@@ -11,196 +11,198 @@ body {
 }
 
 .markerA {
-    /* background-color: var(--colorA); */
-    /* border: solid 2px var(--colorA); */
+	/* background-color: var(--colorA); */
+	/* border: solid 2px var(--colorA); */
 }
 
 
 .markerA::before {
-    content: " ";
-    position: relative;
-    width: 2px;
-    display: inline-block;
-    background: var(--colorA);
-    margin-left: -3px;
+	content: " ";
+	position: relative;
+	width: 2px;
+	display: inline-block;
+	background: var(--colorA);
+	margin-left: -3px;
 }
 
 
 .markerA::after {
-    content: " ";
-    position: relative;
-    width: 2px;
-    display: inline-block;
-    background: var(--colorA);
-    margin-right: -3px;
+	content: " ";
+	position: relative;
+	width: 2px;
+	display: inline-block;
+	background: var(--colorA);
+	margin-right: -3px;
 }
 
 .markerB::before {
-    content: " ";
-    position: relative;
-    width: 2px;
-    display: inline-block;
-    background: var(--colorB);
-    margin-left: -3px;
+	content: " ";
+	position: relative;
+	width: 2px;
+	display: inline-block;
+	background: var(--colorB);
+	margin-left: -3px;
 }
 
 .markerB::after {
-    content: " ";
-    position: relative;
-    width: 2px;
-    display: inline-block;
-    background: var(--colorB);
-    margin-right: -3px;
+	content: " ";
+	position: relative;
+	width: 2px;
+	display: inline-block;
+	background: var(--colorB);
+	margin-right: -3px;
 }
 
-.markerA.markerB::before  {
-    content: " ";
-    position: relative;
-    width: 3px;
-    display: inline-block;
-    background:  linear-gradient(90deg, var(--colorB), var(--colorB) 49%, var(--colorA) 50%);;
-    margin-left: -3px;
+.markerA.markerB::before {
+	content: " ";
+	position: relative;
+	width: 3px;
+	display: inline-block;
+	background: linear-gradient(90deg, var(--colorB), var(--colorB) 49%, var(--colorA) 50%);
+	;
+	margin-left: -3px;
 }
 
-.markerA.markerB::after  {
-    content: " ";
-    position: relative;
-    width: 3px;
-    display: inline-block;
-    background:  linear-gradient(90deg, var(--colorB), var(--colorB) 49%, var(--colorA) 50%);;
-    margin-left: -3px;
+.markerA.markerB::after {
+	content: " ";
+	position: relative;
+	width: 3px;
+	display: inline-block;
+	background: linear-gradient(90deg, var(--colorB), var(--colorB) 49%, var(--colorA) 50%);
+	;
+	margin-left: -3px;
 }
 
 
 .markerB {
-    /* background-color: var(--colorB); */
-    /* border: solid 2px var(--colorB); */
+	/* background-color: var(--colorB); */
+	/* border: solid 2px var(--colorB); */
 }
 
 
-.markerASmall.markerA.markerB  {
-    /* background-color: var(--colorA); */
-    /* border: solid 2px var(--colorB); */
+.markerASmall.markerA.markerB {
+	/* background-color: var(--colorA); */
+	/* border: solid 2px var(--colorB); */
 }
 
 
 .markerBSmall.markerA.markerB {
-    /* background-color: var(--colorB); */
-    /* border: solid 2px var(--colorA); */
+	/* background-color: var(--colorB); */
+	/* border: solid 2px var(--colorA); */
 }
 
 .groupMarkerA {
-    background-color: var(--colorA-lighter);
-    border: solid 2px var(--colorA-lighter);
+	background-color: var(--colorA-lighter);
+	border: solid 2px var(--colorA-lighter);
 
 
 }
 
 .groupMarkerB {
-    background-color: var(--colorB-lighter);
-    border: solid 2px var(--colorB-lighter);
+	background-color: var(--colorB-lighter);
+	border: solid 2px var(--colorB-lighter);
 }
 
 .code {
-    font-family: 'JetBrains Mono', monospace;
+	font-family: 'JetBrains Mono', monospace;
 	font-variant-ligatures: none;
 
 }
 
 .arrow-right {
-    width: 0;
-    height: 0;
-    border-top: 5px solid transparent;
-    border-bottom: 5px solid transparent;
-    border-left: 5px solid white;
-  }
+	width: 0;
+	height: 0;
+	border-top: 5px solid transparent;
+	border-bottom: 5px solid transparent;
+	border-left: 5px solid white;
+}
 
 .outline-start {
-    border-left-style: solid;
-    border-left-width: 3px;
-    border-top-left-radius: 3px;
-    border-bottom-left-radius: 3px;
+	border-left-style: solid;
+	border-left-width: 3px;
+	border-top-left-radius: 3px;
+	border-bottom-left-radius: 3px;
 }
 
 
 .outline-end {
-    border-right-style: solid;
-    border-right-width: 3px;
-    border-top-right-radius: 3px;
-    border-bottom-right-radius: 3px;
+	border-right-style: solid;
+	border-right-width: 3px;
+	border-top-right-radius: 3px;
+	border-bottom-right-radius: 3px;
 }
 
 .outline-start.markerA {
-    border-left-color: var(--colorA);
-    opacity: 0.8;
+	border-left-color: var(--colorA);
+	opacity: 0.8;
 
 }
 
 .outline-start.markerB {
-    border-left-color: var(--colorB);
-    opacity: 0.8;
+	border-left-color: var(--colorB);
+	opacity: 0.8;
 
 }
 
 .outline-start.groupMarkerA {
-    border-left-color: var(--colorA-lighter);
+	border-left-color: var(--colorA-lighter);
 
 }
 
 .outline-start.groupMarkerB {
-    border-left-color: var(--colorB-lighter);
+	border-left-color: var(--colorB-lighter);
 }
 
 
 .outline-end.markerA {
-    border-right-color: var(--colorA);
+	border-right-color: var(--colorA);
 
 }
 
 .outline-end.markerB {
-    border-right-color: var(--colorB);
+	border-right-color: var(--colorB);
 
 }
 
 .outline-end.groupMarkerA {
-    border-right-color: var(--colorA-lighter);
+	border-right-color: var(--colorA-lighter);
 
 }
 
 .outline-end.groupMarkerB {
-    border-right-color: var(--colorB-lighter);
+	border-right-color: var(--colorB-lighter);
 }
 
 
 .sideA {
-    background: var(--colorA);
+	background: var(--colorA);
 }
 
 .sideB {
-    background: var(--colorB);
+	background: var(--colorB);
 }
 
 .sideAB {
-    background: linear-gradient(90deg, var(--colorB), var(--colorB) 49%, var(--colorA) 50%);
+	background: linear-gradient(90deg, var(--colorB), var(--colorB) 49%, var(--colorA) 50%);
 }
 
 
 .context-grid {
-    grid-template-columns: auto 1fr auto 1fr;
+	grid-template-columns: auto 1fr auto 1fr;
 }
 
 .split-container {
-    display: grid;
-    grid-template-columns: 900px 10px 1fr;
+	display: grid;
+	grid-template-columns: 900px 10px 1fr;
 }
 
-.split-gutter-col{
-    grid-row: 1/-1;
-    cursor: col-resize;
+.split-gutter-col {
+	grid-row: 1/-1;
+	cursor: col-resize;
 }
 
 .split-gutter-col-1 {
-    grid-column: 2;
+	grid-column: 2;
 }
 
 /* New Editor  */
@@ -434,18 +436,55 @@ body {
 }
 
 .marker1 {
-    /* background-color: var(--color-cerulean-2);
+	/* background-color: var(--color-cerulean-2);
 	 */
-	 background-color: var(--colorA-lighter);
+	background-color: var(--colorA-lighter);
 }
 
 .marker2 {
-    background-color: var(--colorB-lighter);
+	background-color: var(--colorB-lighter);
 }
 
 .markerDefination {
-    /* background-color: var(--color-cerulean-2);
+	/* background-color: var(--color-cerulean-2);
 	 */
-	 background-color: rgb(204, 204, 204);
+	background-color: rgb(204, 204, 204);
 }
 
+
+/* ----------------------------------------------
+ * Generated by Animista on 2022-6-14 11:55:53
+ * Licensed under FreeBSD License.
+ * See http://animista.net/license for more info. 
+ * w: http://animista.net, t: @cssanimista
+ * ---------------------------------------------- */
+
+/**
+ * ----------------------------------------
+ * animation color-change-2x
+ * ----------------------------------------
+ */
+.color-change {
+	-webkit-animation: color-change 1s linear infinite alternate both;
+	animation: color-change 1s linear infinite alternate both;
+}
+
+@-webkit-keyframes color-change {
+	0% {
+		background: rgb(209, 213, 219);
+	}
+
+	100% {
+		background: #47d557;
+	}
+}
+
+@keyframes color-change {
+	0% {
+		background: rgb(209, 213, 219);
+	}
+
+	100% {
+		background: #47d557;
+	}
+}

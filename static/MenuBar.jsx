@@ -108,7 +108,8 @@ const MenuBar = () => {
 
         </select> */}
         <button
-          className='bg-gray-300 px-4 py-1 rounded-md mx-2 flex h-8 justify-center items-center'
+          className='bg-gray-300 px-4 py-1 rounded-md mx-2 flex h-8 justify-center items-center  hint--bottom'
+          aria-label='Reset the code challenge to its initial state'
           onClick={_ => {
             dispatch(switchTaskThunk(currentTaskNum));
             dispatch(toNormalMode());
@@ -117,7 +118,7 @@ const MenuBar = () => {
           Reset problem
         </button>
         {currentTaskAttemps > 5 ? <button
-          aria-label='Skip this task if you are stuck on a problem for too long'
+          aria-label='Skip this code challenge if you get stuck for too long'
           className='bg-gray-300 px-4 py-1 rounded-md mx-2 flex h-8 justify-center items-center hint--bottom'
           onClick={_ => {
             localStorage.setItem('userProgress', currentTaskNum)
@@ -127,18 +128,10 @@ const MenuBar = () => {
         >
           Give up
         </button> : null}
-        {mode === editorModes.normal ? (
+        {mode === editorModes.normal ? null : (
           <button
-            aria-label='Press this button or click anywhere in the editor window'
-            className='bg-gray-300 px-4 py-1 rounded-md mx-2 flex h-8 justify-center items-center hint--bottom'
-            onClick={_ => dispatch(toEditMode())}
-          >
-            <PencilAltIcon className='h-4 w-4 mr-1'></PencilAltIcon>Edit code
-          </button>
-        ) : (
-          <button
-            className='bg-gray-300 px-4 py-1 rounded-md mx-2 flex h-8 justify-center items-center hint--bottom'
-            aria-label="Press this button or Esc"
+            className='bg-gray-300 px-4 py-1 rounded-md mx-2 flex h-8 justify-center items-center color-change hint--bottom'
+            aria-label="Type check the code (Esc)"
             onClick={_ => {
               dispatch(toNormalMode());
               dispatch(typeCheckThunk());
@@ -151,7 +144,8 @@ const MenuBar = () => {
         <a
           href='/tutorial'
           target={'_blank'}
-          className='bg-gray-300 px-4 py-1 rounded-md mx-2 flex h-8 justify-center items-center'
+          className='bg-gray-300 px-4 py-1 rounded-md mx-2 flex h-8 justify-center items-center hint--bottom'
+          aria-label="Open tutorial in a new tab"
         >
           <BookOpenIcon className='h-4 w-4 mr-1'></BookOpenIcon>
           Tutorial
@@ -159,14 +153,14 @@ const MenuBar = () => {
         {
           deductionSteps ? (<>
             <button
-              aria-label='Previous step (Left arrow key / k )'
+              aria-label='Previous step (Left / Up / h / k )'
               className='bg-gray-700 hover:bg-gray-800 active:bg-gray-900 px-2 py-1 mx-0.5 h-8 rounded-md flex justify-center items-center hint--bottom'
               onClick={_ => dispatch(nextStep())}
             >
               <ChevronDoubleLeftIcon className='h-4 w-4 text-white'></ChevronDoubleLeftIcon>
             </button>
             <button
-              aria-label='Next step (Right arrow key / j)'
+              aria-label='Next step (Right / Down / l / j)'
               className='bg-gray-700 hover:bg-gray-800 active:bg-gray-900 px-2 py-1 mx-0.5 h-8 rounded-md flex justify-center items-center hint--bottom'
               onClick={_ => dispatch(prevStep())}
             >

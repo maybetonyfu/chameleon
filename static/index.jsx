@@ -91,11 +91,11 @@ window.addEventListener('keydown', event => {
       if (
         keyName === 'ArrowDown' ||
         keyName === 'ArrowRight' ||
-        keyName === 'j'
+        keyName === 'j' || keyName === 'l'
       ) {
         store.dispatch(prevStep());
       }
-      if (keyName === 'ArrowUp' || keyName === 'ArrowLeft' || keyName === 'k') {
+      if (keyName === 'ArrowUp' || keyName === 'ArrowLeft' || keyName === 'k' || keyName === 'h') {
         store.dispatch(nextStep());
       }
     }
