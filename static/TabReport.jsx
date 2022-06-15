@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import * as R from 'ramda';
 import TypeSig from './TypeSig';
-import { ChevronRightIcon, ChevronDownIcon } from '@heroicons/react/outline';
+import { ChevronRightIcon, ChevronDownIcon, ChevronDoubleLeftIcon, ChevronDoubleRightIcon } from '@heroicons/react/outline';
 import {
   nextStep,
   prevStep,
@@ -16,8 +16,7 @@ import {
   showBoth,
 } from './debuggerSlice';
 import mixpanel from 'mixpanel-browser';
-import { trackingAttributes } from './util'
-
+import { trackingAttributes } from './util';
 
 const TabReport = () => {
   return (
@@ -37,12 +36,13 @@ const TabList = () => {
   let pinnedStep = useSelector(R.path(['debugger', 'pinnedStep']));
   let pinnedTraverseId = steps[pinnedStep].stepId;
   const multipleExps = useSelector(R.path(['debugger', 'multipleExps']));
+  const deductionSteps = useSelector(R.path(['debugger', 'debuggingSteps']));
 
   return (
     <div
       className={
-        'h-20  shadow-sm bg-gray-100 flex items-center   ' +
-        (multipleExps ? 'rounded-b-lg' : '')
+        'h-20 bg-gray-100 flex items-center   ' +
+        (multipleExps && ! deductionSteps ? 'rounded-b-lg' : '')
       }
       style={{ paddingLeft: 40 }}
     >
@@ -50,23 +50,23 @@ const TabList = () => {
         className={
           'flex items-center cursor-pointer flex-row-reverse justify-end '
         }
-
       >
         {multipleExps
           ? context.map((c, i) => (
-            <Tab
-              key={i}
-              steps={c.contextSteps}
-              exp={c.contextExp}
-              active={
-                c.contextSteps.find(
-                  R.pipe(R.nth(0), R.equals(pinnedTraverseId)),
-                )[2]
-              }
-            ></Tab>
-          ))
+              <Tab
+                key={i}
+                steps={c.contextSteps}
+                exp={c.contextExp}
+                active={
+                  c.contextSteps.find(
+                    R.pipe(R.nth(0), R.equals(pinnedTraverseId)),
+                  )[2]
+                }
+              ></Tab>
+            ))
           : null}
       </div>
+
     </div>
   );
 };
@@ -98,12 +98,8 @@ const Tab = ({ active = false, steps, exp }) => {
       className={face + ' flex flex-col w-max m-1 px-2 py-1 rounded-lg'}
       style={{ minWidth: 80 }}
       onClick={_ => dispatch(lockStep(tabDefaultStep))}
-      onMouseEnter={_ =>
-        active ? null : dispatch(setStep(tabDefaultStep))
-      }
-      onMouseLeave={_ =>
-        dispatch(setStep(pinnedStep))
-      }
+      onMouseEnter={_ => (active ? null : dispatch(setStep(tabDefaultStep)))}
+      onMouseLeave={_ => dispatch(setStep(pinnedStep))}
     >
       <div
         className={
@@ -173,7 +169,8 @@ const TabStep = ({ active = false, step, traverseId }) => {
       <div
         className={
           'w-5 h-5 leading-5 flex justify-center  cursor-pointer rounded-full text-md mx-0.5  ' +
-          face + (deductionSteps ? ' ' : ' hidden')
+          face +
+          (deductionSteps ? ' ' : ' hidden')
         }
       >
         {numOfSteps - step}
@@ -194,12 +191,12 @@ const Summary = () => {
     steps.length === 0
       ? true
       : contextItem.contextSteps.find(
-        R.pipe(R.nth(0), R.equals(steps[pinnedStep].stepId)),
-      )[2];
+          R.pipe(R.nth(0), R.equals(steps[pinnedStep].stepId)),
+        )[2];
 
   const dispatch = useDispatch();
   return contextItem === null ? null : (
-    <>
+    <div className='shadow-sm'>
       <Expandable
         hint={
           debuggingSteps
@@ -212,7 +209,7 @@ const Summary = () => {
             mixpanel.track('Enable Multiple Exp', {
               ...trackingAttributes('Basic mode', currentTaskNum),
               'input type': 'mouse',
-            })
+            });
             dispatch(toggleMultipleExps());
           }
         }}
@@ -220,9 +217,12 @@ const Summary = () => {
           if (multipleExps) {
             dispatch(toggleMultipleExps());
             mixpanel.track('Disable Multiple Exp', {
-              ...trackingAttributes(debuggingSteps ? 'Advanced mode' : 'Balanced mode', currentTaskNum),
+              ...trackingAttributes(
+                debuggingSteps ? 'Advanced mode' : 'Balanced mode',
+                currentTaskNum,
+              ),
               'input type': 'mouse',
-            })
+            });
           }
           if (debuggingSteps) dispatch(toggleDebuggerStpes());
         }}
@@ -264,18 +264,16 @@ const Summary = () => {
               mixpanel.track('Eanble deduction step', {
                 ...trackingAttributes('Advanced mode', currentTaskNum),
                 'input type': 'mouse',
-              }
-              )
+              });
               dispatch(toggleDebuggerStpes());
             }
           }}
           onClose={_ => {
             if (debuggingSteps) {
-              mixpanel.track('Disable deduction step',
-                {
-                  ...trackingAttributes('Balanced mode', currentTaskNum),
-                  'input type': 'mouse',
-                })
+              mixpanel.track('Disable deduction step', {
+                ...trackingAttributes('Balanced mode', currentTaskNum),
+                'input type': 'mouse',
+              });
               dispatch(toggleDebuggerStpes());
             }
           }}
@@ -283,7 +281,25 @@ const Summary = () => {
           <TabList></TabList>
         </Expandable>
       ) : null}
-    </>
+      {debuggingSteps ? (
+        <div className='flex justify-start bg-gray-100 p-1 rounded-b-md' style={{ paddingLeft: 40 }}>
+          <button
+            aria-label='Previous step (Left / Up / h / k )'
+            className='bg-gray-400 border border-gray-700 shadow hover:bg-gray-500 active:bg-gray-500 px-2 py-1 mx-0.5 h-8 rounded-md flex justify-center items-center hint--bottom'
+            onClick={_ => dispatch(nextStep())}
+          >
+            <ChevronDoubleLeftIcon className='h-4 w-4 text-white'></ChevronDoubleLeftIcon>
+          </button>
+          <button
+            aria-label='Next step (Right / Down / l / j)'
+            className='bg-gray-400 border border-gray-700 shadow hover:bg-gray-500 active:bg-gray-500 px-2 py-1 mx-0.5 h-8 rounded-md flex justify-center items-center hint--bottom'
+            onClick={_ => dispatch(prevStep())}
+          >
+            <ChevronDoubleRightIcon className='h-4 w-4 text-white'></ChevronDoubleRightIcon>
+          </button>
+        </div>
+      ) : null}
+    </div>
   );
 };
 
@@ -303,7 +319,10 @@ const Expandable = ({ opened, children, onOpen, onClose, hint, left = 5 }) => {
           left,
         }}
       >
-        <ChevronRightIcon className={(opened ? 'rotate-90' : '') + ' transition-transform'} style={{}} />
+        <ChevronRightIcon
+          className={(opened ? 'rotate-90' : '') + ' transition-transform'}
+          style={{}}
+        />
       </div>
     </div>
   );
@@ -315,11 +334,10 @@ const Message = () => {
   return contextItem === null ? null : (
     <>
       <div className='font-medium mt-5'>Conflicting types</div>
-      <div className='mb-5 mt-2 shadow-sm'>
+      <div className='mb-5 mt-2  shadow-sm'>
         <div
           className='cursor-pointer hover:bg-gray-100 rounded-t-md bg-white p-2 w-full hint--bottom '
-          aria-label="Keyboard shortcut: Hold 1"
-
+          aria-label='Keyboard shortcut: Hold 1'
           onMouseEnter={_ => dispatch(showOnlyMark1())}
           onMouseLeave={_ => dispatch(showBoth())}
         >
@@ -340,8 +358,7 @@ const Message = () => {
         <hr className=''></hr>
         <div
           className='cursor-pointer hover:bg-gray-100 rounded-b-md bg-white p-2 w-full hint--bottom '
-          aria-label="Keyboard shortcut: Hold 2"
-
+          aria-label='Keyboard shortcut: Hold 2'
           onMouseEnter={_ => dispatch(showOnlyMark2())}
           onMouseLeave={_ => dispatch(showBoth())}
         >

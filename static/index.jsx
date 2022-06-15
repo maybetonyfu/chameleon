@@ -155,7 +155,8 @@ const ModelContent = () => {
         className='px-5 py-1 bg-green-400 rounded-md'
         onClick={() => {
           if (currentTaskNum === 8) {
-            window.location = 'https://forms.gle/nts9EQsrbNFAPEdv8';
+            let participant_id = localStorage.getItem('userId')
+            window.location = 'https://tally.so/r/nrjAxX?participant_id=' + participant_id;
             return;
           } else {
             dispatch(switchTaskThunk(currentTaskNum + 1));

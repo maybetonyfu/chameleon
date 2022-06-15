@@ -121,9 +121,14 @@ const MenuBar = () => {
           aria-label='Skip this code challenge if you get stuck for too long'
           className='bg-gray-300 px-4 py-1 rounded-md mx-2 flex h-8 justify-center items-center hint--bottom'
           onClick={_ => {
-            localStorage.setItem('userProgress', currentTaskNum)
-            dispatch(switchTaskThunk(currentTaskNum + 1));
-            dispatch(toNormalMode());
+            if (currentTaskNum === 8) {
+              let participant_id = localStorage.getItem('userId')
+              window.location = 'https://tally.so/r/nrjAxX?participant_id=' + participant_id;
+            } else {
+              localStorage.setItem('userProgress', currentTaskNum)
+              dispatch(switchTaskThunk(currentTaskNum + 1));
+              dispatch(toNormalMode());
+            }
         }}
         >
           Give up
