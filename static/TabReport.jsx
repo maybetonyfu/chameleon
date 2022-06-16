@@ -41,8 +41,8 @@ const TabList = () => {
   return (
     <div
       className={
-        'h-20 bg-gray-100 flex items-center   ' +
-        (multipleExps && ! deductionSteps ? 'rounded-b-lg' : '')
+        'h-24 bg-gray-100 flex items-center   ' +
+        (multipleExps && !deductionSteps ? 'rounded-b-lg' : '')
       }
       style={{ paddingLeft: 40 }}
     >
@@ -53,17 +53,17 @@ const TabList = () => {
       >
         {multipleExps
           ? context.map((c, i) => (
-              <Tab
-                key={i}
-                steps={c.contextSteps}
-                exp={c.contextExp}
-                active={
-                  c.contextSteps.find(
-                    R.pipe(R.nth(0), R.equals(pinnedTraverseId)),
-                  )[2]
-                }
-              ></Tab>
-            ))
+            <Tab
+              key={i}
+              steps={c.contextSteps}
+              exp={c.contextExp}
+              active={
+                c.contextSteps.find(
+                  R.pipe(R.nth(0), R.equals(pinnedTraverseId)),
+                )[2]
+              }
+            ></Tab>
+          ))
           : null}
       </div>
 
@@ -191,12 +191,12 @@ const Summary = () => {
     steps.length === 0
       ? true
       : contextItem.contextSteps.find(
-          R.pipe(R.nth(0), R.equals(steps[pinnedStep].stepId)),
-        )[2];
+        R.pipe(R.nth(0), R.equals(steps[pinnedStep].stepId)),
+      )[2];
 
   const dispatch = useDispatch();
   return contextItem === null ? null : (
-    <div className='shadow-sm'>
+    <div className='shadow-sm rounded-md'>
       <Expandable
         hint={
           debuggingSteps
@@ -228,9 +228,10 @@ const Summary = () => {
         }}
       >
         <div
+          style={{ paddingLeft: 40 }}
           className={
-            'bg-white p-3 pl-8 shadow-sm rounded-t-lg ' +
-            (multipleExps ? '' : 'rounded-b-lg')
+            'bg-white p-3 rounded-t-md ' +
+            (multipleExps ? '' : 'rounded-b-md')
           }
         >
           <div className='text-md'>
@@ -282,20 +283,22 @@ const Summary = () => {
         </Expandable>
       ) : null}
       {debuggingSteps ? (
-        <div className='flex justify-start bg-gray-100 p-1 rounded-b-md' style={{ paddingLeft: 40 }}>
+        <div className='flex justify-start p-1 border-0 rounded-b-md bg-gray-800' style={{ paddingLeft: 40,  }}>
           <button
             aria-label='Previous step (Left / Up / h / k )'
-            className='bg-gray-400 border border-gray-700 shadow hover:bg-gray-500 active:bg-gray-500 px-2 py-1 mx-0.5 h-8 rounded-md flex justify-center items-center hint--bottom'
+            // style={{ backgroundColor: '#B0B0B0' }}
+            className='border bg-gray-800 border-gray-500 text-gray-300 shadow-sm hover:bg-gray-500 hover:text-gray-800 active:bg-gray-700 active:text-white px-2 py-1 mx-0.5 h-8 rounded-md flex justify-center items-center hint--bottom'
             onClick={_ => dispatch(nextStep())}
           >
-            <ChevronDoubleLeftIcon className='h-4 w-4 text-white'></ChevronDoubleLeftIcon>
+            <ChevronDoubleLeftIcon className='h-4 w-4'></ChevronDoubleLeftIcon>
           </button>
           <button
             aria-label='Next step (Right / Down / l / j)'
-            className='bg-gray-400 border border-gray-700 shadow hover:bg-gray-500 active:bg-gray-500 px-2 py-1 mx-0.5 h-8 rounded-md flex justify-center items-center hint--bottom'
+            // style={{ backgroundColor: '#B0B0B0' }}
+            className='border bg-gray-800 border-gray-500 text-gray-300 shadow-sm hover:bg-gray-500 hover:text-gray-800 active:bg-gray-700 active:text-white px-2 py-1 mx-0.5 h-8 rounded-md flex justify-center items-center hint--bottom'
             onClick={_ => dispatch(prevStep())}
           >
-            <ChevronDoubleRightIcon className='h-4 w-4 text-white'></ChevronDoubleRightIcon>
+            <ChevronDoubleRightIcon className='h-4 w-4'></ChevronDoubleRightIcon>
           </button>
         </div>
       ) : null}
