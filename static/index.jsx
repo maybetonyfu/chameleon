@@ -42,7 +42,10 @@ if (localStorage.getItem('userId') === null) {
   localStorage.setItem('userProgress', -1);
 } else {
   userId = localStorage.getItem('userId');
-  userProgress = parseInt(localStorage.getItem('userProgress'), 10);
+  userProgress = parseInt(localStorage.getItem('userProgress'), 10) || -1;
+  if (userProgress === 8) {
+    window.location = '/playground'
+  }
 }
 
 mixpanel.init('6be6077e1d5b8de6978c65490e1666ea', {
