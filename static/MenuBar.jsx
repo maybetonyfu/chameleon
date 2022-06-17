@@ -11,10 +11,7 @@ import {
   prevStep,
   editorModes,
 } from './debuggerSlice';
-import {
-  EyeIcon,
-  BookOpenIcon,
-} from '@heroicons/react/solid';
+import { EyeIcon, BookOpenIcon } from '@heroicons/react/solid';
 import { Event, Source, track } from './report';
 import { getMode } from './util';
 
@@ -25,8 +22,8 @@ const MenuBar = () => {
   const deductionSteps = useSelector(R.path(['debugger', 'debuggingSteps']));
   const currentTaskNum = useSelector(R.path(['debugger', 'currentTaskNum']));
   const debuggingMode = getMode(multipleExps, deductionSteps);
-  const attempts = useSelector(R.path(['debugger', 'attempts']))
-  const currentTaskAttemps = attempts[currentTaskNum]
+  const attempts = useSelector(R.path(['debugger', 'attempts']));
+  const currentTaskAttemps = attempts[currentTaskNum];
 
   return (
     <div className='w-full bg-gray-100 h-10 flex justify-between'>
@@ -89,24 +86,27 @@ const MenuBar = () => {
             />
           </svg>
         </a>
-        {/* <p className='mr-1'>Load examples:</p>
-        <select
-          // defaultValue={0}
-          value={currentTaskNum === null ? 0:currentTaskNum}
-          onChange={e => dispatch(switchTaskThunk(e.target.value))}
-          className='bg-gray-300 h-8 px-4 py-1 rounded-md'
-        >
-          <option value={0}>Example 1</option>
-          <option value={1}>Example 2</option>
-          <option value={2}>Example 3</option>
-          <option value={3}>Example 4</option>
-          <option value={4}>Example 5</option>
-          <option value={5}>Example 6</option>
-          <option value={6}>Example 7</option>
-          <option value={7}>Example 8</option>
-          <option value={8}>Example 9</option>
-
-        </select> */}
+        {OUTPUT_TARGET === 'playground' ? (
+          <>
+            {' '}
+            <p className='mr-1'>Load examples:</p>
+            <select
+              value={currentTaskNum === null ? 0 : currentTaskNum}
+              onChange={e => dispatch(switchTaskThunk(e.target.value))}
+              className='bg-gray-300 h-8 px-4 py-1 rounded-md'
+            >
+              <option value={0}>Example 1</option>
+              <option value={1}>Example 2</option>
+              <option value={2}>Example 3</option>
+              <option value={3}>Example 4</option>
+              <option value={4}>Example 5</option>
+              <option value={5}>Example 6</option>
+              <option value={6}>Example 7</option>
+              <option value={7}>Example 8</option>
+              <option value={8}>Example 9</option>
+            </select>{' '}
+          </>
+        ) : null}
         <button
           className='bg-gray-300 px-4 py-1 rounded-md mx-2 flex h-8 justify-center items-center  hint--bottom'
           aria-label='Reset the code challenge to its initial state'
@@ -116,46 +116,49 @@ const MenuBar = () => {
             track({
               event: Event.reset,
               task: currentTaskNum,
-              mode : debuggingMode,
-              source:  Source.mouse,
-            })
+              mode: debuggingMode,
+              source: Source.mouse,
+            });
           }}
         >
           Reset problem
         </button>
-        {currentTaskAttemps > 5 ? <button
-          aria-label='Skip this code challenge if you get stuck for too long'
-          className='bg-gray-300 px-4 py-1 rounded-md mx-2 flex h-8 justify-center items-center hint--bottom'
-          onClick={_ => {
-            track({
-              event: Event.abandon,
-              task: currentTaskNum,
-              mode : debuggingMode,
-              source:  Source.mouse,
-            })
-            if (currentTaskNum === 8) {
-              let participant_id = localStorage.getItem('userId')
-              window.location = 'https://tally.so/r/nrjAxX?participant_id=' + participant_id;
-            } else {
-              localStorage.setItem('userProgress', currentTaskNum)
-              dispatch(switchTaskThunk(currentTaskNum + 1));
-              dispatch(toNormalMode());
-            }
-        }}
-        >
-          Give up
-        </button> : null}
+        {currentTaskAttemps > 5 && OUTPUT_TARGET === 'userstudy' ? (
+          <button
+            aria-label='Skip this code challenge if you get stuck for too long'
+            className='bg-gray-300 px-4 py-1 rounded-md mx-2 flex h-8 justify-center items-center hint--bottom'
+            onClick={_ => {
+              track({
+                event: Event.abandon,
+                task: currentTaskNum,
+                mode: debuggingMode,
+                source: Source.mouse,
+              });
+              if (currentTaskNum === 8) {
+                let participant_id = localStorage.getItem('userId');
+                window.location =
+                  'https://tally.so/r/nrjAxX?participant_id=' + participant_id;
+              } else {
+                localStorage.setItem('userProgress', currentTaskNum);
+                dispatch(switchTaskThunk(currentTaskNum + 1));
+                dispatch(toNormalMode());
+              }
+            }}
+          >
+            Give up
+          </button>
+        ) : null}
         {mode === editorModes.normal ? null : (
           <button
             className='bg-gray-300 px-4 py-1 rounded-md mx-2 flex h-8 justify-center items-center color-change hint--bottom'
-            aria-label="Type check the code (Esc)"
+            aria-label='Type check the code (Esc)'
             onClick={_ => {
               track({
                 event: Event.typeCheck,
                 task: currentTaskNum,
-                mode : debuggingMode,
-                source:  Source.mouse,
-              })
+                mode: debuggingMode,
+                source: Source.mouse,
+              });
               dispatch(toNormalMode());
               dispatch(typeCheckThunk());
             }}
@@ -168,19 +171,15 @@ const MenuBar = () => {
           href='/tutorial'
           target={'_blank'}
           className='bg-gray-300 px-4 py-1 rounded-md mx-2 flex h-8 justify-center items-center hint--bottom'
-          aria-label="Open tutorial in a new tab"
+          aria-label='Open tutorial in a new tab'
         >
           <BookOpenIcon className='h-4 w-4 mr-1'></BookOpenIcon>
           Tutorial
         </a>
-
-
       </div>
 
       <div className='flex items-center px-2'>
-        <div>
-          {debuggingMode}
-        </div>
+        <div>{debuggingMode}</div>
       </div>
     </div>
   );

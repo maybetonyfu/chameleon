@@ -31,17 +31,21 @@ export let Event = {
 };
 
 export let track;
-if (process.env.NODE_ENV === 'production') {
-  track = ({ event, task, mode, source }) => {
-    mixpanel.track(event, {
-      Stage: 'testing',
-      Task: task,
-      Mode: mode,
-      'Input Source': source,
-    });
-  };
+if (OUTPUT_TARGET === 'playground') {
+    track = () => {}
 } else {
-  track = ({ event, task, mode, source }) => {
-    console.log(`[Task ${task} - ${mode}] ${event} (From ${source})`);
-  };
+    if (process.env.NODE_ENV === 'production') {
+      track = ({ event, task, mode, source }) => {
+        mixpanel.track(event, {
+          Stage: 'testing',
+          Task: task,
+          Mode: mode,
+          'Input Source': source,
+        });
+      };
+    } else {
+      track = ({ event, task, mode, source }) => {
+        console.log(`[Task ${task} - ${mode}] ${event} (From ${source})`);
+      };
+    }
 }

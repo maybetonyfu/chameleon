@@ -275,7 +275,7 @@ const Summary = () => {
             The following expression can have two conflicting types
             <span
               onMouseEnter={_ => {
-                dispatch(showDefination())
+                dispatch(showDefination());
                 track({
                   event: Event.peekDef,
                   task: currentTaskNum,

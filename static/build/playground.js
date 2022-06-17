@@ -495,7 +495,7 @@
             }
             return element;
           };
-          function createElement7(type3, config, children) {
+          function createElement6(type3, config, children) {
             var propName;
             var props = {};
             var key = null;
@@ -932,7 +932,7 @@
             }
             return lazyType;
           }
-          function forwardRef7(render) {
+          function forwardRef6(render) {
             {
               if (render != null && render.$$typeof === REACT_MEMO_TYPE) {
                 error("forwardRef requires a render function but received a `memo` component. Instead of forwardRef(memo(...)), use memo(forwardRef(...)).");
@@ -1041,7 +1041,7 @@
             }
             return dispatcher.useContext(Context, unstable_observedBits);
           }
-          function useState2(initialState2) {
+          function useState(initialState2) {
             var dispatcher = resolveDispatcher();
             return dispatcher.useState(initialState2);
           }
@@ -1053,7 +1053,7 @@
             var dispatcher = resolveDispatcher();
             return dispatcher.useRef(initialValue);
           }
-          function useEffect4(create, deps) {
+          function useEffect5(create, deps) {
             var dispatcher = resolveDispatcher();
             return dispatcher.useEffect(create, deps);
           }
@@ -1543,7 +1543,7 @@
                 error("React.createElement: type is invalid -- expected a string (for built-in components) or a class/function (for composite components) but got: %s.%s", typeString, info);
               }
             }
-            var element = createElement7.apply(this, arguments);
+            var element = createElement6.apply(this, arguments);
             if (element == null) {
               return element;
             }
@@ -1616,20 +1616,20 @@
           exports.createElement = createElement$1;
           exports.createFactory = createFactory;
           exports.createRef = createRef;
-          exports.forwardRef = forwardRef7;
+          exports.forwardRef = forwardRef6;
           exports.isValidElement = isValidElement;
           exports.lazy = lazy;
           exports.memo = memo;
           exports.useCallback = useCallback;
           exports.useContext = useContext5;
           exports.useDebugValue = useDebugValue2;
-          exports.useEffect = useEffect4;
+          exports.useEffect = useEffect5;
           exports.useImperativeHandle = useImperativeHandle;
           exports.useLayoutEffect = useLayoutEffect2;
           exports.useMemo = useMemo4;
           exports.useReducer = useReducer3;
           exports.useRef = useRef4;
-          exports.useState = useState2;
+          exports.useState = useState;
           exports.version = ReactVersion;
         })();
       }
@@ -2437,11 +2437,11 @@
       if (true) {
         (function() {
           "use strict";
-          var React16 = require_react();
+          var React15 = require_react();
           var _assign = require_object_assign();
           var Scheduler = require_scheduler();
           var tracing = require_tracing();
-          var ReactSharedInternals = React16.__SECRET_INTERNALS_DO_NOT_USE_OR_YOU_WILL_BE_FIRED;
+          var ReactSharedInternals = React15.__SECRET_INTERNALS_DO_NOT_USE_OR_YOU_WILL_BE_FIRED;
           function warn(format) {
             {
               for (var _len = arguments.length, args = new Array(_len > 1 ? _len - 1 : 0), _key = 1; _key < _len; _key++) {
@@ -2473,7 +2473,7 @@
               Function.prototype.apply.call(console[level], console, argsWithFormat);
             }
           }
-          if (!React16) {
+          if (!React15) {
             {
               throw Error("ReactDOM was loaded before React. Make sure you load the React package before loading ReactDOM.");
             }
@@ -2489,7 +2489,7 @@
           var Mode = 8;
           var ContextConsumer = 9;
           var ContextProvider = 10;
-          var ForwardRef7 = 11;
+          var ForwardRef6 = 11;
           var Profiler = 12;
           var SuspenseComponent = 13;
           var MemoComponent = 14;
@@ -3269,7 +3269,7 @@
               case IndeterminateComponent:
               case SimpleMemoComponent:
                 return describeFunctionComponentFrame(fiber.type);
-              case ForwardRef7:
+              case ForwardRef6:
                 return describeFunctionComponentFrame(fiber.type.render);
               case Block:
                 return describeFunctionComponentFrame(fiber.type._render);
@@ -3495,7 +3495,7 @@
             };
             return tracker;
           }
-          function track(node) {
+          function track2(node) {
             if (getTracker(node)) {
               return;
             }
@@ -3689,7 +3689,7 @@
           var didWarnInvalidChild = false;
           function flattenChildren(children) {
             var content = "";
-            React16.Children.forEach(children, function(child) {
+            React15.Children.forEach(children, function(child) {
               if (child == null) {
                 return;
               }
@@ -3700,7 +3700,7 @@
           function validateProps(element, props) {
             {
               if (typeof props.children === "object" && props.children !== null) {
-                React16.Children.forEach(props.children, function(child) {
+                React15.Children.forEach(props.children, function(child) {
                   if (child == null) {
                     return;
                   }
@@ -8454,7 +8454,7 @@
               }
             }
           }
-          function createElement7(type3, props, rootContainerElement, parentNamespace) {
+          function createElement6(type3, props, rootContainerElement, parentNamespace) {
             var isCustomComponentTag;
             var ownerDocument = getOwnerDocumentFromRootContainer(rootContainerElement);
             var domElement;
@@ -8571,11 +8571,11 @@
             setInitialDOMProperties(tag, domElement, rootContainerElement, props, isCustomComponentTag);
             switch (tag) {
               case "input":
-                track(domElement);
+                track2(domElement);
                 postMountWrapper(domElement, rawProps, false);
                 break;
               case "textarea":
-                track(domElement);
+                track2(domElement);
                 postMountWrapper$3(domElement);
                 break;
               case "option":
@@ -8934,11 +8934,11 @@
             }
             switch (tag) {
               case "input":
-                track(domElement);
+                track2(domElement);
                 postMountWrapper(domElement, rawProps, true);
                 break;
               case "textarea":
-                track(domElement);
+                track2(domElement);
                 postMountWrapper$3(domElement);
                 break;
               case "select":
@@ -9331,7 +9331,7 @@
               }
               parentNamespace = hostContextDev.namespace;
             }
-            var domElement = createElement7(type3, props, rootContainerInstance, parentNamespace);
+            var domElement = createElement6(type3, props, rootContainerInstance, parentNamespace);
             precacheFiberNode(internalInstanceHandle, domElement);
             updateFiberProps(domElement, props);
             return domElement;
@@ -10893,7 +10893,7 @@
           }
           var fakeInternalInstance = {};
           var isArray = Array.isArray;
-          var emptyRefsObject = new React16.Component().refs;
+          var emptyRefsObject = new React15.Component().refs;
           var didWarnAboutStateAssignmentForComponent;
           var didWarnAboutUninitializedState;
           var didWarnAboutGetSnapshotBeforeUpdateWithoutDidUpdate;
@@ -12150,7 +12150,7 @@
                   }
                   case Block:
                   case FunctionComponent:
-                  case ForwardRef7:
+                  case ForwardRef6:
                   case SimpleMemoComponent: {
                     {
                       {
@@ -14742,7 +14742,7 @@
                 child = updateClassComponent(null, workInProgress2, Component, resolvedProps, renderLanes2);
                 return child;
               }
-              case ForwardRef7: {
+              case ForwardRef6: {
                 {
                   workInProgress2.type = Component = resolveForwardRefForHotReloading(Component);
                 }
@@ -15635,7 +15635,7 @@
                 return updateSuspenseComponent(current2, workInProgress2, renderLanes2);
               case HostPortal:
                 return updatePortalComponent(current2, workInProgress2, renderLanes2);
-              case ForwardRef7: {
+              case ForwardRef6: {
                 var type3 = workInProgress2.type;
                 var _unresolvedProps2 = workInProgress2.pendingProps;
                 var _resolvedProps2 = workInProgress2.elementType === type3 ? _unresolvedProps2 : resolveDefaultProps(type3, _unresolvedProps2);
@@ -15807,7 +15807,7 @@
               case LazyComponent:
               case SimpleMemoComponent:
               case FunctionComponent:
-              case ForwardRef7:
+              case ForwardRef6:
               case Fragment:
               case Mode:
               case Profiler:
@@ -16452,7 +16452,7 @@
           function commitBeforeMutationLifeCycles(current2, finishedWork) {
             switch (finishedWork.tag) {
               case FunctionComponent:
-              case ForwardRef7:
+              case ForwardRef6:
               case SimpleMemoComponent:
               case Block: {
                 return;
@@ -16573,7 +16573,7 @@
           function commitLifeCycles(finishedRoot, current2, finishedWork, committedLanes) {
             switch (finishedWork.tag) {
               case FunctionComponent:
-              case ForwardRef7:
+              case ForwardRef6:
               case SimpleMemoComponent:
               case Block: {
                 {
@@ -16774,7 +16774,7 @@
             onCommitUnmount(current2);
             switch (current2.tag) {
               case FunctionComponent:
-              case ForwardRef7:
+              case ForwardRef6:
               case MemoComponent:
               case SimpleMemoComponent:
               case Block: {
@@ -17082,7 +17082,7 @@
           function commitWork(current2, finishedWork) {
             switch (finishedWork.tag) {
               case FunctionComponent:
-              case ForwardRef7:
+              case ForwardRef6:
               case MemoComponent:
               case SimpleMemoComponent:
               case Block: {
@@ -18637,7 +18637,7 @@
                 return;
               }
               var tag = fiber.tag;
-              if (tag !== IndeterminateComponent && tag !== HostRoot && tag !== ClassComponent && tag !== FunctionComponent && tag !== ForwardRef7 && tag !== MemoComponent && tag !== SimpleMemoComponent && tag !== Block) {
+              if (tag !== IndeterminateComponent && tag !== HostRoot && tag !== ClassComponent && tag !== FunctionComponent && tag !== ForwardRef6 && tag !== MemoComponent && tag !== SimpleMemoComponent && tag !== Block) {
                 return;
               }
               var componentName = getComponentName(fiber.type) || "ReactComponent";
@@ -18666,7 +18666,7 @@
           function warnAboutUpdateOnUnmountedFiberInDEV(fiber) {
             {
               var tag = fiber.tag;
-              if (tag !== HostRoot && tag !== ClassComponent && tag !== FunctionComponent && tag !== ForwardRef7 && tag !== MemoComponent && tag !== SimpleMemoComponent && tag !== Block) {
+              if (tag !== HostRoot && tag !== ClassComponent && tag !== FunctionComponent && tag !== ForwardRef6 && tag !== MemoComponent && tag !== SimpleMemoComponent && tag !== Block) {
                 return;
               }
               if ((fiber.flags & PassiveUnmountPendingDev) !== NoFlags) {
@@ -18736,7 +18736,7 @@
               if (isRendering && (executionContext & RenderContext) !== NoContext && !getIsUpdatingOpaqueValueInRenderPhaseInDEV()) {
                 switch (fiber.tag) {
                   case FunctionComponent:
-                  case ForwardRef7:
+                  case ForwardRef6:
                   case SimpleMemoComponent: {
                     var renderingComponentName = workInProgress && getComponentName(workInProgress.type) || "Unknown";
                     var dedupeKey = renderingComponentName;
@@ -18991,7 +18991,7 @@ For more info, visit https://reactjs.org/link/mock-scheduler`);
                   }
                   break;
                 }
-                case ForwardRef7: {
+                case ForwardRef6: {
                   if ($$typeofNextType === REACT_FORWARD_REF_TYPE) {
                     needsCompareFamilies = true;
                   } else if ($$typeofNextType === REACT_LAZY_TYPE) {
@@ -19067,7 +19067,7 @@ For more info, visit https://reactjs.org/link/mock-scheduler`);
                 case ClassComponent:
                   candidateType = type3;
                   break;
-                case ForwardRef7:
+                case ForwardRef6:
                   candidateType = type3.render;
                   break;
               }
@@ -19129,7 +19129,7 @@ For more info, visit https://reactjs.org/link/mock-scheduler`);
                 case ClassComponent:
                   candidateType = type3;
                   break;
-                case ForwardRef7:
+                case ForwardRef6:
                   candidateType = type3.render;
                   break;
               }
@@ -19278,7 +19278,7 @@ For more info, visit https://reactjs.org/link/mock-scheduler`);
             } else if (Component !== void 0 && Component !== null) {
               var $$typeof = Component.$$typeof;
               if ($$typeof === REACT_FORWARD_REF_TYPE) {
-                return ForwardRef7;
+                return ForwardRef6;
               }
               if ($$typeof === REACT_MEMO_TYPE) {
                 return MemoComponent;
@@ -19342,7 +19342,7 @@ For more info, visit https://reactjs.org/link/mock-scheduler`);
                 case ClassComponent:
                   workInProgress2.type = resolveClassForHotReloading(current2.type);
                   break;
-                case ForwardRef7:
+                case ForwardRef6:
                   workInProgress2.type = resolveForwardRefForHotReloading(current2.type);
                   break;
               }
@@ -19452,7 +19452,7 @@ For more info, visit https://reactjs.org/link/mock-scheduler`);
                           fiberTag = ContextConsumer;
                           break getTag;
                         case REACT_FORWARD_REF_TYPE:
-                          fiberTag = ForwardRef7;
+                          fiberTag = ForwardRef6;
                           {
                             resolvedType = resolveForwardRefForHotReloading(resolvedType);
                           }
@@ -20483,7 +20483,7 @@ For more info, visit https://reactjs.org/link/mock-scheduler`);
           var ContextConsumer = REACT_CONTEXT_TYPE;
           var ContextProvider = REACT_PROVIDER_TYPE;
           var Element = REACT_ELEMENT_TYPE;
-          var ForwardRef7 = REACT_FORWARD_REF_TYPE;
+          var ForwardRef6 = REACT_FORWARD_REF_TYPE;
           var Fragment = REACT_FRAGMENT_TYPE;
           var Lazy = REACT_LAZY_TYPE;
           var Memo = REACT_MEMO_TYPE;
@@ -20542,7 +20542,7 @@ For more info, visit https://reactjs.org/link/mock-scheduler`);
           exports.ContextConsumer = ContextConsumer;
           exports.ContextProvider = ContextProvider;
           exports.Element = Element;
-          exports.ForwardRef = ForwardRef7;
+          exports.ForwardRef = ForwardRef6;
           exports.Fragment = Fragment;
           exports.Lazy = Lazy;
           exports.Memo = Memo;
@@ -21195,7 +21195,7 @@ For more info, visit https://reactjs.org/link/mock-scheduler`);
       if (true) {
         (function() {
           "use strict";
-          var React16 = require_react();
+          var React15 = require_react();
           var _assign = require_object_assign();
           var REACT_ELEMENT_TYPE = 60103;
           var REACT_PORTAL_TYPE = 60106;
@@ -21252,7 +21252,7 @@ For more info, visit https://reactjs.org/link/mock-scheduler`);
             }
             return null;
           }
-          var ReactSharedInternals = React16.__SECRET_INTERNALS_DO_NOT_USE_OR_YOU_WILL_BE_FIRED;
+          var ReactSharedInternals = React15.__SECRET_INTERNALS_DO_NOT_USE_OR_YOU_WILL_BE_FIRED;
           function error(format) {
             {
               for (var _len2 = arguments.length, args = new Array(_len2 > 1 ? _len2 - 1 : 0), _key2 = 1; _key2 < _len2; _key2++) {
@@ -22143,7 +22143,7 @@ For more info, visit https://reactjs.org/link/mock-scheduler`);
           var ContextConsumer = REACT_CONTEXT_TYPE;
           var ContextProvider = REACT_PROVIDER_TYPE;
           var Element = REACT_ELEMENT_TYPE;
-          var ForwardRef7 = REACT_FORWARD_REF_TYPE;
+          var ForwardRef6 = REACT_FORWARD_REF_TYPE;
           var Fragment = REACT_FRAGMENT_TYPE;
           var Lazy = REACT_LAZY_TYPE;
           var Memo = REACT_MEMO_TYPE;
@@ -22207,7 +22207,7 @@ For more info, visit https://reactjs.org/link/mock-scheduler`);
           exports.ContextConsumer = ContextConsumer;
           exports.ContextProvider = ContextProvider;
           exports.Element = Element;
-          exports.ForwardRef = ForwardRef7;
+          exports.ForwardRef = ForwardRef6;
           exports.Fragment = Fragment;
           exports.Lazy = Lazy;
           exports.Memo = Memo;
@@ -22247,7 +22247,3746 @@ For more info, visit https://reactjs.org/link/mock-scheduler`);
     }
   });
 
-  // index.jsx
+  // node_modules/mixpanel-browser/dist/mixpanel.cjs.js
+  var require_mixpanel_cjs = __commonJS({
+    "node_modules/mixpanel-browser/dist/mixpanel.cjs.js"(exports, module) {
+      "use strict";
+      var Config = {
+        DEBUG: false,
+        LIB_VERSION: "2.45.0"
+      };
+      var window$1;
+      if (typeof window === "undefined") {
+        loc = {
+          hostname: ""
+        };
+        window$1 = {
+          navigator: { userAgent: "" },
+          document: {
+            location: loc,
+            referrer: ""
+          },
+          screen: { width: 0, height: 0 },
+          location: loc
+        };
+      } else {
+        window$1 = window;
+      }
+      var loc;
+      var ArrayProto = Array.prototype;
+      var FuncProto = Function.prototype;
+      var ObjProto = Object.prototype;
+      var slice3 = ArrayProto.slice;
+      var toString4 = ObjProto.toString;
+      var hasOwnProperty = ObjProto.hasOwnProperty;
+      var windowConsole = window$1.console;
+      var navigator2 = window$1.navigator;
+      var document$1 = window$1.document;
+      var windowOpera = window$1.opera;
+      var screen = window$1.screen;
+      var userAgent = navigator2.userAgent;
+      var nativeBind = FuncProto.bind;
+      var nativeForEach = ArrayProto.forEach;
+      var nativeIndexOf = ArrayProto.indexOf;
+      var nativeMap = ArrayProto.map;
+      var nativeIsArray = Array.isArray;
+      var breaker = {};
+      var _3 = {
+        trim: function(str) {
+          return str.replace(/^[\s\uFEFF\xA0]+|[\s\uFEFF\xA0]+$/g, "");
+        }
+      };
+      var console2 = {
+        log: function() {
+          if (Config.DEBUG && !_3.isUndefined(windowConsole) && windowConsole) {
+            try {
+              windowConsole.log.apply(windowConsole, arguments);
+            } catch (err) {
+              _3.each(arguments, function(arg) {
+                windowConsole.log(arg);
+              });
+            }
+          }
+        },
+        warn: function() {
+          if (Config.DEBUG && !_3.isUndefined(windowConsole) && windowConsole) {
+            var args = ["Mixpanel warning:"].concat(_3.toArray(arguments));
+            try {
+              windowConsole.warn.apply(windowConsole, args);
+            } catch (err) {
+              _3.each(args, function(arg) {
+                windowConsole.warn(arg);
+              });
+            }
+          }
+        },
+        error: function() {
+          if (Config.DEBUG && !_3.isUndefined(windowConsole) && windowConsole) {
+            var args = ["Mixpanel error:"].concat(_3.toArray(arguments));
+            try {
+              windowConsole.error.apply(windowConsole, args);
+            } catch (err) {
+              _3.each(args, function(arg) {
+                windowConsole.error(arg);
+              });
+            }
+          }
+        },
+        critical: function() {
+          if (!_3.isUndefined(windowConsole) && windowConsole) {
+            var args = ["Mixpanel error:"].concat(_3.toArray(arguments));
+            try {
+              windowConsole.error.apply(windowConsole, args);
+            } catch (err) {
+              _3.each(args, function(arg) {
+                windowConsole.error(arg);
+              });
+            }
+          }
+        }
+      };
+      var log_func_with_prefix = function(func, prefix2) {
+        return function() {
+          arguments[0] = "[" + prefix2 + "] " + arguments[0];
+          return func.apply(console2, arguments);
+        };
+      };
+      var console_with_prefix = function(prefix2) {
+        return {
+          log: log_func_with_prefix(console2.log, prefix2),
+          error: log_func_with_prefix(console2.error, prefix2),
+          critical: log_func_with_prefix(console2.critical, prefix2)
+        };
+      };
+      _3.bind = function(func, context) {
+        var args, bound;
+        if (nativeBind && func.bind === nativeBind) {
+          return nativeBind.apply(func, slice3.call(arguments, 1));
+        }
+        if (!_3.isFunction(func)) {
+          throw new TypeError();
+        }
+        args = slice3.call(arguments, 2);
+        bound = function() {
+          if (!(this instanceof bound)) {
+            return func.apply(context, args.concat(slice3.call(arguments)));
+          }
+          var ctor = {};
+          ctor.prototype = func.prototype;
+          var self = new ctor();
+          ctor.prototype = null;
+          var result = func.apply(self, args.concat(slice3.call(arguments)));
+          if (Object(result) === result) {
+            return result;
+          }
+          return self;
+        };
+        return bound;
+      };
+      _3.each = function(obj, iterator, context) {
+        if (obj === null || obj === void 0) {
+          return;
+        }
+        if (nativeForEach && obj.forEach === nativeForEach) {
+          obj.forEach(iterator, context);
+        } else if (obj.length === +obj.length) {
+          for (var i3 = 0, l3 = obj.length; i3 < l3; i3++) {
+            if (i3 in obj && iterator.call(context, obj[i3], i3, obj) === breaker) {
+              return;
+            }
+          }
+        } else {
+          for (var key in obj) {
+            if (hasOwnProperty.call(obj, key)) {
+              if (iterator.call(context, obj[key], key, obj) === breaker) {
+                return;
+              }
+            }
+          }
+        }
+      };
+      _3.extend = function(obj) {
+        _3.each(slice3.call(arguments, 1), function(source) {
+          for (var prop3 in source) {
+            if (source[prop3] !== void 0) {
+              obj[prop3] = source[prop3];
+            }
+          }
+        });
+        return obj;
+      };
+      _3.isArray = nativeIsArray || function(obj) {
+        return toString4.call(obj) === "[object Array]";
+      };
+      _3.isFunction = function(f3) {
+        try {
+          return /^\s*\bfunction\b/.test(f3);
+        } catch (x2) {
+          return false;
+        }
+      };
+      _3.isArguments = function(obj) {
+        return !!(obj && hasOwnProperty.call(obj, "callee"));
+      };
+      _3.toArray = function(iterable) {
+        if (!iterable) {
+          return [];
+        }
+        if (iterable.toArray) {
+          return iterable.toArray();
+        }
+        if (_3.isArray(iterable)) {
+          return slice3.call(iterable);
+        }
+        if (_3.isArguments(iterable)) {
+          return slice3.call(iterable);
+        }
+        return _3.values(iterable);
+      };
+      _3.map = function(arr, callback, context) {
+        if (nativeMap && arr.map === nativeMap) {
+          return arr.map(callback, context);
+        } else {
+          var results = [];
+          _3.each(arr, function(item) {
+            results.push(callback.call(context, item));
+          });
+          return results;
+        }
+      };
+      _3.keys = function(obj) {
+        var results = [];
+        if (obj === null) {
+          return results;
+        }
+        _3.each(obj, function(value, key) {
+          results[results.length] = key;
+        });
+        return results;
+      };
+      _3.values = function(obj) {
+        var results = [];
+        if (obj === null) {
+          return results;
+        }
+        _3.each(obj, function(value) {
+          results[results.length] = value;
+        });
+        return results;
+      };
+      _3.include = function(obj, target) {
+        var found = false;
+        if (obj === null) {
+          return found;
+        }
+        if (nativeIndexOf && obj.indexOf === nativeIndexOf) {
+          return obj.indexOf(target) != -1;
+        }
+        _3.each(obj, function(value) {
+          if (found || (found = value === target)) {
+            return breaker;
+          }
+        });
+        return found;
+      };
+      _3.includes = function(str, needle) {
+        return str.indexOf(needle) !== -1;
+      };
+      _3.inherit = function(subclass, superclass) {
+        subclass.prototype = new superclass();
+        subclass.prototype.constructor = subclass;
+        subclass.superclass = superclass.prototype;
+        return subclass;
+      };
+      _3.isObject = function(obj) {
+        return obj === Object(obj) && !_3.isArray(obj);
+      };
+      _3.isEmptyObject = function(obj) {
+        if (_3.isObject(obj)) {
+          for (var key in obj) {
+            if (hasOwnProperty.call(obj, key)) {
+              return false;
+            }
+          }
+          return true;
+        }
+        return false;
+      };
+      _3.isUndefined = function(obj) {
+        return obj === void 0;
+      };
+      _3.isString = function(obj) {
+        return toString4.call(obj) == "[object String]";
+      };
+      _3.isDate = function(obj) {
+        return toString4.call(obj) == "[object Date]";
+      };
+      _3.isNumber = function(obj) {
+        return toString4.call(obj) == "[object Number]";
+      };
+      _3.isElement = function(obj) {
+        return !!(obj && obj.nodeType === 1);
+      };
+      _3.encodeDates = function(obj) {
+        _3.each(obj, function(v2, k2) {
+          if (_3.isDate(v2)) {
+            obj[k2] = _3.formatDate(v2);
+          } else if (_3.isObject(v2)) {
+            obj[k2] = _3.encodeDates(v2);
+          }
+        });
+        return obj;
+      };
+      _3.timestamp = function() {
+        Date.now = Date.now || function() {
+          return +new Date();
+        };
+        return Date.now();
+      };
+      _3.formatDate = function(d3) {
+        function pad3(n3) {
+          return n3 < 10 ? "0" + n3 : n3;
+        }
+        return d3.getUTCFullYear() + "-" + pad3(d3.getUTCMonth() + 1) + "-" + pad3(d3.getUTCDate()) + "T" + pad3(d3.getUTCHours()) + ":" + pad3(d3.getUTCMinutes()) + ":" + pad3(d3.getUTCSeconds());
+      };
+      _3.strip_empty_properties = function(p3) {
+        var ret = {};
+        _3.each(p3, function(v2, k2) {
+          if (_3.isString(v2) && v2.length > 0) {
+            ret[k2] = v2;
+          }
+        });
+        return ret;
+      };
+      _3.truncate = function(obj, length3) {
+        var ret;
+        if (typeof obj === "string") {
+          ret = obj.slice(0, length3);
+        } else if (_3.isArray(obj)) {
+          ret = [];
+          _3.each(obj, function(val) {
+            ret.push(_3.truncate(val, length3));
+          });
+        } else if (_3.isObject(obj)) {
+          ret = {};
+          _3.each(obj, function(val, key) {
+            ret[key] = _3.truncate(val, length3);
+          });
+        } else {
+          ret = obj;
+        }
+        return ret;
+      };
+      _3.JSONEncode = function() {
+        return function(mixed_val) {
+          var value = mixed_val;
+          var quote = function(string) {
+            var escapable = /[\\"\x00-\x1f\x7f-\x9f\u00ad\u0600-\u0604\u070f\u17b4\u17b5\u200c-\u200f\u2028-\u202f\u2060-\u206f\ufeff\ufff0-\uffff]/g;
+            var meta = {
+              "\b": "\\b",
+              "	": "\\t",
+              "\n": "\\n",
+              "\f": "\\f",
+              "\r": "\\r",
+              '"': '\\"',
+              "\\": "\\\\"
+            };
+            escapable.lastIndex = 0;
+            return escapable.test(string) ? '"' + string.replace(escapable, function(a3) {
+              var c3 = meta[a3];
+              return typeof c3 === "string" ? c3 : "\\u" + ("0000" + a3.charCodeAt(0).toString(16)).slice(-4);
+            }) + '"' : '"' + string + '"';
+          };
+          var str = function(key, holder) {
+            var gap = "";
+            var indent = "    ";
+            var i3 = 0;
+            var k2 = "";
+            var v2 = "";
+            var length3 = 0;
+            var mind = gap;
+            var partial = [];
+            var value2 = holder[key];
+            if (value2 && typeof value2 === "object" && typeof value2.toJSON === "function") {
+              value2 = value2.toJSON(key);
+            }
+            switch (typeof value2) {
+              case "string":
+                return quote(value2);
+              case "number":
+                return isFinite(value2) ? String(value2) : "null";
+              case "boolean":
+              case "null":
+                return String(value2);
+              case "object":
+                if (!value2) {
+                  return "null";
+                }
+                gap += indent;
+                partial = [];
+                if (toString4.apply(value2) === "[object Array]") {
+                  length3 = value2.length;
+                  for (i3 = 0; i3 < length3; i3 += 1) {
+                    partial[i3] = str(i3, value2) || "null";
+                  }
+                  v2 = partial.length === 0 ? "[]" : gap ? "[\n" + gap + partial.join(",\n" + gap) + "\n" + mind + "]" : "[" + partial.join(",") + "]";
+                  gap = mind;
+                  return v2;
+                }
+                for (k2 in value2) {
+                  if (hasOwnProperty.call(value2, k2)) {
+                    v2 = str(k2, value2);
+                    if (v2) {
+                      partial.push(quote(k2) + (gap ? ": " : ":") + v2);
+                    }
+                  }
+                }
+                v2 = partial.length === 0 ? "{}" : gap ? "{" + partial.join(",") + mind + "}" : "{" + partial.join(",") + "}";
+                gap = mind;
+                return v2;
+            }
+          };
+          return str("", {
+            "": value
+          });
+        };
+      }();
+      _3.JSONDecode = function() {
+        var at, ch, escapee = {
+          '"': '"',
+          "\\": "\\",
+          "/": "/",
+          "b": "\b",
+          "f": "\f",
+          "n": "\n",
+          "r": "\r",
+          "t": "	"
+        }, text, error = function(m2) {
+          var e3 = new SyntaxError(m2);
+          e3.at = at;
+          e3.text = text;
+          throw e3;
+        }, next = function(c3) {
+          if (c3 && c3 !== ch) {
+            error("Expected '" + c3 + "' instead of '" + ch + "'");
+          }
+          ch = text.charAt(at);
+          at += 1;
+          return ch;
+        }, number = function() {
+          var number2, string2 = "";
+          if (ch === "-") {
+            string2 = "-";
+            next("-");
+          }
+          while (ch >= "0" && ch <= "9") {
+            string2 += ch;
+            next();
+          }
+          if (ch === ".") {
+            string2 += ".";
+            while (next() && ch >= "0" && ch <= "9") {
+              string2 += ch;
+            }
+          }
+          if (ch === "e" || ch === "E") {
+            string2 += ch;
+            next();
+            if (ch === "-" || ch === "+") {
+              string2 += ch;
+              next();
+            }
+            while (ch >= "0" && ch <= "9") {
+              string2 += ch;
+              next();
+            }
+          }
+          number2 = +string2;
+          if (!isFinite(number2)) {
+            error("Bad number");
+          } else {
+            return number2;
+          }
+        }, string = function() {
+          var hex, i3, string2 = "", uffff;
+          if (ch === '"') {
+            while (next()) {
+              if (ch === '"') {
+                next();
+                return string2;
+              }
+              if (ch === "\\") {
+                next();
+                if (ch === "u") {
+                  uffff = 0;
+                  for (i3 = 0; i3 < 4; i3 += 1) {
+                    hex = parseInt(next(), 16);
+                    if (!isFinite(hex)) {
+                      break;
+                    }
+                    uffff = uffff * 16 + hex;
+                  }
+                  string2 += String.fromCharCode(uffff);
+                } else if (typeof escapee[ch] === "string") {
+                  string2 += escapee[ch];
+                } else {
+                  break;
+                }
+              } else {
+                string2 += ch;
+              }
+            }
+          }
+          error("Bad string");
+        }, white = function() {
+          while (ch && ch <= " ") {
+            next();
+          }
+        }, word = function() {
+          switch (ch) {
+            case "t":
+              next("t");
+              next("r");
+              next("u");
+              next("e");
+              return true;
+            case "f":
+              next("f");
+              next("a");
+              next("l");
+              next("s");
+              next("e");
+              return false;
+            case "n":
+              next("n");
+              next("u");
+              next("l");
+              next("l");
+              return null;
+          }
+          error('Unexpected "' + ch + '"');
+        }, value, array = function() {
+          var array2 = [];
+          if (ch === "[") {
+            next("[");
+            white();
+            if (ch === "]") {
+              next("]");
+              return array2;
+            }
+            while (ch) {
+              array2.push(value());
+              white();
+              if (ch === "]") {
+                next("]");
+                return array2;
+              }
+              next(",");
+              white();
+            }
+          }
+          error("Bad array");
+        }, object = function() {
+          var key, object2 = {};
+          if (ch === "{") {
+            next("{");
+            white();
+            if (ch === "}") {
+              next("}");
+              return object2;
+            }
+            while (ch) {
+              key = string();
+              white();
+              next(":");
+              if (Object.hasOwnProperty.call(object2, key)) {
+                error('Duplicate key "' + key + '"');
+              }
+              object2[key] = value();
+              white();
+              if (ch === "}") {
+                next("}");
+                return object2;
+              }
+              next(",");
+              white();
+            }
+          }
+          error("Bad object");
+        };
+        value = function() {
+          white();
+          switch (ch) {
+            case "{":
+              return object();
+            case "[":
+              return array();
+            case '"':
+              return string();
+            case "-":
+              return number();
+            default:
+              return ch >= "0" && ch <= "9" ? number() : word();
+          }
+        };
+        return function(source) {
+          var result;
+          text = source;
+          at = 0;
+          ch = " ";
+          result = value();
+          white();
+          if (ch) {
+            error("Syntax error");
+          }
+          return result;
+        };
+      }();
+      _3.base64Encode = function(data) {
+        var b64 = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=";
+        var o1, o22, o3, h1, h22, h3, h4, bits, i3 = 0, ac = 0, enc = "", tmp_arr = [];
+        if (!data) {
+          return data;
+        }
+        data = _3.utf8Encode(data);
+        do {
+          o1 = data.charCodeAt(i3++);
+          o22 = data.charCodeAt(i3++);
+          o3 = data.charCodeAt(i3++);
+          bits = o1 << 16 | o22 << 8 | o3;
+          h1 = bits >> 18 & 63;
+          h22 = bits >> 12 & 63;
+          h3 = bits >> 6 & 63;
+          h4 = bits & 63;
+          tmp_arr[ac++] = b64.charAt(h1) + b64.charAt(h22) + b64.charAt(h3) + b64.charAt(h4);
+        } while (i3 < data.length);
+        enc = tmp_arr.join("");
+        switch (data.length % 3) {
+          case 1:
+            enc = enc.slice(0, -2) + "==";
+            break;
+          case 2:
+            enc = enc.slice(0, -1) + "=";
+            break;
+        }
+        return enc;
+      };
+      _3.utf8Encode = function(string) {
+        string = (string + "").replace(/\r\n/g, "\n").replace(/\r/g, "\n");
+        var utftext = "", start, end;
+        var stringl = 0, n3;
+        start = end = 0;
+        stringl = string.length;
+        for (n3 = 0; n3 < stringl; n3++) {
+          var c1 = string.charCodeAt(n3);
+          var enc = null;
+          if (c1 < 128) {
+            end++;
+          } else if (c1 > 127 && c1 < 2048) {
+            enc = String.fromCharCode(c1 >> 6 | 192, c1 & 63 | 128);
+          } else {
+            enc = String.fromCharCode(c1 >> 12 | 224, c1 >> 6 & 63 | 128, c1 & 63 | 128);
+          }
+          if (enc !== null) {
+            if (end > start) {
+              utftext += string.substring(start, end);
+            }
+            utftext += enc;
+            start = end = n3 + 1;
+          }
+        }
+        if (end > start) {
+          utftext += string.substring(start, string.length);
+        }
+        return utftext;
+      };
+      _3.UUID = function() {
+        var T = function() {
+          var d3 = 1 * new Date(), i3 = 0;
+          while (d3 == 1 * new Date()) {
+            i3++;
+          }
+          return d3.toString(16) + i3.toString(16);
+        };
+        var R2 = function() {
+          return Math.random().toString(16).replace(".", "");
+        };
+        var UA = function() {
+          var ua = userAgent, i3, ch, buffer = [], ret = 0;
+          function xor(result, byte_array) {
+            var j2, tmp = 0;
+            for (j2 = 0; j2 < byte_array.length; j2++) {
+              tmp |= buffer[j2] << j2 * 8;
+            }
+            return result ^ tmp;
+          }
+          for (i3 = 0; i3 < ua.length; i3++) {
+            ch = ua.charCodeAt(i3);
+            buffer.unshift(ch & 255);
+            if (buffer.length >= 4) {
+              ret = xor(ret, buffer);
+              buffer = [];
+            }
+          }
+          if (buffer.length > 0) {
+            ret = xor(ret, buffer);
+          }
+          return ret.toString(16);
+        };
+        return function() {
+          var se = (screen.height * screen.width).toString(16);
+          return T() + "-" + R2() + "-" + UA() + "-" + se + "-" + T();
+        };
+      }();
+      var BLOCKED_UA_STRS = [
+        "ahrefsbot",
+        "baiduspider",
+        "bingbot",
+        "bingpreview",
+        "facebookexternal",
+        "petalbot",
+        "pinterest",
+        "screaming frog",
+        "yahoo! slurp",
+        "yandexbot",
+        "adsbot-google",
+        "apis-google",
+        "duplexweb-google",
+        "feedfetcher-google",
+        "google favicon",
+        "google web preview",
+        "google-read-aloud",
+        "googlebot",
+        "googleweblight",
+        "mediapartners-google",
+        "storebot-google"
+      ];
+      _3.isBlockedUA = function(ua) {
+        var i3;
+        ua = ua.toLowerCase();
+        for (i3 = 0; i3 < BLOCKED_UA_STRS.length; i3++) {
+          if (ua.indexOf(BLOCKED_UA_STRS[i3]) !== -1) {
+            return true;
+          }
+        }
+        return false;
+      };
+      _3.HTTPBuildQuery = function(formdata, arg_separator) {
+        var use_val, use_key, tmp_arr = [];
+        if (_3.isUndefined(arg_separator)) {
+          arg_separator = "&";
+        }
+        _3.each(formdata, function(val, key) {
+          use_val = encodeURIComponent(val.toString());
+          use_key = encodeURIComponent(key);
+          tmp_arr[tmp_arr.length] = use_key + "=" + use_val;
+        });
+        return tmp_arr.join(arg_separator);
+      };
+      _3.getQueryParam = function(url, param) {
+        param = param.replace(/[[]/, "\\[").replace(/[\]]/, "\\]");
+        var regexS = "[\\?&]" + param + "=([^&#]*)", regex = new RegExp(regexS), results = regex.exec(url);
+        if (results === null || results && typeof results[1] !== "string" && results[1].length) {
+          return "";
+        } else {
+          var result = results[1];
+          try {
+            result = decodeURIComponent(result);
+          } catch (err) {
+            console2.error("Skipping decoding for malformed query param: " + result);
+          }
+          return result.replace(/\+/g, " ");
+        }
+      };
+      _3.cookie = {
+        get: function(name) {
+          var nameEQ = name + "=";
+          var ca = document$1.cookie.split(";");
+          for (var i3 = 0; i3 < ca.length; i3++) {
+            var c3 = ca[i3];
+            while (c3.charAt(0) == " ") {
+              c3 = c3.substring(1, c3.length);
+            }
+            if (c3.indexOf(nameEQ) === 0) {
+              return decodeURIComponent(c3.substring(nameEQ.length, c3.length));
+            }
+          }
+          return null;
+        },
+        parse: function(name) {
+          var cookie;
+          try {
+            cookie = _3.JSONDecode(_3.cookie.get(name)) || {};
+          } catch (err) {
+          }
+          return cookie;
+        },
+        set_seconds: function(name, value, seconds, is_cross_subdomain, is_secure, is_cross_site, domain_override) {
+          var cdomain = "", expires = "", secure = "";
+          if (domain_override) {
+            cdomain = "; domain=" + domain_override;
+          } else if (is_cross_subdomain) {
+            var domain = extract_domain(document$1.location.hostname);
+            cdomain = domain ? "; domain=." + domain : "";
+          }
+          if (seconds) {
+            var date = new Date();
+            date.setTime(date.getTime() + seconds * 1e3);
+            expires = "; expires=" + date.toGMTString();
+          }
+          if (is_cross_site) {
+            is_secure = true;
+            secure = "; SameSite=None";
+          }
+          if (is_secure) {
+            secure += "; secure";
+          }
+          document$1.cookie = name + "=" + encodeURIComponent(value) + expires + "; path=/" + cdomain + secure;
+        },
+        set: function(name, value, days, is_cross_subdomain, is_secure, is_cross_site, domain_override) {
+          var cdomain = "", expires = "", secure = "";
+          if (domain_override) {
+            cdomain = "; domain=" + domain_override;
+          } else if (is_cross_subdomain) {
+            var domain = extract_domain(document$1.location.hostname);
+            cdomain = domain ? "; domain=." + domain : "";
+          }
+          if (days) {
+            var date = new Date();
+            date.setTime(date.getTime() + days * 24 * 60 * 60 * 1e3);
+            expires = "; expires=" + date.toGMTString();
+          }
+          if (is_cross_site) {
+            is_secure = true;
+            secure = "; SameSite=None";
+          }
+          if (is_secure) {
+            secure += "; secure";
+          }
+          var new_cookie_val = name + "=" + encodeURIComponent(value) + expires + "; path=/" + cdomain + secure;
+          document$1.cookie = new_cookie_val;
+          return new_cookie_val;
+        },
+        remove: function(name, is_cross_subdomain, domain_override) {
+          _3.cookie.set(name, "", -1, is_cross_subdomain, false, false, domain_override);
+        }
+      };
+      var _localStorageSupported = null;
+      var localStorageSupported = function(storage, forceCheck) {
+        if (_localStorageSupported !== null && !forceCheck) {
+          return _localStorageSupported;
+        }
+        var supported = true;
+        try {
+          storage = storage || window.localStorage;
+          var key = "__mplss_" + cheap_guid(8), val = "xyz";
+          storage.setItem(key, val);
+          if (storage.getItem(key) !== val) {
+            supported = false;
+          }
+          storage.removeItem(key);
+        } catch (err) {
+          supported = false;
+        }
+        _localStorageSupported = supported;
+        return supported;
+      };
+      _3.localStorage = {
+        is_supported: function(force_check) {
+          var supported = localStorageSupported(null, force_check);
+          if (!supported) {
+            console2.error("localStorage unsupported; falling back to cookie store");
+          }
+          return supported;
+        },
+        error: function(msg) {
+          console2.error("localStorage error: " + msg);
+        },
+        get: function(name) {
+          try {
+            return window.localStorage.getItem(name);
+          } catch (err) {
+            _3.localStorage.error(err);
+          }
+          return null;
+        },
+        parse: function(name) {
+          try {
+            return _3.JSONDecode(_3.localStorage.get(name)) || {};
+          } catch (err) {
+          }
+          return null;
+        },
+        set: function(name, value) {
+          try {
+            window.localStorage.setItem(name, value);
+          } catch (err) {
+            _3.localStorage.error(err);
+          }
+        },
+        remove: function(name) {
+          try {
+            window.localStorage.removeItem(name);
+          } catch (err) {
+            _3.localStorage.error(err);
+          }
+        }
+      };
+      _3.register_event = function() {
+        var register_event = function(element, type3, handler, oldSchool, useCapture) {
+          if (!element) {
+            console2.error("No valid element provided to register_event");
+            return;
+          }
+          if (element.addEventListener && !oldSchool) {
+            element.addEventListener(type3, handler, !!useCapture);
+          } else {
+            var ontype = "on" + type3;
+            var old_handler = element[ontype];
+            element[ontype] = makeHandler(element, handler, old_handler);
+          }
+        };
+        function makeHandler(element, new_handler, old_handlers) {
+          var handler = function(event) {
+            event = event || fixEvent(window.event);
+            if (!event) {
+              return void 0;
+            }
+            var ret = true;
+            var old_result, new_result;
+            if (_3.isFunction(old_handlers)) {
+              old_result = old_handlers(event);
+            }
+            new_result = new_handler.call(element, event);
+            if (old_result === false || new_result === false) {
+              ret = false;
+            }
+            return ret;
+          };
+          return handler;
+        }
+        function fixEvent(event) {
+          if (event) {
+            event.preventDefault = fixEvent.preventDefault;
+            event.stopPropagation = fixEvent.stopPropagation;
+          }
+          return event;
+        }
+        fixEvent.preventDefault = function() {
+          this.returnValue = false;
+        };
+        fixEvent.stopPropagation = function() {
+          this.cancelBubble = true;
+        };
+        return register_event;
+      }();
+      var TOKEN_MATCH_REGEX = new RegExp('^(\\w*)\\[(\\w+)([=~\\|\\^\\$\\*]?)=?"?([^\\]"]*)"?\\]$');
+      _3.dom_query = function() {
+        function getAllChildren(e3) {
+          return e3.all ? e3.all : e3.getElementsByTagName("*");
+        }
+        var bad_whitespace = /[\t\r\n]/g;
+        function hasClass(elem, selector) {
+          var className = " " + selector + " ";
+          return (" " + elem.className + " ").replace(bad_whitespace, " ").indexOf(className) >= 0;
+        }
+        function getElementsBySelector(selector) {
+          if (!document$1.getElementsByTagName) {
+            return [];
+          }
+          var tokens = selector.split(" ");
+          var token, bits, tagName, found, foundCount, i3, j2, k2, elements, currentContextIndex;
+          var currentContext = [document$1];
+          for (i3 = 0; i3 < tokens.length; i3++) {
+            token = tokens[i3].replace(/^\s+/, "").replace(/\s+$/, "");
+            if (token.indexOf("#") > -1) {
+              bits = token.split("#");
+              tagName = bits[0];
+              var id = bits[1];
+              var element = document$1.getElementById(id);
+              if (!element || tagName && element.nodeName.toLowerCase() != tagName) {
+                return [];
+              }
+              currentContext = [element];
+              continue;
+            }
+            if (token.indexOf(".") > -1) {
+              bits = token.split(".");
+              tagName = bits[0];
+              var className = bits[1];
+              if (!tagName) {
+                tagName = "*";
+              }
+              found = [];
+              foundCount = 0;
+              for (j2 = 0; j2 < currentContext.length; j2++) {
+                if (tagName == "*") {
+                  elements = getAllChildren(currentContext[j2]);
+                } else {
+                  elements = currentContext[j2].getElementsByTagName(tagName);
+                }
+                for (k2 = 0; k2 < elements.length; k2++) {
+                  found[foundCount++] = elements[k2];
+                }
+              }
+              currentContext = [];
+              currentContextIndex = 0;
+              for (j2 = 0; j2 < found.length; j2++) {
+                if (found[j2].className && _3.isString(found[j2].className) && hasClass(found[j2], className)) {
+                  currentContext[currentContextIndex++] = found[j2];
+                }
+              }
+              continue;
+            }
+            var token_match = token.match(TOKEN_MATCH_REGEX);
+            if (token_match) {
+              tagName = token_match[1];
+              var attrName = token_match[2];
+              var attrOperator = token_match[3];
+              var attrValue = token_match[4];
+              if (!tagName) {
+                tagName = "*";
+              }
+              found = [];
+              foundCount = 0;
+              for (j2 = 0; j2 < currentContext.length; j2++) {
+                if (tagName == "*") {
+                  elements = getAllChildren(currentContext[j2]);
+                } else {
+                  elements = currentContext[j2].getElementsByTagName(tagName);
+                }
+                for (k2 = 0; k2 < elements.length; k2++) {
+                  found[foundCount++] = elements[k2];
+                }
+              }
+              currentContext = [];
+              currentContextIndex = 0;
+              var checkFunction;
+              switch (attrOperator) {
+                case "=":
+                  checkFunction = function(e3) {
+                    return e3.getAttribute(attrName) == attrValue;
+                  };
+                  break;
+                case "~":
+                  checkFunction = function(e3) {
+                    return e3.getAttribute(attrName).match(new RegExp("\\b" + attrValue + "\\b"));
+                  };
+                  break;
+                case "|":
+                  checkFunction = function(e3) {
+                    return e3.getAttribute(attrName).match(new RegExp("^" + attrValue + "-?"));
+                  };
+                  break;
+                case "^":
+                  checkFunction = function(e3) {
+                    return e3.getAttribute(attrName).indexOf(attrValue) === 0;
+                  };
+                  break;
+                case "$":
+                  checkFunction = function(e3) {
+                    return e3.getAttribute(attrName).lastIndexOf(attrValue) == e3.getAttribute(attrName).length - attrValue.length;
+                  };
+                  break;
+                case "*":
+                  checkFunction = function(e3) {
+                    return e3.getAttribute(attrName).indexOf(attrValue) > -1;
+                  };
+                  break;
+                default:
+                  checkFunction = function(e3) {
+                    return e3.getAttribute(attrName);
+                  };
+              }
+              currentContext = [];
+              currentContextIndex = 0;
+              for (j2 = 0; j2 < found.length; j2++) {
+                if (checkFunction(found[j2])) {
+                  currentContext[currentContextIndex++] = found[j2];
+                }
+              }
+              continue;
+            }
+            tagName = token;
+            found = [];
+            foundCount = 0;
+            for (j2 = 0; j2 < currentContext.length; j2++) {
+              elements = currentContext[j2].getElementsByTagName(tagName);
+              for (k2 = 0; k2 < elements.length; k2++) {
+                found[foundCount++] = elements[k2];
+              }
+            }
+            currentContext = found;
+          }
+          return currentContext;
+        }
+        return function(query) {
+          if (_3.isElement(query)) {
+            return [query];
+          } else if (_3.isObject(query) && !_3.isUndefined(query.length)) {
+            return query;
+          } else {
+            return getElementsBySelector.call(this, query);
+          }
+        };
+      }();
+      _3.info = {
+        campaignParams: function() {
+          var campaign_keywords = "utm_source utm_medium utm_campaign utm_content utm_term".split(" "), kw = "", params = {};
+          _3.each(campaign_keywords, function(kwkey) {
+            kw = _3.getQueryParam(document$1.URL, kwkey);
+            if (kw.length) {
+              params[kwkey] = kw;
+            }
+          });
+          return params;
+        },
+        searchEngine: function(referrer) {
+          if (referrer.search("https?://(.*)google.([^/?]*)") === 0) {
+            return "google";
+          } else if (referrer.search("https?://(.*)bing.com") === 0) {
+            return "bing";
+          } else if (referrer.search("https?://(.*)yahoo.com") === 0) {
+            return "yahoo";
+          } else if (referrer.search("https?://(.*)duckduckgo.com") === 0) {
+            return "duckduckgo";
+          } else {
+            return null;
+          }
+        },
+        searchInfo: function(referrer) {
+          var search = _3.info.searchEngine(referrer), param = search != "yahoo" ? "q" : "p", ret = {};
+          if (search !== null) {
+            ret["$search_engine"] = search;
+            var keyword = _3.getQueryParam(referrer, param);
+            if (keyword.length) {
+              ret["mp_keyword"] = keyword;
+            }
+          }
+          return ret;
+        },
+        browser: function(user_agent, vendor, opera) {
+          vendor = vendor || "";
+          if (opera || _3.includes(user_agent, " OPR/")) {
+            if (_3.includes(user_agent, "Mini")) {
+              return "Opera Mini";
+            }
+            return "Opera";
+          } else if (/(BlackBerry|PlayBook|BB10)/i.test(user_agent)) {
+            return "BlackBerry";
+          } else if (_3.includes(user_agent, "IEMobile") || _3.includes(user_agent, "WPDesktop")) {
+            return "Internet Explorer Mobile";
+          } else if (_3.includes(user_agent, "SamsungBrowser/")) {
+            return "Samsung Internet";
+          } else if (_3.includes(user_agent, "Edge") || _3.includes(user_agent, "Edg/")) {
+            return "Microsoft Edge";
+          } else if (_3.includes(user_agent, "FBIOS")) {
+            return "Facebook Mobile";
+          } else if (_3.includes(user_agent, "Chrome")) {
+            return "Chrome";
+          } else if (_3.includes(user_agent, "CriOS")) {
+            return "Chrome iOS";
+          } else if (_3.includes(user_agent, "UCWEB") || _3.includes(user_agent, "UCBrowser")) {
+            return "UC Browser";
+          } else if (_3.includes(user_agent, "FxiOS")) {
+            return "Firefox iOS";
+          } else if (_3.includes(vendor, "Apple")) {
+            if (_3.includes(user_agent, "Mobile")) {
+              return "Mobile Safari";
+            }
+            return "Safari";
+          } else if (_3.includes(user_agent, "Android")) {
+            return "Android Mobile";
+          } else if (_3.includes(user_agent, "Konqueror")) {
+            return "Konqueror";
+          } else if (_3.includes(user_agent, "Firefox")) {
+            return "Firefox";
+          } else if (_3.includes(user_agent, "MSIE") || _3.includes(user_agent, "Trident/")) {
+            return "Internet Explorer";
+          } else if (_3.includes(user_agent, "Gecko")) {
+            return "Mozilla";
+          } else {
+            return "";
+          }
+        },
+        browserVersion: function(userAgent2, vendor, opera) {
+          var browser = _3.info.browser(userAgent2, vendor, opera);
+          var versionRegexs = {
+            "Internet Explorer Mobile": /rv:(\d+(\.\d+)?)/,
+            "Microsoft Edge": /Edge?\/(\d+(\.\d+)?)/,
+            "Chrome": /Chrome\/(\d+(\.\d+)?)/,
+            "Chrome iOS": /CriOS\/(\d+(\.\d+)?)/,
+            "UC Browser": /(UCBrowser|UCWEB)\/(\d+(\.\d+)?)/,
+            "Safari": /Version\/(\d+(\.\d+)?)/,
+            "Mobile Safari": /Version\/(\d+(\.\d+)?)/,
+            "Opera": /(Opera|OPR)\/(\d+(\.\d+)?)/,
+            "Firefox": /Firefox\/(\d+(\.\d+)?)/,
+            "Firefox iOS": /FxiOS\/(\d+(\.\d+)?)/,
+            "Konqueror": /Konqueror:(\d+(\.\d+)?)/,
+            "BlackBerry": /BlackBerry (\d+(\.\d+)?)/,
+            "Android Mobile": /android\s(\d+(\.\d+)?)/,
+            "Samsung Internet": /SamsungBrowser\/(\d+(\.\d+)?)/,
+            "Internet Explorer": /(rv:|MSIE )(\d+(\.\d+)?)/,
+            "Mozilla": /rv:(\d+(\.\d+)?)/
+          };
+          var regex = versionRegexs[browser];
+          if (regex === void 0) {
+            return null;
+          }
+          var matches = userAgent2.match(regex);
+          if (!matches) {
+            return null;
+          }
+          return parseFloat(matches[matches.length - 2]);
+        },
+        os: function() {
+          var a3 = userAgent;
+          if (/Windows/i.test(a3)) {
+            if (/Phone/.test(a3) || /WPDesktop/.test(a3)) {
+              return "Windows Phone";
+            }
+            return "Windows";
+          } else if (/(iPhone|iPad|iPod)/.test(a3)) {
+            return "iOS";
+          } else if (/Android/.test(a3)) {
+            return "Android";
+          } else if (/(BlackBerry|PlayBook|BB10)/i.test(a3)) {
+            return "BlackBerry";
+          } else if (/Mac/i.test(a3)) {
+            return "Mac OS X";
+          } else if (/Linux/.test(a3)) {
+            return "Linux";
+          } else if (/CrOS/.test(a3)) {
+            return "Chrome OS";
+          } else {
+            return "";
+          }
+        },
+        device: function(user_agent) {
+          if (/Windows Phone/i.test(user_agent) || /WPDesktop/.test(user_agent)) {
+            return "Windows Phone";
+          } else if (/iPad/.test(user_agent)) {
+            return "iPad";
+          } else if (/iPod/.test(user_agent)) {
+            return "iPod Touch";
+          } else if (/iPhone/.test(user_agent)) {
+            return "iPhone";
+          } else if (/(BlackBerry|PlayBook|BB10)/i.test(user_agent)) {
+            return "BlackBerry";
+          } else if (/Android/.test(user_agent)) {
+            return "Android";
+          } else {
+            return "";
+          }
+        },
+        referringDomain: function(referrer) {
+          var split2 = referrer.split("/");
+          if (split2.length >= 3) {
+            return split2[2];
+          }
+          return "";
+        },
+        properties: function() {
+          return _3.extend(_3.strip_empty_properties({
+            "$os": _3.info.os(),
+            "$browser": _3.info.browser(userAgent, navigator2.vendor, windowOpera),
+            "$referrer": document$1.referrer,
+            "$referring_domain": _3.info.referringDomain(document$1.referrer),
+            "$device": _3.info.device(userAgent)
+          }), {
+            "$current_url": window$1.location.href,
+            "$browser_version": _3.info.browserVersion(userAgent, navigator2.vendor, windowOpera),
+            "$screen_height": screen.height,
+            "$screen_width": screen.width,
+            "mp_lib": "web",
+            "$lib_version": Config.LIB_VERSION,
+            "$insert_id": cheap_guid(),
+            "time": _3.timestamp() / 1e3
+          });
+        },
+        people_properties: function() {
+          return _3.extend(_3.strip_empty_properties({
+            "$os": _3.info.os(),
+            "$browser": _3.info.browser(userAgent, navigator2.vendor, windowOpera)
+          }), {
+            "$browser_version": _3.info.browserVersion(userAgent, navigator2.vendor, windowOpera)
+          });
+        },
+        pageviewInfo: function(page) {
+          return _3.strip_empty_properties({
+            "mp_page": page,
+            "mp_referrer": document$1.referrer,
+            "mp_browser": _3.info.browser(userAgent, navigator2.vendor, windowOpera),
+            "mp_platform": _3.info.os()
+          });
+        }
+      };
+      var cheap_guid = function(maxlen) {
+        var guid = Math.random().toString(36).substring(2, 10) + Math.random().toString(36).substring(2, 10);
+        return maxlen ? guid.substring(0, maxlen) : guid;
+      };
+      var SIMPLE_DOMAIN_MATCH_REGEX = /[a-z0-9][a-z0-9-]*\.[a-z]+$/i;
+      var DOMAIN_MATCH_REGEX = /[a-z0-9][a-z0-9-]+\.[a-z.]{2,6}$/i;
+      var extract_domain = function(hostname) {
+        var domain_regex = DOMAIN_MATCH_REGEX;
+        var parts = hostname.split(".");
+        var tld = parts[parts.length - 1];
+        if (tld.length > 4 || tld === "com" || tld === "org") {
+          domain_regex = SIMPLE_DOMAIN_MATCH_REGEX;
+        }
+        var matches = hostname.match(domain_regex);
+        return matches ? matches[0] : "";
+      };
+      var JSONStringify = null;
+      var JSONParse = null;
+      if (typeof JSON !== "undefined") {
+        JSONStringify = JSON.stringify;
+        JSONParse = JSON.parse;
+      }
+      JSONStringify = JSONStringify || _3.JSONEncode;
+      JSONParse = JSONParse || _3.JSONDecode;
+      _3["toArray"] = _3.toArray;
+      _3["isObject"] = _3.isObject;
+      _3["JSONEncode"] = _3.JSONEncode;
+      _3["JSONDecode"] = _3.JSONDecode;
+      _3["isBlockedUA"] = _3.isBlockedUA;
+      _3["isEmptyObject"] = _3.isEmptyObject;
+      _3["info"] = _3.info;
+      _3["info"]["device"] = _3.info.device;
+      _3["info"]["browser"] = _3.info.browser;
+      _3["info"]["browserVersion"] = _3.info.browserVersion;
+      _3["info"]["properties"] = _3.info.properties;
+      var DomTracker = function() {
+      };
+      DomTracker.prototype.create_properties = function() {
+      };
+      DomTracker.prototype.event_handler = function() {
+      };
+      DomTracker.prototype.after_track_handler = function() {
+      };
+      DomTracker.prototype.init = function(mixpanel_instance) {
+        this.mp = mixpanel_instance;
+        return this;
+      };
+      DomTracker.prototype.track = function(query, event_name, properties, user_callback) {
+        var that = this;
+        var elements = _3.dom_query(query);
+        if (elements.length === 0) {
+          console2.error("The DOM query (" + query + ") returned 0 elements");
+          return;
+        }
+        _3.each(elements, function(element) {
+          _3.register_event(element, this.override_event, function(e3) {
+            var options = {};
+            var props = that.create_properties(properties, this);
+            var timeout = that.mp.get_config("track_links_timeout");
+            that.event_handler(e3, this, options);
+            window.setTimeout(that.track_callback(user_callback, props, options, true), timeout);
+            that.mp.track(event_name, props, that.track_callback(user_callback, props, options));
+          });
+        }, this);
+        return true;
+      };
+      DomTracker.prototype.track_callback = function(user_callback, props, options, timeout_occured) {
+        timeout_occured = timeout_occured || false;
+        var that = this;
+        return function() {
+          if (options.callback_fired) {
+            return;
+          }
+          options.callback_fired = true;
+          if (user_callback && user_callback(timeout_occured, props) === false) {
+            return;
+          }
+          that.after_track_handler(props, options, timeout_occured);
+        };
+      };
+      DomTracker.prototype.create_properties = function(properties, element) {
+        var props;
+        if (typeof properties === "function") {
+          props = properties(element);
+        } else {
+          props = _3.extend({}, properties);
+        }
+        return props;
+      };
+      var LinkTracker = function() {
+        this.override_event = "click";
+      };
+      _3.inherit(LinkTracker, DomTracker);
+      LinkTracker.prototype.create_properties = function(properties, element) {
+        var props = LinkTracker.superclass.create_properties.apply(this, arguments);
+        if (element.href) {
+          props["url"] = element.href;
+        }
+        return props;
+      };
+      LinkTracker.prototype.event_handler = function(evt, element, options) {
+        options.new_tab = evt.which === 2 || evt.metaKey || evt.ctrlKey || element.target === "_blank";
+        options.href = element.href;
+        if (!options.new_tab) {
+          evt.preventDefault();
+        }
+      };
+      LinkTracker.prototype.after_track_handler = function(props, options) {
+        if (options.new_tab) {
+          return;
+        }
+        setTimeout(function() {
+          window.location = options.href;
+        }, 0);
+      };
+      var FormTracker = function() {
+        this.override_event = "submit";
+      };
+      _3.inherit(FormTracker, DomTracker);
+      FormTracker.prototype.event_handler = function(evt, element, options) {
+        options.element = element;
+        evt.preventDefault();
+      };
+      FormTracker.prototype.after_track_handler = function(props, options) {
+        setTimeout(function() {
+          options.element.submit();
+        }, 0);
+      };
+      var logger$2 = console_with_prefix("lock");
+      var SharedLock = function(key, options) {
+        options = options || {};
+        this.storageKey = key;
+        this.storage = options.storage || window.localStorage;
+        this.pollIntervalMS = options.pollIntervalMS || 100;
+        this.timeoutMS = options.timeoutMS || 2e3;
+      };
+      SharedLock.prototype.withLock = function(lockedCB, errorCB, pid) {
+        if (!pid && typeof errorCB !== "function") {
+          pid = errorCB;
+          errorCB = null;
+        }
+        var i3 = pid || new Date().getTime() + "|" + Math.random();
+        var startTime = new Date().getTime();
+        var key = this.storageKey;
+        var pollIntervalMS = this.pollIntervalMS;
+        var timeoutMS = this.timeoutMS;
+        var storage = this.storage;
+        var keyX = key + ":X";
+        var keyY = key + ":Y";
+        var keyZ = key + ":Z";
+        var reportError = function(err) {
+          errorCB && errorCB(err);
+        };
+        var delay = function(cb) {
+          if (new Date().getTime() - startTime > timeoutMS) {
+            logger$2.error("Timeout waiting for mutex on " + key + "; clearing lock. [" + i3 + "]");
+            storage.removeItem(keyZ);
+            storage.removeItem(keyY);
+            loop();
+            return;
+          }
+          setTimeout(function() {
+            try {
+              cb();
+            } catch (err) {
+              reportError(err);
+            }
+          }, pollIntervalMS * (Math.random() + 0.1));
+        };
+        var waitFor = function(predicate, cb) {
+          if (predicate()) {
+            cb();
+          } else {
+            delay(function() {
+              waitFor(predicate, cb);
+            });
+          }
+        };
+        var getSetY = function() {
+          var valY = storage.getItem(keyY);
+          if (valY && valY !== i3) {
+            return false;
+          } else {
+            storage.setItem(keyY, i3);
+            if (storage.getItem(keyY) === i3) {
+              return true;
+            } else {
+              if (!localStorageSupported(storage, true)) {
+                throw new Error("localStorage support dropped while acquiring lock");
+              }
+              return false;
+            }
+          }
+        };
+        var loop = function() {
+          storage.setItem(keyX, i3);
+          waitFor(getSetY, function() {
+            if (storage.getItem(keyX) === i3) {
+              criticalSection();
+              return;
+            }
+            delay(function() {
+              if (storage.getItem(keyY) !== i3) {
+                loop();
+                return;
+              }
+              waitFor(function() {
+                return !storage.getItem(keyZ);
+              }, criticalSection);
+            });
+          });
+        };
+        var criticalSection = function() {
+          storage.setItem(keyZ, "1");
+          try {
+            lockedCB();
+          } finally {
+            storage.removeItem(keyZ);
+            if (storage.getItem(keyY) === i3) {
+              storage.removeItem(keyY);
+            }
+            if (storage.getItem(keyX) === i3) {
+              storage.removeItem(keyX);
+            }
+          }
+        };
+        try {
+          if (localStorageSupported(storage, true)) {
+            loop();
+          } else {
+            throw new Error("localStorage support check failed");
+          }
+        } catch (err) {
+          reportError(err);
+        }
+      };
+      var logger$1 = console_with_prefix("batch");
+      var RequestQueue = function(storageKey, options) {
+        options = options || {};
+        this.storageKey = storageKey;
+        this.storage = options.storage || window.localStorage;
+        this.reportError = options.errorReporter || _3.bind(logger$1.error, logger$1);
+        this.lock = new SharedLock(storageKey, { storage: this.storage });
+        this.pid = options.pid || null;
+        this.memQueue = [];
+      };
+      RequestQueue.prototype.enqueue = function(item, flushInterval, cb) {
+        var queueEntry = {
+          "id": cheap_guid(),
+          "flushAfter": new Date().getTime() + flushInterval * 2,
+          "payload": item
+        };
+        this.lock.withLock(_3.bind(function lockAcquired() {
+          var succeeded;
+          try {
+            var storedQueue = this.readFromStorage();
+            storedQueue.push(queueEntry);
+            succeeded = this.saveToStorage(storedQueue);
+            if (succeeded) {
+              this.memQueue.push(queueEntry);
+            }
+          } catch (err) {
+            this.reportError("Error enqueueing item", item);
+            succeeded = false;
+          }
+          if (cb) {
+            cb(succeeded);
+          }
+        }, this), _3.bind(function lockFailure(err) {
+          this.reportError("Error acquiring storage lock", err);
+          if (cb) {
+            cb(false);
+          }
+        }, this), this.pid);
+      };
+      RequestQueue.prototype.fillBatch = function(batchSize) {
+        var batch2 = this.memQueue.slice(0, batchSize);
+        if (batch2.length < batchSize) {
+          var storedQueue = this.readFromStorage();
+          if (storedQueue.length) {
+            var idsInBatch = {};
+            _3.each(batch2, function(item2) {
+              idsInBatch[item2["id"]] = true;
+            });
+            for (var i3 = 0; i3 < storedQueue.length; i3++) {
+              var item = storedQueue[i3];
+              if (new Date().getTime() > item["flushAfter"] && !idsInBatch[item["id"]]) {
+                item.orphaned = true;
+                batch2.push(item);
+                if (batch2.length >= batchSize) {
+                  break;
+                }
+              }
+            }
+          }
+        }
+        return batch2;
+      };
+      var filterOutIDsAndInvalid = function(items, idSet) {
+        var filteredItems = [];
+        _3.each(items, function(item) {
+          if (item["id"] && !idSet[item["id"]]) {
+            filteredItems.push(item);
+          }
+        });
+        return filteredItems;
+      };
+      RequestQueue.prototype.removeItemsByID = function(ids, cb) {
+        var idSet = {};
+        _3.each(ids, function(id) {
+          idSet[id] = true;
+        });
+        this.memQueue = filterOutIDsAndInvalid(this.memQueue, idSet);
+        var removeFromStorage = _3.bind(function() {
+          var succeeded;
+          try {
+            var storedQueue = this.readFromStorage();
+            storedQueue = filterOutIDsAndInvalid(storedQueue, idSet);
+            succeeded = this.saveToStorage(storedQueue);
+            if (succeeded) {
+              storedQueue = this.readFromStorage();
+              for (var i3 = 0; i3 < storedQueue.length; i3++) {
+                var item = storedQueue[i3];
+                if (item["id"] && !!idSet[item["id"]]) {
+                  this.reportError("Item not removed from storage");
+                  return false;
+                }
+              }
+            }
+          } catch (err) {
+            this.reportError("Error removing items", ids);
+            succeeded = false;
+          }
+          return succeeded;
+        }, this);
+        this.lock.withLock(function lockAcquired() {
+          var succeeded = removeFromStorage();
+          if (cb) {
+            cb(succeeded);
+          }
+        }, _3.bind(function lockFailure(err) {
+          var succeeded = false;
+          this.reportError("Error acquiring storage lock", err);
+          if (!localStorageSupported(this.storage, true)) {
+            succeeded = removeFromStorage();
+            if (!succeeded) {
+              try {
+                this.storage.removeItem(this.storageKey);
+              } catch (err2) {
+                this.reportError("Error clearing queue", err2);
+              }
+            }
+          }
+          if (cb) {
+            cb(succeeded);
+          }
+        }, this), this.pid);
+      };
+      var updatePayloads = function(existingItems, itemsToUpdate) {
+        var newItems = [];
+        _3.each(existingItems, function(item) {
+          var id = item["id"];
+          if (id in itemsToUpdate) {
+            var newPayload = itemsToUpdate[id];
+            if (newPayload !== null) {
+              item["payload"] = newPayload;
+              newItems.push(item);
+            }
+          } else {
+            newItems.push(item);
+          }
+        });
+        return newItems;
+      };
+      RequestQueue.prototype.updatePayloads = function(itemsToUpdate, cb) {
+        this.memQueue = updatePayloads(this.memQueue, itemsToUpdate);
+        this.lock.withLock(_3.bind(function lockAcquired() {
+          var succeeded;
+          try {
+            var storedQueue = this.readFromStorage();
+            storedQueue = updatePayloads(storedQueue, itemsToUpdate);
+            succeeded = this.saveToStorage(storedQueue);
+          } catch (err) {
+            this.reportError("Error updating items", itemsToUpdate);
+            succeeded = false;
+          }
+          if (cb) {
+            cb(succeeded);
+          }
+        }, this), _3.bind(function lockFailure(err) {
+          this.reportError("Error acquiring storage lock", err);
+          if (cb) {
+            cb(false);
+          }
+        }, this), this.pid);
+      };
+      RequestQueue.prototype.readFromStorage = function() {
+        var storageEntry;
+        try {
+          storageEntry = this.storage.getItem(this.storageKey);
+          if (storageEntry) {
+            storageEntry = JSONParse(storageEntry);
+            if (!_3.isArray(storageEntry)) {
+              this.reportError("Invalid storage entry:", storageEntry);
+              storageEntry = null;
+            }
+          }
+        } catch (err) {
+          this.reportError("Error retrieving queue", err);
+          storageEntry = null;
+        }
+        return storageEntry || [];
+      };
+      RequestQueue.prototype.saveToStorage = function(queue) {
+        try {
+          this.storage.setItem(this.storageKey, JSONStringify(queue));
+          return true;
+        } catch (err) {
+          this.reportError("Error saving queue", err);
+          return false;
+        }
+      };
+      RequestQueue.prototype.clear = function() {
+        this.memQueue = [];
+        this.storage.removeItem(this.storageKey);
+      };
+      var MAX_RETRY_INTERVAL_MS = 10 * 60 * 1e3;
+      var logger = console_with_prefix("batch");
+      var RequestBatcher = function(storageKey, options) {
+        this.errorReporter = options.errorReporter;
+        this.queue = new RequestQueue(storageKey, {
+          errorReporter: _3.bind(this.reportError, this),
+          storage: options.storage
+        });
+        this.libConfig = options.libConfig;
+        this.sendRequest = options.sendRequestFunc;
+        this.beforeSendHook = options.beforeSendHook;
+        this.stopAllBatching = options.stopAllBatchingFunc;
+        this.batchSize = this.libConfig["batch_size"];
+        this.flushInterval = this.libConfig["batch_flush_interval_ms"];
+        this.stopped = !this.libConfig["batch_autostart"];
+        this.consecutiveRemovalFailures = 0;
+      };
+      RequestBatcher.prototype.enqueue = function(item, cb) {
+        this.queue.enqueue(item, this.flushInterval, cb);
+      };
+      RequestBatcher.prototype.start = function() {
+        this.stopped = false;
+        this.consecutiveRemovalFailures = 0;
+        this.flush();
+      };
+      RequestBatcher.prototype.stop = function() {
+        this.stopped = true;
+        if (this.timeoutID) {
+          clearTimeout(this.timeoutID);
+          this.timeoutID = null;
+        }
+      };
+      RequestBatcher.prototype.clear = function() {
+        this.queue.clear();
+      };
+      RequestBatcher.prototype.resetBatchSize = function() {
+        this.batchSize = this.libConfig["batch_size"];
+      };
+      RequestBatcher.prototype.resetFlush = function() {
+        this.scheduleFlush(this.libConfig["batch_flush_interval_ms"]);
+      };
+      RequestBatcher.prototype.scheduleFlush = function(flushMS) {
+        this.flushInterval = flushMS;
+        if (!this.stopped) {
+          this.timeoutID = setTimeout(_3.bind(this.flush, this), this.flushInterval);
+        }
+      };
+      RequestBatcher.prototype.flush = function(options) {
+        try {
+          if (this.requestInProgress) {
+            logger.log("Flush: Request already in progress");
+            return;
+          }
+          options = options || {};
+          var timeoutMS = this.libConfig["batch_request_timeout_ms"];
+          var startTime = new Date().getTime();
+          var currentBatchSize = this.batchSize;
+          var batch2 = this.queue.fillBatch(currentBatchSize);
+          var dataForRequest = [];
+          var transformedItems = {};
+          _3.each(batch2, function(item) {
+            var payload = item["payload"];
+            if (this.beforeSendHook && !item.orphaned) {
+              payload = this.beforeSendHook(payload);
+            }
+            if (payload) {
+              dataForRequest.push(payload);
+            }
+            transformedItems[item["id"]] = payload;
+          }, this);
+          if (dataForRequest.length < 1) {
+            this.resetFlush();
+            return;
+          }
+          this.requestInProgress = true;
+          var batchSendCallback = _3.bind(function(res) {
+            this.requestInProgress = false;
+            try {
+              var removeItemsFromQueue = false;
+              if (options.unloading) {
+                this.queue.updatePayloads(transformedItems);
+              } else if (_3.isObject(res) && res.error === "timeout" && new Date().getTime() - startTime >= timeoutMS) {
+                this.reportError("Network timeout; retrying");
+                this.flush();
+              } else if (_3.isObject(res) && res.xhr_req && (res.xhr_req["status"] >= 500 || res.xhr_req["status"] === 429 || res.error === "timeout")) {
+                var retryMS = this.flushInterval * 2;
+                var headers = res.xhr_req["responseHeaders"];
+                if (headers) {
+                  var retryAfter = headers["Retry-After"];
+                  if (retryAfter) {
+                    retryMS = parseInt(retryAfter, 10) * 1e3 || retryMS;
+                  }
+                }
+                retryMS = Math.min(MAX_RETRY_INTERVAL_MS, retryMS);
+                this.reportError("Error; retry in " + retryMS + " ms");
+                this.scheduleFlush(retryMS);
+              } else if (_3.isObject(res) && res.xhr_req && res.xhr_req["status"] === 413) {
+                if (batch2.length > 1) {
+                  var halvedBatchSize = Math.max(1, Math.floor(currentBatchSize / 2));
+                  this.batchSize = Math.min(this.batchSize, halvedBatchSize, batch2.length - 1);
+                  this.reportError("413 response; reducing batch size to " + this.batchSize);
+                  this.resetFlush();
+                } else {
+                  this.reportError("Single-event request too large; dropping", batch2);
+                  this.resetBatchSize();
+                  removeItemsFromQueue = true;
+                }
+              } else {
+                removeItemsFromQueue = true;
+              }
+              if (removeItemsFromQueue) {
+                this.queue.removeItemsByID(_3.map(batch2, function(item) {
+                  return item["id"];
+                }), _3.bind(function(succeeded) {
+                  if (succeeded) {
+                    this.consecutiveRemovalFailures = 0;
+                    this.flush();
+                  } else {
+                    this.reportError("Failed to remove items from queue");
+                    if (++this.consecutiveRemovalFailures > 5) {
+                      this.reportError("Too many queue failures; disabling batching system.");
+                      this.stopAllBatching();
+                    } else {
+                      this.resetFlush();
+                    }
+                  }
+                }, this));
+              }
+            } catch (err) {
+              this.reportError("Error handling API response", err);
+              this.resetFlush();
+            }
+          }, this);
+          var requestOptions = {
+            method: "POST",
+            verbose: true,
+            ignore_json_errors: true,
+            timeout_ms: timeoutMS
+          };
+          if (options.unloading) {
+            requestOptions.transport = "sendBeacon";
+          }
+          logger.log("MIXPANEL REQUEST:", dataForRequest);
+          this.sendRequest(dataForRequest, requestOptions, batchSendCallback);
+        } catch (err) {
+          this.reportError("Error flushing request queue", err);
+          this.resetFlush();
+        }
+      };
+      RequestBatcher.prototype.reportError = function(msg, err) {
+        logger.error.apply(logger.error, arguments);
+        if (this.errorReporter) {
+          try {
+            if (!(err instanceof Error)) {
+              err = new Error(msg);
+            }
+            this.errorReporter(msg, err);
+          } catch (err2) {
+            logger.error(err2);
+          }
+        }
+      };
+      var GDPR_DEFAULT_PERSISTENCE_PREFIX = "__mp_opt_in_out_";
+      function optIn(token, options) {
+        _optInOut(true, token, options);
+      }
+      function optOut(token, options) {
+        _optInOut(false, token, options);
+      }
+      function hasOptedIn(token, options) {
+        return _getStorageValue(token, options) === "1";
+      }
+      function hasOptedOut(token, options) {
+        if (_hasDoNotTrackFlagOn(options)) {
+          console2.warn('This browser has "Do Not Track" enabled. This will prevent the Mixpanel SDK from sending any data. To ignore the "Do Not Track" browser setting, initialize the Mixpanel instance with the config "ignore_dnt: true"');
+          return true;
+        }
+        var optedOut = _getStorageValue(token, options) === "0";
+        if (optedOut) {
+          console2.warn("You are opted out of Mixpanel tracking. This will prevent the Mixpanel SDK from sending any data.");
+        }
+        return optedOut;
+      }
+      function addOptOutCheckMixpanelLib(method) {
+        return _addOptOutCheck(method, function(name) {
+          return this.get_config(name);
+        });
+      }
+      function addOptOutCheckMixpanelPeople(method) {
+        return _addOptOutCheck(method, function(name) {
+          return this._get_config(name);
+        });
+      }
+      function addOptOutCheckMixpanelGroup(method) {
+        return _addOptOutCheck(method, function(name) {
+          return this._get_config(name);
+        });
+      }
+      function clearOptInOut(token, options) {
+        options = options || {};
+        _getStorage(options).remove(_getStorageKey(token, options), !!options.crossSubdomainCookie, options.cookieDomain);
+      }
+      function _getStorage(options) {
+        options = options || {};
+        return options.persistenceType === "localStorage" ? _3.localStorage : _3.cookie;
+      }
+      function _getStorageKey(token, options) {
+        options = options || {};
+        return (options.persistencePrefix || GDPR_DEFAULT_PERSISTENCE_PREFIX) + token;
+      }
+      function _getStorageValue(token, options) {
+        return _getStorage(options).get(_getStorageKey(token, options));
+      }
+      function _hasDoNotTrackFlagOn(options) {
+        if (options && options.ignoreDnt) {
+          return false;
+        }
+        var win = options && options.window || window$1;
+        var nav = win["navigator"] || {};
+        var hasDntOn = false;
+        _3.each([
+          nav["doNotTrack"],
+          nav["msDoNotTrack"],
+          win["doNotTrack"]
+        ], function(dntValue) {
+          if (_3.includes([true, 1, "1", "yes"], dntValue)) {
+            hasDntOn = true;
+          }
+        });
+        return hasDntOn;
+      }
+      function _optInOut(optValue, token, options) {
+        if (!_3.isString(token) || !token.length) {
+          console2.error("gdpr." + (optValue ? "optIn" : "optOut") + " called with an invalid token");
+          return;
+        }
+        options = options || {};
+        _getStorage(options).set(_getStorageKey(token, options), optValue ? 1 : 0, _3.isNumber(options.cookieExpiration) ? options.cookieExpiration : null, !!options.crossSubdomainCookie, !!options.secureCookie, !!options.crossSiteCookie, options.cookieDomain);
+        if (options.track && optValue) {
+          options.track(options.trackEventName || "$opt_in", options.trackProperties, {
+            "send_immediately": true
+          });
+        }
+      }
+      function _addOptOutCheck(method, getConfigValue) {
+        return function() {
+          var optedOut = false;
+          try {
+            var token = getConfigValue.call(this, "token");
+            var ignoreDnt = getConfigValue.call(this, "ignore_dnt");
+            var persistenceType = getConfigValue.call(this, "opt_out_tracking_persistence_type");
+            var persistencePrefix = getConfigValue.call(this, "opt_out_tracking_cookie_prefix");
+            var win = getConfigValue.call(this, "window");
+            if (token) {
+              optedOut = hasOptedOut(token, {
+                ignoreDnt,
+                persistenceType,
+                persistencePrefix,
+                window: win
+              });
+            }
+          } catch (err) {
+            console2.error("Unexpected error when checking tracking opt-out status: " + err);
+          }
+          if (!optedOut) {
+            return method.apply(this, arguments);
+          }
+          var callback = arguments[arguments.length - 1];
+          if (typeof callback === "function") {
+            callback(0);
+          }
+          return;
+        };
+      }
+      var SET_ACTION = "$set";
+      var SET_ONCE_ACTION = "$set_once";
+      var UNSET_ACTION = "$unset";
+      var ADD_ACTION = "$add";
+      var APPEND_ACTION = "$append";
+      var UNION_ACTION = "$union";
+      var REMOVE_ACTION = "$remove";
+      var DELETE_ACTION = "$delete";
+      var apiActions = {
+        set_action: function(prop3, to) {
+          var data = {};
+          var $set = {};
+          if (_3.isObject(prop3)) {
+            _3.each(prop3, function(v2, k2) {
+              if (!this._is_reserved_property(k2)) {
+                $set[k2] = v2;
+              }
+            }, this);
+          } else {
+            $set[prop3] = to;
+          }
+          data[SET_ACTION] = $set;
+          return data;
+        },
+        unset_action: function(prop3) {
+          var data = {};
+          var $unset = [];
+          if (!_3.isArray(prop3)) {
+            prop3 = [prop3];
+          }
+          _3.each(prop3, function(k2) {
+            if (!this._is_reserved_property(k2)) {
+              $unset.push(k2);
+            }
+          }, this);
+          data[UNSET_ACTION] = $unset;
+          return data;
+        },
+        set_once_action: function(prop3, to) {
+          var data = {};
+          var $set_once = {};
+          if (_3.isObject(prop3)) {
+            _3.each(prop3, function(v2, k2) {
+              if (!this._is_reserved_property(k2)) {
+                $set_once[k2] = v2;
+              }
+            }, this);
+          } else {
+            $set_once[prop3] = to;
+          }
+          data[SET_ONCE_ACTION] = $set_once;
+          return data;
+        },
+        union_action: function(list_name, values) {
+          var data = {};
+          var $union = {};
+          if (_3.isObject(list_name)) {
+            _3.each(list_name, function(v2, k2) {
+              if (!this._is_reserved_property(k2)) {
+                $union[k2] = _3.isArray(v2) ? v2 : [v2];
+              }
+            }, this);
+          } else {
+            $union[list_name] = _3.isArray(values) ? values : [values];
+          }
+          data[UNION_ACTION] = $union;
+          return data;
+        },
+        append_action: function(list_name, value) {
+          var data = {};
+          var $append = {};
+          if (_3.isObject(list_name)) {
+            _3.each(list_name, function(v2, k2) {
+              if (!this._is_reserved_property(k2)) {
+                $append[k2] = v2;
+              }
+            }, this);
+          } else {
+            $append[list_name] = value;
+          }
+          data[APPEND_ACTION] = $append;
+          return data;
+        },
+        remove_action: function(list_name, value) {
+          var data = {};
+          var $remove = {};
+          if (_3.isObject(list_name)) {
+            _3.each(list_name, function(v2, k2) {
+              if (!this._is_reserved_property(k2)) {
+                $remove[k2] = v2;
+              }
+            }, this);
+          } else {
+            $remove[list_name] = value;
+          }
+          data[REMOVE_ACTION] = $remove;
+          return data;
+        },
+        delete_action: function() {
+          var data = {};
+          data[DELETE_ACTION] = "";
+          return data;
+        }
+      };
+      var MixpanelGroup = function() {
+      };
+      _3.extend(MixpanelGroup.prototype, apiActions);
+      MixpanelGroup.prototype._init = function(mixpanel_instance, group_key, group_id) {
+        this._mixpanel = mixpanel_instance;
+        this._group_key = group_key;
+        this._group_id = group_id;
+      };
+      MixpanelGroup.prototype.set = addOptOutCheckMixpanelGroup(function(prop3, to, callback) {
+        var data = this.set_action(prop3, to);
+        if (_3.isObject(prop3)) {
+          callback = to;
+        }
+        return this._send_request(data, callback);
+      });
+      MixpanelGroup.prototype.set_once = addOptOutCheckMixpanelGroup(function(prop3, to, callback) {
+        var data = this.set_once_action(prop3, to);
+        if (_3.isObject(prop3)) {
+          callback = to;
+        }
+        return this._send_request(data, callback);
+      });
+      MixpanelGroup.prototype.unset = addOptOutCheckMixpanelGroup(function(prop3, callback) {
+        var data = this.unset_action(prop3);
+        return this._send_request(data, callback);
+      });
+      MixpanelGroup.prototype.union = addOptOutCheckMixpanelGroup(function(list_name, values, callback) {
+        if (_3.isObject(list_name)) {
+          callback = values;
+        }
+        var data = this.union_action(list_name, values);
+        return this._send_request(data, callback);
+      });
+      MixpanelGroup.prototype["delete"] = addOptOutCheckMixpanelGroup(function(callback) {
+        var data = this.delete_action();
+        return this._send_request(data, callback);
+      });
+      MixpanelGroup.prototype.remove = addOptOutCheckMixpanelGroup(function(list_name, value, callback) {
+        var data = this.remove_action(list_name, value);
+        return this._send_request(data, callback);
+      });
+      MixpanelGroup.prototype._send_request = function(data, callback) {
+        data["$group_key"] = this._group_key;
+        data["$group_id"] = this._group_id;
+        data["$token"] = this._get_config("token");
+        var date_encoded_data = _3.encodeDates(data);
+        return this._mixpanel._track_or_batch({
+          type: "groups",
+          data: date_encoded_data,
+          endpoint: this._get_config("api_host") + "/groups/",
+          batcher: this._mixpanel.request_batchers.groups
+        }, callback);
+      };
+      MixpanelGroup.prototype._is_reserved_property = function(prop3) {
+        return prop3 === "$group_key" || prop3 === "$group_id";
+      };
+      MixpanelGroup.prototype._get_config = function(conf) {
+        return this._mixpanel.get_config(conf);
+      };
+      MixpanelGroup.prototype.toString = function() {
+        return this._mixpanel.toString() + ".group." + this._group_key + "." + this._group_id;
+      };
+      MixpanelGroup.prototype["remove"] = MixpanelGroup.prototype.remove;
+      MixpanelGroup.prototype["set"] = MixpanelGroup.prototype.set;
+      MixpanelGroup.prototype["set_once"] = MixpanelGroup.prototype.set_once;
+      MixpanelGroup.prototype["union"] = MixpanelGroup.prototype.union;
+      MixpanelGroup.prototype["unset"] = MixpanelGroup.prototype.unset;
+      MixpanelGroup.prototype["toString"] = MixpanelGroup.prototype.toString;
+      var MixpanelPeople = function() {
+      };
+      _3.extend(MixpanelPeople.prototype, apiActions);
+      MixpanelPeople.prototype._init = function(mixpanel_instance) {
+        this._mixpanel = mixpanel_instance;
+      };
+      MixpanelPeople.prototype.set = addOptOutCheckMixpanelPeople(function(prop3, to, callback) {
+        var data = this.set_action(prop3, to);
+        if (_3.isObject(prop3)) {
+          callback = to;
+        }
+        if (this._get_config("save_referrer")) {
+          this._mixpanel["persistence"].update_referrer_info(document.referrer);
+        }
+        data[SET_ACTION] = _3.extend({}, _3.info.people_properties(), this._mixpanel["persistence"].get_referrer_info(), data[SET_ACTION]);
+        return this._send_request(data, callback);
+      });
+      MixpanelPeople.prototype.set_once = addOptOutCheckMixpanelPeople(function(prop3, to, callback) {
+        var data = this.set_once_action(prop3, to);
+        if (_3.isObject(prop3)) {
+          callback = to;
+        }
+        return this._send_request(data, callback);
+      });
+      MixpanelPeople.prototype.unset = addOptOutCheckMixpanelPeople(function(prop3, callback) {
+        var data = this.unset_action(prop3);
+        return this._send_request(data, callback);
+      });
+      MixpanelPeople.prototype.increment = addOptOutCheckMixpanelPeople(function(prop3, by, callback) {
+        var data = {};
+        var $add = {};
+        if (_3.isObject(prop3)) {
+          _3.each(prop3, function(v2, k2) {
+            if (!this._is_reserved_property(k2)) {
+              if (isNaN(parseFloat(v2))) {
+                console2.error("Invalid increment value passed to mixpanel.people.increment - must be a number");
+                return;
+              } else {
+                $add[k2] = v2;
+              }
+            }
+          }, this);
+          callback = by;
+        } else {
+          if (_3.isUndefined(by)) {
+            by = 1;
+          }
+          $add[prop3] = by;
+        }
+        data[ADD_ACTION] = $add;
+        return this._send_request(data, callback);
+      });
+      MixpanelPeople.prototype.append = addOptOutCheckMixpanelPeople(function(list_name, value, callback) {
+        if (_3.isObject(list_name)) {
+          callback = value;
+        }
+        var data = this.append_action(list_name, value);
+        return this._send_request(data, callback);
+      });
+      MixpanelPeople.prototype.remove = addOptOutCheckMixpanelPeople(function(list_name, value, callback) {
+        if (_3.isObject(list_name)) {
+          callback = value;
+        }
+        var data = this.remove_action(list_name, value);
+        return this._send_request(data, callback);
+      });
+      MixpanelPeople.prototype.union = addOptOutCheckMixpanelPeople(function(list_name, values, callback) {
+        if (_3.isObject(list_name)) {
+          callback = values;
+        }
+        var data = this.union_action(list_name, values);
+        return this._send_request(data, callback);
+      });
+      MixpanelPeople.prototype.track_charge = addOptOutCheckMixpanelPeople(function(amount, properties, callback) {
+        if (!_3.isNumber(amount)) {
+          amount = parseFloat(amount);
+          if (isNaN(amount)) {
+            console2.error("Invalid value passed to mixpanel.people.track_charge - must be a number");
+            return;
+          }
+        }
+        return this.append("$transactions", _3.extend({
+          "$amount": amount
+        }, properties), callback);
+      });
+      MixpanelPeople.prototype.clear_charges = function(callback) {
+        return this.set("$transactions", [], callback);
+      };
+      MixpanelPeople.prototype.delete_user = function() {
+        if (!this._identify_called()) {
+          console2.error("mixpanel.people.delete_user() requires you to call identify() first");
+          return;
+        }
+        var data = { "$delete": this._mixpanel.get_distinct_id() };
+        return this._send_request(data);
+      };
+      MixpanelPeople.prototype.toString = function() {
+        return this._mixpanel.toString() + ".people";
+      };
+      MixpanelPeople.prototype._send_request = function(data, callback) {
+        data["$token"] = this._get_config("token");
+        data["$distinct_id"] = this._mixpanel.get_distinct_id();
+        var device_id = this._mixpanel.get_property("$device_id");
+        var user_id = this._mixpanel.get_property("$user_id");
+        var had_persisted_distinct_id = this._mixpanel.get_property("$had_persisted_distinct_id");
+        if (device_id) {
+          data["$device_id"] = device_id;
+        }
+        if (user_id) {
+          data["$user_id"] = user_id;
+        }
+        if (had_persisted_distinct_id) {
+          data["$had_persisted_distinct_id"] = had_persisted_distinct_id;
+        }
+        var date_encoded_data = _3.encodeDates(data);
+        if (!this._identify_called()) {
+          this._enqueue(data);
+          if (!_3.isUndefined(callback)) {
+            if (this._get_config("verbose")) {
+              callback({ status: -1, error: null });
+            } else {
+              callback(-1);
+            }
+          }
+          return _3.truncate(date_encoded_data, 255);
+        }
+        return this._mixpanel._track_or_batch({
+          type: "people",
+          data: date_encoded_data,
+          endpoint: this._get_config("api_host") + "/engage/",
+          batcher: this._mixpanel.request_batchers.people
+        }, callback);
+      };
+      MixpanelPeople.prototype._get_config = function(conf_var) {
+        return this._mixpanel.get_config(conf_var);
+      };
+      MixpanelPeople.prototype._identify_called = function() {
+        return this._mixpanel._flags.identify_called === true;
+      };
+      MixpanelPeople.prototype._enqueue = function(data) {
+        if (SET_ACTION in data) {
+          this._mixpanel["persistence"]._add_to_people_queue(SET_ACTION, data);
+        } else if (SET_ONCE_ACTION in data) {
+          this._mixpanel["persistence"]._add_to_people_queue(SET_ONCE_ACTION, data);
+        } else if (UNSET_ACTION in data) {
+          this._mixpanel["persistence"]._add_to_people_queue(UNSET_ACTION, data);
+        } else if (ADD_ACTION in data) {
+          this._mixpanel["persistence"]._add_to_people_queue(ADD_ACTION, data);
+        } else if (APPEND_ACTION in data) {
+          this._mixpanel["persistence"]._add_to_people_queue(APPEND_ACTION, data);
+        } else if (REMOVE_ACTION in data) {
+          this._mixpanel["persistence"]._add_to_people_queue(REMOVE_ACTION, data);
+        } else if (UNION_ACTION in data) {
+          this._mixpanel["persistence"]._add_to_people_queue(UNION_ACTION, data);
+        } else {
+          console2.error("Invalid call to _enqueue():", data);
+        }
+      };
+      MixpanelPeople.prototype._flush_one_queue = function(action, action_method, callback, queue_to_params_fn) {
+        var _this = this;
+        var queued_data = _3.extend({}, this._mixpanel["persistence"]._get_queue(action));
+        var action_params = queued_data;
+        if (!_3.isUndefined(queued_data) && _3.isObject(queued_data) && !_3.isEmptyObject(queued_data)) {
+          _this._mixpanel["persistence"]._pop_from_people_queue(action, queued_data);
+          if (queue_to_params_fn) {
+            action_params = queue_to_params_fn(queued_data);
+          }
+          action_method.call(_this, action_params, function(response, data) {
+            if (response === 0) {
+              _this._mixpanel["persistence"]._add_to_people_queue(action, queued_data);
+            }
+            if (!_3.isUndefined(callback)) {
+              callback(response, data);
+            }
+          });
+        }
+      };
+      MixpanelPeople.prototype._flush = function(_set_callback, _add_callback, _append_callback, _set_once_callback, _union_callback, _unset_callback, _remove_callback) {
+        var _this = this;
+        var $append_queue = this._mixpanel["persistence"]._get_queue(APPEND_ACTION);
+        var $remove_queue = this._mixpanel["persistence"]._get_queue(REMOVE_ACTION);
+        this._flush_one_queue(SET_ACTION, this.set, _set_callback);
+        this._flush_one_queue(SET_ONCE_ACTION, this.set_once, _set_once_callback);
+        this._flush_one_queue(UNSET_ACTION, this.unset, _unset_callback, function(queue) {
+          return _3.keys(queue);
+        });
+        this._flush_one_queue(ADD_ACTION, this.increment, _add_callback);
+        this._flush_one_queue(UNION_ACTION, this.union, _union_callback);
+        if (!_3.isUndefined($append_queue) && _3.isArray($append_queue) && $append_queue.length) {
+          var $append_item;
+          var append_callback = function(response, data) {
+            if (response === 0) {
+              _this._mixpanel["persistence"]._add_to_people_queue(APPEND_ACTION, $append_item);
+            }
+            if (!_3.isUndefined(_append_callback)) {
+              _append_callback(response, data);
+            }
+          };
+          for (var i3 = $append_queue.length - 1; i3 >= 0; i3--) {
+            $append_item = $append_queue.pop();
+            if (!_3.isEmptyObject($append_item)) {
+              _this.append($append_item, append_callback);
+            }
+          }
+          _this._mixpanel["persistence"].save();
+        }
+        if (!_3.isUndefined($remove_queue) && _3.isArray($remove_queue) && $remove_queue.length) {
+          var $remove_item;
+          var remove_callback = function(response, data) {
+            if (response === 0) {
+              _this._mixpanel["persistence"]._add_to_people_queue(REMOVE_ACTION, $remove_item);
+            }
+            if (!_3.isUndefined(_remove_callback)) {
+              _remove_callback(response, data);
+            }
+          };
+          for (var j2 = $remove_queue.length - 1; j2 >= 0; j2--) {
+            $remove_item = $remove_queue.pop();
+            if (!_3.isEmptyObject($remove_item)) {
+              _this.remove($remove_item, remove_callback);
+            }
+          }
+          _this._mixpanel["persistence"].save();
+        }
+      };
+      MixpanelPeople.prototype._is_reserved_property = function(prop3) {
+        return prop3 === "$distinct_id" || prop3 === "$token" || prop3 === "$device_id" || prop3 === "$user_id" || prop3 === "$had_persisted_distinct_id";
+      };
+      MixpanelPeople.prototype["set"] = MixpanelPeople.prototype.set;
+      MixpanelPeople.prototype["set_once"] = MixpanelPeople.prototype.set_once;
+      MixpanelPeople.prototype["unset"] = MixpanelPeople.prototype.unset;
+      MixpanelPeople.prototype["increment"] = MixpanelPeople.prototype.increment;
+      MixpanelPeople.prototype["append"] = MixpanelPeople.prototype.append;
+      MixpanelPeople.prototype["remove"] = MixpanelPeople.prototype.remove;
+      MixpanelPeople.prototype["union"] = MixpanelPeople.prototype.union;
+      MixpanelPeople.prototype["track_charge"] = MixpanelPeople.prototype.track_charge;
+      MixpanelPeople.prototype["clear_charges"] = MixpanelPeople.prototype.clear_charges;
+      MixpanelPeople.prototype["delete_user"] = MixpanelPeople.prototype.delete_user;
+      MixpanelPeople.prototype["toString"] = MixpanelPeople.prototype.toString;
+      var SET_QUEUE_KEY = "__mps";
+      var SET_ONCE_QUEUE_KEY = "__mpso";
+      var UNSET_QUEUE_KEY = "__mpus";
+      var ADD_QUEUE_KEY = "__mpa";
+      var APPEND_QUEUE_KEY = "__mpap";
+      var REMOVE_QUEUE_KEY = "__mpr";
+      var UNION_QUEUE_KEY = "__mpu";
+      var PEOPLE_DISTINCT_ID_KEY = "$people_distinct_id";
+      var ALIAS_ID_KEY = "__alias";
+      var EVENT_TIMERS_KEY = "__timers";
+      var RESERVED_PROPERTIES = [
+        SET_QUEUE_KEY,
+        SET_ONCE_QUEUE_KEY,
+        UNSET_QUEUE_KEY,
+        ADD_QUEUE_KEY,
+        APPEND_QUEUE_KEY,
+        REMOVE_QUEUE_KEY,
+        UNION_QUEUE_KEY,
+        PEOPLE_DISTINCT_ID_KEY,
+        ALIAS_ID_KEY,
+        EVENT_TIMERS_KEY
+      ];
+      var MixpanelPersistence = function(config) {
+        this["props"] = {};
+        this.campaign_params_saved = false;
+        if (config["persistence_name"]) {
+          this.name = "mp_" + config["persistence_name"];
+        } else {
+          this.name = "mp_" + config["token"] + "_mixpanel";
+        }
+        var storage_type = config["persistence"];
+        if (storage_type !== "cookie" && storage_type !== "localStorage") {
+          console2.critical("Unknown persistence type " + storage_type + "; falling back to cookie");
+          storage_type = config["persistence"] = "cookie";
+        }
+        if (storage_type === "localStorage" && _3.localStorage.is_supported()) {
+          this.storage = _3.localStorage;
+        } else {
+          this.storage = _3.cookie;
+        }
+        this.load();
+        this.update_config(config);
+        this.upgrade(config);
+        this.save();
+      };
+      MixpanelPersistence.prototype.properties = function() {
+        var p3 = {};
+        _3.each(this["props"], function(v2, k2) {
+          if (!_3.include(RESERVED_PROPERTIES, k2)) {
+            p3[k2] = v2;
+          }
+        });
+        return p3;
+      };
+      MixpanelPersistence.prototype.load = function() {
+        if (this.disabled) {
+          return;
+        }
+        var entry = this.storage.parse(this.name);
+        if (entry) {
+          this["props"] = _3.extend({}, entry);
+        }
+      };
+      MixpanelPersistence.prototype.upgrade = function(config) {
+        var upgrade_from_old_lib = config["upgrade"], old_cookie_name, old_cookie;
+        if (upgrade_from_old_lib) {
+          old_cookie_name = "mp_super_properties";
+          if (typeof upgrade_from_old_lib === "string") {
+            old_cookie_name = upgrade_from_old_lib;
+          }
+          old_cookie = this.storage.parse(old_cookie_name);
+          this.storage.remove(old_cookie_name);
+          this.storage.remove(old_cookie_name, true);
+          if (old_cookie) {
+            this["props"] = _3.extend(this["props"], old_cookie["all"], old_cookie["events"]);
+          }
+        }
+        if (!config["cookie_name"] && config["name"] !== "mixpanel") {
+          old_cookie_name = "mp_" + config["token"] + "_" + config["name"];
+          old_cookie = this.storage.parse(old_cookie_name);
+          if (old_cookie) {
+            this.storage.remove(old_cookie_name);
+            this.storage.remove(old_cookie_name, true);
+            this.register_once(old_cookie);
+          }
+        }
+        if (this.storage === _3.localStorage) {
+          old_cookie = _3.cookie.parse(this.name);
+          _3.cookie.remove(this.name);
+          _3.cookie.remove(this.name, true);
+          if (old_cookie) {
+            this.register_once(old_cookie);
+          }
+        }
+      };
+      MixpanelPersistence.prototype.save = function() {
+        if (this.disabled) {
+          return;
+        }
+        this.storage.set(this.name, _3.JSONEncode(this["props"]), this.expire_days, this.cross_subdomain, this.secure, this.cross_site, this.cookie_domain);
+      };
+      MixpanelPersistence.prototype.remove = function() {
+        this.storage.remove(this.name, false, this.cookie_domain);
+        this.storage.remove(this.name, true, this.cookie_domain);
+      };
+      MixpanelPersistence.prototype.clear = function() {
+        this.remove();
+        this["props"] = {};
+      };
+      MixpanelPersistence.prototype.register_once = function(props, default_value, days) {
+        if (_3.isObject(props)) {
+          if (typeof default_value === "undefined") {
+            default_value = "None";
+          }
+          this.expire_days = typeof days === "undefined" ? this.default_expiry : days;
+          _3.each(props, function(val, prop3) {
+            if (!this["props"].hasOwnProperty(prop3) || this["props"][prop3] === default_value) {
+              this["props"][prop3] = val;
+            }
+          }, this);
+          this.save();
+          return true;
+        }
+        return false;
+      };
+      MixpanelPersistence.prototype.register = function(props, days) {
+        if (_3.isObject(props)) {
+          this.expire_days = typeof days === "undefined" ? this.default_expiry : days;
+          _3.extend(this["props"], props);
+          this.save();
+          return true;
+        }
+        return false;
+      };
+      MixpanelPersistence.prototype.unregister = function(prop3) {
+        if (prop3 in this["props"]) {
+          delete this["props"][prop3];
+          this.save();
+        }
+      };
+      MixpanelPersistence.prototype.update_campaign_params = function() {
+        if (!this.campaign_params_saved) {
+          this.register_once(_3.info.campaignParams());
+          this.campaign_params_saved = true;
+        }
+      };
+      MixpanelPersistence.prototype.update_search_keyword = function(referrer) {
+        this.register(_3.info.searchInfo(referrer));
+      };
+      MixpanelPersistence.prototype.update_referrer_info = function(referrer) {
+        this.register_once({
+          "$initial_referrer": referrer || "$direct",
+          "$initial_referring_domain": _3.info.referringDomain(referrer) || "$direct"
+        }, "");
+      };
+      MixpanelPersistence.prototype.get_referrer_info = function() {
+        return _3.strip_empty_properties({
+          "$initial_referrer": this["props"]["$initial_referrer"],
+          "$initial_referring_domain": this["props"]["$initial_referring_domain"]
+        });
+      };
+      MixpanelPersistence.prototype.safe_merge = function(props) {
+        _3.each(this["props"], function(val, prop3) {
+          if (!(prop3 in props)) {
+            props[prop3] = val;
+          }
+        });
+        return props;
+      };
+      MixpanelPersistence.prototype.update_config = function(config) {
+        this.default_expiry = this.expire_days = config["cookie_expiration"];
+        this.set_disabled(config["disable_persistence"]);
+        this.set_cookie_domain(config["cookie_domain"]);
+        this.set_cross_site(config["cross_site_cookie"]);
+        this.set_cross_subdomain(config["cross_subdomain_cookie"]);
+        this.set_secure(config["secure_cookie"]);
+      };
+      MixpanelPersistence.prototype.set_disabled = function(disabled) {
+        this.disabled = disabled;
+        if (this.disabled) {
+          this.remove();
+        } else {
+          this.save();
+        }
+      };
+      MixpanelPersistence.prototype.set_cookie_domain = function(cookie_domain) {
+        if (cookie_domain !== this.cookie_domain) {
+          this.remove();
+          this.cookie_domain = cookie_domain;
+          this.save();
+        }
+      };
+      MixpanelPersistence.prototype.set_cross_site = function(cross_site) {
+        if (cross_site !== this.cross_site) {
+          this.cross_site = cross_site;
+          this.remove();
+          this.save();
+        }
+      };
+      MixpanelPersistence.prototype.set_cross_subdomain = function(cross_subdomain) {
+        if (cross_subdomain !== this.cross_subdomain) {
+          this.cross_subdomain = cross_subdomain;
+          this.remove();
+          this.save();
+        }
+      };
+      MixpanelPersistence.prototype.get_cross_subdomain = function() {
+        return this.cross_subdomain;
+      };
+      MixpanelPersistence.prototype.set_secure = function(secure) {
+        if (secure !== this.secure) {
+          this.secure = secure ? true : false;
+          this.remove();
+          this.save();
+        }
+      };
+      MixpanelPersistence.prototype._add_to_people_queue = function(queue, data) {
+        var q_key = this._get_queue_key(queue), q_data = data[queue], set_q = this._get_or_create_queue(SET_ACTION), set_once_q = this._get_or_create_queue(SET_ONCE_ACTION), unset_q = this._get_or_create_queue(UNSET_ACTION), add_q = this._get_or_create_queue(ADD_ACTION), union_q = this._get_or_create_queue(UNION_ACTION), remove_q = this._get_or_create_queue(REMOVE_ACTION, []), append_q = this._get_or_create_queue(APPEND_ACTION, []);
+        if (q_key === SET_QUEUE_KEY) {
+          _3.extend(set_q, q_data);
+          this._pop_from_people_queue(ADD_ACTION, q_data);
+          this._pop_from_people_queue(UNION_ACTION, q_data);
+          this._pop_from_people_queue(UNSET_ACTION, q_data);
+        } else if (q_key === SET_ONCE_QUEUE_KEY) {
+          _3.each(q_data, function(v2, k2) {
+            if (!(k2 in set_once_q)) {
+              set_once_q[k2] = v2;
+            }
+          });
+          this._pop_from_people_queue(UNSET_ACTION, q_data);
+        } else if (q_key === UNSET_QUEUE_KEY) {
+          _3.each(q_data, function(prop3) {
+            _3.each([set_q, set_once_q, add_q, union_q], function(enqueued_obj) {
+              if (prop3 in enqueued_obj) {
+                delete enqueued_obj[prop3];
+              }
+            });
+            _3.each(append_q, function(append_obj) {
+              if (prop3 in append_obj) {
+                delete append_obj[prop3];
+              }
+            });
+            unset_q[prop3] = true;
+          });
+        } else if (q_key === ADD_QUEUE_KEY) {
+          _3.each(q_data, function(v2, k2) {
+            if (k2 in set_q) {
+              set_q[k2] += v2;
+            } else {
+              if (!(k2 in add_q)) {
+                add_q[k2] = 0;
+              }
+              add_q[k2] += v2;
+            }
+          }, this);
+          this._pop_from_people_queue(UNSET_ACTION, q_data);
+        } else if (q_key === UNION_QUEUE_KEY) {
+          _3.each(q_data, function(v2, k2) {
+            if (_3.isArray(v2)) {
+              if (!(k2 in union_q)) {
+                union_q[k2] = [];
+              }
+              union_q[k2] = union_q[k2].concat(v2);
+            }
+          });
+          this._pop_from_people_queue(UNSET_ACTION, q_data);
+        } else if (q_key === REMOVE_QUEUE_KEY) {
+          remove_q.push(q_data);
+          this._pop_from_people_queue(APPEND_ACTION, q_data);
+        } else if (q_key === APPEND_QUEUE_KEY) {
+          append_q.push(q_data);
+          this._pop_from_people_queue(UNSET_ACTION, q_data);
+        }
+        console2.log("MIXPANEL PEOPLE REQUEST (QUEUED, PENDING IDENTIFY):");
+        console2.log(data);
+        this.save();
+      };
+      MixpanelPersistence.prototype._pop_from_people_queue = function(queue, data) {
+        var q2 = this._get_queue(queue);
+        if (!_3.isUndefined(q2)) {
+          _3.each(data, function(v2, k2) {
+            if (queue === APPEND_ACTION || queue === REMOVE_ACTION) {
+              _3.each(q2, function(queued_action) {
+                if (queued_action[k2] === v2) {
+                  delete queued_action[k2];
+                }
+              });
+            } else {
+              delete q2[k2];
+            }
+          }, this);
+          this.save();
+        }
+      };
+      MixpanelPersistence.prototype._get_queue_key = function(queue) {
+        if (queue === SET_ACTION) {
+          return SET_QUEUE_KEY;
+        } else if (queue === SET_ONCE_ACTION) {
+          return SET_ONCE_QUEUE_KEY;
+        } else if (queue === UNSET_ACTION) {
+          return UNSET_QUEUE_KEY;
+        } else if (queue === ADD_ACTION) {
+          return ADD_QUEUE_KEY;
+        } else if (queue === APPEND_ACTION) {
+          return APPEND_QUEUE_KEY;
+        } else if (queue === REMOVE_ACTION) {
+          return REMOVE_QUEUE_KEY;
+        } else if (queue === UNION_ACTION) {
+          return UNION_QUEUE_KEY;
+        } else {
+          console2.error("Invalid queue:", queue);
+        }
+      };
+      MixpanelPersistence.prototype._get_queue = function(queue) {
+        return this["props"][this._get_queue_key(queue)];
+      };
+      MixpanelPersistence.prototype._get_or_create_queue = function(queue, default_val) {
+        var key = this._get_queue_key(queue);
+        default_val = _3.isUndefined(default_val) ? {} : default_val;
+        return this["props"][key] || (this["props"][key] = default_val);
+      };
+      MixpanelPersistence.prototype.set_event_timer = function(event_name, timestamp) {
+        var timers = this["props"][EVENT_TIMERS_KEY] || {};
+        timers[event_name] = timestamp;
+        this["props"][EVENT_TIMERS_KEY] = timers;
+        this.save();
+      };
+      MixpanelPersistence.prototype.remove_event_timer = function(event_name) {
+        var timers = this["props"][EVENT_TIMERS_KEY] || {};
+        var timestamp = timers[event_name];
+        if (!_3.isUndefined(timestamp)) {
+          delete this["props"][EVENT_TIMERS_KEY][event_name];
+          this.save();
+        }
+        return timestamp;
+      };
+      var init_type;
+      var mixpanel_master;
+      var INIT_MODULE = 0;
+      var INIT_SNIPPET = 1;
+      var IDENTITY_FUNC = function(x2) {
+        return x2;
+      };
+      var NOOP_FUNC = function() {
+      };
+      var PRIMARY_INSTANCE_NAME = "mixpanel";
+      var PAYLOAD_TYPE_BASE64 = "base64";
+      var PAYLOAD_TYPE_JSON = "json";
+      var USE_XHR = window$1.XMLHttpRequest && "withCredentials" in new XMLHttpRequest();
+      var ENQUEUE_REQUESTS = !USE_XHR && userAgent.indexOf("MSIE") === -1 && userAgent.indexOf("Mozilla") === -1;
+      var sendBeacon = null;
+      if (navigator2["sendBeacon"]) {
+        sendBeacon = function() {
+          return navigator2["sendBeacon"].apply(navigator2, arguments);
+        };
+      }
+      var DEFAULT_CONFIG = {
+        "api_host": "https://api-js.mixpanel.com",
+        "api_method": "POST",
+        "api_transport": "XHR",
+        "api_payload_format": PAYLOAD_TYPE_BASE64,
+        "app_host": "https://mixpanel.com",
+        "cdn": "https://cdn.mxpnl.com",
+        "cross_site_cookie": false,
+        "cross_subdomain_cookie": true,
+        "error_reporter": NOOP_FUNC,
+        "persistence": "cookie",
+        "persistence_name": "",
+        "cookie_domain": "",
+        "cookie_name": "",
+        "loaded": NOOP_FUNC,
+        "store_google": true,
+        "save_referrer": true,
+        "test": false,
+        "verbose": false,
+        "img": false,
+        "debug": false,
+        "track_links_timeout": 300,
+        "cookie_expiration": 365,
+        "upgrade": false,
+        "disable_persistence": false,
+        "disable_cookie": false,
+        "secure_cookie": false,
+        "ip": true,
+        "opt_out_tracking_by_default": false,
+        "opt_out_persistence_by_default": false,
+        "opt_out_tracking_persistence_type": "localStorage",
+        "opt_out_tracking_cookie_prefix": null,
+        "property_blacklist": [],
+        "xhr_headers": {},
+        "ignore_dnt": false,
+        "batch_requests": true,
+        "batch_size": 50,
+        "batch_flush_interval_ms": 5e3,
+        "batch_request_timeout_ms": 9e4,
+        "batch_autostart": true,
+        "hooks": {}
+      };
+      var DOM_LOADED = false;
+      var MixpanelLib = function() {
+      };
+      var create_mplib = function(token, config, name) {
+        var instance, target = name === PRIMARY_INSTANCE_NAME ? mixpanel_master : mixpanel_master[name];
+        if (target && init_type === INIT_MODULE) {
+          instance = target;
+        } else {
+          if (target && !_3.isArray(target)) {
+            console2.error("You have already initialized " + name);
+            return;
+          }
+          instance = new MixpanelLib();
+        }
+        instance._cached_groups = {};
+        instance._init(token, config, name);
+        instance["people"] = new MixpanelPeople();
+        instance["people"]._init(instance);
+        Config.DEBUG = Config.DEBUG || instance.get_config("debug");
+        if (!_3.isUndefined(target) && _3.isArray(target)) {
+          instance._execute_array.call(instance["people"], target["people"]);
+          instance._execute_array(target);
+        }
+        return instance;
+      };
+      MixpanelLib.prototype.init = function(token, config, name) {
+        if (_3.isUndefined(name)) {
+          this.report_error("You must name your new library: init(token, config, name)");
+          return;
+        }
+        if (name === PRIMARY_INSTANCE_NAME) {
+          this.report_error("You must initialize the main mixpanel object right after you include the Mixpanel js snippet");
+          return;
+        }
+        var instance = create_mplib(token, config, name);
+        mixpanel_master[name] = instance;
+        instance._loaded();
+        return instance;
+      };
+      MixpanelLib.prototype._init = function(token, config, name) {
+        config = config || {};
+        this["__loaded"] = true;
+        this["config"] = {};
+        var variable_features = {};
+        if (!("api_payload_format" in config)) {
+          var api_host = config["api_host"] || DEFAULT_CONFIG["api_host"];
+          if (api_host.match(/\.mixpanel\.com$/)) {
+            variable_features["api_payload_format"] = PAYLOAD_TYPE_JSON;
+          }
+        }
+        this.set_config(_3.extend({}, DEFAULT_CONFIG, variable_features, config, {
+          "name": name,
+          "token": token,
+          "callback_fn": (name === PRIMARY_INSTANCE_NAME ? name : PRIMARY_INSTANCE_NAME + "." + name) + "._jsc"
+        }));
+        this["_jsc"] = NOOP_FUNC;
+        this.__dom_loaded_queue = [];
+        this.__request_queue = [];
+        this.__disabled_events = [];
+        this._flags = {
+          "disable_all_events": false,
+          "identify_called": false
+        };
+        this.request_batchers = {};
+        this._batch_requests = this.get_config("batch_requests");
+        if (this._batch_requests) {
+          if (!_3.localStorage.is_supported(true) || !USE_XHR) {
+            this._batch_requests = false;
+            console2.log("Turning off Mixpanel request-queueing; needs XHR and localStorage support");
+          } else {
+            this.init_batchers();
+            if (sendBeacon && window$1.addEventListener) {
+              var flush_on_unload = _3.bind(function() {
+                if (!this.request_batchers.events.stopped) {
+                  this.request_batchers.events.flush({ unloading: true });
+                }
+              }, this);
+              window$1.addEventListener("pagehide", function(ev) {
+                if (ev["persisted"]) {
+                  flush_on_unload();
+                }
+              });
+              window$1.addEventListener("visibilitychange", function() {
+                if (document$1["visibilityState"] === "hidden") {
+                  flush_on_unload();
+                }
+              });
+            }
+          }
+        }
+        this["persistence"] = this["cookie"] = new MixpanelPersistence(this["config"]);
+        this.unpersisted_superprops = {};
+        this._gdpr_init();
+        var uuid = _3.UUID();
+        if (!this.get_distinct_id()) {
+          this.register_once({
+            "distinct_id": uuid,
+            "$device_id": uuid
+          }, "");
+        }
+      };
+      MixpanelLib.prototype._loaded = function() {
+        this.get_config("loaded")(this);
+        this._set_default_superprops();
+      };
+      MixpanelLib.prototype._set_default_superprops = function() {
+        this["persistence"].update_search_keyword(document$1.referrer);
+        if (this.get_config("store_google")) {
+          this["persistence"].update_campaign_params();
+        }
+        if (this.get_config("save_referrer")) {
+          this["persistence"].update_referrer_info(document$1.referrer);
+        }
+      };
+      MixpanelLib.prototype._dom_loaded = function() {
+        _3.each(this.__dom_loaded_queue, function(item) {
+          this._track_dom.apply(this, item);
+        }, this);
+        if (!this.has_opted_out_tracking()) {
+          _3.each(this.__request_queue, function(item) {
+            this._send_request.apply(this, item);
+          }, this);
+        }
+        delete this.__dom_loaded_queue;
+        delete this.__request_queue;
+      };
+      MixpanelLib.prototype._track_dom = function(DomClass, args) {
+        if (this.get_config("img")) {
+          this.report_error("You can't use DOM tracking functions with img = true.");
+          return false;
+        }
+        if (!DOM_LOADED) {
+          this.__dom_loaded_queue.push([DomClass, args]);
+          return false;
+        }
+        var dt = new DomClass().init(this);
+        return dt.track.apply(dt, args);
+      };
+      MixpanelLib.prototype._prepare_callback = function(callback, data) {
+        if (_3.isUndefined(callback)) {
+          return null;
+        }
+        if (USE_XHR) {
+          var callback_function = function(response) {
+            callback(response, data);
+          };
+          return callback_function;
+        } else {
+          var jsc = this["_jsc"];
+          var randomized_cb = "" + Math.floor(Math.random() * 1e8);
+          var callback_string = this.get_config("callback_fn") + "[" + randomized_cb + "]";
+          jsc[randomized_cb] = function(response) {
+            delete jsc[randomized_cb];
+            callback(response, data);
+          };
+          return callback_string;
+        }
+      };
+      MixpanelLib.prototype._send_request = function(url, data, options, callback) {
+        var succeeded = true;
+        if (ENQUEUE_REQUESTS) {
+          this.__request_queue.push(arguments);
+          return succeeded;
+        }
+        var DEFAULT_OPTIONS = {
+          method: this.get_config("api_method"),
+          transport: this.get_config("api_transport"),
+          verbose: this.get_config("verbose")
+        };
+        var body_data = null;
+        if (!callback && (_3.isFunction(options) || typeof options === "string")) {
+          callback = options;
+          options = null;
+        }
+        options = _3.extend(DEFAULT_OPTIONS, options || {});
+        if (!USE_XHR) {
+          options.method = "GET";
+        }
+        var use_post = options.method === "POST";
+        var use_sendBeacon = sendBeacon && use_post && options.transport.toLowerCase() === "sendbeacon";
+        var verbose_mode = options.verbose;
+        if (data["verbose"]) {
+          verbose_mode = true;
+        }
+        if (this.get_config("test")) {
+          data["test"] = 1;
+        }
+        if (verbose_mode) {
+          data["verbose"] = 1;
+        }
+        if (this.get_config("img")) {
+          data["img"] = 1;
+        }
+        if (!USE_XHR) {
+          if (callback) {
+            data["callback"] = callback;
+          } else if (verbose_mode || this.get_config("test")) {
+            data["callback"] = "(function(){})";
+          }
+        }
+        data["ip"] = this.get_config("ip") ? 1 : 0;
+        data["_"] = new Date().getTime().toString();
+        if (use_post) {
+          body_data = "data=" + encodeURIComponent(data["data"]);
+          delete data["data"];
+        }
+        url += "?" + _3.HTTPBuildQuery(data);
+        var lib = this;
+        if ("img" in data) {
+          var img = document$1.createElement("img");
+          img.src = url;
+          document$1.body.appendChild(img);
+        } else if (use_sendBeacon) {
+          try {
+            succeeded = sendBeacon(url, body_data);
+          } catch (e3) {
+            lib.report_error(e3);
+            succeeded = false;
+          }
+          try {
+            if (callback) {
+              callback(succeeded ? 1 : 0);
+            }
+          } catch (e3) {
+            lib.report_error(e3);
+          }
+        } else if (USE_XHR) {
+          try {
+            var req = new XMLHttpRequest();
+            req.open(options.method, url, true);
+            var headers = this.get_config("xhr_headers");
+            if (use_post) {
+              headers["Content-Type"] = "application/x-www-form-urlencoded";
+            }
+            _3.each(headers, function(headerValue, headerName) {
+              req.setRequestHeader(headerName, headerValue);
+            });
+            if (options.timeout_ms && typeof req.timeout !== "undefined") {
+              req.timeout = options.timeout_ms;
+              var start_time = new Date().getTime();
+            }
+            req.withCredentials = true;
+            req.onreadystatechange = function() {
+              if (req.readyState === 4) {
+                if (req.status === 200) {
+                  if (callback) {
+                    if (verbose_mode) {
+                      var response;
+                      try {
+                        response = _3.JSONDecode(req.responseText);
+                      } catch (e3) {
+                        lib.report_error(e3);
+                        if (options.ignore_json_errors) {
+                          response = req.responseText;
+                        } else {
+                          return;
+                        }
+                      }
+                      callback(response);
+                    } else {
+                      callback(Number(req.responseText));
+                    }
+                  }
+                } else {
+                  var error;
+                  if (req.timeout && !req.status && new Date().getTime() - start_time >= req.timeout) {
+                    error = "timeout";
+                  } else {
+                    error = "Bad HTTP status: " + req.status + " " + req.statusText;
+                  }
+                  lib.report_error(error);
+                  if (callback) {
+                    if (verbose_mode) {
+                      callback({ status: 0, error, xhr_req: req });
+                    } else {
+                      callback(0);
+                    }
+                  }
+                }
+              }
+            };
+            req.send(body_data);
+          } catch (e3) {
+            lib.report_error(e3);
+            succeeded = false;
+          }
+        } else {
+          var script = document$1.createElement("script");
+          script.type = "text/javascript";
+          script.async = true;
+          script.defer = true;
+          script.src = url;
+          var s3 = document$1.getElementsByTagName("script")[0];
+          s3.parentNode.insertBefore(script, s3);
+        }
+        return succeeded;
+      };
+      MixpanelLib.prototype._execute_array = function(array) {
+        var fn_name, alias_calls = [], other_calls = [], tracking_calls = [];
+        _3.each(array, function(item) {
+          if (item) {
+            fn_name = item[0];
+            if (_3.isArray(fn_name)) {
+              tracking_calls.push(item);
+            } else if (typeof item === "function") {
+              item.call(this);
+            } else if (_3.isArray(item) && fn_name === "alias") {
+              alias_calls.push(item);
+            } else if (_3.isArray(item) && fn_name.indexOf("track") !== -1 && typeof this[fn_name] === "function") {
+              tracking_calls.push(item);
+            } else {
+              other_calls.push(item);
+            }
+          }
+        }, this);
+        var execute = function(calls, context) {
+          _3.each(calls, function(item) {
+            if (_3.isArray(item[0])) {
+              var caller = context;
+              _3.each(item, function(call) {
+                caller = caller[call[0]].apply(caller, call.slice(1));
+              });
+            } else {
+              this[item[0]].apply(this, item.slice(1));
+            }
+          }, context);
+        };
+        execute(alias_calls, this);
+        execute(other_calls, this);
+        execute(tracking_calls, this);
+      };
+      MixpanelLib.prototype.are_batchers_initialized = function() {
+        return !!this.request_batchers.events;
+      };
+      MixpanelLib.prototype.init_batchers = function() {
+        var token = this.get_config("token");
+        if (!this.are_batchers_initialized()) {
+          var batcher_for = _3.bind(function(attrs) {
+            return new RequestBatcher("__mpq_" + token + attrs.queue_suffix, {
+              libConfig: this["config"],
+              sendRequestFunc: _3.bind(function(data, options, cb) {
+                this._send_request(this.get_config("api_host") + attrs.endpoint, this._encode_data_for_request(data), options, this._prepare_callback(cb, data));
+              }, this),
+              beforeSendHook: _3.bind(function(item) {
+                return this._run_hook("before_send_" + attrs.type, item);
+              }, this),
+              errorReporter: this.get_config("error_reporter"),
+              stopAllBatchingFunc: _3.bind(this.stop_batch_senders, this)
+            });
+          }, this);
+          this.request_batchers = {
+            events: batcher_for({ type: "events", endpoint: "/track/", queue_suffix: "_ev" }),
+            people: batcher_for({ type: "people", endpoint: "/engage/", queue_suffix: "_pp" }),
+            groups: batcher_for({ type: "groups", endpoint: "/groups/", queue_suffix: "_gr" })
+          };
+        }
+        if (this.get_config("batch_autostart")) {
+          this.start_batch_senders();
+        }
+      };
+      MixpanelLib.prototype.start_batch_senders = function() {
+        if (this.are_batchers_initialized()) {
+          this._batch_requests = true;
+          _3.each(this.request_batchers, function(batcher) {
+            batcher.start();
+          });
+        }
+      };
+      MixpanelLib.prototype.stop_batch_senders = function() {
+        this._batch_requests = false;
+        _3.each(this.request_batchers, function(batcher) {
+          batcher.stop();
+          batcher.clear();
+        });
+      };
+      MixpanelLib.prototype.push = function(item) {
+        this._execute_array([item]);
+      };
+      MixpanelLib.prototype.disable = function(events) {
+        if (typeof events === "undefined") {
+          this._flags.disable_all_events = true;
+        } else {
+          this.__disabled_events = this.__disabled_events.concat(events);
+        }
+      };
+      MixpanelLib.prototype._encode_data_for_request = function(data) {
+        var encoded_data = _3.JSONEncode(data);
+        if (this.get_config("api_payload_format") === PAYLOAD_TYPE_BASE64) {
+          encoded_data = _3.base64Encode(encoded_data);
+        }
+        return { "data": encoded_data };
+      };
+      MixpanelLib.prototype._track_or_batch = function(options, callback) {
+        var truncated_data = _3.truncate(options.data, 255);
+        var endpoint = options.endpoint;
+        var batcher = options.batcher;
+        var should_send_immediately = options.should_send_immediately;
+        var send_request_options = options.send_request_options || {};
+        callback = callback || NOOP_FUNC;
+        var request_enqueued_or_initiated = true;
+        var send_request_immediately = _3.bind(function() {
+          if (!send_request_options.skip_hooks) {
+            truncated_data = this._run_hook("before_send_" + options.type, truncated_data);
+          }
+          if (truncated_data) {
+            console2.log("MIXPANEL REQUEST:");
+            console2.log(truncated_data);
+            return this._send_request(endpoint, this._encode_data_for_request(truncated_data), send_request_options, this._prepare_callback(callback, truncated_data));
+          } else {
+            return null;
+          }
+        }, this);
+        if (this._batch_requests && !should_send_immediately) {
+          batcher.enqueue(truncated_data, function(succeeded) {
+            if (succeeded) {
+              callback(1, truncated_data);
+            } else {
+              send_request_immediately();
+            }
+          });
+        } else {
+          request_enqueued_or_initiated = send_request_immediately();
+        }
+        return request_enqueued_or_initiated && truncated_data;
+      };
+      MixpanelLib.prototype.track = addOptOutCheckMixpanelLib(function(event_name, properties, options, callback) {
+        if (!callback && typeof options === "function") {
+          callback = options;
+          options = null;
+        }
+        options = options || {};
+        var transport = options["transport"];
+        if (transport) {
+          options.transport = transport;
+        }
+        var should_send_immediately = options["send_immediately"];
+        if (typeof callback !== "function") {
+          callback = NOOP_FUNC;
+        }
+        if (_3.isUndefined(event_name)) {
+          this.report_error("No event name provided to mixpanel.track");
+          return;
+        }
+        if (this._event_is_disabled(event_name)) {
+          callback(0);
+          return;
+        }
+        properties = properties || {};
+        properties["token"] = this.get_config("token");
+        var start_timestamp = this["persistence"].remove_event_timer(event_name);
+        if (!_3.isUndefined(start_timestamp)) {
+          var duration_in_ms = new Date().getTime() - start_timestamp;
+          properties["$duration"] = parseFloat((duration_in_ms / 1e3).toFixed(3));
+        }
+        this._set_default_superprops();
+        properties = _3.extend({}, _3.info.properties(), this["persistence"].properties(), this.unpersisted_superprops, properties);
+        var property_blacklist = this.get_config("property_blacklist");
+        if (_3.isArray(property_blacklist)) {
+          _3.each(property_blacklist, function(blacklisted_prop) {
+            delete properties[blacklisted_prop];
+          });
+        } else {
+          this.report_error("Invalid value for property_blacklist config: " + property_blacklist);
+        }
+        var data = {
+          "event": event_name,
+          "properties": properties
+        };
+        var ret = this._track_or_batch({
+          type: "events",
+          data,
+          endpoint: this.get_config("api_host") + "/track/",
+          batcher: this.request_batchers.events,
+          should_send_immediately,
+          send_request_options: options
+        }, callback);
+        return ret;
+      });
+      MixpanelLib.prototype.set_group = addOptOutCheckMixpanelLib(function(group_key, group_ids, callback) {
+        if (!_3.isArray(group_ids)) {
+          group_ids = [group_ids];
+        }
+        var prop3 = {};
+        prop3[group_key] = group_ids;
+        this.register(prop3);
+        return this["people"].set(group_key, group_ids, callback);
+      });
+      MixpanelLib.prototype.add_group = addOptOutCheckMixpanelLib(function(group_key, group_id, callback) {
+        var old_values = this.get_property(group_key);
+        if (old_values === void 0) {
+          var prop3 = {};
+          prop3[group_key] = [group_id];
+          this.register(prop3);
+        } else {
+          if (old_values.indexOf(group_id) === -1) {
+            old_values.push(group_id);
+            this.register(prop3);
+          }
+        }
+        return this["people"].union(group_key, group_id, callback);
+      });
+      MixpanelLib.prototype.remove_group = addOptOutCheckMixpanelLib(function(group_key, group_id, callback) {
+        var old_value = this.get_property(group_key);
+        if (old_value !== void 0) {
+          var idx = old_value.indexOf(group_id);
+          if (idx > -1) {
+            old_value.splice(idx, 1);
+            this.register({ group_key: old_value });
+          }
+          if (old_value.length === 0) {
+            this.unregister(group_key);
+          }
+        }
+        return this["people"].remove(group_key, group_id, callback);
+      });
+      MixpanelLib.prototype.track_with_groups = addOptOutCheckMixpanelLib(function(event_name, properties, groups, callback) {
+        var tracking_props = _3.extend({}, properties || {});
+        _3.each(groups, function(v2, k2) {
+          if (v2 !== null && v2 !== void 0) {
+            tracking_props[k2] = v2;
+          }
+        });
+        return this.track(event_name, tracking_props, callback);
+      });
+      MixpanelLib.prototype._create_map_key = function(group_key, group_id) {
+        return group_key + "_" + JSON.stringify(group_id);
+      };
+      MixpanelLib.prototype._remove_group_from_cache = function(group_key, group_id) {
+        delete this._cached_groups[this._create_map_key(group_key, group_id)];
+      };
+      MixpanelLib.prototype.get_group = function(group_key, group_id) {
+        var map_key = this._create_map_key(group_key, group_id);
+        var group = this._cached_groups[map_key];
+        if (group === void 0 || group._group_key !== group_key || group._group_id !== group_id) {
+          group = new MixpanelGroup();
+          group._init(this, group_key, group_id);
+          this._cached_groups[map_key] = group;
+        }
+        return group;
+      };
+      MixpanelLib.prototype.track_pageview = function(page) {
+        if (_3.isUndefined(page)) {
+          page = document$1.location.href;
+        }
+        this.track("mp_page_view", _3.info.pageviewInfo(page));
+      };
+      MixpanelLib.prototype.track_links = function() {
+        return this._track_dom.call(this, LinkTracker, arguments);
+      };
+      MixpanelLib.prototype.track_forms = function() {
+        return this._track_dom.call(this, FormTracker, arguments);
+      };
+      MixpanelLib.prototype.time_event = function(event_name) {
+        if (_3.isUndefined(event_name)) {
+          this.report_error("No event name provided to mixpanel.time_event");
+          return;
+        }
+        if (this._event_is_disabled(event_name)) {
+          return;
+        }
+        this["persistence"].set_event_timer(event_name, new Date().getTime());
+      };
+      var REGISTER_DEFAULTS = {
+        "persistent": true
+      };
+      var options_for_register = function(days_or_options) {
+        var options;
+        if (_3.isObject(days_or_options)) {
+          options = days_or_options;
+        } else if (!_3.isUndefined(days_or_options)) {
+          options = { "days": days_or_options };
+        } else {
+          options = {};
+        }
+        return _3.extend({}, REGISTER_DEFAULTS, options);
+      };
+      MixpanelLib.prototype.register = function(props, days_or_options) {
+        var options = options_for_register(days_or_options);
+        if (options["persistent"]) {
+          this["persistence"].register(props, options["days"]);
+        } else {
+          _3.extend(this.unpersisted_superprops, props);
+        }
+      };
+      MixpanelLib.prototype.register_once = function(props, default_value, days_or_options) {
+        var options = options_for_register(days_or_options);
+        if (options["persistent"]) {
+          this["persistence"].register_once(props, default_value, options["days"]);
+        } else {
+          if (typeof default_value === "undefined") {
+            default_value = "None";
+          }
+          _3.each(props, function(val, prop3) {
+            if (!this.unpersisted_superprops.hasOwnProperty(prop3) || this.unpersisted_superprops[prop3] === default_value) {
+              this.unpersisted_superprops[prop3] = val;
+            }
+          }, this);
+        }
+      };
+      MixpanelLib.prototype.unregister = function(property, options) {
+        options = options_for_register(options);
+        if (options["persistent"]) {
+          this["persistence"].unregister(property);
+        } else {
+          delete this.unpersisted_superprops[property];
+        }
+      };
+      MixpanelLib.prototype._register_single = function(prop3, value) {
+        var props = {};
+        props[prop3] = value;
+        this.register(props);
+      };
+      MixpanelLib.prototype.identify = function(new_distinct_id, _set_callback, _add_callback, _append_callback, _set_once_callback, _union_callback, _unset_callback, _remove_callback) {
+        var previous_distinct_id = this.get_distinct_id();
+        this.register({ "$user_id": new_distinct_id });
+        if (!this.get_property("$device_id")) {
+          var device_id = previous_distinct_id;
+          this.register_once({
+            "$had_persisted_distinct_id": true,
+            "$device_id": device_id
+          }, "");
+        }
+        if (new_distinct_id !== previous_distinct_id && new_distinct_id !== this.get_property(ALIAS_ID_KEY)) {
+          this.unregister(ALIAS_ID_KEY);
+          this.register({ "distinct_id": new_distinct_id });
+        }
+        this._flags.identify_called = true;
+        this["people"]._flush(_set_callback, _add_callback, _append_callback, _set_once_callback, _union_callback, _unset_callback, _remove_callback);
+        if (new_distinct_id !== previous_distinct_id) {
+          this.track("$identify", {
+            "distinct_id": new_distinct_id,
+            "$anon_distinct_id": previous_distinct_id
+          }, { skip_hooks: true });
+        }
+      };
+      MixpanelLib.prototype.reset = function() {
+        this["persistence"].clear();
+        this._flags.identify_called = false;
+        var uuid = _3.UUID();
+        this.register_once({
+          "distinct_id": uuid,
+          "$device_id": uuid
+        }, "");
+      };
+      MixpanelLib.prototype.get_distinct_id = function() {
+        return this.get_property("distinct_id");
+      };
+      MixpanelLib.prototype.alias = function(alias, original) {
+        if (alias === this.get_property(PEOPLE_DISTINCT_ID_KEY)) {
+          this.report_error("Attempting to create alias for existing People user - aborting.");
+          return -2;
+        }
+        var _this = this;
+        if (_3.isUndefined(original)) {
+          original = this.get_distinct_id();
+        }
+        if (alias !== original) {
+          this._register_single(ALIAS_ID_KEY, alias);
+          return this.track("$create_alias", {
+            "alias": alias,
+            "distinct_id": original
+          }, {
+            skip_hooks: true
+          }, function() {
+            _this.identify(alias);
+          });
+        } else {
+          this.report_error("alias matches current distinct_id - skipping api call.");
+          this.identify(alias);
+          return -1;
+        }
+      };
+      MixpanelLib.prototype.name_tag = function(name_tag) {
+        this._register_single("mp_name_tag", name_tag);
+      };
+      MixpanelLib.prototype.set_config = function(config) {
+        if (_3.isObject(config)) {
+          _3.extend(this["config"], config);
+          var new_batch_size = config["batch_size"];
+          if (new_batch_size) {
+            _3.each(this.request_batchers, function(batcher) {
+              batcher.resetBatchSize();
+            });
+          }
+          if (!this.get_config("persistence_name")) {
+            this["config"]["persistence_name"] = this["config"]["cookie_name"];
+          }
+          if (!this.get_config("disable_persistence")) {
+            this["config"]["disable_persistence"] = this["config"]["disable_cookie"];
+          }
+          if (this["persistence"]) {
+            this["persistence"].update_config(this["config"]);
+          }
+          Config.DEBUG = Config.DEBUG || this.get_config("debug");
+        }
+      };
+      MixpanelLib.prototype.get_config = function(prop_name) {
+        return this["config"][prop_name];
+      };
+      MixpanelLib.prototype._run_hook = function(hook_name) {
+        var ret = (this["config"]["hooks"][hook_name] || IDENTITY_FUNC).apply(this, slice3.call(arguments, 1));
+        if (typeof ret === "undefined") {
+          this.report_error(hook_name + " hook did not return a value");
+          ret = null;
+        }
+        return ret;
+      };
+      MixpanelLib.prototype.get_property = function(property_name) {
+        return this["persistence"]["props"][property_name];
+      };
+      MixpanelLib.prototype.toString = function() {
+        var name = this.get_config("name");
+        if (name !== PRIMARY_INSTANCE_NAME) {
+          name = PRIMARY_INSTANCE_NAME + "." + name;
+        }
+        return name;
+      };
+      MixpanelLib.prototype._event_is_disabled = function(event_name) {
+        return _3.isBlockedUA(userAgent) || this._flags.disable_all_events || _3.include(this.__disabled_events, event_name);
+      };
+      MixpanelLib.prototype._gdpr_init = function() {
+        var is_localStorage_requested = this.get_config("opt_out_tracking_persistence_type") === "localStorage";
+        if (is_localStorage_requested && _3.localStorage.is_supported()) {
+          if (!this.has_opted_in_tracking() && this.has_opted_in_tracking({ "persistence_type": "cookie" })) {
+            this.opt_in_tracking({ "enable_persistence": false });
+          }
+          if (!this.has_opted_out_tracking() && this.has_opted_out_tracking({ "persistence_type": "cookie" })) {
+            this.opt_out_tracking({ "clear_persistence": false });
+          }
+          this.clear_opt_in_out_tracking({
+            "persistence_type": "cookie",
+            "enable_persistence": false
+          });
+        }
+        if (this.has_opted_out_tracking()) {
+          this._gdpr_update_persistence({ "clear_persistence": true });
+        } else if (!this.has_opted_in_tracking() && (this.get_config("opt_out_tracking_by_default") || _3.cookie.get("mp_optout"))) {
+          _3.cookie.remove("mp_optout");
+          this.opt_out_tracking({
+            "clear_persistence": this.get_config("opt_out_persistence_by_default")
+          });
+        }
+      };
+      MixpanelLib.prototype._gdpr_update_persistence = function(options) {
+        var disabled;
+        if (options && options["clear_persistence"]) {
+          disabled = true;
+        } else if (options && options["enable_persistence"]) {
+          disabled = false;
+        } else {
+          return;
+        }
+        if (!this.get_config("disable_persistence") && this["persistence"].disabled !== disabled) {
+          this["persistence"].set_disabled(disabled);
+        }
+        if (disabled) {
+          _3.each(this.request_batchers, function(batcher) {
+            batcher.clear();
+          });
+        }
+      };
+      MixpanelLib.prototype._gdpr_call_func = function(func, options) {
+        options = _3.extend({
+          "track": _3.bind(this.track, this),
+          "persistence_type": this.get_config("opt_out_tracking_persistence_type"),
+          "cookie_prefix": this.get_config("opt_out_tracking_cookie_prefix"),
+          "cookie_expiration": this.get_config("cookie_expiration"),
+          "cross_site_cookie": this.get_config("cross_site_cookie"),
+          "cross_subdomain_cookie": this.get_config("cross_subdomain_cookie"),
+          "cookie_domain": this.get_config("cookie_domain"),
+          "secure_cookie": this.get_config("secure_cookie"),
+          "ignore_dnt": this.get_config("ignore_dnt")
+        }, options);
+        if (!_3.localStorage.is_supported()) {
+          options["persistence_type"] = "cookie";
+        }
+        return func(this.get_config("token"), {
+          track: options["track"],
+          trackEventName: options["track_event_name"],
+          trackProperties: options["track_properties"],
+          persistenceType: options["persistence_type"],
+          persistencePrefix: options["cookie_prefix"],
+          cookieDomain: options["cookie_domain"],
+          cookieExpiration: options["cookie_expiration"],
+          crossSiteCookie: options["cross_site_cookie"],
+          crossSubdomainCookie: options["cross_subdomain_cookie"],
+          secureCookie: options["secure_cookie"],
+          ignoreDnt: options["ignore_dnt"]
+        });
+      };
+      MixpanelLib.prototype.opt_in_tracking = function(options) {
+        options = _3.extend({
+          "enable_persistence": true
+        }, options);
+        this._gdpr_call_func(optIn, options);
+        this._gdpr_update_persistence(options);
+      };
+      MixpanelLib.prototype.opt_out_tracking = function(options) {
+        options = _3.extend({
+          "clear_persistence": true,
+          "delete_user": true
+        }, options);
+        if (options["delete_user"] && this["people"] && this["people"]._identify_called()) {
+          this["people"].delete_user();
+          this["people"].clear_charges();
+        }
+        this._gdpr_call_func(optOut, options);
+        this._gdpr_update_persistence(options);
+      };
+      MixpanelLib.prototype.has_opted_in_tracking = function(options) {
+        return this._gdpr_call_func(hasOptedIn, options);
+      };
+      MixpanelLib.prototype.has_opted_out_tracking = function(options) {
+        return this._gdpr_call_func(hasOptedOut, options);
+      };
+      MixpanelLib.prototype.clear_opt_in_out_tracking = function(options) {
+        options = _3.extend({
+          "enable_persistence": true
+        }, options);
+        this._gdpr_call_func(clearOptInOut, options);
+        this._gdpr_update_persistence(options);
+      };
+      MixpanelLib.prototype.report_error = function(msg, err) {
+        console2.error.apply(console2.error, arguments);
+        try {
+          if (!err && !(msg instanceof Error)) {
+            msg = new Error(msg);
+          }
+          this.get_config("error_reporter")(msg, err);
+        } catch (err2) {
+          console2.error(err2);
+        }
+      };
+      MixpanelLib.prototype["init"] = MixpanelLib.prototype.init;
+      MixpanelLib.prototype["reset"] = MixpanelLib.prototype.reset;
+      MixpanelLib.prototype["disable"] = MixpanelLib.prototype.disable;
+      MixpanelLib.prototype["time_event"] = MixpanelLib.prototype.time_event;
+      MixpanelLib.prototype["track"] = MixpanelLib.prototype.track;
+      MixpanelLib.prototype["track_links"] = MixpanelLib.prototype.track_links;
+      MixpanelLib.prototype["track_forms"] = MixpanelLib.prototype.track_forms;
+      MixpanelLib.prototype["track_pageview"] = MixpanelLib.prototype.track_pageview;
+      MixpanelLib.prototype["register"] = MixpanelLib.prototype.register;
+      MixpanelLib.prototype["register_once"] = MixpanelLib.prototype.register_once;
+      MixpanelLib.prototype["unregister"] = MixpanelLib.prototype.unregister;
+      MixpanelLib.prototype["identify"] = MixpanelLib.prototype.identify;
+      MixpanelLib.prototype["alias"] = MixpanelLib.prototype.alias;
+      MixpanelLib.prototype["name_tag"] = MixpanelLib.prototype.name_tag;
+      MixpanelLib.prototype["set_config"] = MixpanelLib.prototype.set_config;
+      MixpanelLib.prototype["get_config"] = MixpanelLib.prototype.get_config;
+      MixpanelLib.prototype["get_property"] = MixpanelLib.prototype.get_property;
+      MixpanelLib.prototype["get_distinct_id"] = MixpanelLib.prototype.get_distinct_id;
+      MixpanelLib.prototype["toString"] = MixpanelLib.prototype.toString;
+      MixpanelLib.prototype["opt_out_tracking"] = MixpanelLib.prototype.opt_out_tracking;
+      MixpanelLib.prototype["opt_in_tracking"] = MixpanelLib.prototype.opt_in_tracking;
+      MixpanelLib.prototype["has_opted_out_tracking"] = MixpanelLib.prototype.has_opted_out_tracking;
+      MixpanelLib.prototype["has_opted_in_tracking"] = MixpanelLib.prototype.has_opted_in_tracking;
+      MixpanelLib.prototype["clear_opt_in_out_tracking"] = MixpanelLib.prototype.clear_opt_in_out_tracking;
+      MixpanelLib.prototype["get_group"] = MixpanelLib.prototype.get_group;
+      MixpanelLib.prototype["set_group"] = MixpanelLib.prototype.set_group;
+      MixpanelLib.prototype["add_group"] = MixpanelLib.prototype.add_group;
+      MixpanelLib.prototype["remove_group"] = MixpanelLib.prototype.remove_group;
+      MixpanelLib.prototype["track_with_groups"] = MixpanelLib.prototype.track_with_groups;
+      MixpanelLib.prototype["start_batch_senders"] = MixpanelLib.prototype.start_batch_senders;
+      MixpanelLib.prototype["stop_batch_senders"] = MixpanelLib.prototype.stop_batch_senders;
+      MixpanelPersistence.prototype["properties"] = MixpanelPersistence.prototype.properties;
+      MixpanelPersistence.prototype["update_search_keyword"] = MixpanelPersistence.prototype.update_search_keyword;
+      MixpanelPersistence.prototype["update_referrer_info"] = MixpanelPersistence.prototype.update_referrer_info;
+      MixpanelPersistence.prototype["get_cross_subdomain"] = MixpanelPersistence.prototype.get_cross_subdomain;
+      MixpanelPersistence.prototype["clear"] = MixpanelPersistence.prototype.clear;
+      var instances = {};
+      var extend_mp = function() {
+        _3.each(instances, function(instance, name) {
+          if (name !== PRIMARY_INSTANCE_NAME) {
+            mixpanel_master[name] = instance;
+          }
+        });
+        mixpanel_master["_"] = _3;
+      };
+      var override_mp_init_func = function() {
+        mixpanel_master["init"] = function(token, config, name) {
+          if (name) {
+            if (!mixpanel_master[name]) {
+              mixpanel_master[name] = instances[name] = create_mplib(token, config, name);
+              mixpanel_master[name]._loaded();
+            }
+            return mixpanel_master[name];
+          } else {
+            var instance = mixpanel_master;
+            if (instances[PRIMARY_INSTANCE_NAME]) {
+              instance = instances[PRIMARY_INSTANCE_NAME];
+            } else if (token) {
+              instance = create_mplib(token, config, PRIMARY_INSTANCE_NAME);
+              instance._loaded();
+              instances[PRIMARY_INSTANCE_NAME] = instance;
+            }
+            mixpanel_master = instance;
+            if (init_type === INIT_SNIPPET) {
+              window$1[PRIMARY_INSTANCE_NAME] = mixpanel_master;
+            }
+            extend_mp();
+          }
+        };
+      };
+      var add_dom_loaded_handler = function() {
+        function dom_loaded_handler() {
+          if (dom_loaded_handler.done) {
+            return;
+          }
+          dom_loaded_handler.done = true;
+          DOM_LOADED = true;
+          ENQUEUE_REQUESTS = false;
+          _3.each(instances, function(inst) {
+            inst._dom_loaded();
+          });
+        }
+        function do_scroll_check() {
+          try {
+            document$1.documentElement.doScroll("left");
+          } catch (e3) {
+            setTimeout(do_scroll_check, 1);
+            return;
+          }
+          dom_loaded_handler();
+        }
+        if (document$1.addEventListener) {
+          if (document$1.readyState === "complete") {
+            dom_loaded_handler();
+          } else {
+            document$1.addEventListener("DOMContentLoaded", dom_loaded_handler, false);
+          }
+        } else if (document$1.attachEvent) {
+          document$1.attachEvent("onreadystatechange", dom_loaded_handler);
+          var toplevel = false;
+          try {
+            toplevel = window$1.frameElement === null;
+          } catch (e3) {
+          }
+          if (document$1.documentElement.doScroll && toplevel) {
+            do_scroll_check();
+          }
+        }
+        _3.register_event(window$1, "load", dom_loaded_handler, true);
+      };
+      function init_as_module() {
+        init_type = INIT_MODULE;
+        mixpanel_master = new MixpanelLib();
+        override_mp_init_func();
+        mixpanel_master["init"]();
+        add_dom_loaded_handler();
+        return mixpanel_master;
+      }
+      var mixpanel2 = init_as_module();
+      module.exports = mixpanel2;
+    }
+  });
+
+  // playground.jsx
   var import_react14 = __toESM(require_react());
   var import_react_dom2 = __toESM(require_react_dom());
 
@@ -23820,11 +27559,11 @@ For more info, visit https://reactjs.org/link/mock-scheduler`);
     }
     var _c = options.isImmutable, isImmutable = _c === void 0 ? isImmutableDefault : _c, ignoredPaths = options.ignoredPaths, _d = options.warnAfter, warnAfter = _d === void 0 ? 32 : _d, ignore = options.ignore;
     ignoredPaths = ignoredPaths || ignore;
-    var track = trackForMutations.bind(null, isImmutable, ignoredPaths);
+    var track2 = trackForMutations.bind(null, isImmutable, ignoredPaths);
     return function(_c2) {
       var getState = _c2.getState;
       var state = getState();
-      var tracker = track(state);
+      var tracker = track2(state);
       var result;
       return function(next) {
         return function(action) {
@@ -23832,14 +27571,14 @@ For more info, visit https://reactjs.org/link/mock-scheduler`);
           measureUtils.measureTime(function() {
             state = getState();
             result = tracker.detectMutations();
-            tracker = track(state);
+            tracker = track2(state);
             invariant(!result.wasMutated, "A state mutation was detected between dispatches, in the path '" + (result.path || "") + "'.  This may cause incorrect behavior. (https://redux.js.org/style-guide/style-guide#do-not-mutate-state)");
           });
           var dispatchedAction = next(action);
           measureUtils.measureTime(function() {
             state = getState();
             result = tracker.detectMutations();
-            tracker = track(state);
+            tracker = track2(state);
             result.wasMutated && invariant(!result.wasMutated, "A state mutation was detected inside a dispatch, in the path: " + (result.path || "") + ". Take a look at the reducer(s) handling the action " + stringify(action) + ". (https://redux.js.org/style-guide/style-guide#do-not-mutate-state)");
           });
           measureUtils.warnIfExceeded();
@@ -24524,19 +28263,23 @@ expect = [3,4,5,6]
 
 actual = compress [3,3,4,5,6,6]
 
-y :: Bool
-y =  expect == actual
+test :: Bool
+test =  expect == actual
 `;
   var uconandvcon = (n3) => `module Task${n3} where
 
-data V = VCon String
 data U = UCon Bool Int (Int, Int)
 
-u :: U -> V
-u (UCon x y j) =
+u (UCon x y z) =
   if x
-    then j
+    then z
     else fst y + snd y
+
+actual = u (UCon False 0 (15, 10))
+expect = 25
+
+test :: Bool
+test = actual == expect
 
 `;
   var quicksort = (n3) => `module Task${n3} where
@@ -25062,6 +28805,14 @@ problem_1 = sum (check [1..999])
   var reduce = /* @__PURE__ */ _curry3(_reduce);
   var reduce_default = reduce;
 
+  // node_modules/ramda/es/always.js
+  var always = /* @__PURE__ */ _curry1(function always2(val) {
+    return function() {
+      return val;
+    };
+  });
+  var always_default = always;
+
   // node_modules/ramda/es/internal/_xany.js
   var XAny = /* @__PURE__ */ function() {
     function XAny2(f3, xf) {
@@ -25150,14 +28901,30 @@ problem_1 = sum (check [1..999])
     return type3 === "[object Function]" || type3 === "[object AsyncFunction]" || type3 === "[object GeneratorFunction]" || type3 === "[object AsyncGeneratorFunction]";
   }
 
-  // node_modules/ramda/es/clamp.js
-  var clamp = /* @__PURE__ */ _curry3(function clamp2(min, max, value) {
-    if (min > max) {
-      throw new Error("min must not be greater than max in clamp(min, max, value)");
-    }
-    return value < min ? min : value > max ? max : value;
-  });
-  var clamp_default = clamp;
+  // node_modules/ramda/es/internal/_makeFlat.js
+  function _makeFlat(recursive) {
+    return function flatt(list) {
+      var value, jlen, j2;
+      var result = [];
+      var idx = 0;
+      var ilen = list.length;
+      while (idx < ilen) {
+        if (isArrayLike_default(list[idx])) {
+          value = recursive ? flatt(list[idx]) : list[idx];
+          j2 = 0;
+          jlen = value.length;
+          while (j2 < jlen) {
+            result[result.length] = value[j2];
+            j2 += 1;
+          }
+        } else {
+          result[result.length] = list[idx];
+        }
+        idx += 1;
+      }
+      return result;
+    };
+  }
 
   // node_modules/ramda/es/type.js
   var type = /* @__PURE__ */ _curry1(function type2(val) {
@@ -25604,6 +29371,10 @@ problem_1 = sum (check [1..999])
   }));
   var find_default = find;
 
+  // node_modules/ramda/es/flatten.js
+  var flatten = /* @__PURE__ */ _curry1(/* @__PURE__ */ _makeFlat(true));
+  var flatten_default = flatten;
+
   // node_modules/ramda/es/includes.js
   var includes = /* @__PURE__ */ _curry2(_includes);
   var includes_default = includes;
@@ -25696,6 +29467,29 @@ problem_1 = sum (check [1..999])
     return modifyPath_default([prop3], fn2, object);
   });
   var modify_default = modify;
+
+  // node_modules/ramda/es/times.js
+  var times = /* @__PURE__ */ _curry2(function times2(fn2, n3) {
+    var len = Number(n3);
+    var idx = 0;
+    var list;
+    if (len < 0 || isNaN(len)) {
+      throw new RangeError("n must be a non-negative number");
+    }
+    list = new Array(len);
+    while (idx < len) {
+      list[idx] = fn2(idx);
+      idx += 1;
+    }
+    return list;
+  });
+  var times_default = times;
+
+  // node_modules/ramda/es/repeat.js
+  var repeat = /* @__PURE__ */ _curry2(function repeat2(value, n3) {
+    return times_default(always_default(value), n3);
+  });
+  var repeat_default = repeat;
 
   // node_modules/ramda/es/sort.js
   var sort = /* @__PURE__ */ _curry2(function sort2(comparator, list) {
@@ -25933,8 +29727,31 @@ problem_1 = sum (check [1..999])
       }
     };
   };
+  function getRandomInt(max) {
+    return Math.floor(Math.random() * max);
+  }
+  function getMode(mulExp, deduction) {
+    return !mulExp ? "Basic Mode" : deduction ? "Advanced Mode" : "Balanced Mode";
+  }
 
   // debuggerSlice.js
+  var debuggerOrders = [
+    flatten_default(repeat_default(["level1", "level2", "level3"], 3)),
+    flatten_default(repeat_default(["level1", "level3", "level2"], 3)),
+    flatten_default(repeat_default(["level2", "level1", "level3"], 3)),
+    flatten_default(repeat_default(["level2", "level3", "level1"], 3)),
+    flatten_default(repeat_default(["level3", "level1", "level2"], 3)),
+    flatten_default(repeat_default(["level3", "level2", "level1"], 3))
+  ];
+  var debuggerOrder = debuggerOrders[getRandomInt(6)];
+  var setLevelTo = (x2) => {
+    if (x2 === "level1")
+      return debuggingLevel1;
+    if (x2 === "level2")
+      return debuggingLevel2;
+    if (x2 === "level3")
+      return debuggingLevel3;
+  };
   var editorModes = {
     edit: 0,
     normal: 1
@@ -25943,6 +29760,8 @@ problem_1 = sum (check [1..999])
     dispatch(resetHighlights());
     let state = getState();
     let text = state.debugger.text;
+    let currentTaskNum = state.debugger.currentTaskNum;
+    dispatch(incrementAttemps(currentTaskNum));
     let response = await fetch("/typecheck", {
       method: "POST",
       body: text
@@ -25960,8 +29779,10 @@ problem_1 = sum (check [1..999])
     return null;
   });
   var switchTaskThunk = createAsyncThunk("switchTask", async (n3, { dispatch }) => {
+    let setLevelAction = setLevelTo(debuggerOrder[n3]);
     dispatch(setTask(n3));
     dispatch(typeCheckThunk(null));
+    dispatch(setLevelAction());
   });
   var initialState = {
     currentStepNum: null,
@@ -25978,6 +29799,7 @@ problem_1 = sum (check [1..999])
     prevLocs: [],
     nextLocs: [],
     currentTaskNum: null,
+    cursorPosition: 0,
     wellTyped: false,
     loadError: null,
     parseError: null,
@@ -25985,7 +29807,8 @@ problem_1 = sum (check [1..999])
     widgets: [],
     highlights: [],
     debuggingSteps: false,
-    multipleExps: false
+    multipleExps: false,
+    attempts: [0, 0, 0, 0, 0, 0, 0, 0, 0]
   };
   var { actions, reducer } = createSlice({
     name: "editor",
@@ -25995,6 +29818,24 @@ problem_1 = sum (check [1..999])
       toNormalMode: assoc_default("mode", editorModes.normal),
       toggleDebuggerStpes: modify_default("debuggingSteps", not_default),
       toggleMultipleExps: modify_default("multipleExps", not_default),
+      incrementAttemps(state, action) {
+        state.attempts = state.attempts.map((v2, i3) => i3 === action.payload ? v2 + 1 : v2);
+      },
+      setCursorPosition(state, action) {
+        state.cursorPosition = action.payload;
+      },
+      debuggingLevel1(state) {
+        state.debuggingSteps = false;
+        state.multipleExps = false;
+      },
+      debuggingLevel2(state) {
+        state.debuggingSteps = false;
+        state.multipleExps = true;
+      },
+      debuggingLevel3(state) {
+        state.debuggingSteps = true;
+        state.multipleExps = true;
+      },
       setText(state, action) {
         state.text = action.payload;
       },
@@ -26111,7 +29952,8 @@ problem_1 = sum (check [1..999])
           let steps = action.payload.steps;
           let context = action.payload.contextTable;
           let currentStepNum = Math.floor(steps.length / 2);
-          let { highlights, widgets } = convertStep(steps[currentStepNum], currentStepNum, state.longestLine);
+          let longestLine = pipe(split_default("\n"), map_default(split_default("")), map_default(length_default), sort_default(subtract_default), reverse_default, head_default)(state.text);
+          let { highlights, widgets } = convertStep(steps[currentStepNum], currentStepNum, longestLine);
           let currentTraverseId = steps[currentStepNum].stepId;
           state.context = context;
           state.steps = steps;
@@ -26131,6 +29973,7 @@ problem_1 = sum (check [1..999])
           state.parseError = null;
           state.loadError = null;
           state.wellTyped = false;
+          state.longestLine = longestLine;
         } else if (action.payload.tag === "ChSuccess") {
           return Object.assign({}, {
             ...state,
@@ -26174,7 +30017,12 @@ problem_1 = sum (check [1..999])
     showOnlyMark1,
     showOnlyMark2,
     showBoth,
-    showDefination
+    showDefination,
+    debuggingLevel1,
+    debuggingLevel2,
+    debuggingLevel3,
+    incrementAttemps,
+    setCursorPosition
   } = actions;
   var debuggerSlice_default = reducer;
   function getCurrentActiveContext(contexts, currentTraverseId) {
@@ -26229,8 +30077,7 @@ problem_1 = sum (check [1..999])
   var store = configureStore({
     reducer: {
       "debugger": debuggerSlice_default
-    },
-    devTools: true
+    }
   });
   var store_default = store;
 
@@ -26450,10 +30297,13 @@ problem_1 = sum (check [1..999])
   };
   var EditorEditMode = () => {
     const text = useSelector(path_default(["debugger", "text"]));
+    const cursorPosition = useSelector(path_default(["debugger", "cursorPosition"]));
     const dispatch = useDispatch();
     const inputEl = (0, import_react9.useRef)(null);
     (0, import_react9.useEffect)(() => {
       inputEl.current.focus();
+      inputEl.current.selectionStart = cursorPosition;
+      inputEl.current.selectionEnd = cursorPosition;
     }, []);
     return /* @__PURE__ */ import_react9.default.createElement("textarea", {
       ref: inputEl,
@@ -26477,20 +30327,30 @@ problem_1 = sum (check [1..999])
     })));
   };
   var Line = ({ text, line }) => {
+    const fulltext = useSelector(path_default(["debugger", "text"]));
+    const dispatch = useDispatch();
     return /* @__PURE__ */ import_react9.default.createElement("div", {
-      className: "h-6 my-0.5"
+      className: "h-6 my-0.5 flex"
     }, text.split("").map((t3, ch) => /* @__PURE__ */ import_react9.default.createElement(Cell, {
       text: t3,
       line,
       ch,
       key: ch
-    })));
+    })), /* @__PURE__ */ import_react9.default.createElement("div", {
+      onClick: (_3) => {
+        let offset = fulltext.split("\n").filter((l3, ln2) => ln2 <= line).map((l3) => l3.length + 1).reduce((x2, y3) => x2 + y3, 0) - 1;
+        dispatch(setCursorPosition(offset));
+      },
+      className: "inline-block h-6 flex-grow cursor-text"
+    }));
   };
   var Cell = ({ text, line, ch }) => {
     const point = { line, ch };
+    const fulltext = useSelector(path_default(["debugger", "text"]));
     const highlights = useSelector(path_default(["debugger", "highlights"]));
     const widgets = useSelector(path_default(["debugger", "widgets"]));
     const deductionStpe = useSelector(path_default(["debugger", "debuggingSteps"]));
+    const dispatch = useDispatch();
     const highlighters = highlights.filter(curry_default(within)(point)).map((hl, k2) => /* @__PURE__ */ import_react9.default.createElement(Highlighter, {
       highlight: hl,
       line,
@@ -26504,6 +30364,11 @@ problem_1 = sum (check [1..999])
       key: wgt.key
     })))(widgets);
     return /* @__PURE__ */ import_react9.default.createElement("div", {
+      onClick: (_3) => {
+        let offset = fulltext.split("\n").filter((l3, ln2) => ln2 < line).map((l3) => l3.length + 1).reduce((x2, y3) => x2 + y3, 0) + ch;
+        console.log(offset);
+        dispatch(setCursorPosition(offset));
+      },
       className: "inline-block h-6 relative",
       style: { width: "0.6rem" }
     }, highlighters, deductionStpe ? appliedWidgets : null, /* @__PURE__ */ import_react9.default.createElement("div", {
@@ -26598,9 +30463,9 @@ problem_1 = sum (check [1..999])
   var ForwardRef = React5.forwardRef(BookOpenIcon);
   var BookOpenIcon_default = ForwardRef;
 
-  // node_modules/@heroicons/react/solid/esm/ChevronDoubleLeftIcon.js
+  // node_modules/@heroicons/react/solid/esm/EyeIcon.js
   var React6 = __toESM(require_react(), 1);
-  function ChevronDoubleLeftIcon(props, svgRef) {
+  function EyeIcon(props, svgRef) {
     return /* @__PURE__ */ React6.createElement("svg", Object.assign({
       xmlns: "http://www.w3.org/2000/svg",
       viewBox: "0 0 20 20",
@@ -26608,75 +30473,15 @@ problem_1 = sum (check [1..999])
       "aria-hidden": "true",
       ref: svgRef
     }, props), /* @__PURE__ */ React6.createElement("path", {
-      fillRule: "evenodd",
-      d: "M15.707 15.707a1 1 0 01-1.414 0l-5-5a1 1 0 010-1.414l5-5a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 010 1.414zm-6 0a1 1 0 01-1.414 0l-5-5a1 1 0 010-1.414l5-5a1 1 0 011.414 1.414L5.414 10l4.293 4.293a1 1 0 010 1.414z",
-      clipRule: "evenodd"
-    }));
-  }
-  var ForwardRef2 = React6.forwardRef(ChevronDoubleLeftIcon);
-  var ChevronDoubleLeftIcon_default = ForwardRef2;
-
-  // node_modules/@heroicons/react/solid/esm/ChevronDoubleRightIcon.js
-  var React7 = __toESM(require_react(), 1);
-  function ChevronDoubleRightIcon(props, svgRef) {
-    return /* @__PURE__ */ React7.createElement("svg", Object.assign({
-      xmlns: "http://www.w3.org/2000/svg",
-      viewBox: "0 0 20 20",
-      fill: "currentColor",
-      "aria-hidden": "true",
-      ref: svgRef
-    }, props), /* @__PURE__ */ React7.createElement("path", {
-      fillRule: "evenodd",
-      d: "M10.293 15.707a1 1 0 010-1.414L14.586 10l-4.293-4.293a1 1 0 111.414-1.414l5 5a1 1 0 010 1.414l-5 5a1 1 0 01-1.414 0z",
-      clipRule: "evenodd"
-    }), /* @__PURE__ */ React7.createElement("path", {
-      fillRule: "evenodd",
-      d: "M4.293 15.707a1 1 0 010-1.414L8.586 10 4.293 5.707a1 1 0 011.414-1.414l5 5a1 1 0 010 1.414l-5 5a1 1 0 01-1.414 0z",
-      clipRule: "evenodd"
-    }));
-  }
-  var ForwardRef3 = React7.forwardRef(ChevronDoubleRightIcon);
-  var ChevronDoubleRightIcon_default = ForwardRef3;
-
-  // node_modules/@heroicons/react/solid/esm/EyeIcon.js
-  var React8 = __toESM(require_react(), 1);
-  function EyeIcon(props, svgRef) {
-    return /* @__PURE__ */ React8.createElement("svg", Object.assign({
-      xmlns: "http://www.w3.org/2000/svg",
-      viewBox: "0 0 20 20",
-      fill: "currentColor",
-      "aria-hidden": "true",
-      ref: svgRef
-    }, props), /* @__PURE__ */ React8.createElement("path", {
       d: "M10 12a2 2 0 100-4 2 2 0 000 4z"
-    }), /* @__PURE__ */ React8.createElement("path", {
+    }), /* @__PURE__ */ React6.createElement("path", {
       fillRule: "evenodd",
       d: "M.458 10C1.732 5.943 5.522 3 10 3s8.268 2.943 9.542 7c-1.274 4.057-5.064 7-9.542 7S1.732 14.057.458 10zM14 10a4 4 0 11-8 0 4 4 0 018 0z",
       clipRule: "evenodd"
     }));
   }
-  var ForwardRef4 = React8.forwardRef(EyeIcon);
-  var EyeIcon_default = ForwardRef4;
-
-  // node_modules/@heroicons/react/solid/esm/PencilAltIcon.js
-  var React9 = __toESM(require_react(), 1);
-  function PencilAltIcon(props, svgRef) {
-    return /* @__PURE__ */ React9.createElement("svg", Object.assign({
-      xmlns: "http://www.w3.org/2000/svg",
-      viewBox: "0 0 20 20",
-      fill: "currentColor",
-      "aria-hidden": "true",
-      ref: svgRef
-    }, props), /* @__PURE__ */ React9.createElement("path", {
-      d: "M17.414 2.586a2 2 0 00-2.828 0L7 10.172V13h2.828l7.586-7.586a2 2 0 000-2.828z"
-    }), /* @__PURE__ */ React9.createElement("path", {
-      fillRule: "evenodd",
-      d: "M2 6a2 2 0 012-2h4a1 1 0 010 2H4v10h10v-4a1 1 0 112 0v4a2 2 0 01-2 2H4a2 2 0 01-2-2V6z",
-      clipRule: "evenodd"
-    }));
-  }
-  var ForwardRef5 = React9.forwardRef(PencilAltIcon);
-  var PencilAltIcon_default = ForwardRef5;
+  var ForwardRef2 = React6.forwardRef(EyeIcon);
+  var EyeIcon_default = ForwardRef2;
 
   // TabReport.jsx
   var import_react11 = __toESM(require_react());
@@ -26693,10 +30498,10 @@ problem_1 = sum (check [1..999])
   };
   var TypeSig_default = StringTypeSig2;
 
-  // node_modules/@heroicons/react/outline/esm/ChevronRightIcon.js
-  var React11 = __toESM(require_react(), 1);
-  function ChevronRightIcon(props, svgRef) {
-    return /* @__PURE__ */ React11.createElement("svg", Object.assign({
+  // node_modules/@heroicons/react/outline/esm/ChevronDoubleLeftIcon.js
+  var React8 = __toESM(require_react(), 1);
+  function ChevronDoubleLeftIcon(props, svgRef) {
+    return /* @__PURE__ */ React8.createElement("svg", Object.assign({
       xmlns: "http://www.w3.org/2000/svg",
       fill: "none",
       viewBox: "0 0 24 24",
@@ -26704,14 +30509,105 @@ problem_1 = sum (check [1..999])
       stroke: "currentColor",
       "aria-hidden": "true",
       ref: svgRef
-    }, props), /* @__PURE__ */ React11.createElement("path", {
+    }, props), /* @__PURE__ */ React8.createElement("path", {
+      strokeLinecap: "round",
+      strokeLinejoin: "round",
+      d: "M11 19l-7-7 7-7m8 14l-7-7 7-7"
+    }));
+  }
+  var ForwardRef3 = React8.forwardRef(ChevronDoubleLeftIcon);
+  var ChevronDoubleLeftIcon_default = ForwardRef3;
+
+  // node_modules/@heroicons/react/outline/esm/ChevronDoubleRightIcon.js
+  var React9 = __toESM(require_react(), 1);
+  function ChevronDoubleRightIcon(props, svgRef) {
+    return /* @__PURE__ */ React9.createElement("svg", Object.assign({
+      xmlns: "http://www.w3.org/2000/svg",
+      fill: "none",
+      viewBox: "0 0 24 24",
+      strokeWidth: 2,
+      stroke: "currentColor",
+      "aria-hidden": "true",
+      ref: svgRef
+    }, props), /* @__PURE__ */ React9.createElement("path", {
+      strokeLinecap: "round",
+      strokeLinejoin: "round",
+      d: "M13 5l7 7-7 7M5 5l7 7-7 7"
+    }));
+  }
+  var ForwardRef4 = React9.forwardRef(ChevronDoubleRightIcon);
+  var ChevronDoubleRightIcon_default = ForwardRef4;
+
+  // node_modules/@heroicons/react/outline/esm/ChevronRightIcon.js
+  var React10 = __toESM(require_react(), 1);
+  function ChevronRightIcon(props, svgRef) {
+    return /* @__PURE__ */ React10.createElement("svg", Object.assign({
+      xmlns: "http://www.w3.org/2000/svg",
+      fill: "none",
+      viewBox: "0 0 24 24",
+      strokeWidth: 2,
+      stroke: "currentColor",
+      "aria-hidden": "true",
+      ref: svgRef
+    }, props), /* @__PURE__ */ React10.createElement("path", {
       strokeLinecap: "round",
       strokeLinejoin: "round",
       d: "M9 5l7 7-7 7"
     }));
   }
-  var ForwardRef6 = React11.forwardRef(ChevronRightIcon);
-  var ChevronRightIcon_default = ForwardRef6;
+  var ForwardRef5 = React10.forwardRef(ChevronRightIcon);
+  var ChevronRightIcon_default = ForwardRef5;
+
+  // report.js
+  var import_mixpanel_browser = __toESM(require_mixpanel_cjs());
+  var Source = {
+    mouse: "Mouse",
+    keyboard: "Keyboard",
+    remote: "Remote"
+  };
+  var Event = {
+    basicMode: "Set Basic Mode",
+    balancedMode: "Set Balanced Mode",
+    advancedMode: "Set Advanced Mode",
+    next: "Next Step",
+    prev: "Previous Step",
+    typeCheck: "Type Check",
+    succeed: "Succeed",
+    loaderr: "Load Error",
+    syntaxerr: "Syntax Error",
+    typeerr: "Type Error",
+    peekStep: "Peek Step",
+    peekExp: "Peek Expression",
+    peekDef: "Peek Definition",
+    gotoStep: "Go To Step",
+    gotoExp: "Go To Expression",
+    narrowType1: "Narrow To Possible Type 1",
+    narrowType2: "Narrow To Possible Type 2",
+    narrowRelevent: "Narrow Relevant Type",
+    inspect: "Inspect Relevant Type",
+    reset: "Reset Task",
+    abandon: "Abandon Task"
+  };
+  var track;
+  if (true) {
+    track = () => {
+    };
+  } else {
+    if (false) {
+      track = ({ event, task: task2, mode, source }) => {
+        import_mixpanel_browser.default.track(event, {
+          Stage: "testing",
+          Task: task2,
+          Mode: mode,
+          "Input Source": source
+        });
+      };
+    } else {
+      track = ({ event, task: task2, mode, source }) => {
+        console.log(`[Task ${task2} - ${mode}] ${event} (From ${source})`);
+      };
+    }
+  }
 
   // TabReport.jsx
   var TabReport = () => {
@@ -26720,30 +30616,17 @@ problem_1 = sum (check [1..999])
     }, /* @__PURE__ */ import_react11.default.createElement(Summary, null), /* @__PURE__ */ import_react11.default.createElement(Message, null), /* @__PURE__ */ import_react11.default.createElement(ReleventTerms, null));
   };
   var TabList = () => {
-    const dispatch = useDispatch();
     let context = useSelector(path_default(["debugger", "context"]));
     let steps = useSelector(path_default(["debugger", "steps"]));
     let pinnedStep = useSelector(path_default(["debugger", "pinnedStep"]));
     let pinnedTraverseId = steps[pinnedStep].stepId;
     const multipleExps = useSelector(path_default(["debugger", "multipleExps"]));
-    const [scrollProgress, setScrollProgress] = (0, import_react11.useState)(0);
+    const deductionSteps = useSelector(path_default(["debugger", "debuggingSteps"]));
     return /* @__PURE__ */ import_react11.default.createElement("div", {
-      className: "h-20  shadow-sm bg-gray-100 flex items-center   " + (multipleExps ? "rounded-b-lg" : ""),
+      className: "h-24 bg-gray-100 flex items-center   " + (multipleExps && !deductionSteps ? "rounded-b-lg" : ""),
       style: { paddingLeft: 40 }
     }, /* @__PURE__ */ import_react11.default.createElement("div", {
-      className: "flex items-center cursor-pointer flex-row-reverse justify-end ",
-      onWheel: (e3) => {
-        let progress = clamp_default(-1.5, 1.5, Math.sign(e3.deltaY) * Math.log2(Math.abs(e3.deltaY)));
-        setScrollProgress(scrollProgress + progress);
-        console.log(progress);
-        if (scrollProgress > 30) {
-          dispatch(nextStep());
-          setScrollProgress(0);
-        } else if (scrollProgress < -30) {
-          dispatch(prevStep());
-          setScrollProgress(0);
-        }
-      }
+      className: "flex items-center cursor-pointer flex-row-reverse justify-end "
     }, multipleExps ? context.map((c3, i3) => /* @__PURE__ */ import_react11.default.createElement(Tab, {
       key: i3,
       steps: c3.contextSteps,
@@ -26754,6 +30637,9 @@ problem_1 = sum (check [1..999])
   var Tab = ({ active = false, steps, exp }) => {
     let dispatch = useDispatch();
     const deductionSteps = useSelector(path_default(["debugger", "debuggingSteps"]));
+    const multipleExps = useSelector(path_default(["debugger", "multipleExps"]));
+    const currentTaskNum = useSelector(path_default(["debugger", "currentTaskNum"]));
+    const mode = getMode(multipleExps, deductionSteps);
     let pinnedStep = useSelector(path_default(["debugger", "pinnedStep"]));
     let traverseId = useSelector(path_default(["debugger", "currentTraverseId"]));
     let tabReleventSteps = steps.map((step, i3) => [...step, i3]).filter(nth_default(2));
@@ -26771,13 +30657,32 @@ problem_1 = sum (check [1..999])
     } else if (!deductionSteps && !active && !hovering) {
       face = "bg-white active:bg-gray-200 border ";
     }
-    let maxSize = deductionSteps ? { height: "4.5rem" } : { height: "3rem", transitionDelay: "75ms" };
     return /* @__PURE__ */ import_react11.default.createElement("div", {
-      className: face + " flex flex-col w-max m-1 px-2 py-1 rounded-lg duration-75",
-      style: { minWidth: 80, transitionProperty: "height", ...maxSize },
-      onClick: (_3) => dispatch(lockStep(tabDefaultStep)),
-      onMouseEnter: (_3) => active ? null : dispatch(setStep(tabDefaultStep)),
-      onMouseLeave: (_3) => dispatch(setStep(pinnedStep))
+      className: face + " flex flex-col w-max m-1 px-2 py-1 rounded-lg",
+      style: { minWidth: 80 },
+      onClick: (_3) => {
+        dispatch(lockStep(tabDefaultStep));
+        track({
+          event: Event.gotoExp,
+          task: currentTaskNum,
+          mode,
+          source: Source.mouse
+        });
+      },
+      onMouseEnter: (_3) => {
+        if (!active) {
+          dispatch(setStep(tabDefaultStep));
+          track({
+            event: Event.peekExp,
+            task: currentTaskNum,
+            mode,
+            source: Source.mouse
+          });
+        }
+      },
+      onMouseLeave: (_3) => {
+        dispatch(setStep(pinnedStep));
+      }
     }, /* @__PURE__ */ import_react11.default.createElement("div", {
       className: " rounded-t-2xl inline-block w-full h-10 leading-10 text-xl code select-none " + (active ? "text-white" : "text-gray-800")
     }, exp), /* @__PURE__ */ import_react11.default.createElement("div", {
@@ -26800,8 +30705,11 @@ problem_1 = sum (check [1..999])
   var TabStep = ({ active = false, step, traverseId }) => {
     let dispatch = useDispatch();
     let numOfSteps = useSelector(path_default(["debugger", "numOfSteps"]));
+    let task2 = useSelector(path_default(["debugger", "currentTaskNum"]));
     let currentTraverseId = useSelector(path_default(["debugger", "currentTraverseId"]));
+    let multipleExps = useSelector(path_default(["debugger", "multipleExps"]));
     let deductionSteps = useSelector(path_default(["debugger", "debuggingSteps"]));
+    let mode = getMode(multipleExps, deductionSteps);
     let pinnedStep = useSelector(path_default(["debugger", "pinnedStep"]));
     let stepping = equals_default(currentTraverseId, traverseId);
     let pinned = pinnedStep === step;
@@ -26821,43 +30729,77 @@ problem_1 = sum (check [1..999])
       onClick: (e3) => {
         e3.stopPropagation();
         dispatch(lockStep(step));
+        track({ event: Event.gotoStep, task: task2, mode, source: Source.mouse });
       },
       onMouseEnter: (_3) => {
         dispatch(setStep(step));
+        track({ event: Event.peekStep, task: task2, mode, source: Source.mouse });
       }
     }, /* @__PURE__ */ import_react11.default.createElement("div", {
-      className: "w-5 h-5 leading-5 flex justify-center  cursor-pointer rounded-full text-md mx-0.5 transition-transform " + face + (deductionSteps ? " scale-100 delay-75" : " scale-0")
+      className: "w-5 h-5 leading-5 flex justify-center  cursor-pointer rounded-full text-md mx-0.5  " + face + (deductionSteps ? " " : " hidden")
     }, numOfSteps - step));
   };
   var Summary = () => {
     let contextItem = useSelector((state) => state.debugger.currentContextItem);
-    const multipleExps = useSelector(path_default(["debugger", "multipleExps"]));
-    const debuggingSteps = useSelector(path_default(["debugger", "debuggingSteps"]));
     const steps = useSelector(path_default(["debugger", "steps"]));
     const pinnedStep = useSelector(path_default(["debugger", "pinnedStep"]));
+    const multipleExps = useSelector(path_default(["debugger", "multipleExps"]));
+    const debuggingSteps = useSelector(path_default(["debugger", "debuggingSteps"]));
+    const currentTaskNum = useSelector(path_default(["debugger", "currentTaskNum"]));
+    const mode = getMode(multipleExps, debuggingSteps);
     const pinned = steps.length === 0 ? true : contextItem.contextSteps.find(pipe(nth_default(0), equals_default(steps[pinnedStep].stepId)))[2];
     const dispatch = useDispatch();
-    return contextItem === null ? null : /* @__PURE__ */ import_react11.default.createElement(import_react11.default.Fragment, null, /* @__PURE__ */ import_react11.default.createElement(Expandable, {
+    return contextItem === null ? null : /* @__PURE__ */ import_react11.default.createElement("div", {
+      className: "shadow-sm rounded-md"
+    }, /* @__PURE__ */ import_react11.default.createElement(Expandable, {
       hint: debuggingSteps ? "Hide other uncertain expressions (Tab key)" : "Expand to see a list of uncertain expressions (Tab key)",
       opened: multipleExps,
       onOpen: (_3) => {
         if (!multipleExps) {
+          track({
+            event: Event.balancedMode,
+            task: currentTaskNum,
+            mode,
+            source: Source.mouse
+          });
           dispatch(toggleMultipleExps());
         }
       },
       onClose: (_3) => {
-        if (multipleExps) {
+        if (multipleExps && !debuggingSteps) {
           dispatch(toggleMultipleExps());
-        }
-        if (debuggingSteps)
+          track({
+            event: Event.basicMode,
+            task: currentTaskNum,
+            mode,
+            source: Source.mouse
+          });
+        } else if (multipleExps && debuggingSteps) {
+          dispatch(toggleMultipleExps());
           dispatch(toggleDebuggerStpes());
+          track({
+            event: Event.basicMode,
+            task: currentTaskNum,
+            mode,
+            source: Source.mouse
+          });
+        }
       }
     }, /* @__PURE__ */ import_react11.default.createElement("div", {
-      className: "bg-white p-3 pl-8 shadow-sm rounded-t-lg " + (multipleExps ? "" : "rounded-b-lg")
+      style: { paddingLeft: 40 },
+      className: "bg-white p-3 rounded-t-md " + (multipleExps ? "" : "rounded-b-md")
     }, /* @__PURE__ */ import_react11.default.createElement("div", {
       className: "text-md"
     }, "The following expression can have two conflicting types", /* @__PURE__ */ import_react11.default.createElement("span", {
-      onMouseEnter: (_3) => dispatch(showDefination()),
+      onMouseEnter: (_3) => {
+        dispatch(showDefination());
+        track({
+          event: Event.peekDef,
+          task: currentTaskNum,
+          mode,
+          source: Source.mouse
+        });
+      },
       onMouseLeave: (_3) => dispatch(showBoth()),
       className: "code ml-2 px-1 rounded-md  inline-block not-italic cursor-pointer " + (pinned ? "border border-gray-700 bg-gray-700 text-white hover:bg-gray-600" : "border border-black border-dashed hover:bg-gray-100")
     }, contextItem["contextExp"])))), multipleExps ? /* @__PURE__ */ import_react11.default.createElement(Expandable, {
@@ -26865,14 +30807,59 @@ problem_1 = sum (check [1..999])
       left: 5,
       hint: debuggingSteps ? "Hide debugging steps (Tab key)" : "Expand to see debugging steps (Tab key)",
       onOpen: (_3) => {
-        if (!debuggingSteps)
+        if (!debuggingSteps) {
+          track({
+            event: Event.advancedMode,
+            task: currentTaskNum,
+            mode,
+            source: Source.mouse
+          });
           dispatch(toggleDebuggerStpes());
+        }
       },
       onClose: (_3) => {
-        if (debuggingSteps)
+        if (debuggingSteps) {
+          track({
+            event: Event.balancedMode,
+            task: currentTaskNum,
+            mode,
+            source: Source.mouse
+          });
           dispatch(toggleDebuggerStpes());
+        }
       }
-    }, /* @__PURE__ */ import_react11.default.createElement(TabList, null)) : null);
+    }, /* @__PURE__ */ import_react11.default.createElement(TabList, null)) : null, debuggingSteps ? /* @__PURE__ */ import_react11.default.createElement("div", {
+      className: "flex justify-start p-1 border-0 rounded-b-md bg-gray-800",
+      style: { paddingLeft: 40 }
+    }, /* @__PURE__ */ import_react11.default.createElement("button", {
+      "aria-label": "Previous step (Left / Up / h / k )",
+      className: "border bg-gray-800 border-gray-500 text-gray-300 shadow-sm hover:bg-gray-500 hover:text-gray-800 active:bg-gray-700 active:text-white px-2 py-1 mx-0.5 h-8 rounded-md flex justify-center items-center hint--bottom",
+      onClick: (_3) => {
+        dispatch(nextStep());
+        track({
+          event: Event.prev,
+          task: currentTaskNum,
+          mode,
+          source: Source.mouse
+        });
+      }
+    }, /* @__PURE__ */ import_react11.default.createElement(ChevronDoubleLeftIcon_default, {
+      className: "h-4 w-4"
+    })), /* @__PURE__ */ import_react11.default.createElement("button", {
+      "aria-label": "Next step (Right / Down / l / j)",
+      className: "border bg-gray-800 border-gray-500 text-gray-300 shadow-sm hover:bg-gray-500 hover:text-gray-800 active:bg-gray-700 active:text-white px-2 py-1 mx-0.5 h-8 rounded-md flex justify-center items-center hint--bottom",
+      onClick: (_3) => {
+        dispatch(prevStep());
+        track({
+          event: Event.next,
+          task: currentTaskNum,
+          mode,
+          source: Source.mouse
+        });
+      }
+    }, /* @__PURE__ */ import_react11.default.createElement(ChevronDoubleRightIcon_default, {
+      className: "h-4 w-4"
+    }))) : null);
   };
   var Expandable = ({ opened, children, onOpen, onClose, hint, left = 5 }) => {
     let size = 25;
@@ -26895,15 +30882,27 @@ problem_1 = sum (check [1..999])
   };
   var Message = () => {
     let contextItem = useSelector((state) => state.debugger.currentContextItem);
+    const multipleExps = useSelector(path_default(["debugger", "multipleExps"]));
+    const debuggingSteps = useSelector(path_default(["debugger", "debuggingSteps"]));
+    const currentTaskNum = useSelector(path_default(["debugger", "currentTaskNum"]));
+    const mode = getMode(multipleExps, debuggingSteps);
     let dispatch = useDispatch();
     return contextItem === null ? null : /* @__PURE__ */ import_react11.default.createElement(import_react11.default.Fragment, null, /* @__PURE__ */ import_react11.default.createElement("div", {
       className: "font-medium mt-5"
     }, "Conflicting types"), /* @__PURE__ */ import_react11.default.createElement("div", {
-      className: "mb-5 mt-2 shadow-sm"
+      className: "mb-5 mt-2  shadow-sm"
     }, /* @__PURE__ */ import_react11.default.createElement("div", {
       className: "cursor-pointer hover:bg-gray-100 rounded-t-md bg-white p-2 w-full hint--bottom ",
       "aria-label": "Keyboard shortcut: Hold 1",
-      onMouseEnter: (_3) => dispatch(showOnlyMark1()),
+      onMouseEnter: (_3) => {
+        dispatch(showOnlyMark1());
+        track({
+          event: Event.narrowType1,
+          task: currentTaskNum,
+          mode,
+          source: Source.mouse
+        });
+      },
       onMouseLeave: (_3) => dispatch(showBoth())
     }, /* @__PURE__ */ import_react11.default.createElement("div", {
       className: "mb-2 text-sm font-medium"
@@ -26921,7 +30920,15 @@ problem_1 = sum (check [1..999])
     }), /* @__PURE__ */ import_react11.default.createElement("div", {
       className: "cursor-pointer hover:bg-gray-100 rounded-b-md bg-white p-2 w-full hint--bottom ",
       "aria-label": "Keyboard shortcut: Hold 2",
-      onMouseEnter: (_3) => dispatch(showOnlyMark2()),
+      onMouseEnter: (_3) => {
+        dispatch(showOnlyMark2());
+        track({
+          event: Event.narrowType2,
+          task: currentTaskNum,
+          mode,
+          source: Source.mouse
+        });
+      },
       onMouseLeave: (_3) => dispatch(showBoth())
     }, /* @__PURE__ */ import_react11.default.createElement("div", {
       className: "mb-2 text-sm font-medium"
@@ -26971,6 +30978,9 @@ problem_1 = sum (check [1..999])
   var ReleventItem = ({ item }) => {
     let currentTraverseId = useSelector(path_default(["debugger", "currentTraverseId"]));
     const multipleExps = useSelector(path_default(["debugger", "multipleExps"]));
+    const debuggingSteps = useSelector(path_default(["debugger", "debuggingSteps"]));
+    const currentTaskNum = useSelector(path_default(["debugger", "currentTaskNum"]));
+    const mode = getMode(multipleExps, debuggingSteps);
     let dispatch = useDispatch();
     let affinity = pipe(find_default(pipe(nth_default(0), equals_default(currentTraverseId))), nth_default(1))(item.contextSteps);
     let type3 = affinity === "L" ? item.contextType1String : item.contextType2String;
@@ -26979,7 +30989,15 @@ problem_1 = sum (check [1..999])
     let tabDefaultStep = tabReleventSteps[Math.round(tabReleventSteps.length / 2) - 1][3];
     return /* @__PURE__ */ import_react11.default.createElement("div", {
       className: "flex flex-col my-1.5 bg-white p-2 rounded-md cursor-pointer shadow-sm hover:bg-gray-100",
-      onMouseEnter: (_3) => affinity === "L" ? dispatch(showOnlyMark1()) : dispatch(showOnlyMark2()),
+      onMouseEnter: (_3) => {
+        affinity === "L" ? dispatch(showOnlyMark1()) : dispatch(showOnlyMark2());
+        track({
+          event: Event.narrowRelevent,
+          task: currentTaskNum,
+          mode,
+          source: Source.mouse
+        });
+      },
       onMouseLeave: (_3) => dispatch(showBoth())
     }, /* @__PURE__ */ import_react11.default.createElement("div", {
       className: "flex justify-between"
@@ -26996,7 +31014,15 @@ problem_1 = sum (check [1..999])
     }, /* @__PURE__ */ import_react11.default.createElement("div", {
       className: "text-sm text-gray-500"
     }, "Looks wrong? "), /* @__PURE__ */ import_react11.default.createElement("button", {
-      onClick: (_3) => dispatch(lockStep(tabDefaultStep)),
+      onClick: (_3) => {
+        dispatch(lockStep(tabDefaultStep));
+        track({
+          event: Event.inspect,
+          task: currentTaskNum,
+          mode,
+          source: Source.mouse
+        });
+      },
       className: "border border-gray-300 rounded-sm px-2 py-1 mr-1 ml-2 bg-white active:bg-gray-200 hover:bg-gray-100 shadow-sm"
     }, "Inspect")) : null), /* @__PURE__ */ import_react11.default.createElement("div", {
       className: "text-xs italic"
@@ -27060,11 +31086,12 @@ problem_1 = sum (check [1..999])
   var MenuBar = () => {
     const dispatch = useDispatch();
     const mode = useSelector(path_default(["debugger", "mode"]));
+    const multipleExps = useSelector(path_default(["debugger", "multipleExps"]));
     const deductionSteps = useSelector(path_default(["debugger", "debuggingSteps"]));
-    (0, import_react13.useEffect)(() => {
-      dispatch(setTask(1));
-      dispatch(typeCheckThunk());
-    }, []);
+    const currentTaskNum = useSelector(path_default(["debugger", "currentTaskNum"]));
+    const debuggingMode = getMode(multipleExps, deductionSteps);
+    const attempts = useSelector(path_default(["debugger", "attempts"]));
+    const currentTaskAttemps = attempts[currentTaskNum];
     return /* @__PURE__ */ import_react13.default.createElement("div", {
       className: "w-full bg-gray-100 h-10 flex justify-between"
     }, /* @__PURE__ */ import_react13.default.createElement("div", {
@@ -27118,10 +31145,10 @@ problem_1 = sum (check [1..999])
     }), /* @__PURE__ */ import_react13.default.createElement("path", {
       d: "M34.015,56.47c0,4.563 3.908,8.262 8.729,8.262c4.821,-0 8.729,-3.699 8.729,-8.262l-17.458,0Z",
       style: { fill: "#486c47" }
-    }))), /* @__PURE__ */ import_react13.default.createElement("p", {
+    }))), true ? /* @__PURE__ */ import_react13.default.createElement(import_react13.default.Fragment, null, " ", /* @__PURE__ */ import_react13.default.createElement("p", {
       className: "mr-1"
     }, "Load examples:"), /* @__PURE__ */ import_react13.default.createElement("select", {
-      defaultValue: 1,
+      value: currentTaskNum === null ? 0 : currentTaskNum,
       onChange: (e3) => dispatch(switchTaskThunk(e3.target.value)),
       className: "bg-gray-300 h-8 px-4 py-1 rounded-md"
     }, /* @__PURE__ */ import_react13.default.createElement("option", {
@@ -27142,14 +31169,48 @@ problem_1 = sum (check [1..999])
       value: 7
     }, "Example 8"), /* @__PURE__ */ import_react13.default.createElement("option", {
       value: 8
-    }, "Example 9")), mode === editorModes.normal ? /* @__PURE__ */ import_react13.default.createElement("button", {
-      className: "bg-gray-300 px-4 py-1 rounded-md mx-2 flex h-8 justify-center items-center",
-      onClick: (_3) => dispatch(toEditMode())
-    }, /* @__PURE__ */ import_react13.default.createElement(PencilAltIcon_default, {
-      className: "h-4 w-4 mr-1"
-    }), "Edit code") : /* @__PURE__ */ import_react13.default.createElement("button", {
-      className: "bg-gray-300 px-4 py-1 rounded-md mx-2 flex h-8 justify-center items-center",
+    }, "Example 9")), " ") : null, /* @__PURE__ */ import_react13.default.createElement("button", {
+      className: "bg-gray-300 px-4 py-1 rounded-md mx-2 flex h-8 justify-center items-center  hint--bottom",
+      "aria-label": "Reset the code challenge to its initial state",
       onClick: (_3) => {
+        dispatch(switchTaskThunk(currentTaskNum));
+        dispatch(toNormalMode());
+        track({
+          event: Event.reset,
+          task: currentTaskNum,
+          mode: debuggingMode,
+          source: Source.mouse
+        });
+      }
+    }, "Reset problem"), currentTaskAttemps > 5 && false ? /* @__PURE__ */ import_react13.default.createElement("button", {
+      "aria-label": "Skip this code challenge if you get stuck for too long",
+      className: "bg-gray-300 px-4 py-1 rounded-md mx-2 flex h-8 justify-center items-center hint--bottom",
+      onClick: (_3) => {
+        track({
+          event: Event.abandon,
+          task: currentTaskNum,
+          mode: debuggingMode,
+          source: Source.mouse
+        });
+        if (currentTaskNum === 8) {
+          let participant_id = localStorage.getItem("userId");
+          window.location = "https://tally.so/r/nrjAxX?participant_id=" + participant_id;
+        } else {
+          localStorage.setItem("userProgress", currentTaskNum);
+          dispatch(switchTaskThunk(currentTaskNum + 1));
+          dispatch(toNormalMode());
+        }
+      }
+    }, "Give up") : null, mode === editorModes.normal ? null : /* @__PURE__ */ import_react13.default.createElement("button", {
+      className: "bg-gray-300 px-4 py-1 rounded-md mx-2 flex h-8 justify-center items-center color-change hint--bottom",
+      "aria-label": "Type check the code (Esc)",
+      onClick: (_3) => {
+        track({
+          event: Event.typeCheck,
+          task: currentTaskNum,
+          mode: debuggingMode,
+          source: Source.mouse
+        });
         dispatch(toNormalMode());
         dispatch(typeCheckThunk());
       }
@@ -27158,74 +31219,116 @@ problem_1 = sum (check [1..999])
     }), "Type check"), /* @__PURE__ */ import_react13.default.createElement("a", {
       href: "/tutorial",
       target: "_blank",
-      className: "bg-gray-300 px-4 py-1 rounded-md mx-2 flex h-8 justify-center items-center"
+      className: "bg-gray-300 px-4 py-1 rounded-md mx-2 flex h-8 justify-center items-center hint--bottom",
+      "aria-label": "Open tutorial in a new tab"
     }, /* @__PURE__ */ import_react13.default.createElement(BookOpenIcon_default, {
       className: "h-4 w-4 mr-1"
-    }), "Tutorial"), deductionSteps ? /* @__PURE__ */ import_react13.default.createElement(import_react13.default.Fragment, null, /* @__PURE__ */ import_react13.default.createElement("button", {
-      "aria-label": "Previous step (Left arrow key / k )",
-      className: "bg-gray-700 hover:bg-gray-800 active:bg-gray-900 px-2 py-1 mx-0.5 h-8 rounded-md flex justify-center items-center hint--bottom",
-      onClick: (_3) => dispatch(nextStep())
-    }, /* @__PURE__ */ import_react13.default.createElement(ChevronDoubleLeftIcon_default, {
-      className: "h-4 w-4 text-white"
-    })), /* @__PURE__ */ import_react13.default.createElement("button", {
-      "aria-label": "Next step (Right arrow key / j)",
-      className: "bg-gray-700 hover:bg-gray-800 active:bg-gray-900 px-2 py-1 mx-0.5 h-8 rounded-md flex justify-center items-center hint--bottom",
-      onClick: (_3) => dispatch(prevStep())
-    }, /* @__PURE__ */ import_react13.default.createElement(ChevronDoubleRightIcon_default, {
-      className: "h-4 w-4 text-white"
-    }))) : null), /* @__PURE__ */ import_react13.default.createElement("div", {
+    }), "Tutorial")), /* @__PURE__ */ import_react13.default.createElement("div", {
       className: "flex items-center px-2"
-    }));
+    }, /* @__PURE__ */ import_react13.default.createElement("div", null, debuggingMode)));
   };
   var MenuBar_default = MenuBar;
 
-  // index.jsx
+  // playground.jsx
+  store_default.dispatch(switchTaskThunk(0));
   window.addEventListener("keyup", (event) => {
     const keyName = event.key;
-    if (keyName === "1" || keyName === "2") {
+    let state = store_default.getState();
+    if (state.debugger.mode === editorModes.normal && (keyName === "1" || keyName === "2")) {
       store_default.dispatch(showBoth());
     }
   });
   window.addEventListener("keydown", (event) => {
     let state = store_default.getState();
     const keyName = event.key;
-    console.log(keyName);
-    if (state.debugger.mode === editorModes.normal) {
-      if (keyName === "Tab") {
-        event.preventDefault();
-        if (!state.debugger.multipleExps) {
-          store_default.dispatch(toggleMultipleExps());
-        } else if (state.debugger.multipleExps && !state.debugger.debuggingSteps) {
-          store_default.dispatch(toggleDebuggerStpes());
-        } else if (state.debugger.multipleExps && state.debugger.debuggingSteps) {
-          store_default.dispatch(toggleMultipleExps());
-          store_default.dispatch(toggleDebuggerStpes());
-        }
+    if (keyName === "Tab") {
+      event.preventDefault();
+      if (!state.debugger.multipleExps) {
+        store_default.dispatch(toggleMultipleExps());
+        track({
+          event: Event.balancedMode,
+          task: state.debugger.currentTaskNum,
+          mode: "Basic Mode",
+          source: Source.keyboard
+        });
+      } else if (state.debugger.multipleExps && !state.debugger.debuggingSteps) {
+        track({
+          event: Event.advancedMode,
+          task: state.debugger.currentTaskNum,
+          mode: "Balanced Mode",
+          source: Source.keyboard
+        });
+        store_default.dispatch(toggleDebuggerStpes());
+      } else if (state.debugger.multipleExps && state.debugger.debuggingSteps) {
+        track({
+          event: Event.basicMode,
+          task: state.debugger.currentTaskNum,
+          mode: "Advanced Mode",
+          source: Source.keyboard
+        });
+        store_default.dispatch(toggleMultipleExps());
+        store_default.dispatch(toggleDebuggerStpes());
       }
+    }
+    if (state.debugger.mode === editorModes.edit && keyName === "Escape") {
+      track({
+        event: Event.typeCheck,
+        task: state.debugger.currentTaskNum,
+        mode: getMode(state.debugger.multipleExps, state.debugger.debuggingSteps),
+        source: Source.keyboard
+      });
+      store_default.dispatch(toNormalMode());
+      store_default.dispatch(typeCheckThunk());
+    }
+    if (state.debugger.mode === editorModes.normal) {
       if (keyName === "1") {
+        track({
+          event: Event.narrowType1,
+          task: state.debugger.currentTaskNum,
+          mode: getMode(state.debugger.multipleExps, state.debugger.debuggingSteps),
+          source: Source.keyboard
+        });
         store_default.dispatch(showOnlyMark1());
       }
       if (keyName === "2") {
+        track({
+          event: Event.narrowType2,
+          task: state.debugger.currentTaskNum,
+          mode: getMode(state.debugger.multipleExps, state.debugger.debuggingSteps),
+          source: Source.keyboard
+        });
         store_default.dispatch(showOnlyMark2());
       }
       if (state.debugger.debuggingSteps) {
-        if (keyName === "ArrowDown" || keyName === "ArrowRight" || keyName === "j") {
+        if (keyName === "ArrowDown" || keyName === "ArrowRight" || keyName === "j" || keyName === "l") {
+          track({
+            event: Event.next,
+            task: state.debugger.currentTaskNum,
+            mode: getMode(state.debugger.multipleExps, state.debugger.debuggingSteps),
+            source: Source.keyboard
+          });
           store_default.dispatch(prevStep());
         }
-        if (keyName === "ArrowUp" || keyName === "ArrowLeft" || keyName === "k") {
+        if (keyName === "ArrowUp" || keyName === "ArrowLeft" || keyName === "k" || keyName === "h") {
+          track({
+            event: Event.prev,
+            task: state.debugger.currentTaskNum,
+            mode: getMode(state.debugger.multipleExps, state.debugger.debuggingSteps),
+            source: Source.keyboard
+          });
           store_default.dispatch(nextStep());
         }
       }
     }
   });
   var App2 = () => {
-    return /* @__PURE__ */ import_react14.default.createElement("div", {
+    return /* @__PURE__ */ import_react14.default.createElement(import_react14.default.Fragment, null, /* @__PURE__ */ import_react14.default.createElement("div", {
       className: "w-full h-full flex flex-col"
     }, /* @__PURE__ */ import_react14.default.createElement(MenuBar_default, null), /* @__PURE__ */ import_react14.default.createElement("div", {
       className: "flex-grow"
     }, /* @__PURE__ */ import_react14.default.createElement(y2, {
       initialSizes: [60, 40]
-    }, /* @__PURE__ */ import_react14.default.createElement(Editor_default, null), /* @__PURE__ */ import_react14.default.createElement(Debugger_default, null))));
+    }, /* @__PURE__ */ import_react14.default.createElement(Editor_default, null), /* @__PURE__ */ import_react14.default.createElement(Debugger_default, null)))));
   };
   import_react_dom2.default.render(/* @__PURE__ */ import_react14.default.createElement(import_react14.default.StrictMode, null, /* @__PURE__ */ import_react14.default.createElement(Provider_default, {
     store: store_default
@@ -27305,4 +31408,3 @@ object-assign
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
  */
-//# sourceMappingURL=playground.js.map
