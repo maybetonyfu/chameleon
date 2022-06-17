@@ -310,10 +310,7 @@ export function getRandomInt(max) {
   return Math.floor(Math.random() * max);
 }
 
-export function trackingAttributes (currentMode, taskNum) {
-  return {
-    stage: 'testing',
-    currentMode,
-    taskNum,
-  }
+export function getMode (mulExp, deduction) {
+  return !mulExp ? 'Basic Mode': deduction ? 'Advanced Mode' : 'Balanced Mode'
+
 }

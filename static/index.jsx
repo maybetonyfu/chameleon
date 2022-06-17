@@ -13,9 +13,6 @@ import {
   showOnlyMark2,
   showBoth,
   toNormalMode,
-  debuggingLevel1,
-  debuggingLevel2,
-  debuggingLevel3,
   typeCheckThunk,
 } from './debuggerSlice';
 import Splitter from '@devbookhq/splitter';
@@ -23,28 +20,32 @@ import Editor from './Editor';
 import Debugger from './Debugger';
 import MenuBar from './MenuBar';
 import Modal from 'react-modal';
-import mixpanel from 'mixpanel-browser';
 import { nanoid } from 'nanoid';
-
-mixpanel.init('6be6077e1d5b8de6978c65490e1666ea', { debug: true, ignore_dnt: true, api_host: "https://data.chameleon.typecheck.me" });
+import mixpanel from 'mixpanel-browser';
+import { Event, Source, track } from './report';
+import { getMode } from './util';
+import * as R from 'ramda';
 
 Modal.setAppElement('#react-root');
 
 let userId, userProgress;
 if (localStorage.getItem('userId') === null) {
-    userId =nanoid()
-    userProgress = -1;
-    localStorage.setItem('userId', userId);
-    localStorage.setItem('userProgress', -1);
-    mixpanel.identify(userId);
-    mixpanel.track('Start user study')
+  userId = nanoid();
+  userProgress = -1;
+  localStorage.setItem('userId', userId);
+  localStorage.setItem('userProgress', -1);
 } else {
   userId = localStorage.getItem('userId');
   userProgress = parseInt(localStorage.getItem('userProgress'), 10);
-  mixpanel.identify(userId);
-
 }
 
+mixpanel.init('6be6077e1d5b8de6978c65490e1666ea', {
+  debug: true,
+  ignore_dnt: true,
+  api_host: 'https://data.chameleon.typecheck.me',
+});
+
+mixpanel.identify(userId);
 
 store.dispatch(switchTaskThunk(userProgress + 1));
 
@@ -66,24 +67,66 @@ window.addEventListener('keydown', event => {
     event.preventDefault();
     if (!state.debugger.multipleExps) {
       store.dispatch(toggleMultipleExps());
+      track({
+        event: Event.balancedMode,
+        task: state.debugger.currentTaskNum,
+        mode: 'Basic Mode',
+        source: Source.keyboard,
+      });
     } else if (state.debugger.multipleExps && !state.debugger.debuggingSteps) {
+      track({
+        event: Event.advancedMode,
+        task: state.debugger.currentTaskNum,
+        mode: 'Balanced Mode',
+        source: Source.keyboard,
+      });
       store.dispatch(toggleDebuggerStpes());
     } else if (state.debugger.multipleExps && state.debugger.debuggingSteps) {
+      track({
+        event: Event.basicMode,
+        task: state.debugger.currentTaskNum,
+        mode: 'Advanced Mode',
+        source: Source.keyboard,
+      });
       store.dispatch(toggleMultipleExps());
       store.dispatch(toggleDebuggerStpes());
     }
   }
 
   if (state.debugger.mode === editorModes.edit && keyName === 'Escape') {
+    track({
+      event: Event.typeCheck,
+      task: state.debugger.currentTaskNum,
+      mode: getMode(state.debugger.multipleExps, state.debugger.debuggingSteps),
+      source: Source.keyboard,
+    });
     store.dispatch(toNormalMode());
     store.dispatch(typeCheckThunk());
   }
   if (state.debugger.mode === editorModes.normal) {
     if (keyName === '1') {
+      track({
+        event: Event.narrowType1,
+        task: state.debugger.currentTaskNum,
+        mode: getMode(
+          state.debugger.multipleExps,
+          state.debugger.debuggingSteps,
+        ),
+        source: Source.keyboard,
+      });
       store.dispatch(showOnlyMark1());
     }
 
     if (keyName === '2') {
+      track({
+        event: Event.narrowType2,
+        task: state.debugger.currentTaskNum,
+        mode: getMode(
+          state.debugger.multipleExps,
+          state.debugger.debuggingSteps,
+        ),
+        source: Source.keyboard,
+      });
       store.dispatch(showOnlyMark2());
     }
 
@@ -91,11 +134,35 @@ window.addEventListener('keydown', event => {
       if (
         keyName === 'ArrowDown' ||
         keyName === 'ArrowRight' ||
-        keyName === 'j' || keyName === 'l'
+        keyName === 'j' ||
+        keyName === 'l'
       ) {
+        track({
+          event: Event.next,
+          task: state.debugger.currentTaskNum,
+          mode: getMode(
+            state.debugger.multipleExps,
+            state.debugger.debuggingSteps,
+          ),
+          source: Source.keyboard,
+        });
         store.dispatch(prevStep());
       }
-      if (keyName === 'ArrowUp' || keyName === 'ArrowLeft' || keyName === 'k' || keyName === 'h') {
+      if (
+        keyName === 'ArrowUp' ||
+        keyName === 'ArrowLeft' ||
+        keyName === 'k' ||
+        keyName === 'h'
+      ) {
+        track({
+          event: Event.prev,
+          task: state.debugger.currentTaskNum,
+          mode: getMode(
+            state.debugger.multipleExps,
+            state.debugger.debuggingSteps,
+          ),
+          source: Source.keyboard,
+        });
         store.dispatch(nextStep());
       }
     }
@@ -129,9 +196,17 @@ const App = () => {
 const ModelContent = () => {
   let dispatch = useDispatch();
   let currentTaskNum = useSelector(state => state.debugger.currentTaskNum);
-  // analytics.track(events.succeed, { taskNumber: currentTaskNum, mode });
+  const multipleExps = useSelector(R.path(['debugger', 'multipleExps']));
+  const deductionSteps = useSelector(R.path(['debugger', 'debuggingSteps']));
+  const mode = getMode(multipleExps, deductionSteps);
   useEffect(() => {
-    localStorage.setItem('userProgress', currentTaskNum)
+    track({
+      event: Event.succeed,
+      source: Source.remote,
+      mode,
+      task: currentTaskNum,
+    });
+    localStorage.setItem('userProgress', currentTaskNum);
     if (currentTaskNum === 8) {
       localStorage.removeItem('userId');
       localStorage.removeItem('userProgress');
@@ -155,8 +230,9 @@ const ModelContent = () => {
         className='px-5 py-1 bg-green-400 rounded-md'
         onClick={() => {
           if (currentTaskNum === 8) {
-            let participant_id = localStorage.getItem('userId')
-            window.location = 'https://tally.so/r/nrjAxX?participant_id=' + participant_id;
+            let participant_id = localStorage.getItem('userId');
+            window.location =
+              'https://tally.so/r/nrjAxX?participant_id=' + participant_id;
             return;
           } else {
             dispatch(switchTaskThunk(currentTaskNum + 1));

@@ -12,19 +12,19 @@ import {
   editorModes,
 } from './debuggerSlice';
 import {
-  PencilAltIcon,
   EyeIcon,
   BookOpenIcon,
-  ChevronDoubleLeftIcon,
-  ChevronDoubleRightIcon,
 } from '@heroicons/react/solid';
+import { Event, Source, track } from './report';
+import { getMode } from './util';
 
 const MenuBar = () => {
   const dispatch = useDispatch();
   const mode = useSelector(R.path(['debugger', 'mode']));
-  const deductionSteps = useSelector(R.path(['debugger', 'debuggingSteps']));
   const multipleExps = useSelector(R.path(['debugger', 'multipleExps']));
+  const deductionSteps = useSelector(R.path(['debugger', 'debuggingSteps']));
   const currentTaskNum = useSelector(R.path(['debugger', 'currentTaskNum']));
+  const debuggingMode = getMode(multipleExps, deductionSteps);
   const attempts = useSelector(R.path(['debugger', 'attempts']))
   const currentTaskAttemps = attempts[currentTaskNum]
 
@@ -113,6 +113,12 @@ const MenuBar = () => {
           onClick={_ => {
             dispatch(switchTaskThunk(currentTaskNum));
             dispatch(toNormalMode());
+            track({
+              event: Event.reset,
+              task: currentTaskNum,
+              mode : debuggingMode,
+              source:  Source.mouse,
+            })
           }}
         >
           Reset problem
@@ -121,6 +127,12 @@ const MenuBar = () => {
           aria-label='Skip this code challenge if you get stuck for too long'
           className='bg-gray-300 px-4 py-1 rounded-md mx-2 flex h-8 justify-center items-center hint--bottom'
           onClick={_ => {
+            track({
+              event: Event.abandon,
+              task: currentTaskNum,
+              mode : debuggingMode,
+              source:  Source.mouse,
+            })
             if (currentTaskNum === 8) {
               let participant_id = localStorage.getItem('userId')
               window.location = 'https://tally.so/r/nrjAxX?participant_id=' + participant_id;
@@ -138,6 +150,12 @@ const MenuBar = () => {
             className='bg-gray-300 px-4 py-1 rounded-md mx-2 flex h-8 justify-center items-center color-change hint--bottom'
             aria-label="Type check the code (Esc)"
             onClick={_ => {
+              track({
+                event: Event.typeCheck,
+                task: currentTaskNum,
+                mode : debuggingMode,
+                source:  Source.mouse,
+              })
               dispatch(toNormalMode());
               dispatch(typeCheckThunk());
             }}
@@ -155,34 +173,13 @@ const MenuBar = () => {
           <BookOpenIcon className='h-4 w-4 mr-1'></BookOpenIcon>
           Tutorial
         </a>
-        {
-          deductionSteps ? (<>
-            <button
-              aria-label='Previous step (Left / Up / h / k )'
-              className='bg-gray-700 hover:bg-gray-800 active:bg-gray-900 px-2 py-1 mx-0.5 h-8 rounded-md flex justify-center items-center hint--bottom'
-              onClick={_ => dispatch(nextStep())}
-            >
-              <ChevronDoubleLeftIcon className='h-4 w-4 text-white'></ChevronDoubleLeftIcon>
-            </button>
-            <button
-              aria-label='Next step (Right / Down / l / j)'
-              className='bg-gray-700 hover:bg-gray-800 active:bg-gray-900 px-2 py-1 mx-0.5 h-8 rounded-md flex justify-center items-center hint--bottom'
-              onClick={_ => dispatch(prevStep())}
-            >
-              <ChevronDoubleRightIcon className='h-4 w-4 text-white'></ChevronDoubleRightIcon>
-            </button>
-          </>) : null
-        }
+
 
       </div>
 
       <div className='flex items-center px-2'>
         <div>
-          {(() => {
-            if (!multipleExps && !deductionSteps) return "Basic Mode"
-            if (multipleExps && !deductionSteps) return "Balanced Mode"
-            if (multipleExps && deductionSteps) return "Advanced Mode"
-          })()}
+          {debuggingMode}
         </div>
       </div>
     </div>
