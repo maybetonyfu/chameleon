@@ -215,10 +215,6 @@ const ModelContent = () => {
       task: currentTaskNum,
     });
     localStorage.setItem('userProgress', currentTaskNum);
-    if (currentTaskNum === 8) {
-      localStorage.removeItem('userId');
-      localStorage.removeItem('userProgress');
-    }
   }, []);
   return (
     <div className='flex flex-col justify-around items-center h-full'>
@@ -239,8 +235,9 @@ const ModelContent = () => {
         onClick={() => {
           if (currentTaskNum === 8) {
             let participant_id = localStorage.getItem('userId');
+            console.log(participant_id)
             window.location =
-              'https://tally.so/r/nrjAxX?participant_id=' + participant_id;
+            `https://tally.so/r/nrjAxX?participant_id=${participant_id}`;
             return;
           } else {
             dispatch(switchTaskThunk(currentTaskNum + 1));

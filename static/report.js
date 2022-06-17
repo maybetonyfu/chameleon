@@ -37,7 +37,7 @@ if (OUTPUT_TARGET === 'playground') {
     if (process.env.NODE_ENV === 'production') {
       track = ({ event, task, mode, source }) => {
         mixpanel.track(event, {
-          Stage: 'testing',
+          Stage: 'live',
           Task: task,
           Mode: mode,
           'Input Source': source,
