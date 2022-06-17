@@ -31,15 +31,3 @@ Hang tight! We are working on more features to make Chameleon even better!
 The chameleon playground is an online editor for you to test out some of the chameleon features.
 
 [Go to playground](https://chameleon.typecheck.me/playground)
-
-## Build Project
-
-```
-stack build
-```
-
-## Run Server
-```
-stack run
-```
-and the server will be available at http://localhost:5000

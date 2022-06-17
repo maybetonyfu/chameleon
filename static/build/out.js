@@ -200,7 +200,7 @@
           {
             ReactSharedInternals.ReactDebugCurrentFrame = ReactDebugCurrentFrame;
           }
-          function warn(format) {
+          function warn2(format) {
             {
               for (var _len = arguments.length, args = new Array(_len > 1 ? _len - 1 : 0), _key = 1; _key < _len; _key++) {
                 args[_key - 1] = arguments[_key];
@@ -288,7 +288,7 @@
             var defineDeprecationWarning = function(methodName, info) {
               Object.defineProperty(Component.prototype, methodName, {
                 get: function() {
-                  warn("%s(...) is deprecated in plain JavaScript React classes. %s", info[0], info[1]);
+                  warn2("%s(...) is deprecated in plain JavaScript React classes. %s", info[0], info[1]);
                   return void 0;
                 }
               });
@@ -693,7 +693,7 @@
                 {
                   if (iteratorFn === iterableChildren.entries) {
                     if (!didWarnAboutMaps) {
-                      warn("Using Maps as children is not supported. Use an array of keyed ReactElements instead.");
+                      warn2("Using Maps as children is not supported. Use an array of keyed ReactElements instead.");
                     }
                     didWarnAboutMaps = true;
                   }
@@ -837,7 +837,7 @@
                   },
                   set: function(displayName) {
                     if (!hasWarnedAboutDisplayNameOnConsumer) {
-                      warn("Setting `displayName` on Context.Consumer has no effect. You should set it directly on the context with Context.displayName = '%s'.", displayName);
+                      warn2("Setting `displayName` on Context.Consumer has no effect. You should set it directly on the context with Context.displayName = '%s'.", displayName);
                       hasWarnedAboutDisplayNameOnConsumer = true;
                     }
                   }
@@ -1339,7 +1339,7 @@
               }
             }
           }
-          function checkPropTypes(typeSpecs, values, location, componentName, element) {
+          function checkPropTypes(typeSpecs, values, location2, componentName, element) {
             {
               var has = Function.call.bind(Object.prototype.hasOwnProperty);
               for (var typeSpecName in typeSpecs) {
@@ -1347,23 +1347,23 @@
                   var error$1 = void 0;
                   try {
                     if (typeof typeSpecs[typeSpecName] !== "function") {
-                      var err = Error((componentName || "React class") + ": " + location + " type `" + typeSpecName + "` is invalid; it must be a function, usually from the `prop-types` package, but received `" + typeof typeSpecs[typeSpecName] + "`.This often happens because of typos such as `PropTypes.function` instead of `PropTypes.func`.");
+                      var err = Error((componentName || "React class") + ": " + location2 + " type `" + typeSpecName + "` is invalid; it must be a function, usually from the `prop-types` package, but received `" + typeof typeSpecs[typeSpecName] + "`.This often happens because of typos such as `PropTypes.function` instead of `PropTypes.func`.");
                       err.name = "Invariant Violation";
                       throw err;
                     }
-                    error$1 = typeSpecs[typeSpecName](values, typeSpecName, componentName, location, null, "SECRET_DO_NOT_PASS_THIS_OR_YOU_WILL_BE_FIRED");
+                    error$1 = typeSpecs[typeSpecName](values, typeSpecName, componentName, location2, null, "SECRET_DO_NOT_PASS_THIS_OR_YOU_WILL_BE_FIRED");
                   } catch (ex) {
                     error$1 = ex;
                   }
                   if (error$1 && !(error$1 instanceof Error)) {
                     setCurrentlyValidatingElement(element);
-                    error("%s: type specification of %s `%s` is invalid; the type checker function must return `null` or an `Error` but returned a %s. You may have forgotten to pass an argument to the type checker creator (arrayOf, instanceOf, objectOf, oneOf, oneOfType, and shape all require an argument).", componentName || "React class", location, typeSpecName, typeof error$1);
+                    error("%s: type specification of %s `%s` is invalid; the type checker function must return `null` or an `Error` but returned a %s. You may have forgotten to pass an argument to the type checker creator (arrayOf, instanceOf, objectOf, oneOf, oneOfType, and shape all require an argument).", componentName || "React class", location2, typeSpecName, typeof error$1);
                     setCurrentlyValidatingElement(null);
                   }
                   if (error$1 instanceof Error && !(error$1.message in loggedTypeFailures)) {
                     loggedTypeFailures[error$1.message] = true;
                     setCurrentlyValidatingElement(element);
-                    error("Failed %s type: %s", location, error$1.message);
+                    error("Failed %s type: %s", location2, error$1.message);
                     setCurrentlyValidatingElement(null);
                   }
                 }
@@ -1566,12 +1566,12 @@
             {
               if (!didWarnAboutDeprecatedCreateFactory) {
                 didWarnAboutDeprecatedCreateFactory = true;
-                warn("React.createFactory() is deprecated and will be removed in a future major release. Consider using JSX or use React.createElement() directly instead.");
+                warn2("React.createFactory() is deprecated and will be removed in a future major release. Consider using JSX or use React.createElement() directly instead.");
               }
               Object.defineProperty(validatedFactory, "type", {
                 enumerable: false,
                 get: function() {
-                  warn("Factory.type is deprecated. Access the class directly before passing it to createFactory.");
+                  warn2("Factory.type is deprecated. Access the class directly before passing it to createFactory.");
                   Object.defineProperty(this, "type", {
                     value: type3
                   });
@@ -2173,13 +2173,13 @@
           function unstable_getThreadID() {
             return ++threadIDCounter;
           }
-          function unstable_trace(name, timestamp, callback) {
+          function unstable_trace(name, timestamp2, callback) {
             var threadID = arguments.length > 3 && arguments[3] !== void 0 ? arguments[3] : DEFAULT_THREAD_ID;
             var interaction = {
               __count: 1,
               id: interactionIDCounter++,
               name,
-              timestamp
+              timestamp: timestamp2
             };
             var prevInteractions = exports.__interactionsRef.current;
             var interactions = new Set(prevInteractions);
@@ -2442,7 +2442,7 @@
           var Scheduler = require_scheduler();
           var tracing = require_tracing();
           var ReactSharedInternals = React15.__SECRET_INTERNALS_DO_NOT_USE_OR_YOU_WILL_BE_FIRED;
-          function warn(format) {
+          function warn2(format) {
             {
               for (var _len = arguments.length, args = new Array(_len > 1 ? _len - 1 : 0), _key = 1; _key < _len; _key++) {
                 args[_key - 1] = arguments[_key];
@@ -2490,7 +2490,7 @@
           var ContextConsumer = 9;
           var ContextProvider = 10;
           var ForwardRef6 = 11;
-          var Profiler = 12;
+          var Profiler2 = 12;
           var SuspenseComponent = 13;
           var MemoComponent = 14;
           var SimpleMemoComponent = 15;
@@ -3437,7 +3437,7 @@
               }
             }
           }
-          function isCheckable(elem) {
+          function isCheckable2(elem) {
             var type3 = elem.type;
             var nodeName = elem.nodeName;
             return nodeName && nodeName.toLowerCase() === "input" && (type3 === "checkbox" || type3 === "radio");
@@ -3453,7 +3453,7 @@
             if (!node) {
               return value;
             }
-            if (isCheckable(node)) {
+            if (isCheckable2(node)) {
               value = node.checked ? "true" : "false";
             } else {
               value = node.value;
@@ -3461,7 +3461,7 @@
             return value;
           }
           function trackValueOnNode(node) {
-            var valueField = isCheckable(node) ? "checked" : "value";
+            var valueField = isCheckable2(node) ? "checked" : "value";
             var descriptor = Object.getOwnPropertyDescriptor(node.constructor.prototype, valueField);
             var currentValue = "" + node[valueField];
             if (node.hasOwnProperty(valueField) || typeof descriptor === "undefined" || typeof descriptor.get !== "function" || typeof descriptor.set !== "function") {
@@ -3481,7 +3481,7 @@
             Object.defineProperty(node, valueField, {
               enumerable: descriptor.enumerable
             });
-            var tracker = {
+            var tracker2 = {
               getValue: function() {
                 return currentValue;
               },
@@ -3493,7 +3493,7 @@
                 delete node[valueField];
               }
             };
-            return tracker;
+            return tracker2;
           }
           function track2(node) {
             if (getTracker(node)) {
@@ -3505,14 +3505,14 @@
             if (!node) {
               return false;
             }
-            var tracker = getTracker(node);
-            if (!tracker) {
+            var tracker2 = getTracker(node);
+            if (!tracker2) {
               return true;
             }
-            var lastValue = tracker.getValue();
+            var lastValue = tracker2.getValue();
             var nextValue = getValueFromNode(node);
             if (nextValue !== lastValue) {
-              tracker.setValue(nextValue);
+              tracker2.setValue(nextValue);
               return true;
             }
             return false;
@@ -6603,13 +6603,13 @@
             }
           }
           var clz32 = Math.clz32 ? Math.clz32 : clz32Fallback;
-          var log = Math.log;
+          var log2 = Math.log;
           var LN2 = Math.LN2;
           function clz32Fallback(lanes) {
             if (lanes === 0) {
               return 32;
             }
-            return 31 - (log(lanes) / LN2 | 0) | 0;
+            return 31 - (log2(lanes) / LN2 | 0) | 0;
           }
           var UserBlockingPriority$1 = Scheduler.unstable_UserBlockingPriority, runWithPriority = Scheduler.unstable_runWithPriority;
           var _enabled = true;
@@ -9721,7 +9721,7 @@
               }
             }
           }
-          function checkPropTypes(typeSpecs, values, location, componentName, element) {
+          function checkPropTypes(typeSpecs, values, location2, componentName, element) {
             {
               var has2 = Function.call.bind(Object.prototype.hasOwnProperty);
               for (var typeSpecName in typeSpecs) {
@@ -9729,23 +9729,23 @@
                   var error$1 = void 0;
                   try {
                     if (typeof typeSpecs[typeSpecName] !== "function") {
-                      var err = Error((componentName || "React class") + ": " + location + " type `" + typeSpecName + "` is invalid; it must be a function, usually from the `prop-types` package, but received `" + typeof typeSpecs[typeSpecName] + "`.This often happens because of typos such as `PropTypes.function` instead of `PropTypes.func`.");
+                      var err = Error((componentName || "React class") + ": " + location2 + " type `" + typeSpecName + "` is invalid; it must be a function, usually from the `prop-types` package, but received `" + typeof typeSpecs[typeSpecName] + "`.This often happens because of typos such as `PropTypes.function` instead of `PropTypes.func`.");
                       err.name = "Invariant Violation";
                       throw err;
                     }
-                    error$1 = typeSpecs[typeSpecName](values, typeSpecName, componentName, location, null, "SECRET_DO_NOT_PASS_THIS_OR_YOU_WILL_BE_FIRED");
+                    error$1 = typeSpecs[typeSpecName](values, typeSpecName, componentName, location2, null, "SECRET_DO_NOT_PASS_THIS_OR_YOU_WILL_BE_FIRED");
                   } catch (ex) {
                     error$1 = ex;
                   }
                   if (error$1 && !(error$1 instanceof Error)) {
                     setCurrentlyValidatingElement(element);
-                    error("%s: type specification of %s `%s` is invalid; the type checker function must return `null` or an `Error` but returned a %s. You may have forgotten to pass an argument to the type checker creator (arrayOf, instanceOf, objectOf, oneOf, oneOfType, and shape all require an argument).", componentName || "React class", location, typeSpecName, typeof error$1);
+                    error("%s: type specification of %s `%s` is invalid; the type checker function must return `null` or an `Error` but returned a %s. You may have forgotten to pass an argument to the type checker creator (arrayOf, instanceOf, objectOf, oneOf, oneOfType, and shape all require an argument).", componentName || "React class", location2, typeSpecName, typeof error$1);
                     setCurrentlyValidatingElement(null);
                   }
                   if (error$1 instanceof Error && !(error$1.message in loggedTypeFailures)) {
                     loggedTypeFailures[error$1.message] = true;
                     setCurrentlyValidatingElement(element);
-                    error("Failed %s type: %s", location, error$1.message);
+                    error("Failed %s type: %s", location2, error$1.message);
                     setCurrentlyValidatingElement(null);
                   }
                 }
@@ -10300,15 +10300,15 @@
               }
               if (componentWillMountUniqueNames.size > 0) {
                 var _sortedNames3 = setToSortedString(componentWillMountUniqueNames);
-                warn("componentWillMount has been renamed, and is not recommended for use. See https://reactjs.org/link/unsafe-component-lifecycles for details.\n\n* Move code with side effects to componentDidMount, and set initial state in the constructor.\n* Rename componentWillMount to UNSAFE_componentWillMount to suppress this warning in non-strict mode. In React 18.x, only the UNSAFE_ name will work. To rename all deprecated lifecycles to their new names, you can run `npx react-codemod rename-unsafe-lifecycles` in your project source folder.\n\nPlease update the following components: %s", _sortedNames3);
+                warn2("componentWillMount has been renamed, and is not recommended for use. See https://reactjs.org/link/unsafe-component-lifecycles for details.\n\n* Move code with side effects to componentDidMount, and set initial state in the constructor.\n* Rename componentWillMount to UNSAFE_componentWillMount to suppress this warning in non-strict mode. In React 18.x, only the UNSAFE_ name will work. To rename all deprecated lifecycles to their new names, you can run `npx react-codemod rename-unsafe-lifecycles` in your project source folder.\n\nPlease update the following components: %s", _sortedNames3);
               }
               if (componentWillReceivePropsUniqueNames.size > 0) {
                 var _sortedNames4 = setToSortedString(componentWillReceivePropsUniqueNames);
-                warn("componentWillReceiveProps has been renamed, and is not recommended for use. See https://reactjs.org/link/unsafe-component-lifecycles for details.\n\n* Move data fetching code or side effects to componentDidUpdate.\n* If you're updating state whenever props change, refactor your code to use memoization techniques or move it to static getDerivedStateFromProps. Learn more at: https://reactjs.org/link/derived-state\n* Rename componentWillReceiveProps to UNSAFE_componentWillReceiveProps to suppress this warning in non-strict mode. In React 18.x, only the UNSAFE_ name will work. To rename all deprecated lifecycles to their new names, you can run `npx react-codemod rename-unsafe-lifecycles` in your project source folder.\n\nPlease update the following components: %s", _sortedNames4);
+                warn2("componentWillReceiveProps has been renamed, and is not recommended for use. See https://reactjs.org/link/unsafe-component-lifecycles for details.\n\n* Move data fetching code or side effects to componentDidUpdate.\n* If you're updating state whenever props change, refactor your code to use memoization techniques or move it to static getDerivedStateFromProps. Learn more at: https://reactjs.org/link/derived-state\n* Rename componentWillReceiveProps to UNSAFE_componentWillReceiveProps to suppress this warning in non-strict mode. In React 18.x, only the UNSAFE_ name will work. To rename all deprecated lifecycles to their new names, you can run `npx react-codemod rename-unsafe-lifecycles` in your project source folder.\n\nPlease update the following components: %s", _sortedNames4);
               }
               if (componentWillUpdateUniqueNames.size > 0) {
                 var _sortedNames5 = setToSortedString(componentWillUpdateUniqueNames);
-                warn("componentWillUpdate has been renamed, and is not recommended for use. See https://reactjs.org/link/unsafe-component-lifecycles for details.\n\n* Move data fetching code or side effects to componentDidUpdate.\n* Rename componentWillUpdate to UNSAFE_componentWillUpdate to suppress this warning in non-strict mode. In React 18.x, only the UNSAFE_ name will work. To rename all deprecated lifecycles to their new names, you can run `npx react-codemod rename-unsafe-lifecycles` in your project source folder.\n\nPlease update the following components: %s", _sortedNames5);
+                warn2("componentWillUpdate has been renamed, and is not recommended for use. See https://reactjs.org/link/unsafe-component-lifecycles for details.\n\n* Move data fetching code or side effects to componentDidUpdate.\n* Rename componentWillUpdate to UNSAFE_componentWillUpdate to suppress this warning in non-strict mode. In React 18.x, only the UNSAFE_ name will work. To rename all deprecated lifecycles to their new names, you can run `npx react-codemod rename-unsafe-lifecycles` in your project source folder.\n\nPlease update the following components: %s", _sortedNames5);
               }
             };
             var pendingLegacyContextWarning = /* @__PURE__ */ new Map();
@@ -15533,7 +15533,7 @@
                     pushProvider(workInProgress2, newValue);
                     break;
                   }
-                  case Profiler:
+                  case Profiler2:
                     {
                       var hasChildWork = includesSomeLane(renderLanes2, workInProgress2.childLanes);
                       if (hasChildWork) {
@@ -15645,7 +15645,7 @@
                 return updateFragment(current2, workInProgress2, renderLanes2);
               case Mode:
                 return updateMode(current2, workInProgress2, renderLanes2);
-              case Profiler:
+              case Profiler2:
                 return updateProfiler(current2, workInProgress2, renderLanes2);
               case ContextProvider:
                 return updateContextProvider(current2, workInProgress2, renderLanes2);
@@ -15810,7 +15810,7 @@
               case ForwardRef6:
               case Fragment:
               case Mode:
-              case Profiler:
+              case Profiler2:
               case ContextConsumer:
               case MemoComponent:
                 return null;
@@ -16666,7 +16666,7 @@
               case HostPortal: {
                 return;
               }
-              case Profiler: {
+              case Profiler2: {
                 {
                   var _finishedWork$memoize2 = finishedWork.memoizedProps, onCommit = _finishedWork$memoize2.onCommit, onRender = _finishedWork$memoize2.onRender;
                   var effectDuration = finishedWork.stateNode.effectDuration;
@@ -17130,7 +17130,7 @@
                 }
                 return;
               }
-              case Profiler: {
+              case Profiler2: {
                 return;
               }
               case SuspenseComponent: {
@@ -19522,7 +19522,7 @@ For more info, visit https://reactjs.org/link/mock-scheduler`);
                 error('Profiler must specify an "id" as a prop');
               }
             }
-            var fiber = createFiber(Profiler, pendingProps, key, mode | ProfileMode);
+            var fiber = createFiber(Profiler2, pendingProps, key, mode | ProfileMode);
             fiber.elementType = REACT_PROFILER_TYPE;
             fiber.type = REACT_PROFILER_TYPE;
             fiber.lanes = lanes;
@@ -19932,12 +19932,12 @@ For more info, visit https://reactjs.org/link/mock-scheduler`);
             };
             var copyWithRename = function(obj, oldPath, newPath) {
               if (oldPath.length !== newPath.length) {
-                warn("copyWithRename() expects paths of the same length");
+                warn2("copyWithRename() expects paths of the same length");
                 return;
               } else {
                 for (var i3 = 0; i3 < newPath.length - 1; i3++) {
                   if (oldPath[i3] !== newPath[i3]) {
-                    warn("copyWithRename() expects paths to be the same except for the deepest key");
+                    warn2("copyWithRename() expects paths to be the same except for the deepest key");
                     return;
                   }
                 }
@@ -20178,7 +20178,7 @@ For more info, visit https://reactjs.org/link/mock-scheduler`);
             {
               if (shouldHydrate && !forceHydrate && !warnedAboutHydrateAPI) {
                 warnedAboutHydrateAPI = true;
-                warn("render(): Calling ReactDOM.render() to hydrate server-rendered markup will stop working in React v18. Replace the ReactDOM.render() call with ReactDOM.hydrate() if you want React to attach to the server HTML.");
+                warn2("render(): Calling ReactDOM.render() to hydrate server-rendered markup will stop working in React v18. Replace the ReactDOM.render() call with ReactDOM.hydrate() if you want React to attach to the server HTML.");
               }
             }
             return createLegacyRoot(container, shouldHydrate ? {
@@ -20355,7 +20355,7 @@ For more info, visit https://reactjs.org/link/mock-scheduler`);
             {
               if (!didWarnAboutUnstableCreatePortal) {
                 didWarnAboutUnstableCreatePortal = true;
-                warn('The ReactDOM.unstable_createPortal() alias has been deprecated, and will be removed in React 18+. Update your code to use ReactDOM.createPortal() instead. It has the exact same API, but without the "unstable_" prefix.');
+                warn2('The ReactDOM.unstable_createPortal() alias has been deprecated, and will be removed in React 18+. Update your code to use ReactDOM.createPortal() instead. It has the exact same API, but without the "unstable_" prefix.');
               }
             }
             return createPortal$1(children, container, key);
@@ -20482,13 +20482,13 @@ For more info, visit https://reactjs.org/link/mock-scheduler`);
           var ConcurrentMode = REACT_CONCURRENT_MODE_TYPE;
           var ContextConsumer = REACT_CONTEXT_TYPE;
           var ContextProvider = REACT_PROVIDER_TYPE;
-          var Element = REACT_ELEMENT_TYPE;
+          var Element2 = REACT_ELEMENT_TYPE;
           var ForwardRef6 = REACT_FORWARD_REF_TYPE;
           var Fragment = REACT_FRAGMENT_TYPE;
           var Lazy = REACT_LAZY_TYPE;
           var Memo = REACT_MEMO_TYPE;
           var Portal = REACT_PORTAL_TYPE;
-          var Profiler = REACT_PROFILER_TYPE;
+          var Profiler2 = REACT_PROFILER_TYPE;
           var StrictMode = REACT_STRICT_MODE_TYPE;
           var Suspense = REACT_SUSPENSE_TYPE;
           var hasWarnedAboutDeprecatedIsAsyncMode = false;
@@ -20541,13 +20541,13 @@ For more info, visit https://reactjs.org/link/mock-scheduler`);
           exports.ConcurrentMode = ConcurrentMode;
           exports.ContextConsumer = ContextConsumer;
           exports.ContextProvider = ContextProvider;
-          exports.Element = Element;
+          exports.Element = Element2;
           exports.ForwardRef = ForwardRef6;
           exports.Fragment = Fragment;
           exports.Lazy = Lazy;
           exports.Memo = Memo;
           exports.Portal = Portal;
-          exports.Profiler = Profiler;
+          exports.Profiler = Profiler2;
           exports.StrictMode = StrictMode;
           exports.Suspense = Suspense;
           exports.isAsyncMode = isAsyncMode;
@@ -20622,28 +20622,28 @@ For more info, visit https://reactjs.org/link/mock-scheduler`);
       var ReactPropTypesSecret;
       var loggedTypeFailures;
       var has;
-      function checkPropTypes(typeSpecs, values, location, componentName, getStack) {
+      function checkPropTypes(typeSpecs, values, location2, componentName, getStack) {
         if (true) {
           for (var typeSpecName in typeSpecs) {
             if (has(typeSpecs, typeSpecName)) {
               var error;
               try {
                 if (typeof typeSpecs[typeSpecName] !== "function") {
-                  var err = Error((componentName || "React class") + ": " + location + " type `" + typeSpecName + "` is invalid; it must be a function, usually from the `prop-types` package, but received `" + typeof typeSpecs[typeSpecName] + "`.This often happens because of typos such as `PropTypes.function` instead of `PropTypes.func`.");
+                  var err = Error((componentName || "React class") + ": " + location2 + " type `" + typeSpecName + "` is invalid; it must be a function, usually from the `prop-types` package, but received `" + typeof typeSpecs[typeSpecName] + "`.This often happens because of typos such as `PropTypes.function` instead of `PropTypes.func`.");
                   err.name = "Invariant Violation";
                   throw err;
                 }
-                error = typeSpecs[typeSpecName](values, typeSpecName, componentName, location, null, ReactPropTypesSecret);
+                error = typeSpecs[typeSpecName](values, typeSpecName, componentName, location2, null, ReactPropTypesSecret);
               } catch (ex) {
                 error = ex;
               }
               if (error && !(error instanceof Error)) {
-                printWarning((componentName || "React class") + ": type specification of " + location + " `" + typeSpecName + "` is invalid; the type checker function must return `null` or an `Error` but returned a " + typeof error + ". You may have forgotten to pass an argument to the type checker creator (arrayOf, instanceOf, objectOf, oneOf, oneOfType, and shape all require an argument).");
+                printWarning((componentName || "React class") + ": type specification of " + location2 + " `" + typeSpecName + "` is invalid; the type checker function must return `null` or an `Error` but returned a " + typeof error + ". You may have forgotten to pass an argument to the type checker creator (arrayOf, instanceOf, objectOf, oneOf, oneOfType, and shape all require an argument).");
               }
               if (error instanceof Error && !(error.message in loggedTypeFailures)) {
                 loggedTypeFailures[error.message] = true;
                 var stack = getStack ? getStack() : "";
-                printWarning("Failed " + location + " type: " + error.message + (stack != null ? stack : ""));
+                printWarning("Failed " + location2 + " type: " + error.message + (stack != null ? stack : ""));
               }
             }
           }
@@ -20733,7 +20733,7 @@ For more info, visit https://reactjs.org/link/mock-scheduler`);
             var manualPropTypeCallCache = {};
             var manualPropTypeWarningCount = 0;
           }
-          function checkType(isRequired, props, propName, componentName, location, propFullName, secret) {
+          function checkType(isRequired, props, propName, componentName, location2, propFullName, secret) {
             componentName = componentName || ANONYMOUS;
             propFullName = propFullName || propName;
             if (secret !== ReactPropTypesSecret) {
@@ -20753,13 +20753,13 @@ For more info, visit https://reactjs.org/link/mock-scheduler`);
             if (props[propName] == null) {
               if (isRequired) {
                 if (props[propName] === null) {
-                  return new PropTypeError("The " + location + " `" + propFullName + "` is marked as required " + ("in `" + componentName + "`, but its value is `null`."));
+                  return new PropTypeError("The " + location2 + " `" + propFullName + "` is marked as required " + ("in `" + componentName + "`, but its value is `null`."));
                 }
-                return new PropTypeError("The " + location + " `" + propFullName + "` is marked as required in " + ("`" + componentName + "`, but its value is `undefined`."));
+                return new PropTypeError("The " + location2 + " `" + propFullName + "` is marked as required in " + ("`" + componentName + "`, but its value is `undefined`."));
               }
               return null;
             } else {
-              return validate(props, propName, componentName, location, propFullName);
+              return validate(props, propName, componentName, location2, propFullName);
             }
           }
           var chainedCheckType = checkType.bind(null, false);
@@ -20767,12 +20767,12 @@ For more info, visit https://reactjs.org/link/mock-scheduler`);
           return chainedCheckType;
         }
         function createPrimitiveTypeChecker(expectedType) {
-          function validate(props, propName, componentName, location, propFullName, secret) {
+          function validate(props, propName, componentName, location2, propFullName, secret) {
             var propValue = props[propName];
             var propType = getPropType(propValue);
             if (propType !== expectedType) {
               var preciseType = getPreciseType(propValue);
-              return new PropTypeError("Invalid " + location + " `" + propFullName + "` of type " + ("`" + preciseType + "` supplied to `" + componentName + "`, expected ") + ("`" + expectedType + "`."), { expectedType });
+              return new PropTypeError("Invalid " + location2 + " `" + propFullName + "` of type " + ("`" + preciseType + "` supplied to `" + componentName + "`, expected ") + ("`" + expectedType + "`."), { expectedType });
             }
             return null;
           }
@@ -20782,17 +20782,17 @@ For more info, visit https://reactjs.org/link/mock-scheduler`);
           return createChainableTypeChecker(emptyFunctionThatReturnsNull);
         }
         function createArrayOfTypeChecker(typeChecker) {
-          function validate(props, propName, componentName, location, propFullName) {
+          function validate(props, propName, componentName, location2, propFullName) {
             if (typeof typeChecker !== "function") {
               return new PropTypeError("Property `" + propFullName + "` of component `" + componentName + "` has invalid PropType notation inside arrayOf.");
             }
             var propValue = props[propName];
             if (!Array.isArray(propValue)) {
               var propType = getPropType(propValue);
-              return new PropTypeError("Invalid " + location + " `" + propFullName + "` of type " + ("`" + propType + "` supplied to `" + componentName + "`, expected an array."));
+              return new PropTypeError("Invalid " + location2 + " `" + propFullName + "` of type " + ("`" + propType + "` supplied to `" + componentName + "`, expected an array."));
             }
             for (var i3 = 0; i3 < propValue.length; i3++) {
-              var error = typeChecker(propValue, i3, componentName, location, propFullName + "[" + i3 + "]", ReactPropTypesSecret);
+              var error = typeChecker(propValue, i3, componentName, location2, propFullName + "[" + i3 + "]", ReactPropTypesSecret);
               if (error instanceof Error) {
                 return error;
               }
@@ -20802,33 +20802,33 @@ For more info, visit https://reactjs.org/link/mock-scheduler`);
           return createChainableTypeChecker(validate);
         }
         function createElementTypeChecker() {
-          function validate(props, propName, componentName, location, propFullName) {
+          function validate(props, propName, componentName, location2, propFullName) {
             var propValue = props[propName];
             if (!isValidElement(propValue)) {
               var propType = getPropType(propValue);
-              return new PropTypeError("Invalid " + location + " `" + propFullName + "` of type " + ("`" + propType + "` supplied to `" + componentName + "`, expected a single ReactElement."));
+              return new PropTypeError("Invalid " + location2 + " `" + propFullName + "` of type " + ("`" + propType + "` supplied to `" + componentName + "`, expected a single ReactElement."));
             }
             return null;
           }
           return createChainableTypeChecker(validate);
         }
         function createElementTypeTypeChecker() {
-          function validate(props, propName, componentName, location, propFullName) {
+          function validate(props, propName, componentName, location2, propFullName) {
             var propValue = props[propName];
             if (!ReactIs.isValidElementType(propValue)) {
               var propType = getPropType(propValue);
-              return new PropTypeError("Invalid " + location + " `" + propFullName + "` of type " + ("`" + propType + "` supplied to `" + componentName + "`, expected a single ReactElement type."));
+              return new PropTypeError("Invalid " + location2 + " `" + propFullName + "` of type " + ("`" + propType + "` supplied to `" + componentName + "`, expected a single ReactElement type."));
             }
             return null;
           }
           return createChainableTypeChecker(validate);
         }
         function createInstanceTypeChecker(expectedClass) {
-          function validate(props, propName, componentName, location, propFullName) {
+          function validate(props, propName, componentName, location2, propFullName) {
             if (!(props[propName] instanceof expectedClass)) {
               var expectedClassName = expectedClass.name || ANONYMOUS;
               var actualClassName = getClassName(props[propName]);
-              return new PropTypeError("Invalid " + location + " `" + propFullName + "` of type " + ("`" + actualClassName + "` supplied to `" + componentName + "`, expected ") + ("instance of `" + expectedClassName + "`."));
+              return new PropTypeError("Invalid " + location2 + " `" + propFullName + "` of type " + ("`" + actualClassName + "` supplied to `" + componentName + "`, expected ") + ("instance of `" + expectedClassName + "`."));
             }
             return null;
           }
@@ -20845,7 +20845,7 @@ For more info, visit https://reactjs.org/link/mock-scheduler`);
             }
             return emptyFunctionThatReturnsNull;
           }
-          function validate(props, propName, componentName, location, propFullName) {
+          function validate(props, propName, componentName, location2, propFullName) {
             var propValue = props[propName];
             for (var i3 = 0; i3 < expectedValues.length; i3++) {
               if (is(propValue, expectedValues[i3])) {
@@ -20859,23 +20859,23 @@ For more info, visit https://reactjs.org/link/mock-scheduler`);
               }
               return value;
             });
-            return new PropTypeError("Invalid " + location + " `" + propFullName + "` of value `" + String(propValue) + "` " + ("supplied to `" + componentName + "`, expected one of " + valuesString + "."));
+            return new PropTypeError("Invalid " + location2 + " `" + propFullName + "` of value `" + String(propValue) + "` " + ("supplied to `" + componentName + "`, expected one of " + valuesString + "."));
           }
           return createChainableTypeChecker(validate);
         }
         function createObjectOfTypeChecker(typeChecker) {
-          function validate(props, propName, componentName, location, propFullName) {
+          function validate(props, propName, componentName, location2, propFullName) {
             if (typeof typeChecker !== "function") {
               return new PropTypeError("Property `" + propFullName + "` of component `" + componentName + "` has invalid PropType notation inside objectOf.");
             }
             var propValue = props[propName];
             var propType = getPropType(propValue);
             if (propType !== "object") {
-              return new PropTypeError("Invalid " + location + " `" + propFullName + "` of type " + ("`" + propType + "` supplied to `" + componentName + "`, expected an object."));
+              return new PropTypeError("Invalid " + location2 + " `" + propFullName + "` of type " + ("`" + propType + "` supplied to `" + componentName + "`, expected an object."));
             }
             for (var key in propValue) {
               if (has(propValue, key)) {
-                var error = typeChecker(propValue, key, componentName, location, propFullName + "." + key, ReactPropTypesSecret);
+                var error = typeChecker(propValue, key, componentName, location2, propFullName + "." + key, ReactPropTypesSecret);
                 if (error instanceof Error) {
                   return error;
                 }
@@ -20897,11 +20897,11 @@ For more info, visit https://reactjs.org/link/mock-scheduler`);
               return emptyFunctionThatReturnsNull;
             }
           }
-          function validate(props, propName, componentName, location, propFullName) {
+          function validate(props, propName, componentName, location2, propFullName) {
             var expectedTypes = [];
             for (var i4 = 0; i4 < arrayOfTypeCheckers.length; i4++) {
               var checker2 = arrayOfTypeCheckers[i4];
-              var checkerResult = checker2(props, propName, componentName, location, propFullName, ReactPropTypesSecret);
+              var checkerResult = checker2(props, propName, componentName, location2, propFullName, ReactPropTypesSecret);
               if (checkerResult == null) {
                 return null;
               }
@@ -20910,35 +20910,35 @@ For more info, visit https://reactjs.org/link/mock-scheduler`);
               }
             }
             var expectedTypesMessage = expectedTypes.length > 0 ? ", expected one of type [" + expectedTypes.join(", ") + "]" : "";
-            return new PropTypeError("Invalid " + location + " `" + propFullName + "` supplied to " + ("`" + componentName + "`" + expectedTypesMessage + "."));
+            return new PropTypeError("Invalid " + location2 + " `" + propFullName + "` supplied to " + ("`" + componentName + "`" + expectedTypesMessage + "."));
           }
           return createChainableTypeChecker(validate);
         }
         function createNodeChecker() {
-          function validate(props, propName, componentName, location, propFullName) {
+          function validate(props, propName, componentName, location2, propFullName) {
             if (!isNode(props[propName])) {
-              return new PropTypeError("Invalid " + location + " `" + propFullName + "` supplied to " + ("`" + componentName + "`, expected a ReactNode."));
+              return new PropTypeError("Invalid " + location2 + " `" + propFullName + "` supplied to " + ("`" + componentName + "`, expected a ReactNode."));
             }
             return null;
           }
           return createChainableTypeChecker(validate);
         }
-        function invalidValidatorError(componentName, location, propFullName, key, type3) {
-          return new PropTypeError((componentName || "React class") + ": " + location + " type `" + propFullName + "." + key + "` is invalid; it must be a function, usually from the `prop-types` package, but received `" + type3 + "`.");
+        function invalidValidatorError(componentName, location2, propFullName, key, type3) {
+          return new PropTypeError((componentName || "React class") + ": " + location2 + " type `" + propFullName + "." + key + "` is invalid; it must be a function, usually from the `prop-types` package, but received `" + type3 + "`.");
         }
         function createShapeTypeChecker(shapeTypes) {
-          function validate(props, propName, componentName, location, propFullName) {
+          function validate(props, propName, componentName, location2, propFullName) {
             var propValue = props[propName];
             var propType = getPropType(propValue);
             if (propType !== "object") {
-              return new PropTypeError("Invalid " + location + " `" + propFullName + "` of type `" + propType + "` " + ("supplied to `" + componentName + "`, expected `object`."));
+              return new PropTypeError("Invalid " + location2 + " `" + propFullName + "` of type `" + propType + "` " + ("supplied to `" + componentName + "`, expected `object`."));
             }
             for (var key in shapeTypes) {
               var checker = shapeTypes[key];
               if (typeof checker !== "function") {
-                return invalidValidatorError(componentName, location, propFullName, key, getPreciseType(checker));
+                return invalidValidatorError(componentName, location2, propFullName, key, getPreciseType(checker));
               }
-              var error = checker(propValue, key, componentName, location, propFullName + "." + key, ReactPropTypesSecret);
+              var error = checker(propValue, key, componentName, location2, propFullName + "." + key, ReactPropTypesSecret);
               if (error) {
                 return error;
               }
@@ -20948,22 +20948,22 @@ For more info, visit https://reactjs.org/link/mock-scheduler`);
           return createChainableTypeChecker(validate);
         }
         function createStrictShapeTypeChecker(shapeTypes) {
-          function validate(props, propName, componentName, location, propFullName) {
+          function validate(props, propName, componentName, location2, propFullName) {
             var propValue = props[propName];
             var propType = getPropType(propValue);
             if (propType !== "object") {
-              return new PropTypeError("Invalid " + location + " `" + propFullName + "` of type `" + propType + "` " + ("supplied to `" + componentName + "`, expected `object`."));
+              return new PropTypeError("Invalid " + location2 + " `" + propFullName + "` of type `" + propType + "` " + ("supplied to `" + componentName + "`, expected `object`."));
             }
             var allKeys = assign({}, props[propName], shapeTypes);
             for (var key in allKeys) {
               var checker = shapeTypes[key];
               if (has(shapeTypes, key) && typeof checker !== "function") {
-                return invalidValidatorError(componentName, location, propFullName, key, getPreciseType(checker));
+                return invalidValidatorError(componentName, location2, propFullName, key, getPreciseType(checker));
               }
               if (!checker) {
-                return new PropTypeError("Invalid " + location + " `" + propFullName + "` key `" + key + "` supplied to `" + componentName + "`.\nBad object: " + JSON.stringify(props[propName], null, "  ") + "\nValid keys: " + JSON.stringify(Object.keys(shapeTypes), null, "  "));
+                return new PropTypeError("Invalid " + location2 + " `" + propFullName + "` key `" + key + "` supplied to `" + componentName + "`.\nBad object: " + JSON.stringify(props[propName], null, "  ") + "\nValid keys: " + JSON.stringify(Object.keys(shapeTypes), null, "  "));
               }
-              var error = checker(propValue, key, componentName, location, propFullName + "." + key, ReactPropTypesSecret);
+              var error = checker(propValue, key, componentName, location2, propFullName + "." + key, ReactPropTypesSecret);
               if (error) {
                 return error;
               }
@@ -21615,7 +21615,7 @@ For more info, visit https://reactjs.org/link/mock-scheduler`);
               }
             }
           }
-          function checkPropTypes(typeSpecs, values, location, componentName, element) {
+          function checkPropTypes(typeSpecs, values, location2, componentName, element) {
             {
               var has = Function.call.bind(Object.prototype.hasOwnProperty);
               for (var typeSpecName in typeSpecs) {
@@ -21623,23 +21623,23 @@ For more info, visit https://reactjs.org/link/mock-scheduler`);
                   var error$1 = void 0;
                   try {
                     if (typeof typeSpecs[typeSpecName] !== "function") {
-                      var err = Error((componentName || "React class") + ": " + location + " type `" + typeSpecName + "` is invalid; it must be a function, usually from the `prop-types` package, but received `" + typeof typeSpecs[typeSpecName] + "`.This often happens because of typos such as `PropTypes.function` instead of `PropTypes.func`.");
+                      var err = Error((componentName || "React class") + ": " + location2 + " type `" + typeSpecName + "` is invalid; it must be a function, usually from the `prop-types` package, but received `" + typeof typeSpecs[typeSpecName] + "`.This often happens because of typos such as `PropTypes.function` instead of `PropTypes.func`.");
                       err.name = "Invariant Violation";
                       throw err;
                     }
-                    error$1 = typeSpecs[typeSpecName](values, typeSpecName, componentName, location, null, "SECRET_DO_NOT_PASS_THIS_OR_YOU_WILL_BE_FIRED");
+                    error$1 = typeSpecs[typeSpecName](values, typeSpecName, componentName, location2, null, "SECRET_DO_NOT_PASS_THIS_OR_YOU_WILL_BE_FIRED");
                   } catch (ex) {
                     error$1 = ex;
                   }
                   if (error$1 && !(error$1 instanceof Error)) {
                     setCurrentlyValidatingElement(element);
-                    error("%s: type specification of %s `%s` is invalid; the type checker function must return `null` or an `Error` but returned a %s. You may have forgotten to pass an argument to the type checker creator (arrayOf, instanceOf, objectOf, oneOf, oneOfType, and shape all require an argument).", componentName || "React class", location, typeSpecName, typeof error$1);
+                    error("%s: type specification of %s `%s` is invalid; the type checker function must return `null` or an `Error` but returned a %s. You may have forgotten to pass an argument to the type checker creator (arrayOf, instanceOf, objectOf, oneOf, oneOfType, and shape all require an argument).", componentName || "React class", location2, typeSpecName, typeof error$1);
                     setCurrentlyValidatingElement(null);
                   }
                   if (error$1 instanceof Error && !(error$1.message in loggedTypeFailures)) {
                     loggedTypeFailures[error$1.message] = true;
                     setCurrentlyValidatingElement(element);
-                    error("Failed %s type: %s", location, error$1.message);
+                    error("Failed %s type: %s", location2, error$1.message);
                     setCurrentlyValidatingElement(null);
                   }
                 }
@@ -22142,13 +22142,13 @@ For more info, visit https://reactjs.org/link/mock-scheduler`);
           }
           var ContextConsumer = REACT_CONTEXT_TYPE;
           var ContextProvider = REACT_PROVIDER_TYPE;
-          var Element = REACT_ELEMENT_TYPE;
+          var Element2 = REACT_ELEMENT_TYPE;
           var ForwardRef6 = REACT_FORWARD_REF_TYPE;
           var Fragment = REACT_FRAGMENT_TYPE;
           var Lazy = REACT_LAZY_TYPE;
           var Memo = REACT_MEMO_TYPE;
           var Portal = REACT_PORTAL_TYPE;
-          var Profiler = REACT_PROFILER_TYPE;
+          var Profiler2 = REACT_PROFILER_TYPE;
           var StrictMode = REACT_STRICT_MODE_TYPE;
           var Suspense = REACT_SUSPENSE_TYPE;
           var hasWarnedAboutDeprecatedIsAsyncMode = false;
@@ -22206,13 +22206,13 @@ For more info, visit https://reactjs.org/link/mock-scheduler`);
           }
           exports.ContextConsumer = ContextConsumer;
           exports.ContextProvider = ContextProvider;
-          exports.Element = Element;
+          exports.Element = Element2;
           exports.ForwardRef = ForwardRef6;
           exports.Fragment = Fragment;
           exports.Lazy = Lazy;
           exports.Memo = Memo;
           exports.Portal = Portal;
-          exports.Profiler = Profiler;
+          exports.Profiler = Profiler2;
           exports.StrictMode = StrictMode;
           exports.Suspense = Suspense;
           exports.isAsyncMode = isAsyncMode;
@@ -24953,20 +24953,20 @@ For more info, visit https://reactjs.org/link/mock-scheduler`);
         default_val = _3.isUndefined(default_val) ? {} : default_val;
         return this["props"][key] || (this["props"][key] = default_val);
       };
-      MixpanelPersistence.prototype.set_event_timer = function(event_name, timestamp) {
+      MixpanelPersistence.prototype.set_event_timer = function(event_name, timestamp2) {
         var timers = this["props"][EVENT_TIMERS_KEY] || {};
-        timers[event_name] = timestamp;
+        timers[event_name] = timestamp2;
         this["props"][EVENT_TIMERS_KEY] = timers;
         this.save();
       };
       MixpanelPersistence.prototype.remove_event_timer = function(event_name) {
         var timers = this["props"][EVENT_TIMERS_KEY] || {};
-        var timestamp = timers[event_name];
-        if (!_3.isUndefined(timestamp)) {
+        var timestamp2 = timers[event_name];
+        if (!_3.isUndefined(timestamp2)) {
           delete this["props"][EVENT_TIMERS_KEY][event_name];
           this.save();
         }
-        return timestamp;
+        return timestamp2;
       };
       var init_type;
       var mixpanel_master;
@@ -26051,7 +26051,7 @@ For more info, visit https://reactjs.org/link/mock-scheduler`);
         value: true
       });
       exports.resetState = resetState;
-      exports.log = log;
+      exports.log = log2;
       exports.handleBlur = handleBlur;
       exports.handleFocus = handleFocus;
       exports.markForFocusLater = markForFocusLater;
@@ -26070,7 +26070,7 @@ For more info, visit https://reactjs.org/link/mock-scheduler`);
       function resetState() {
         focusLaterElements = [];
       }
-      function log() {
+      function log2() {
         if (true) {
           console.log("focusManager ----------");
           focusLaterElements.forEach(function(f3) {
@@ -26306,7 +26306,7 @@ For more info, visit https://reactjs.org/link/mock-scheduler`);
         value: true
       });
       exports.resetState = resetState;
-      exports.log = log;
+      exports.log = log2;
       exports.assertNodeList = assertNodeList;
       exports.setElement = setElement;
       exports.validateElement = validateElement;
@@ -26336,7 +26336,7 @@ For more info, visit https://reactjs.org/link/mock-scheduler`);
         }
         globalElement = null;
       }
-      function log() {
+      function log2() {
         if (true) {
           var check = globalElement || {};
           console.log("ariaAppHider ----------");
@@ -26430,7 +26430,7 @@ For more info, visit https://reactjs.org/link/mock-scheduler`);
         value: true
       });
       exports.resetState = resetState;
-      exports.log = log;
+      exports.log = log2;
       var htmlClassList = {};
       var docBodyClassList = {};
       function removeClass(at, cls) {
@@ -26448,16 +26448,16 @@ For more info, visit https://reactjs.org/link/mock-scheduler`);
         htmlClassList = {};
         docBodyClassList = {};
       }
-      function log() {
+      function log2() {
         if (true) {
-          var classes = document.getElementsByTagName("html")[0].className;
+          var classes2 = document.getElementsByTagName("html")[0].className;
           var buffer = "Show tracked classes:\n\n";
-          buffer += "<html /> (" + classes + "):\n  ";
+          buffer += "<html /> (" + classes2 + "):\n  ";
           for (var x2 in htmlClassList) {
             buffer += "  " + x2 + " " + htmlClassList[x2] + "\n  ";
           }
-          classes = document.body.className;
-          buffer += "\n\ndoc.body (" + classes + "):\n  ";
+          classes2 = document.body.className;
+          buffer += "\n\ndoc.body (" + classes2 + "):\n  ";
           for (var _x in docBodyClassList) {
             buffer += "  " + _x + " " + docBodyClassList[_x] + "\n  ";
           }
@@ -26478,14 +26478,14 @@ For more info, visit https://reactjs.org/link/mock-scheduler`);
         }
         return className;
       };
-      var trackClass = function trackClass2(classListRef, poll, classes) {
-        classes.forEach(function(className) {
+      var trackClass = function trackClass2(classListRef, poll, classes2) {
+        classes2.forEach(function(className) {
           incrementReference(poll, className);
           classListRef.add(className);
         });
       };
-      var untrackClass = function untrackClass2(classListRef, poll, classes) {
-        classes.forEach(function(className) {
+      var untrackClass = function untrackClass2(classListRef, poll, classes2) {
+        classes2.forEach(function(className) {
           decrementReference(poll, className);
           poll[className] === 0 && classListRef.remove(className);
         });
@@ -26506,7 +26506,7 @@ For more info, visit https://reactjs.org/link/mock-scheduler`);
       Object.defineProperty(exports, "__esModule", {
         value: true
       });
-      exports.log = log;
+      exports.log = log2;
       exports.resetState = resetState;
       function _classCallCheck(instance, Constructor) {
         if (!(instance instanceof Constructor)) {
@@ -26549,7 +26549,7 @@ For more info, visit https://reactjs.org/link/mock-scheduler`);
         this.subscribers = [];
       };
       var portalOpenInstances = new PortalOpenInstances();
-      function log() {
+      function log2() {
         console.log("portalOpenInstances ----------");
         console.log(portalOpenInstances.openInstances.length);
         portalOpenInstances.openInstances.forEach(function(p3) {
@@ -26572,7 +26572,7 @@ For more info, visit https://reactjs.org/link/mock-scheduler`);
         value: true
       });
       exports.resetState = resetState;
-      exports.log = log;
+      exports.log = log2;
       var _portalOpenInstances = require_portalOpenInstances();
       var _portalOpenInstances2 = _interopRequireDefault(_portalOpenInstances);
       function _interopRequireDefault(obj) {
@@ -26592,7 +26592,7 @@ For more info, visit https://reactjs.org/link/mock-scheduler`);
         before = after = null;
         instances = [];
       }
-      function log() {
+      function log2() {
         console.log("bodyTrap ----------");
         console.log(instances.length);
         var _arr2 = [before, after];
@@ -27439,6 +27439,295 @@ For more info, visit https://reactjs.org/link/mock-scheduler`);
       }
       exports.default = _Modal2.default;
       module.exports = exports["default"];
+    }
+  });
+
+  // node_modules/stackframe/stackframe.js
+  var require_stackframe = __commonJS({
+    "node_modules/stackframe/stackframe.js"(exports, module) {
+      (function(root, factory) {
+        "use strict";
+        if (typeof define === "function" && define.amd) {
+          define("stackframe", [], factory);
+        } else if (typeof exports === "object") {
+          module.exports = factory();
+        } else {
+          root.StackFrame = factory();
+        }
+      })(exports, function() {
+        "use strict";
+        function _isNumber2(n3) {
+          return !isNaN(parseFloat(n3)) && isFinite(n3);
+        }
+        function _capitalize(str) {
+          return str.charAt(0).toUpperCase() + str.substring(1);
+        }
+        function _getter(p3) {
+          return function() {
+            return this[p3];
+          };
+        }
+        var booleanProps = ["isConstructor", "isEval", "isNative", "isToplevel"];
+        var numericProps = ["columnNumber", "lineNumber"];
+        var stringProps = ["fileName", "functionName", "source"];
+        var arrayProps = ["args"];
+        var objectProps = ["evalOrigin"];
+        var props = booleanProps.concat(numericProps, stringProps, arrayProps, objectProps);
+        function StackFrame(obj) {
+          if (!obj)
+            return;
+          for (var i4 = 0; i4 < props.length; i4++) {
+            if (obj[props[i4]] !== void 0) {
+              this["set" + _capitalize(props[i4])](obj[props[i4]]);
+            }
+          }
+        }
+        StackFrame.prototype = {
+          getArgs: function() {
+            return this.args;
+          },
+          setArgs: function(v2) {
+            if (Object.prototype.toString.call(v2) !== "[object Array]") {
+              throw new TypeError("Args must be an Array");
+            }
+            this.args = v2;
+          },
+          getEvalOrigin: function() {
+            return this.evalOrigin;
+          },
+          setEvalOrigin: function(v2) {
+            if (v2 instanceof StackFrame) {
+              this.evalOrigin = v2;
+            } else if (v2 instanceof Object) {
+              this.evalOrigin = new StackFrame(v2);
+            } else {
+              throw new TypeError("Eval Origin must be an Object or StackFrame");
+            }
+          },
+          toString: function() {
+            var fileName = this.getFileName() || "";
+            var lineNumber = this.getLineNumber() || "";
+            var columnNumber = this.getColumnNumber() || "";
+            var functionName = this.getFunctionName() || "";
+            if (this.getIsEval()) {
+              if (fileName) {
+                return "[eval] (" + fileName + ":" + lineNumber + ":" + columnNumber + ")";
+              }
+              return "[eval]:" + lineNumber + ":" + columnNumber;
+            }
+            if (functionName) {
+              return functionName + " (" + fileName + ":" + lineNumber + ":" + columnNumber + ")";
+            }
+            return fileName + ":" + lineNumber + ":" + columnNumber;
+          }
+        };
+        StackFrame.fromString = function StackFrame$$fromString(str) {
+          var argsStartIndex = str.indexOf("(");
+          var argsEndIndex = str.lastIndexOf(")");
+          var functionName = str.substring(0, argsStartIndex);
+          var args = str.substring(argsStartIndex + 1, argsEndIndex).split(",");
+          var locationString = str.substring(argsEndIndex + 1);
+          if (locationString.indexOf("@") === 0) {
+            var parts = /@(.+?)(?::(\d+))?(?::(\d+))?$/.exec(locationString, "");
+            var fileName = parts[1];
+            var lineNumber = parts[2];
+            var columnNumber = parts[3];
+          }
+          return new StackFrame({
+            functionName,
+            args: args || void 0,
+            fileName,
+            lineNumber: lineNumber || void 0,
+            columnNumber: columnNumber || void 0
+          });
+        };
+        for (var i3 = 0; i3 < booleanProps.length; i3++) {
+          StackFrame.prototype["get" + _capitalize(booleanProps[i3])] = _getter(booleanProps[i3]);
+          StackFrame.prototype["set" + _capitalize(booleanProps[i3])] = function(p3) {
+            return function(v2) {
+              this[p3] = Boolean(v2);
+            };
+          }(booleanProps[i3]);
+        }
+        for (var j2 = 0; j2 < numericProps.length; j2++) {
+          StackFrame.prototype["get" + _capitalize(numericProps[j2])] = _getter(numericProps[j2]);
+          StackFrame.prototype["set" + _capitalize(numericProps[j2])] = function(p3) {
+            return function(v2) {
+              if (!_isNumber2(v2)) {
+                throw new TypeError(p3 + " must be a Number");
+              }
+              this[p3] = Number(v2);
+            };
+          }(numericProps[j2]);
+        }
+        for (var k2 = 0; k2 < stringProps.length; k2++) {
+          StackFrame.prototype["get" + _capitalize(stringProps[k2])] = _getter(stringProps[k2]);
+          StackFrame.prototype["set" + _capitalize(stringProps[k2])] = function(p3) {
+            return function(v2) {
+              this[p3] = String(v2);
+            };
+          }(stringProps[k2]);
+        }
+        return StackFrame;
+      });
+    }
+  });
+
+  // node_modules/error-stack-parser/error-stack-parser.js
+  var require_error_stack_parser = __commonJS({
+    "node_modules/error-stack-parser/error-stack-parser.js"(exports, module) {
+      (function(root, factory) {
+        "use strict";
+        if (typeof define === "function" && define.amd) {
+          define("error-stack-parser", ["stackframe"], factory);
+        } else if (typeof exports === "object") {
+          module.exports = factory(require_stackframe());
+        } else {
+          root.ErrorStackParser = factory(root.StackFrame);
+        }
+      })(exports, function ErrorStackParser2(StackFrame) {
+        "use strict";
+        var FIREFOX_SAFARI_STACK_REGEXP = /(^|@)\S+:\d+/;
+        var CHROME_IE_STACK_REGEXP = /^\s*at .*(\S+:\d+|\(native\))/m;
+        var SAFARI_NATIVE_CODE_REGEXP = /^(eval@)?(\[native code])?$/;
+        return {
+          parse: function ErrorStackParser$$parse(error) {
+            if (typeof error.stacktrace !== "undefined" || typeof error["opera#sourceloc"] !== "undefined") {
+              return this.parseOpera(error);
+            } else if (error.stack && error.stack.match(CHROME_IE_STACK_REGEXP)) {
+              return this.parseV8OrIE(error);
+            } else if (error.stack) {
+              return this.parseFFOrSafari(error);
+            } else {
+              throw new Error("Cannot parse given Error object");
+            }
+          },
+          extractLocation: function ErrorStackParser$$extractLocation(urlLike) {
+            if (urlLike.indexOf(":") === -1) {
+              return [urlLike];
+            }
+            var regExp = /(.+?)(?::(\d+))?(?::(\d+))?$/;
+            var parts = regExp.exec(urlLike.replace(/[()]/g, ""));
+            return [parts[1], parts[2] || void 0, parts[3] || void 0];
+          },
+          parseV8OrIE: function ErrorStackParser$$parseV8OrIE(error) {
+            var filtered = error.stack.split("\n").filter(function(line) {
+              return !!line.match(CHROME_IE_STACK_REGEXP);
+            }, this);
+            return filtered.map(function(line) {
+              if (line.indexOf("(eval ") > -1) {
+                line = line.replace(/eval code/g, "eval").replace(/(\(eval at [^()]*)|(,.*$)/g, "");
+              }
+              var sanitizedLine = line.replace(/^\s+/, "").replace(/\(eval code/g, "(").replace(/^.*?\s+/, "");
+              var location2 = sanitizedLine.match(/ (\(.+\)$)/);
+              sanitizedLine = location2 ? sanitizedLine.replace(location2[0], "") : sanitizedLine;
+              var locationParts = this.extractLocation(location2 ? location2[1] : sanitizedLine);
+              var functionName = location2 && sanitizedLine || void 0;
+              var fileName = ["eval", "<anonymous>"].indexOf(locationParts[0]) > -1 ? void 0 : locationParts[0];
+              return new StackFrame({
+                functionName,
+                fileName,
+                lineNumber: locationParts[1],
+                columnNumber: locationParts[2],
+                source: line
+              });
+            }, this);
+          },
+          parseFFOrSafari: function ErrorStackParser$$parseFFOrSafari(error) {
+            var filtered = error.stack.split("\n").filter(function(line) {
+              return !line.match(SAFARI_NATIVE_CODE_REGEXP);
+            }, this);
+            return filtered.map(function(line) {
+              if (line.indexOf(" > eval") > -1) {
+                line = line.replace(/ line (\d+)(?: > eval line \d+)* > eval:\d+:\d+/g, ":$1");
+              }
+              if (line.indexOf("@") === -1 && line.indexOf(":") === -1) {
+                return new StackFrame({
+                  functionName: line
+                });
+              } else {
+                var functionNameRegex = /((.*".+"[^@]*)?[^@]*)(?:@)/;
+                var matches = line.match(functionNameRegex);
+                var functionName = matches && matches[1] ? matches[1] : void 0;
+                var locationParts = this.extractLocation(line.replace(functionNameRegex, ""));
+                return new StackFrame({
+                  functionName,
+                  fileName: locationParts[0],
+                  lineNumber: locationParts[1],
+                  columnNumber: locationParts[2],
+                  source: line
+                });
+              }
+            }, this);
+          },
+          parseOpera: function ErrorStackParser$$parseOpera(e3) {
+            if (!e3.stacktrace || e3.message.indexOf("\n") > -1 && e3.message.split("\n").length > e3.stacktrace.split("\n").length) {
+              return this.parseOpera9(e3);
+            } else if (!e3.stack) {
+              return this.parseOpera10(e3);
+            } else {
+              return this.parseOpera11(e3);
+            }
+          },
+          parseOpera9: function ErrorStackParser$$parseOpera9(e3) {
+            var lineRE = /Line (\d+).*script (?:in )?(\S+)/i;
+            var lines = e3.message.split("\n");
+            var result = [];
+            for (var i3 = 2, len = lines.length; i3 < len; i3 += 2) {
+              var match = lineRE.exec(lines[i3]);
+              if (match) {
+                result.push(new StackFrame({
+                  fileName: match[2],
+                  lineNumber: match[1],
+                  source: lines[i3]
+                }));
+              }
+            }
+            return result;
+          },
+          parseOpera10: function ErrorStackParser$$parseOpera10(e3) {
+            var lineRE = /Line (\d+).*script (?:in )?(\S+)(?:: In function (\S+))?$/i;
+            var lines = e3.stacktrace.split("\n");
+            var result = [];
+            for (var i3 = 0, len = lines.length; i3 < len; i3 += 2) {
+              var match = lineRE.exec(lines[i3]);
+              if (match) {
+                result.push(new StackFrame({
+                  functionName: match[3] || void 0,
+                  fileName: match[2],
+                  lineNumber: match[1],
+                  source: lines[i3]
+                }));
+              }
+            }
+            return result;
+          },
+          parseOpera11: function ErrorStackParser$$parseOpera11(error) {
+            var filtered = error.stack.split("\n").filter(function(line) {
+              return !!line.match(FIREFOX_SAFARI_STACK_REGEXP) && !line.match(/^Error created at/);
+            }, this);
+            return filtered.map(function(line) {
+              var tokens = line.split("@");
+              var locationParts = this.extractLocation(tokens.pop());
+              var functionCall = tokens.shift() || "";
+              var functionName = functionCall.replace(/<anonymous function(: (\w+))?>/, "$2").replace(/\([^)]*\)/g, "") || void 0;
+              var argsRaw;
+              if (functionCall.match(/\(([^)]*)\)/)) {
+                argsRaw = functionCall.replace(/^[^(]+\(([^)]*)\)$/, "$1");
+              }
+              var args = argsRaw === void 0 || argsRaw === "[arguments not available]" ? void 0 : argsRaw.split(",");
+              return new StackFrame({
+                functionName,
+                args,
+                fileName: locationParts[0],
+                lineNumber: locationParts[1],
+                columnNumber: locationParts[2],
+                source: line
+              });
+            }, this);
+          }
+        };
+      });
     }
   });
 
@@ -29019,22 +29308,22 @@ For more info, visit https://reactjs.org/link/mock-scheduler`);
     return function(_c2) {
       var getState = _c2.getState;
       var state = getState();
-      var tracker = track2(state);
+      var tracker2 = track2(state);
       var result;
       return function(next) {
         return function(action) {
           var measureUtils = getTimeMeasureUtils(warnAfter, "ImmutableStateInvariantMiddleware");
           measureUtils.measureTime(function() {
             state = getState();
-            result = tracker.detectMutations();
-            tracker = track2(state);
+            result = tracker2.detectMutations();
+            tracker2 = track2(state);
             invariant(!result.wasMutated, "A state mutation was detected between dispatches, in the path '" + (result.path || "") + "'.  This may cause incorrect behavior. (https://redux.js.org/style-guide/style-guide#do-not-mutate-state)");
           });
           var dispatchedAction = next(action);
           measureUtils.measureTime(function() {
             state = getState();
-            result = tracker.detectMutations();
-            tracker = track2(state);
+            result = tracker2.detectMutations();
+            tracker2 = track2(state);
             result.wasMutated && invariant(!result.wasMutated, "A state mutation was detected inside a dispatch, in the path: " + (result.path || "") + ". Take a look at the reducer(s) handling the action " + stringify(action) + ". (https://redux.js.org/style-guide/style-guide#do-not-mutate-state)");
           });
           measureUtils.warnIfExceeded();
@@ -31831,7 +32120,7 @@ problem_1 = sum (check [1..999])
       className: "absolute w-full h-full z-50"
     }, text));
   };
-  var Widget = ({ styles, classes, content }) => {
+  var Widget = ({ styles, classes: classes2, content }) => {
     const highlightFilter = useSelector(path_default(["debugger", "highlightFilter"]));
     const numOfSteps = useSelector(path_default(["debugger", "numOfSteps"]));
     const pinnedStep = useSelector(path_default(["debugger", "pinnedStep"]));
@@ -31845,7 +32134,7 @@ problem_1 = sum (check [1..999])
     if (content.type === "annotation") {
       if (content.direction === "LR") {
         return /* @__PURE__ */ import_react9.default.createElement("div", {
-          className: "flex items-center justify-center text-gray-400 " + classes.join(" "),
+          className: "flex items-center justify-center text-gray-400 " + classes2.join(" "),
           style: styles
         }, /* @__PURE__ */ import_react9.default.createElement("span", {
           className: "marker1 border border-black inline-block w-2 h-2 rounded-sm mr-1"
@@ -31860,7 +32149,7 @@ problem_1 = sum (check [1..999])
         }, ")"));
       } else {
         return /* @__PURE__ */ import_react9.default.createElement("div", {
-          className: "flex items-center justify-center  text-gray-400 " + classes.join(" "),
+          className: "flex items-center justify-center  text-gray-400 " + classes2.join(" "),
           style: styles
         }, /* @__PURE__ */ import_react9.default.createElement("span", {
           className: "marker2 border border-black inline-block w-2 h-2 rounded-sm mr-1"
@@ -31876,7 +32165,7 @@ problem_1 = sum (check [1..999])
       }
     } else {
       return /* @__PURE__ */ import_react9.default.createElement("div", {
-        className: classes.join(" "),
+        className: classes2.join(" "),
         style: styles
       });
     }
@@ -31885,16 +32174,16 @@ problem_1 = sum (check [1..999])
     const deductionSteps = useSelector(path_default(["debugger", "debuggingSteps"]));
     const highlightFilter = useSelector(path_default(["debugger", "highlightFilter"]));
     const borderResetter = deductionSteps && equals_default(highlightFilter, ["markerDefination"]) ? {} : { borderWidth: 0 };
-    let classes = highlight.marker.shared;
+    let classes2 = highlight.marker.shared;
     if (equals_default(highlight.from, { line, ch })) {
-      classes = [...classes, ...highlight.marker.start];
+      classes2 = [...classes2, ...highlight.marker.start];
     }
     if (equals_default(highlight.to, { line, ch: ch + 1 })) {
-      classes = [...classes, ...highlight.marker.end];
+      classes2 = [...classes2, ...highlight.marker.end];
     }
-    classes = any_default((f3) => includes_default(f3, classes))(highlightFilter) ? [] : classes;
+    classes2 = any_default((f3) => includes_default(f3, classes2))(highlightFilter) ? [] : classes2;
     return /* @__PURE__ */ import_react9.default.createElement("div", {
-      className: "absolute " + classes.join(" "),
+      className: "absolute " + classes2.join(" "),
       style: borderResetter
     });
   };
@@ -32705,6 +32994,2450 @@ problem_1 = sum (check [1..999])
 
   // index.jsx
   var import_mixpanel_browser2 = __toESM(require_mixpanel_cjs());
+
+  // node_modules/@openreplay/tracker/lib/utils.js
+  function timestamp() {
+    return Math.round(performance.now()) + performance.timing.navigationStart;
+  }
+  var stars = "repeat" in String.prototype ? (str) => "*".repeat(str.length) : (str) => str.replace(/./g, "*");
+  function normSpaces(str) {
+    return str.trim().replace(/\s+/g, " ");
+  }
+  function isURL(s3) {
+    return s3.substr(0, 8) === "https://" || s3.substr(0, 7) === "http://";
+  }
+  var IN_BROWSER = !(typeof window === "undefined");
+  var log = console.log;
+  var warn = console.warn;
+  var DOCS_HOST = "https://docs.openreplay.com";
+  var warnedFeatures = {};
+  function deprecationWarn(nameOfFeature, useInstead, docsPath = "/") {
+    if (warnedFeatures[nameOfFeature]) {
+      return;
+    }
+    warn(`OpenReplay: ${nameOfFeature} is deprecated. ${useInstead ? `Please, use ${useInstead} instead.` : ""} Visit ${DOCS_HOST}${docsPath} for more information.`);
+    warnedFeatures[nameOfFeature] = true;
+  }
+  function getLabelAttribute(e3) {
+    let value = e3.getAttribute("data-openreplay-label");
+    if (value !== null) {
+      return value;
+    }
+    value = e3.getAttribute("data-asayer-label");
+    if (value !== null) {
+      deprecationWarn(`"data-asayer-label" attribute`, `"data-openreplay-label" attribute`, "/");
+    }
+    return value;
+  }
+  function hasOpenreplayAttribute(e3, name) {
+    const newName = `data-openreplay-${name}`;
+    if (e3.hasAttribute(newName)) {
+      return true;
+    }
+    const oldName = `data-asayer-${name}`;
+    if (e3.hasAttribute(oldName)) {
+      deprecationWarn(`"${oldName}" attribute`, `"${newName}" attribute`, "/installation/sanitize-data");
+      return true;
+    }
+    return false;
+  }
+
+  // node_modules/@openreplay/tracker/lib/messages/index.js
+  function bindNew(Class) {
+    function _Class(...args) {
+      return new Class(...args);
+    }
+    _Class.prototype = Class.prototype;
+    return _Class;
+  }
+  var classes = /* @__PURE__ */ new Map();
+  var _BatchMeta = class {
+    constructor(pageNo, firstIndex, timestamp2) {
+      this.pageNo = pageNo;
+      this.firstIndex = firstIndex;
+      this.timestamp = timestamp2;
+      this._id = 80;
+    }
+    encode(writer) {
+      return writer.uint(80) && writer.uint(this.pageNo) && writer.uint(this.firstIndex) && writer.int(this.timestamp);
+    }
+  };
+  var BatchMeta = bindNew(_BatchMeta);
+  classes.set(80, BatchMeta);
+  var _Timestamp = class {
+    constructor(timestamp2) {
+      this.timestamp = timestamp2;
+      this._id = 0;
+    }
+    encode(writer) {
+      return writer.uint(0) && writer.uint(this.timestamp);
+    }
+  };
+  var Timestamp = bindNew(_Timestamp);
+  classes.set(0, Timestamp);
+  var _SetPageLocation = class {
+    constructor(url, referrer, navigationStart) {
+      this.url = url;
+      this.referrer = referrer;
+      this.navigationStart = navigationStart;
+      this._id = 4;
+    }
+    encode(writer) {
+      return writer.uint(4) && writer.string(this.url) && writer.string(this.referrer) && writer.uint(this.navigationStart);
+    }
+  };
+  var SetPageLocation = bindNew(_SetPageLocation);
+  classes.set(4, SetPageLocation);
+  var _SetViewportSize = class {
+    constructor(width, height) {
+      this.width = width;
+      this.height = height;
+      this._id = 5;
+    }
+    encode(writer) {
+      return writer.uint(5) && writer.uint(this.width) && writer.uint(this.height);
+    }
+  };
+  var SetViewportSize = bindNew(_SetViewportSize);
+  classes.set(5, SetViewportSize);
+  var _SetViewportScroll = class {
+    constructor(x2, y3) {
+      this.x = x2;
+      this.y = y3;
+      this._id = 6;
+    }
+    encode(writer) {
+      return writer.uint(6) && writer.int(this.x) && writer.int(this.y);
+    }
+  };
+  var SetViewportScroll = bindNew(_SetViewportScroll);
+  classes.set(6, SetViewportScroll);
+  var _CreateDocument = class {
+    constructor() {
+      this._id = 7;
+    }
+    encode(writer) {
+      return writer.uint(7);
+    }
+  };
+  var CreateDocument = bindNew(_CreateDocument);
+  classes.set(7, CreateDocument);
+  var _CreateElementNode = class {
+    constructor(id, parentID, index, tag, svg) {
+      this.id = id;
+      this.parentID = parentID;
+      this.index = index;
+      this.tag = tag;
+      this.svg = svg;
+      this._id = 8;
+    }
+    encode(writer) {
+      return writer.uint(8) && writer.uint(this.id) && writer.uint(this.parentID) && writer.uint(this.index) && writer.string(this.tag) && writer.boolean(this.svg);
+    }
+  };
+  var CreateElementNode = bindNew(_CreateElementNode);
+  classes.set(8, CreateElementNode);
+  var _CreateTextNode = class {
+    constructor(id, parentID, index) {
+      this.id = id;
+      this.parentID = parentID;
+      this.index = index;
+      this._id = 9;
+    }
+    encode(writer) {
+      return writer.uint(9) && writer.uint(this.id) && writer.uint(this.parentID) && writer.uint(this.index);
+    }
+  };
+  var CreateTextNode = bindNew(_CreateTextNode);
+  classes.set(9, CreateTextNode);
+  var _MoveNode = class {
+    constructor(id, parentID, index) {
+      this.id = id;
+      this.parentID = parentID;
+      this.index = index;
+      this._id = 10;
+    }
+    encode(writer) {
+      return writer.uint(10) && writer.uint(this.id) && writer.uint(this.parentID) && writer.uint(this.index);
+    }
+  };
+  var MoveNode = bindNew(_MoveNode);
+  classes.set(10, MoveNode);
+  var _RemoveNode = class {
+    constructor(id) {
+      this.id = id;
+      this._id = 11;
+    }
+    encode(writer) {
+      return writer.uint(11) && writer.uint(this.id);
+    }
+  };
+  var RemoveNode = bindNew(_RemoveNode);
+  classes.set(11, RemoveNode);
+  var _SetNodeAttribute = class {
+    constructor(id, name, value) {
+      this.id = id;
+      this.name = name;
+      this.value = value;
+      this._id = 12;
+    }
+    encode(writer) {
+      return writer.uint(12) && writer.uint(this.id) && writer.string(this.name) && writer.string(this.value);
+    }
+  };
+  var SetNodeAttribute = bindNew(_SetNodeAttribute);
+  classes.set(12, SetNodeAttribute);
+  var _RemoveNodeAttribute = class {
+    constructor(id, name) {
+      this.id = id;
+      this.name = name;
+      this._id = 13;
+    }
+    encode(writer) {
+      return writer.uint(13) && writer.uint(this.id) && writer.string(this.name);
+    }
+  };
+  var RemoveNodeAttribute = bindNew(_RemoveNodeAttribute);
+  classes.set(13, RemoveNodeAttribute);
+  var _SetNodeData = class {
+    constructor(id, data) {
+      this.id = id;
+      this.data = data;
+      this._id = 14;
+    }
+    encode(writer) {
+      return writer.uint(14) && writer.uint(this.id) && writer.string(this.data);
+    }
+  };
+  var SetNodeData = bindNew(_SetNodeData);
+  classes.set(14, SetNodeData);
+  var _SetNodeScroll = class {
+    constructor(id, x2, y3) {
+      this.id = id;
+      this.x = x2;
+      this.y = y3;
+      this._id = 16;
+    }
+    encode(writer) {
+      return writer.uint(16) && writer.uint(this.id) && writer.int(this.x) && writer.int(this.y);
+    }
+  };
+  var SetNodeScroll = bindNew(_SetNodeScroll);
+  classes.set(16, SetNodeScroll);
+  var _SetInputTarget = class {
+    constructor(id, label) {
+      this.id = id;
+      this.label = label;
+      this._id = 17;
+    }
+    encode(writer) {
+      return writer.uint(17) && writer.uint(this.id) && writer.string(this.label);
+    }
+  };
+  var SetInputTarget = bindNew(_SetInputTarget);
+  classes.set(17, SetInputTarget);
+  var _SetInputValue = class {
+    constructor(id, value, mask) {
+      this.id = id;
+      this.value = value;
+      this.mask = mask;
+      this._id = 18;
+    }
+    encode(writer) {
+      return writer.uint(18) && writer.uint(this.id) && writer.string(this.value) && writer.int(this.mask);
+    }
+  };
+  var SetInputValue = bindNew(_SetInputValue);
+  classes.set(18, SetInputValue);
+  var _SetInputChecked = class {
+    constructor(id, checked) {
+      this.id = id;
+      this.checked = checked;
+      this._id = 19;
+    }
+    encode(writer) {
+      return writer.uint(19) && writer.uint(this.id) && writer.boolean(this.checked);
+    }
+  };
+  var SetInputChecked = bindNew(_SetInputChecked);
+  classes.set(19, SetInputChecked);
+  var _MouseMove = class {
+    constructor(x2, y3) {
+      this.x = x2;
+      this.y = y3;
+      this._id = 20;
+    }
+    encode(writer) {
+      return writer.uint(20) && writer.uint(this.x) && writer.uint(this.y);
+    }
+  };
+  var MouseMove = bindNew(_MouseMove);
+  classes.set(20, MouseMove);
+  var _ConsoleLog = class {
+    constructor(level, value) {
+      this.level = level;
+      this.value = value;
+      this._id = 22;
+    }
+    encode(writer) {
+      return writer.uint(22) && writer.string(this.level) && writer.string(this.value);
+    }
+  };
+  var ConsoleLog = bindNew(_ConsoleLog);
+  classes.set(22, ConsoleLog);
+  var _PageLoadTiming = class {
+    constructor(requestStart, responseStart, responseEnd, domContentLoadedEventStart, domContentLoadedEventEnd, loadEventStart, loadEventEnd, firstPaint, firstContentfulPaint) {
+      this.requestStart = requestStart;
+      this.responseStart = responseStart;
+      this.responseEnd = responseEnd;
+      this.domContentLoadedEventStart = domContentLoadedEventStart;
+      this.domContentLoadedEventEnd = domContentLoadedEventEnd;
+      this.loadEventStart = loadEventStart;
+      this.loadEventEnd = loadEventEnd;
+      this.firstPaint = firstPaint;
+      this.firstContentfulPaint = firstContentfulPaint;
+      this._id = 23;
+    }
+    encode(writer) {
+      return writer.uint(23) && writer.uint(this.requestStart) && writer.uint(this.responseStart) && writer.uint(this.responseEnd) && writer.uint(this.domContentLoadedEventStart) && writer.uint(this.domContentLoadedEventEnd) && writer.uint(this.loadEventStart) && writer.uint(this.loadEventEnd) && writer.uint(this.firstPaint) && writer.uint(this.firstContentfulPaint);
+    }
+  };
+  var PageLoadTiming = bindNew(_PageLoadTiming);
+  classes.set(23, PageLoadTiming);
+  var _PageRenderTiming = class {
+    constructor(speedIndex, visuallyComplete, timeToInteractive) {
+      this.speedIndex = speedIndex;
+      this.visuallyComplete = visuallyComplete;
+      this.timeToInteractive = timeToInteractive;
+      this._id = 24;
+    }
+    encode(writer) {
+      return writer.uint(24) && writer.uint(this.speedIndex) && writer.uint(this.visuallyComplete) && writer.uint(this.timeToInteractive);
+    }
+  };
+  var PageRenderTiming = bindNew(_PageRenderTiming);
+  classes.set(24, PageRenderTiming);
+  var _JSException = class {
+    constructor(name, message, payload) {
+      this.name = name;
+      this.message = message;
+      this.payload = payload;
+      this._id = 25;
+    }
+    encode(writer) {
+      return writer.uint(25) && writer.string(this.name) && writer.string(this.message) && writer.string(this.payload);
+    }
+  };
+  var JSException = bindNew(_JSException);
+  classes.set(25, JSException);
+  var _RawCustomEvent = class {
+    constructor(name, payload) {
+      this.name = name;
+      this.payload = payload;
+      this._id = 27;
+    }
+    encode(writer) {
+      return writer.uint(27) && writer.string(this.name) && writer.string(this.payload);
+    }
+  };
+  var RawCustomEvent = bindNew(_RawCustomEvent);
+  classes.set(27, RawCustomEvent);
+  var _UserID = class {
+    constructor(id) {
+      this.id = id;
+      this._id = 28;
+    }
+    encode(writer) {
+      return writer.uint(28) && writer.string(this.id);
+    }
+  };
+  var UserID = bindNew(_UserID);
+  classes.set(28, UserID);
+  var _UserAnonymousID = class {
+    constructor(id) {
+      this.id = id;
+      this._id = 29;
+    }
+    encode(writer) {
+      return writer.uint(29) && writer.string(this.id);
+    }
+  };
+  var UserAnonymousID = bindNew(_UserAnonymousID);
+  classes.set(29, UserAnonymousID);
+  var _Metadata = class {
+    constructor(key, value) {
+      this.key = key;
+      this.value = value;
+      this._id = 30;
+    }
+    encode(writer) {
+      return writer.uint(30) && writer.string(this.key) && writer.string(this.value);
+    }
+  };
+  var Metadata = bindNew(_Metadata);
+  classes.set(30, Metadata);
+  var _CSSInsertRule = class {
+    constructor(id, rule, index) {
+      this.id = id;
+      this.rule = rule;
+      this.index = index;
+      this._id = 37;
+    }
+    encode(writer) {
+      return writer.uint(37) && writer.uint(this.id) && writer.string(this.rule) && writer.uint(this.index);
+    }
+  };
+  var CSSInsertRule = bindNew(_CSSInsertRule);
+  classes.set(37, CSSInsertRule);
+  var _CSSDeleteRule = class {
+    constructor(id, index) {
+      this.id = id;
+      this.index = index;
+      this._id = 38;
+    }
+    encode(writer) {
+      return writer.uint(38) && writer.uint(this.id) && writer.uint(this.index);
+    }
+  };
+  var CSSDeleteRule = bindNew(_CSSDeleteRule);
+  classes.set(38, CSSDeleteRule);
+  var _Fetch = class {
+    constructor(method, url, request, response, status, timestamp2, duration) {
+      this.method = method;
+      this.url = url;
+      this.request = request;
+      this.response = response;
+      this.status = status;
+      this.timestamp = timestamp2;
+      this.duration = duration;
+      this._id = 39;
+    }
+    encode(writer) {
+      return writer.uint(39) && writer.string(this.method) && writer.string(this.url) && writer.string(this.request) && writer.string(this.response) && writer.uint(this.status) && writer.uint(this.timestamp) && writer.uint(this.duration);
+    }
+  };
+  var Fetch = bindNew(_Fetch);
+  classes.set(39, Fetch);
+  var _Profiler = class {
+    constructor(name, duration, args, result) {
+      this.name = name;
+      this.duration = duration;
+      this.args = args;
+      this.result = result;
+      this._id = 40;
+    }
+    encode(writer) {
+      return writer.uint(40) && writer.string(this.name) && writer.uint(this.duration) && writer.string(this.args) && writer.string(this.result);
+    }
+  };
+  var Profiler = bindNew(_Profiler);
+  classes.set(40, Profiler);
+  var _OTable = class {
+    constructor(key, value) {
+      this.key = key;
+      this.value = value;
+      this._id = 41;
+    }
+    encode(writer) {
+      return writer.uint(41) && writer.string(this.key) && writer.string(this.value);
+    }
+  };
+  var OTable = bindNew(_OTable);
+  classes.set(41, OTable);
+  var _StateAction = class {
+    constructor(type3) {
+      this.type = type3;
+      this._id = 42;
+    }
+    encode(writer) {
+      return writer.uint(42) && writer.string(this.type);
+    }
+  };
+  var StateAction = bindNew(_StateAction);
+  classes.set(42, StateAction);
+  var _Redux = class {
+    constructor(action, state, duration) {
+      this.action = action;
+      this.state = state;
+      this.duration = duration;
+      this._id = 44;
+    }
+    encode(writer) {
+      return writer.uint(44) && writer.string(this.action) && writer.string(this.state) && writer.uint(this.duration);
+    }
+  };
+  var Redux = bindNew(_Redux);
+  classes.set(44, Redux);
+  var _Vuex = class {
+    constructor(mutation, state) {
+      this.mutation = mutation;
+      this.state = state;
+      this._id = 45;
+    }
+    encode(writer) {
+      return writer.uint(45) && writer.string(this.mutation) && writer.string(this.state);
+    }
+  };
+  var Vuex = bindNew(_Vuex);
+  classes.set(45, Vuex);
+  var _MobX = class {
+    constructor(type3, payload) {
+      this.type = type3;
+      this.payload = payload;
+      this._id = 46;
+    }
+    encode(writer) {
+      return writer.uint(46) && writer.string(this.type) && writer.string(this.payload);
+    }
+  };
+  var MobX = bindNew(_MobX);
+  classes.set(46, MobX);
+  var _NgRx = class {
+    constructor(action, state, duration) {
+      this.action = action;
+      this.state = state;
+      this.duration = duration;
+      this._id = 47;
+    }
+    encode(writer) {
+      return writer.uint(47) && writer.string(this.action) && writer.string(this.state) && writer.uint(this.duration);
+    }
+  };
+  var NgRx = bindNew(_NgRx);
+  classes.set(47, NgRx);
+  var _GraphQL = class {
+    constructor(operationKind, operationName, variables, response) {
+      this.operationKind = operationKind;
+      this.operationName = operationName;
+      this.variables = variables;
+      this.response = response;
+      this._id = 48;
+    }
+    encode(writer) {
+      return writer.uint(48) && writer.string(this.operationKind) && writer.string(this.operationName) && writer.string(this.variables) && writer.string(this.response);
+    }
+  };
+  var GraphQL = bindNew(_GraphQL);
+  classes.set(48, GraphQL);
+  var _PerformanceTrack = class {
+    constructor(frames, ticks, totalJSHeapSize, usedJSHeapSize) {
+      this.frames = frames;
+      this.ticks = ticks;
+      this.totalJSHeapSize = totalJSHeapSize;
+      this.usedJSHeapSize = usedJSHeapSize;
+      this._id = 49;
+    }
+    encode(writer) {
+      return writer.uint(49) && writer.int(this.frames) && writer.int(this.ticks) && writer.uint(this.totalJSHeapSize) && writer.uint(this.usedJSHeapSize);
+    }
+  };
+  var PerformanceTrack = bindNew(_PerformanceTrack);
+  classes.set(49, PerformanceTrack);
+  var _ResourceTiming = class {
+    constructor(timestamp2, duration, ttfb, headerSize, encodedBodySize, decodedBodySize, url, initiator) {
+      this.timestamp = timestamp2;
+      this.duration = duration;
+      this.ttfb = ttfb;
+      this.headerSize = headerSize;
+      this.encodedBodySize = encodedBodySize;
+      this.decodedBodySize = decodedBodySize;
+      this.url = url;
+      this.initiator = initiator;
+      this._id = 53;
+    }
+    encode(writer) {
+      return writer.uint(53) && writer.uint(this.timestamp) && writer.uint(this.duration) && writer.uint(this.ttfb) && writer.uint(this.headerSize) && writer.uint(this.encodedBodySize) && writer.uint(this.decodedBodySize) && writer.string(this.url) && writer.string(this.initiator);
+    }
+  };
+  var ResourceTiming = bindNew(_ResourceTiming);
+  classes.set(53, ResourceTiming);
+  var _ConnectionInformation = class {
+    constructor(downlink, type3) {
+      this.downlink = downlink;
+      this.type = type3;
+      this._id = 54;
+    }
+    encode(writer) {
+      return writer.uint(54) && writer.uint(this.downlink) && writer.string(this.type);
+    }
+  };
+  var ConnectionInformation = bindNew(_ConnectionInformation);
+  classes.set(54, ConnectionInformation);
+  var _SetPageVisibility = class {
+    constructor(hidden) {
+      this.hidden = hidden;
+      this._id = 55;
+    }
+    encode(writer) {
+      return writer.uint(55) && writer.boolean(this.hidden);
+    }
+  };
+  var SetPageVisibility = bindNew(_SetPageVisibility);
+  classes.set(55, SetPageVisibility);
+  var _LongTask = class {
+    constructor(timestamp2, duration, context, containerType, containerSrc, containerId, containerName) {
+      this.timestamp = timestamp2;
+      this.duration = duration;
+      this.context = context;
+      this.containerType = containerType;
+      this.containerSrc = containerSrc;
+      this.containerId = containerId;
+      this.containerName = containerName;
+      this._id = 59;
+    }
+    encode(writer) {
+      return writer.uint(59) && writer.uint(this.timestamp) && writer.uint(this.duration) && writer.uint(this.context) && writer.uint(this.containerType) && writer.string(this.containerSrc) && writer.string(this.containerId) && writer.string(this.containerName);
+    }
+  };
+  var LongTask = bindNew(_LongTask);
+  classes.set(59, LongTask);
+  var _SetNodeAttributeURLBased = class {
+    constructor(id, name, value, baseURL) {
+      this.id = id;
+      this.name = name;
+      this.value = value;
+      this.baseURL = baseURL;
+      this._id = 60;
+    }
+    encode(writer) {
+      return writer.uint(60) && writer.uint(this.id) && writer.string(this.name) && writer.string(this.value) && writer.string(this.baseURL);
+    }
+  };
+  var SetNodeAttributeURLBased = bindNew(_SetNodeAttributeURLBased);
+  classes.set(60, SetNodeAttributeURLBased);
+  var _SetCSSDataURLBased = class {
+    constructor(id, data, baseURL) {
+      this.id = id;
+      this.data = data;
+      this.baseURL = baseURL;
+      this._id = 61;
+    }
+    encode(writer) {
+      return writer.uint(61) && writer.uint(this.id) && writer.string(this.data) && writer.string(this.baseURL);
+    }
+  };
+  var SetCSSDataURLBased = bindNew(_SetCSSDataURLBased);
+  classes.set(61, SetCSSDataURLBased);
+  var _TechnicalInfo = class {
+    constructor(type3, value) {
+      this.type = type3;
+      this.value = value;
+      this._id = 63;
+    }
+    encode(writer) {
+      return writer.uint(63) && writer.string(this.type) && writer.string(this.value);
+    }
+  };
+  var TechnicalInfo = bindNew(_TechnicalInfo);
+  classes.set(63, TechnicalInfo);
+  var _CustomIssue = class {
+    constructor(name, payload) {
+      this.name = name;
+      this.payload = payload;
+      this._id = 64;
+    }
+    encode(writer) {
+      return writer.uint(64) && writer.string(this.name) && writer.string(this.payload);
+    }
+  };
+  var CustomIssue = bindNew(_CustomIssue);
+  classes.set(64, CustomIssue);
+  var _PageClose = class {
+    constructor() {
+      this._id = 65;
+    }
+    encode(writer) {
+      return writer.uint(65);
+    }
+  };
+  var PageClose = bindNew(_PageClose);
+  classes.set(65, PageClose);
+  var _CSSInsertRuleURLBased = class {
+    constructor(id, rule, index, baseURL) {
+      this.id = id;
+      this.rule = rule;
+      this.index = index;
+      this.baseURL = baseURL;
+      this._id = 67;
+    }
+    encode(writer) {
+      return writer.uint(67) && writer.uint(this.id) && writer.string(this.rule) && writer.uint(this.index) && writer.string(this.baseURL);
+    }
+  };
+  var CSSInsertRuleURLBased = bindNew(_CSSInsertRuleURLBased);
+  classes.set(67, CSSInsertRuleURLBased);
+  var _MouseClick = class {
+    constructor(id, hesitationTime, label, selector) {
+      this.id = id;
+      this.hesitationTime = hesitationTime;
+      this.label = label;
+      this.selector = selector;
+      this._id = 69;
+    }
+    encode(writer) {
+      return writer.uint(69) && writer.uint(this.id) && writer.uint(this.hesitationTime) && writer.string(this.label) && writer.string(this.selector);
+    }
+  };
+  var MouseClick = bindNew(_MouseClick);
+  classes.set(69, MouseClick);
+  var _CreateIFrameDocument = class {
+    constructor(frameID, id) {
+      this.frameID = frameID;
+      this.id = id;
+      this._id = 70;
+    }
+    encode(writer) {
+      return writer.uint(70) && writer.uint(this.frameID) && writer.uint(this.id);
+    }
+  };
+  var CreateIFrameDocument = bindNew(_CreateIFrameDocument);
+  classes.set(70, CreateIFrameDocument);
+
+  // node_modules/@openreplay/tracker/lib/app/nodes.js
+  var Nodes = class {
+    constructor(node_id) {
+      this.node_id = node_id;
+      this.nodes = [];
+      this.nodeCallbacks = [];
+      this.elementListeners = /* @__PURE__ */ new Map();
+    }
+    attachNodeCallback(nodeCallback) {
+      this.nodeCallbacks.push(nodeCallback);
+    }
+    attachElementListener(type3, node, elementListener) {
+      const id = this.getID(node);
+      if (id === void 0) {
+        return;
+      }
+      node.addEventListener(type3, elementListener);
+      let listeners = this.elementListeners.get(id);
+      if (listeners === void 0) {
+        listeners = [];
+        this.elementListeners.set(id, listeners);
+        return;
+      }
+      listeners.push([type3, elementListener]);
+    }
+    registerNode(node) {
+      let id = node[this.node_id];
+      const isNew = id === void 0;
+      if (isNew) {
+        id = this.nodes.length;
+        this.nodes[id] = node;
+        node[this.node_id] = id;
+      }
+      return [id, isNew];
+    }
+    unregisterNode(node) {
+      const id = node[this.node_id];
+      if (id !== void 0) {
+        delete node[this.node_id];
+        this.nodes[id] = void 0;
+        const listeners = this.elementListeners.get(id);
+        if (listeners !== void 0) {
+          this.elementListeners.delete(id);
+          listeners.forEach((listener2) => node.removeEventListener(listener2[0], listener2[1]));
+        }
+      }
+      return id;
+    }
+    callNodeCallbacks(node) {
+      this.nodeCallbacks.forEach((cb) => cb(node));
+    }
+    getID(node) {
+      return node[this.node_id];
+    }
+    getNode(id) {
+      return this.nodes[id];
+    }
+    clear() {
+      for (let id = 0; id < this.nodes.length; id++) {
+        const node = this.nodes[id];
+        if (node === void 0) {
+          continue;
+        }
+        this.unregisterNode(node);
+      }
+      this.nodes.length = 0;
+    }
+  };
+
+  // node_modules/@openreplay/tracker/lib/app/observer.js
+  function isSVGElement(node) {
+    return node.namespaceURI === "http://www.w3.org/2000/svg";
+  }
+  var Observer = class {
+    constructor(app, options, context = window) {
+      this.app = app;
+      this.options = options;
+      this.context = context;
+      this.iframeObservers = [];
+      this.observer = new MutationObserver(this.app.safe((mutations) => {
+        var _a;
+        for (const mutation of mutations) {
+          const target = mutation.target;
+          const type3 = mutation.type;
+          if (this.isInstance(target, Document) && type3 === "childList") {
+            const parentFrame = (_a = target.defaultView) === null || _a === void 0 ? void 0 : _a.frameElement;
+            if (!parentFrame) {
+              continue;
+            }
+            this.bindTree(target.documentElement);
+            const frameID = this.app.nodes.getID(parentFrame);
+            const docID = this.app.nodes.getID(target.documentElement);
+            if (frameID === void 0 || docID === void 0) {
+              continue;
+            }
+            this.app.send(CreateIFrameDocument(frameID, docID));
+            continue;
+          }
+          if (this.isIgnored(target) || !context.document.contains(target)) {
+            continue;
+          }
+          if (type3 === "childList") {
+            for (let i3 = 0; i3 < mutation.removedNodes.length; i3++) {
+              this.bindTree(mutation.removedNodes[i3]);
+            }
+            for (let i3 = 0; i3 < mutation.addedNodes.length; i3++) {
+              this.bindTree(mutation.addedNodes[i3]);
+            }
+            continue;
+          }
+          const id = this.app.nodes.getID(target);
+          if (id === void 0) {
+            continue;
+          }
+          if (id >= this.recents.length) {
+            this.recents[id] = void 0;
+          }
+          if (type3 === "attributes") {
+            const name = mutation.attributeName;
+            if (name === null) {
+              continue;
+            }
+            let attr = this.attributesList[id];
+            if (attr === void 0) {
+              this.attributesList[id] = attr = /* @__PURE__ */ new Set();
+            }
+            attr.add(name);
+            continue;
+          }
+          if (type3 === "characterData") {
+            this.textSet.add(id);
+            continue;
+          }
+        }
+        this.commitNodes();
+      }));
+      this.commited = [];
+      this.recents = [];
+      this.indexes = [0];
+      this.attributesList = [];
+      this.textSet = /* @__PURE__ */ new Set();
+      this.textMasked = /* @__PURE__ */ new Set();
+    }
+    clear() {
+      this.commited.length = 0;
+      this.recents.length = 0;
+      this.indexes.length = 1;
+      this.attributesList.length = 0;
+      this.textSet.clear();
+      this.textMasked.clear();
+    }
+    isInstance(node, constr) {
+      let context = this.context;
+      while (context.parent && context.parent !== context) {
+        if (node instanceof context[constr.name]) {
+          return true;
+        }
+        context = context.parent;
+      }
+      return node instanceof context[constr.name];
+    }
+    isIgnored(node) {
+      if (this.isInstance(node, Text)) {
+        return false;
+      }
+      if (!this.isInstance(node, Element)) {
+        return true;
+      }
+      const tag = node.tagName.toUpperCase();
+      if (tag === "LINK") {
+        const rel = node.getAttribute("rel");
+        const as = node.getAttribute("as");
+        return !((rel === null || rel === void 0 ? void 0 : rel.includes("stylesheet")) || as === "style" || as === "font");
+      }
+      return tag === "SCRIPT" || tag === "NOSCRIPT" || tag === "META" || tag === "TITLE" || tag === "BASE";
+    }
+    sendNodeAttribute(id, node, name, value) {
+      if (isSVGElement(node)) {
+        if (name.substr(0, 6) === "xlink:") {
+          name = name.substr(6);
+        }
+        if (value === null) {
+          this.app.send(new RemoveNodeAttribute(id, name));
+        } else if (name === "href") {
+          if (value.length > 1e5) {
+            value = "";
+          }
+          this.app.send(new SetNodeAttributeURLBased(id, name, value, this.app.getBaseHref()));
+        } else {
+          this.app.send(new SetNodeAttribute(id, name, value));
+        }
+        return;
+      }
+      if (name === "src" || name === "srcset" || name === "integrity" || name === "crossorigin" || name === "autocomplete" || name.substr(0, 2) === "on") {
+        return;
+      }
+      if (name === "value" && this.isInstance(node, HTMLInputElement) && node.type !== "button" && node.type !== "reset" && node.type !== "submit") {
+        return;
+      }
+      if (value === null) {
+        this.app.send(new RemoveNodeAttribute(id, name));
+        return;
+      }
+      if (name === "style" || name === "href" && this.isInstance(node, HTMLLinkElement)) {
+        this.app.send(new SetNodeAttributeURLBased(id, name, value, this.app.getBaseHref()));
+        return;
+      }
+      if (name === "href" || value.length > 1e5) {
+        value = "";
+      }
+      this.app.send(new SetNodeAttribute(id, name, value));
+    }
+    getInnerTextSecure(el) {
+      const id = this.app.nodes.getID(el);
+      if (!id) {
+        return "";
+      }
+      return this.checkObscure(id, el.innerText);
+    }
+    checkObscure(id, data) {
+      if (this.textMasked.has(id)) {
+        return data.replace(/[^\f\n\r\t\v\u00a0\u1680\u2000-\u200a\u2028\u2029\u202f\u205f\u3000\ufeff]/g, "\u2588");
+      }
+      if (this.options.obscureTextNumbers) {
+        data = data.replace(/\d/g, "0");
+      }
+      if (this.options.obscureTextEmails) {
+        data = data.replace(/([^\s]+)@([^\s]+)\.([^\s]+)/g, (...f3) => stars(f3[1]) + "@" + stars(f3[2]) + "." + stars(f3[3]));
+      }
+      return data;
+    }
+    sendNodeData(id, parentElement, data) {
+      if (this.isInstance(parentElement, HTMLStyleElement) || this.isInstance(parentElement, SVGStyleElement)) {
+        this.app.send(new SetCSSDataURLBased(id, data, this.app.getBaseHref()));
+        return;
+      }
+      data = this.checkObscure(id, data);
+      this.app.send(new SetNodeData(id, data));
+    }
+    bindNode(node) {
+      const r3 = this.app.nodes.registerNode(node);
+      const id = r3[0];
+      this.recents[id] = r3[1] || this.recents[id] || false;
+    }
+    bindTree(node) {
+      if (this.isIgnored(node)) {
+        return;
+      }
+      this.bindNode(node);
+      const walker = document.createTreeWalker(node, NodeFilter.SHOW_ELEMENT + NodeFilter.SHOW_TEXT, {
+        acceptNode: (node2) => this.isIgnored(node2) || this.app.nodes.getID(node2) !== void 0 ? NodeFilter.FILTER_REJECT : NodeFilter.FILTER_ACCEPT
+      }, false);
+      while (walker.nextNode()) {
+        this.bindNode(walker.currentNode);
+      }
+    }
+    unbindNode(node) {
+      const id = this.app.nodes.unregisterNode(node);
+      if (id !== void 0 && this.recents[id] === false) {
+        this.app.send(new RemoveNode(id));
+      }
+    }
+    _commitNode(id, node) {
+      const parent = node.parentNode;
+      let parentID;
+      if (this.isInstance(node, HTMLHtmlElement)) {
+        this.indexes[id] = 0;
+      } else {
+        if (parent === null) {
+          this.unbindNode(node);
+          return false;
+        }
+        parentID = this.app.nodes.getID(parent);
+        if (parentID === void 0) {
+          this.unbindNode(node);
+          return false;
+        }
+        if (!this.commitNode(parentID)) {
+          this.unbindNode(node);
+          return false;
+        }
+        if (this.textMasked.has(parentID) || this.isInstance(node, Element) && hasOpenreplayAttribute(node, "masked")) {
+          this.textMasked.add(id);
+        }
+        let sibling = node.previousSibling;
+        while (sibling !== null) {
+          const siblingID = this.app.nodes.getID(sibling);
+          if (siblingID !== void 0) {
+            this.commitNode(siblingID);
+            this.indexes[id] = this.indexes[siblingID] + 1;
+            break;
+          }
+          sibling = sibling.previousSibling;
+        }
+        if (sibling === null) {
+          this.indexes[id] = 0;
+        }
+      }
+      const isNew = this.recents[id];
+      const index = this.indexes[id];
+      if (index === void 0) {
+        throw "commitNode: missing node index";
+      }
+      if (isNew === true) {
+        if (this.isInstance(node, Element)) {
+          if (parentID !== void 0) {
+            this.app.send(new CreateElementNode(id, parentID, index, node.tagName, isSVGElement(node)));
+          }
+          for (let i3 = 0; i3 < node.attributes.length; i3++) {
+            const attr2 = node.attributes[i3];
+            this.sendNodeAttribute(id, node, attr2.nodeName, attr2.value);
+          }
+          if (this.isInstance(node, HTMLIFrameElement) && (this.options.captureIFrames || node.getAttribute("data-openreplay-capture"))) {
+            this.handleIframe(node);
+          }
+        } else if (this.isInstance(node, Text)) {
+          this.app.send(new CreateTextNode(id, parentID, index));
+          this.sendNodeData(id, parent, node.data);
+        }
+        return true;
+      }
+      if (isNew === false && parentID !== void 0) {
+        this.app.send(new MoveNode(id, parentID, index));
+      }
+      const attr = this.attributesList[id];
+      if (attr !== void 0) {
+        if (!this.isInstance(node, Element)) {
+          throw "commitNode: node is not an element";
+        }
+        for (const name of attr) {
+          this.sendNodeAttribute(id, node, name, node.getAttribute(name));
+        }
+      }
+      if (this.textSet.has(id)) {
+        if (!this.isInstance(node, Text)) {
+          throw "commitNode: node is not a text";
+        }
+        this.sendNodeData(id, parent, node.data);
+      }
+      return true;
+    }
+    commitNode(id) {
+      const node = this.app.nodes.getNode(id);
+      if (node === void 0) {
+        return false;
+      }
+      const cmt = this.commited[id];
+      if (cmt !== void 0) {
+        return cmt;
+      }
+      return this.commited[id] = this._commitNode(id, node);
+    }
+    commitNodes() {
+      let node;
+      for (let id = 0; id < this.recents.length; id++) {
+        this.commitNode(id);
+        if (this.recents[id] === true && (node = this.app.nodes.getNode(id))) {
+          this.app.nodes.callNodeCallbacks(node);
+        }
+      }
+      this.clear();
+    }
+    handleIframe(iframe) {
+      let context = null;
+      const handle = this.app.safe(() => {
+        const id = this.app.nodes.getID(iframe);
+        if (id === void 0) {
+          return;
+        }
+        if (iframe.contentWindow === context) {
+          return;
+        }
+        context = iframe.contentWindow;
+        if (!context) {
+          return;
+        }
+        const observer = new Observer(this.app, this.options, context);
+        this.iframeObservers.push(observer);
+        observer.observeIframe(id, context);
+      });
+      this.app.attachEventListener(iframe, "load", handle);
+      handle();
+    }
+    observeIframe(id, context) {
+      const doc = context.document;
+      this.observer.observe(doc, {
+        childList: true,
+        attributes: true,
+        characterData: true,
+        subtree: true,
+        attributeOldValue: false,
+        characterDataOldValue: false
+      });
+      this.bindTree(doc.documentElement);
+      const docID = this.app.nodes.getID(doc.documentElement);
+      if (docID === void 0) {
+        console.log("Wrong");
+        return;
+      }
+      this.app.send(CreateIFrameDocument(id, docID));
+      this.commitNodes();
+    }
+    observe() {
+      this.observer.observe(this.context.document, {
+        childList: true,
+        attributes: true,
+        characterData: true,
+        subtree: true,
+        attributeOldValue: false,
+        characterDataOldValue: false
+      });
+      this.app.send(new CreateDocument());
+      this.bindTree(this.context.document.documentElement);
+      this.commitNodes();
+    }
+    disconnect() {
+      this.iframeObservers.forEach((o3) => o3.disconnect());
+      this.iframeObservers = [];
+      this.observer.disconnect();
+      this.clear();
+    }
+  };
+
+  // node_modules/@openreplay/tracker/lib/app/ticker.js
+  function wrap(callback, n3) {
+    let t3 = 0;
+    return () => {
+      if (t3++ >= n3) {
+        t3 = 0;
+        callback();
+      }
+    };
+  }
+  var Ticker = class {
+    constructor(app) {
+      this.app = app;
+      this.timer = null;
+      this.callbacks = [];
+    }
+    attach(callback, n3 = 0, useSafe = true, thisArg) {
+      if (thisArg) {
+        callback = callback.bind(thisArg);
+      }
+      if (useSafe) {
+        callback = this.app.safe(callback);
+      }
+      this.callbacks.unshift(n3 ? wrap(callback, n3) : callback) - 1;
+    }
+    start() {
+      if (this.timer === null) {
+        this.timer = setInterval(() => this.callbacks.forEach((cb) => {
+          if (cb)
+            cb();
+        }), 30);
+      }
+    }
+    stop() {
+      if (this.timer !== null) {
+        clearInterval(this.timer);
+        this.timer = null;
+      }
+    }
+  };
+
+  // node_modules/@openreplay/tracker/lib/modules/performance.js
+  var perf = IN_BROWSER && "performance" in window && "memory" in performance ? performance : { memory: {} };
+  var deviceMemory = IN_BROWSER ? (navigator.deviceMemory || 0) * 1024 : 0;
+  var jsHeapSizeLimit = perf.memory.jsHeapSizeLimit || 0;
+  function performance_default(app, opts) {
+    const options = Object.assign({
+      capturePerformance: true
+    }, opts);
+    if (!options.capturePerformance) {
+      return;
+    }
+    let frames;
+    let ticks;
+    const nextFrame = () => {
+      if (frames === void 0 || frames === -1) {
+        return;
+      }
+      frames++;
+      requestAnimationFrame(nextFrame);
+    };
+    app.ticker.attach(() => {
+      if (ticks === void 0 || ticks === -1) {
+        return;
+      }
+      ticks++;
+    }, 0, false);
+    const sendPerformanceTrack = () => {
+      if (frames === void 0 || ticks === void 0) {
+        return;
+      }
+      app.send(new PerformanceTrack(frames, ticks, perf.memory.totalJSHeapSize || 0, perf.memory.usedJSHeapSize || 0));
+      ticks = frames = document.hidden ? -1 : 0;
+    };
+    app.attachStartCallback(() => {
+      ticks = frames = -1;
+      sendPerformanceTrack();
+      nextFrame();
+    });
+    app.attachStopCallback(() => {
+      ticks = frames = void 0;
+    });
+    app.ticker.attach(sendPerformanceTrack, 40, false);
+    if (document.hidden !== void 0) {
+      app.attachEventListener(document, "visibilitychange", sendPerformanceTrack, false, false);
+    }
+  }
+
+  // node_modules/@openreplay/tracker/lib/app/index.js
+  var DEFAULT_INGEST_POINT = "https://api.openreplay.com/ingest";
+  var App2 = class {
+    constructor(projectKey, sessionToken, opts) {
+      this.messages = [];
+      this.startCallbacks = [];
+      this.stopCallbacks = [];
+      this.commitCallbacks = [];
+      this._sessionID = null;
+      this.isActive = false;
+      this.version = "3.4.7";
+      this.projectKey = projectKey;
+      this.options = Object.assign({
+        revID: "",
+        node_id: "__openreplay_id",
+        session_token_key: "__openreplay_token",
+        session_pageno_key: "__openreplay_pageno",
+        local_uuid_key: "__openreplay_uuid",
+        ingestPoint: DEFAULT_INGEST_POINT,
+        resourceBaseHref: null,
+        __is_snippet: false,
+        __debug_report_edp: null,
+        __debug_log: false,
+        obscureTextEmails: true,
+        obscureTextNumbers: false,
+        captureIFrames: false
+      }, opts);
+      if (sessionToken != null) {
+        sessionStorage.setItem(this.options.session_token_key, sessionToken);
+      }
+      this.revID = this.options.revID;
+      this.nodes = new Nodes(this.options.node_id);
+      this.observer = new Observer(this, this.options);
+      this.ticker = new Ticker(this);
+      this.ticker.attach(() => this.commit());
+      try {
+        this.worker = new Worker(URL.createObjectURL(new Blob([`"use strict";function t(t){function s(...s){return new t(...s)}return s.prototype=t.prototype,s}const s=new Map;const i=t(class{constructor(t,s,i){this.pageNo=t,this.firstIndex=s,this.timestamp=i,this._id=80}encode(t){return t.uint(80)&&t.uint(this.pageNo)&&t.uint(this.firstIndex)&&t.int(this.timestamp)}});s.set(80,i);const n=t(class{constructor(t){this.timestamp=t,this._id=0}encode(t){return t.uint(0)&&t.uint(this.timestamp)}});s.set(0,n);const e=t(class{constructor(t,s,i){this.url=t,this.referrer=s,this.navigationStart=i,this._id=4}encode(t){return t.uint(4)&&t.string(this.url)&&t.string(this.referrer)&&t.uint(this.navigationStart)}});s.set(4,e);const r=t(class{constructor(t,s){this.width=t,this.height=s,this._id=5}encode(t){return t.uint(5)&&t.uint(this.width)&&t.uint(this.height)}});s.set(5,r);const o=t(class{constructor(t,s){this.x=t,this.y=s,this._id=6}encode(t){return t.uint(6)&&t.int(this.x)&&t.int(this.y)}});s.set(6,o);const h=t(class{constructor(){this._id=7}encode(t){return t.uint(7)}});s.set(7,h);const c=t(class{constructor(t,s,i,n,e){this.id=t,this.parentID=s,this.index=i,this.tag=n,this.svg=e,this._id=8}encode(t){return t.uint(8)&&t.uint(this.id)&&t.uint(this.parentID)&&t.uint(this.index)&&t.string(this.tag)&&t.boolean(this.svg)}});s.set(8,c);const u=t(class{constructor(t,s,i){this.id=t,this.parentID=s,this.index=i,this._id=9}encode(t){return t.uint(9)&&t.uint(this.id)&&t.uint(this.parentID)&&t.uint(this.index)}});s.set(9,u);const a=t(class{constructor(t,s,i){this.id=t,this.parentID=s,this.index=i,this._id=10}encode(t){return t.uint(10)&&t.uint(this.id)&&t.uint(this.parentID)&&t.uint(this.index)}});s.set(10,a);const d=t(class{constructor(t){this.id=t,this._id=11}encode(t){return t.uint(11)&&t.uint(this.id)}});s.set(11,d);const l=t(class{constructor(t,s,i){this.id=t,this.name=s,this.value=i,this._id=12}encode(t){return t.uint(12)&&t.uint(this.id)&&t.string(this.name)&&t.string(this.value)}});s.set(12,l);const g=t(class{constructor(t,s){this.id=t,this.name=s,this._id=13}encode(t){return t.uint(13)&&t.uint(this.id)&&t.string(this.name)}});s.set(13,g);const f=t(class{constructor(t,s){this.id=t,this.data=s,this._id=14}encode(t){return t.uint(14)&&t.uint(this.id)&&t.string(this.data)}});s.set(14,f);const p=t(class{constructor(t,s,i){this.id=t,this.x=s,this.y=i,this._id=16}encode(t){return t.uint(16)&&t.uint(this.id)&&t.int(this.x)&&t.int(this.y)}});s.set(16,p);const m=t(class{constructor(t,s){this.id=t,this.label=s,this._id=17}encode(t){return t.uint(17)&&t.uint(this.id)&&t.string(this.label)}});s.set(17,m);const _=t(class{constructor(t,s,i){this.id=t,this.value=s,this.mask=i,this._id=18}encode(t){return t.uint(18)&&t.uint(this.id)&&t.string(this.value)&&t.int(this.mask)}});s.set(18,_);const y=t(class{constructor(t,s){this.id=t,this.checked=s,this._id=19}encode(t){return t.uint(19)&&t.uint(this.id)&&t.boolean(this.checked)}});s.set(19,y);const v=t(class{constructor(t,s){this.x=t,this.y=s,this._id=20}encode(t){return t.uint(20)&&t.uint(this.x)&&t.uint(this.y)}});s.set(20,v);const S=t(class{constructor(t,s){this.level=t,this.value=s,this._id=22}encode(t){return t.uint(22)&&t.string(this.level)&&t.string(this.value)}});s.set(22,S);const b=t(class{constructor(t,s,i,n,e,r,o,h,c){this.requestStart=t,this.responseStart=s,this.responseEnd=i,this.domContentLoadedEventStart=n,this.domContentLoadedEventEnd=e,this.loadEventStart=r,this.loadEventEnd=o,this.firstPaint=h,this.firstContentfulPaint=c,this._id=23}encode(t){return t.uint(23)&&t.uint(this.requestStart)&&t.uint(this.responseStart)&&t.uint(this.responseEnd)&&t.uint(this.domContentLoadedEventStart)&&t.uint(this.domContentLoadedEventEnd)&&t.uint(this.loadEventStart)&&t.uint(this.loadEventEnd)&&t.uint(this.firstPaint)&&t.uint(this.firstContentfulPaint)}});s.set(23,b);const x=t(class{constructor(t,s,i){this.speedIndex=t,this.visuallyComplete=s,this.timeToInteractive=i,this._id=24}encode(t){return t.uint(24)&&t.uint(this.speedIndex)&&t.uint(this.visuallyComplete)&&t.uint(this.timeToInteractive)}});s.set(24,x);const E=t(class{constructor(t,s,i){this.name=t,this.message=s,this.payload=i,this._id=25}encode(t){return t.uint(25)&&t.string(this.name)&&t.string(this.message)&&t.string(this.payload)}});s.set(25,E);const k=t(class{constructor(t,s){this.name=t,this.payload=s,this._id=27}encode(t){return t.uint(27)&&t.string(this.name)&&t.string(this.payload)}});s.set(27,k);const I=t(class{constructor(t){this.id=t,this._id=28}encode(t){return t.uint(28)&&t.string(this.id)}});s.set(28,I);const z=t(class{constructor(t){this.id=t,this._id=29}encode(t){return t.uint(29)&&t.string(this.id)}});s.set(29,z);const w=t(class{constructor(t,s){this.key=t,this.value=s,this._id=30}encode(t){return t.uint(30)&&t.string(this.key)&&t.string(this.value)}});s.set(30,w);const T=t(class{constructor(t,s,i){this.id=t,this.rule=s,this.index=i,this._id=37}encode(t){return t.uint(37)&&t.uint(this.id)&&t.string(this.rule)&&t.uint(this.index)}});s.set(37,T);const L=t(class{constructor(t,s){this.id=t,this.index=s,this._id=38}encode(t){return t.uint(38)&&t.uint(this.id)&&t.uint(this.index)}});s.set(38,L);const A=t(class{constructor(t,s,i,n,e,r,o){this.method=t,this.url=s,this.request=i,this.response=n,this.status=e,this.timestamp=r,this.duration=o,this._id=39}encode(t){return t.uint(39)&&t.string(this.method)&&t.string(this.url)&&t.string(this.request)&&t.string(this.response)&&t.uint(this.status)&&t.uint(this.timestamp)&&t.uint(this.duration)}});s.set(39,A);const C=t(class{constructor(t,s,i,n){this.name=t,this.duration=s,this.args=i,this.result=n,this._id=40}encode(t){return t.uint(40)&&t.string(this.name)&&t.uint(this.duration)&&t.string(this.args)&&t.string(this.result)}});s.set(40,C);const M=t(class{constructor(t,s){this.key=t,this.value=s,this._id=41}encode(t){return t.uint(41)&&t.string(this.key)&&t.string(this.value)}});s.set(41,M);const R=t(class{constructor(t){this.type=t,this._id=42}encode(t){return t.uint(42)&&t.string(this.type)}});s.set(42,R);const N=t(class{constructor(t,s,i){this.action=t,this.state=s,this.duration=i,this._id=44}encode(t){return t.uint(44)&&t.string(this.action)&&t.string(this.state)&&t.uint(this.duration)}});s.set(44,N);const D=t(class{constructor(t,s){this.mutation=t,this.state=s,this._id=45}encode(t){return t.uint(45)&&t.string(this.mutation)&&t.string(this.state)}});s.set(45,D);const U=t(class{constructor(t,s){this.type=t,this.payload=s,this._id=46}encode(t){return t.uint(46)&&t.string(this.type)&&t.string(this.payload)}});s.set(46,U);const O=t(class{constructor(t,s,i){this.action=t,this.state=s,this.duration=i,this._id=47}encode(t){return t.uint(47)&&t.string(this.action)&&t.string(this.state)&&t.uint(this.duration)}});s.set(47,O);const q=t(class{constructor(t,s,i,n){this.operationKind=t,this.operationName=s,this.variables=i,this.response=n,this._id=48}encode(t){return t.uint(48)&&t.string(this.operationKind)&&t.string(this.operationName)&&t.string(this.variables)&&t.string(this.response)}});s.set(48,q);const H=t(class{constructor(t,s,i,n){this.frames=t,this.ticks=s,this.totalJSHeapSize=i,this.usedJSHeapSize=n,this._id=49}encode(t){return t.uint(49)&&t.int(this.frames)&&t.int(this.ticks)&&t.uint(this.totalJSHeapSize)&&t.uint(this.usedJSHeapSize)}});s.set(49,H);const P=t(class{constructor(t,s,i,n,e,r,o,h){this.timestamp=t,this.duration=s,this.ttfb=i,this.headerSize=n,this.encodedBodySize=e,this.decodedBodySize=r,this.url=o,this.initiator=h,this._id=53}encode(t){return t.uint(53)&&t.uint(this.timestamp)&&t.uint(this.duration)&&t.uint(this.ttfb)&&t.uint(this.headerSize)&&t.uint(this.encodedBodySize)&&t.uint(this.decodedBodySize)&&t.string(this.url)&&t.string(this.initiator)}});s.set(53,P);const B=t(class{constructor(t,s){this.downlink=t,this.type=s,this._id=54}encode(t){return t.uint(54)&&t.uint(this.downlink)&&t.string(this.type)}});s.set(54,B);const J=t(class{constructor(t){this.hidden=t,this._id=55}encode(t){return t.uint(55)&&t.boolean(this.hidden)}});s.set(55,J);const j=t(class{constructor(t,s,i,n,e,r,o){this.timestamp=t,this.duration=s,this.context=i,this.containerType=n,this.containerSrc=e,this.containerId=r,this.containerName=o,this._id=59}encode(t){return t.uint(59)&&t.uint(this.timestamp)&&t.uint(this.duration)&&t.uint(this.context)&&t.uint(this.containerType)&&t.string(this.containerSrc)&&t.string(this.containerId)&&t.string(this.containerName)}});s.set(59,j);const G=t(class{constructor(t,s,i,n){this.id=t,this.name=s,this.value=i,this.baseURL=n,this._id=60}encode(t){return t.uint(60)&&t.uint(this.id)&&t.string(this.name)&&t.string(this.value)&&t.string(this.baseURL)}});s.set(60,G);const K=t(class{constructor(t,s,i){this.id=t,this.data=s,this.baseURL=i,this._id=61}encode(t){return t.uint(61)&&t.uint(this.id)&&t.string(this.data)&&t.string(this.baseURL)}});s.set(61,K);const X=t(class{constructor(t,s){this.type=t,this.value=s,this._id=63}encode(t){return t.uint(63)&&t.string(this.type)&&t.string(this.value)}});s.set(63,X);const F=t(class{constructor(t,s){this.name=t,this.payload=s,this._id=64}encode(t){return t.uint(64)&&t.string(this.name)&&t.string(this.payload)}});s.set(64,F);const Q=t(class{constructor(){this._id=65}encode(t){return t.uint(65)}});s.set(65,Q);const V=t(class{constructor(t,s,i,n){this.id=t,this.rule=s,this.index=i,this.baseURL=n,this._id=67}encode(t){return t.uint(67)&&t.uint(this.id)&&t.string(this.rule)&&t.uint(this.index)&&t.string(this.baseURL)}});s.set(67,V);const W=t(class{constructor(t,s,i,n){this.id=t,this.hesitationTime=s,this.label=i,this.selector=n,this._id=69}encode(t){return t.uint(69)&&t.uint(this.id)&&t.uint(this.hesitationTime)&&t.string(this.label)&&t.string(this.selector)}});s.set(69,W);const Y=t(class{constructor(t,s){this.frameID=t,this.id=s,this._id=70}encode(t){return t.uint(70)&&t.uint(this.frameID)&&t.uint(this.id)}});s.set(70,Y);const Z="function"==typeof TextEncoder?new TextEncoder:{encode(t){const s=t.length,i=new Uint8Array(3*s);let n=-1;for(var e=0,r=0,o=0;o!==s;){if(e=t.charCodeAt(o),o+=1,e>=55296&&e<=56319){if(o===s){i[n+=1]=239,i[n+=1]=191,i[n+=1]=189;break}if(!((r=t.charCodeAt(o))>=56320&&r<=57343)){i[n+=1]=239,i[n+=1]=191,i[n+=1]=189;continue}if(o+=1,(e=1024*(e-55296)+r-56320+65536)>65535){i[n+=1]=240|e>>>18,i[n+=1]=128|e>>>12&63,i[n+=1]=128|e>>>6&63,i[n+=1]=128|63&e;continue}}e<=127?i[n+=1]=0|e:e<=2047?(i[n+=1]=192|e>>>6,i[n+=1]=128|63&e):(i[n+=1]=224|e>>>12,i[n+=1]=128|e>>>6&63,i[n+=1]=128|63&e)}return i.subarray(0,n+1)}};class tt{constructor(t){this.size=t,this.offset=0,this.checkpointOffset=0,this.data=new Uint8Array(t)}checkpoint(){this.checkpointOffset=this.offset}isEmpty(){return 0===this.offset}boolean(t){return this.data[this.offset++]=+t,this.offset<=this.size}uint(t){for((t<0||t>Number.MAX_SAFE_INTEGER)&&(t=0);t>=128;)this.data[this.offset++]=t%256|128,t=Math.floor(t/128);return this.data[this.offset++]=t,this.offset<=this.size}int(t){return t=Math.round(t),this.uint(t>=0?2*t:-2*t-1)}string(t){const s=Z.encode(t),i=s.byteLength;return!(!this.uint(i)||this.offset+i>this.size)&&(this.data.set(s,this.offset),this.offset+=i,!0)}reset(){this.offset=0,this.checkpointOffset=0}flush(){const t=this.data.slice(0,this.checkpointOffset);return this.reset(),t}}let st,it=1e6,nt=4e5,et=new tt(nt),rt="",ot="",ht=0,ct=0,ut=0,at=0,dt=!0;function lt(){return new i(ht,at,ct).encode(et)}const gt=[];let ft,pt=!1,mt=0,_t=8e3,yt=10;function vt(){if(dt||""===ot||""===rt)return;const t=et.flush();pt?gt.push(t):(pt=!0,function t(s){const i=new XMLHttpRequest;i.open("POST",rt+"/v1/web/i",!1),i.setRequestHeader("Authorization","Bearer "+ot),i.onreadystatechange=function(){if(4===this.readyState){if(0==this.status)return;if(this.status>=400)return St(),gt.length=0,401===this.status?void self.postMessage("restart"):void self.postMessage(null);const s=gt.shift();s?t(s):pt=!1}},i.onerror=function(i){if(mt>=yt)return St(),void self.postMessage(null);mt++,setTimeout(()=>t(s),_t)},i.send(s.buffer)}(t)),dt=!0,lt()}function St(){rt="",ot="",clearInterval(st),et.reset()}self.onmessage=({data:t})=>{if(null!==t)return"stop"===t?(vt(),void St()):Array.isArray(t)?void t.forEach(t=>{const i=new(s.get(t._id));if(Object.assign(i,t),i instanceof n?ct=i.timestamp:i instanceof J&&(i.hidden?ft=setTimeout(()=>self.postMessage("restart"),3e5):clearTimeout(ft)),et.checkpoint(),!i.encode(et)&&(vt(),!i.encode(et)))for(;!i.encode(et);){if(nt===it)return console.warn("OpenReplay: beacon size overflow."),et.reset(),void lt();nt=Math.min(2*nt,it),et=new tt(nt),lt()}at++,dt=!1}):(rt=t.ingestPoint||rt,ot=t.token||ot,ht=t.pageNo||ht,ct=t.startTimestamp||ct,ut=t.timeAdjustment||ut,yt=t.connAttemptCount||yt,_t=t.connAttemptGap||_t,it=t.beaconSizeLimit||it,nt=Math.min(it,t.beaconSize||nt),et.isEmpty()&&lt(),void(null==st&&(st=setInterval(vt,2e4))));vt()};
+`], { type: "text/javascript" })));
+        this.worker.onerror = (e3) => {
+          this._debug("webworker_error", e3);
+        };
+        let lastTs = timestamp();
+        let fileno = 0;
+        this.worker.onmessage = ({ data }) => {
+          if (data === null) {
+            this.stop();
+          } else if (data === "restart") {
+            this.stop();
+            this.start(true);
+          }
+        };
+        const alertWorker = () => {
+          if (this.worker) {
+            this.worker.postMessage(null);
+          }
+        };
+        this.attachEventListener(window, "beforeunload", alertWorker, false);
+        this.attachEventListener(document, "mouseleave", alertWorker, false, false);
+        this.attachEventListener(document, "visibilitychange", alertWorker, false);
+      } catch (e3) {
+        this._debug("worker_start", e3);
+      }
+    }
+    _debug(context, e3) {
+      if (this.options.__debug_report_edp !== null) {
+        fetch(this.options.__debug_report_edp, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            context,
+            error: `${e3}`
+          })
+        });
+      }
+      if (this.options.__debug_log) {
+        warn("OpenReplay error: ", context, e3);
+      }
+    }
+    send(message, urgent = false) {
+      if (!this.isActive) {
+        return;
+      }
+      this.messages.push(message);
+      if (urgent) {
+        this.commit();
+      }
+    }
+    commit() {
+      if (this.worker && this.messages.length) {
+        this.messages.unshift(new Timestamp(timestamp()));
+        this.worker.postMessage(this.messages);
+        this.commitCallbacks.forEach((cb) => cb(this.messages));
+        this.messages.length = 0;
+      }
+    }
+    attachCommitCallback(cb) {
+      this.commitCallbacks.push(cb);
+    }
+    addCommitCallback(cb) {
+      this.attachCommitCallback(cb);
+    }
+    safe(fn2) {
+      const app = this;
+      return function(...args) {
+        try {
+          fn2.apply(this, args);
+        } catch (e3) {
+          app._debug("safe_fn_call", e3);
+        }
+      };
+    }
+    attachStartCallback(cb) {
+      this.startCallbacks.push(cb);
+    }
+    attachStopCallback(cb) {
+      this.stopCallbacks.push(cb);
+    }
+    attachEventListener(target, type3, listener2, useSafe = true, useCapture = true) {
+      if (useSafe) {
+        listener2 = this.safe(listener2);
+      }
+      this.attachStartCallback(() => target.addEventListener(type3, listener2, useCapture));
+      this.attachStopCallback(() => target.removeEventListener(type3, listener2, useCapture));
+    }
+    getSessionToken() {
+      const token = sessionStorage.getItem(this.options.session_token_key);
+      if (token !== null) {
+        return token;
+      }
+    }
+    getSessionID() {
+      return this._sessionID || void 0;
+    }
+    getHost() {
+      return new URL(this.options.ingestPoint).hostname;
+    }
+    getProjectKey() {
+      return this.projectKey;
+    }
+    getBaseHref() {
+      var _a, _b;
+      if (typeof this.options.resourceBaseHref === "string") {
+        return this.options.resourceBaseHref;
+      } else if (typeof this.options.resourceBaseHref === "object") {
+      }
+      if (document.baseURI) {
+        return document.baseURI;
+      }
+      return ((_b = (_a = document.head) === null || _a === void 0 ? void 0 : _a.getElementsByTagName("base")[0]) === null || _b === void 0 ? void 0 : _b.getAttribute("href")) || location.origin + location.pathname;
+    }
+    resolveResourceURL(resourceURL) {
+      const base = new URL(this.getBaseHref());
+      base.pathname += "/" + new URL(resourceURL).pathname;
+      base.pathname.replace(/\/+/g, "/");
+      return base.toString();
+    }
+    isServiceURL(url) {
+      return url.startsWith(this.options.ingestPoint);
+    }
+    active() {
+      return this.isActive;
+    }
+    _start(reset) {
+      if (!this.isActive) {
+        if (!this.worker) {
+          return Promise.reject("No worker found: perhaps, CSP is not set.");
+        }
+        this.isActive = true;
+        let pageNo = 0;
+        const pageNoStr = sessionStorage.getItem(this.options.session_pageno_key);
+        if (pageNoStr != null) {
+          pageNo = parseInt(pageNoStr);
+          pageNo++;
+        }
+        sessionStorage.setItem(this.options.session_pageno_key, pageNo.toString());
+        const startTimestamp = timestamp();
+        const messageData = {
+          ingestPoint: this.options.ingestPoint,
+          pageNo,
+          startTimestamp,
+          connAttemptCount: this.options.connAttemptCount,
+          connAttemptGap: this.options.connAttemptGap
+        };
+        this.worker.postMessage(messageData);
+        return window.fetch(this.options.ingestPoint + "/v1/web/start", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify({
+            token: sessionStorage.getItem(this.options.session_token_key),
+            userUUID: localStorage.getItem(this.options.local_uuid_key),
+            projectKey: this.projectKey,
+            revID: this.revID,
+            timestamp: startTimestamp,
+            trackerVersion: this.version,
+            isSnippet: this.options.__is_snippet,
+            deviceMemory,
+            jsHeapSizeLimit,
+            reset
+          })
+        }).then((r3) => {
+          if (r3.status === 200) {
+            return r3.json();
+          } else {
+            return r3.text().then((text) => {
+              throw new Error(`Server error: ${r3.status}. ${text}`);
+            });
+          }
+        }).then((r3) => {
+          const { token, userUUID, sessionID, beaconSizeLimit } = r3;
+          if (typeof token !== "string" || typeof userUUID !== "string" || typeof beaconSizeLimit !== "number" && typeof beaconSizeLimit !== "undefined") {
+            throw new Error(`Incorrect server response: ${JSON.stringify(r3)}`);
+          }
+          sessionStorage.setItem(this.options.session_token_key, token);
+          localStorage.setItem(this.options.local_uuid_key, userUUID);
+          if (typeof sessionID === "string") {
+            this._sessionID = sessionID;
+          }
+          if (!this.worker) {
+            throw new Error("no worker found after start request (this might not happen)");
+          }
+          this.worker.postMessage({ token, beaconSizeLimit });
+          this.startCallbacks.forEach((cb) => cb());
+          this.observer.observe();
+          this.ticker.start();
+          log("OpenReplay tracking started.");
+          const onStartInfo = { sessionToken: token, userUUID, sessionID };
+          if (typeof this.options.onStart === "function") {
+            this.options.onStart(onStartInfo);
+          }
+          return onStartInfo;
+        }).catch((e3) => {
+          sessionStorage.removeItem(this.options.session_token_key);
+          this.stop();
+          warn("OpenReplay was unable to start. ", e3);
+          this._debug("session_start", e3);
+          throw e3;
+        });
+      }
+      return Promise.reject("Player is already active");
+    }
+    start(reset = false) {
+      if (!document.hidden) {
+        return this._start(reset);
+      } else {
+        return new Promise((resolve) => {
+          const onVisibilityChange = () => {
+            if (!document.hidden) {
+              document.removeEventListener("visibilitychange", onVisibilityChange);
+              resolve(this._start(reset));
+            }
+          };
+          document.addEventListener("visibilitychange", onVisibilityChange);
+        });
+      }
+    }
+    stop() {
+      if (this.isActive) {
+        try {
+          if (this.worker) {
+            this.worker.postMessage("stop");
+          }
+          this.observer.disconnect();
+          this.nodes.clear();
+          this.ticker.stop();
+          this.stopCallbacks.forEach((cb) => cb());
+          log("OpenReplay tracking stopped.");
+        } finally {
+          this.isActive = false;
+        }
+      }
+    }
+  };
+
+  // node_modules/@openreplay/tracker/lib/modules/connection.js
+  function connection_default(app) {
+    const connection = navigator.connection || navigator.mozConnection || navigator.webkitConnection;
+    if (connection === void 0) {
+      return;
+    }
+    const sendConnectionInformation = () => app.send(new ConnectionInformation(Math.round(connection.downlink * 1e3), connection.type || "unknown"));
+    sendConnectionInformation();
+    connection.addEventListener("change", sendConnectionInformation);
+  }
+
+  // node_modules/@openreplay/tracker/lib/modules/console.js
+  var printError = IN_BROWSER && "InstallTrigger" in window ? (e3) => e3.message + "\n" + e3.stack : (e3) => e3.stack || e3.message;
+  function printString(arg) {
+    if (arg === void 0) {
+      return "undefined";
+    }
+    if (arg === null) {
+      return "null";
+    }
+    if (arg instanceof Error) {
+      return printError(arg);
+    }
+    if (Array.isArray(arg)) {
+      return `Array(${arg.length})`;
+    }
+    return arg.toString();
+  }
+  function printFloat(arg) {
+    if (typeof arg !== "number")
+      return "NaN";
+    return arg.toString();
+  }
+  function printInt(arg) {
+    if (typeof arg !== "number")
+      return "NaN";
+    return Math.floor(arg).toString();
+  }
+  function printObject(arg) {
+    if (arg === void 0) {
+      return "undefined";
+    }
+    if (arg === null) {
+      return "null";
+    }
+    if (arg instanceof Error) {
+      return printError(arg);
+    }
+    if (Array.isArray(arg)) {
+      const length3 = arg.length;
+      const values = arg.slice(0, 10).map(printString).join(", ");
+      return `Array(${length3})[${values}]`;
+    }
+    if (typeof arg === "object") {
+      const res = [];
+      let i3 = 0;
+      for (const k2 in arg) {
+        if (++i3 === 10) {
+          break;
+        }
+        const v2 = arg[k2];
+        res.push(k2 + ": " + printString(v2));
+      }
+      return "{" + res.join(", ") + "}";
+    }
+    return arg.toString();
+  }
+  function printf(args) {
+    if (typeof args[0] === "string") {
+      args.unshift(args.shift().replace(/%(o|s|f|d|i)/g, (s3, t3) => {
+        const arg = args.shift();
+        if (arg === void 0)
+          return s3;
+        switch (t3) {
+          case "o":
+            return printObject(arg);
+          case "s":
+            return printString(arg);
+          case "f":
+            return printFloat(arg);
+          case "d":
+          case "i":
+            return printInt(arg);
+          default:
+            return s3;
+        }
+      }));
+    }
+    return args.map(printObject).join(" ");
+  }
+  var consoleMethods = ["log", "info", "warn", "error", "debug", "assert"];
+  function console_default(app, opts) {
+    const options = Object.assign({
+      consoleMethods,
+      consoleThrottling: 30
+    }, opts);
+    if (!Array.isArray(options.consoleMethods) || options.consoleMethods.length === 0) {
+      return;
+    }
+    const sendConsoleLog = app.safe((level, args) => app.send(new ConsoleLog(level, printf(args))));
+    let n3;
+    const reset = () => {
+      n3 = 0;
+    };
+    app.attachStartCallback(reset);
+    app.ticker.attach(reset, 33, false);
+    const patchConsole = (console2) => options.consoleMethods.forEach((method) => {
+      if (consoleMethods.indexOf(method) === -1) {
+        console2.error(`OpenReplay: unsupported console method "${method}"`);
+        return;
+      }
+      const fn2 = console2[method];
+      console2[method] = function(...args) {
+        fn2.apply(this, args);
+        if (n3++ > options.consoleThrottling) {
+          return;
+        }
+        sendConsoleLog(method, args);
+      };
+    });
+    patchConsole(window.console);
+    app.nodes.attachNodeCallback(app.safe((node) => {
+      if (node instanceof HTMLIFrameElement) {
+        let context = node.contentWindow;
+        if (context) {
+          patchConsole(context.console);
+        }
+        app.attachEventListener(node, "load", () => {
+          if (node.contentWindow !== context) {
+            context = node.contentWindow;
+            patchConsole(context.console);
+          }
+        });
+      }
+    }));
+  }
+
+  // node_modules/@openreplay/tracker/lib/modules/exception.js
+  var import_error_stack_parser = __toESM(require_error_stack_parser(), 1);
+  function getDefaultStack(e3) {
+    return [{
+      columnNumber: e3.colno,
+      lineNumber: e3.lineno,
+      fileName: e3.filename,
+      functionName: "",
+      source: ""
+    }];
+  }
+  function getExceptionMessage(error, fallbackStack) {
+    let stack = fallbackStack;
+    try {
+      stack = import_error_stack_parser.default.parse(error);
+    } catch (e3) {
+    }
+    return new JSException(error.name, error.message, JSON.stringify(stack));
+  }
+  function getExceptionMessageFromEvent(e3) {
+    if (e3 instanceof ErrorEvent) {
+      if (e3.error instanceof Error) {
+        return getExceptionMessage(e3.error, getDefaultStack(e3));
+      } else {
+        let [name, message] = e3.message.split(":");
+        if (!message) {
+          name = "Error";
+          message = e3.message;
+        }
+        return new JSException(name, message, JSON.stringify(getDefaultStack(e3)));
+      }
+    } else if ("PromiseRejectionEvent" in window && e3 instanceof PromiseRejectionEvent) {
+      if (e3.reason instanceof Error) {
+        return getExceptionMessage(e3.reason, []);
+      } else {
+        return new JSException("Unhandled Promise Rejection", String(e3.reason), "[]");
+      }
+    }
+    return null;
+  }
+  function exception_default(app, opts) {
+    const options = Object.assign({
+      captureExceptions: true
+    }, opts);
+    if (options.captureExceptions) {
+      const handler = (e3) => {
+        const msg = getExceptionMessageFromEvent(e3);
+        if (msg != null) {
+          app.send(msg);
+        }
+      };
+      app.attachEventListener(window, "unhandledrejection", (e3) => handler(e3));
+      app.attachEventListener(window, "error", (e3) => handler(e3));
+    }
+  }
+
+  // node_modules/@openreplay/tracker/lib/modules/img.js
+  function img_default(app) {
+    const sendImgSrc = app.safe(function() {
+      const id = app.nodes.getID(this);
+      if (id === void 0) {
+        return;
+      }
+      const { src, complete, naturalWidth, naturalHeight } = this;
+      if (!complete) {
+        return;
+      }
+      if (naturalWidth === 0 && naturalHeight === 0) {
+        if (src != null && isURL(src)) {
+          app.send(new ResourceTiming(timestamp(), 0, 0, 0, 0, 0, src, "img"));
+        }
+      } else if (src.length < 1e5) {
+        app.send(new SetNodeAttributeURLBased(id, "src", src, app.getBaseHref()));
+      }
+    });
+    const observer = new MutationObserver((mutations) => {
+      for (const mutation of mutations) {
+        if (mutation.type === "attributes" && mutation.attributeName === "src") {
+          const target = mutation.target;
+          const id = app.nodes.getID(target);
+          if (id === void 0) {
+            return;
+          }
+          const src = target.src;
+          app.send(new SetNodeAttributeURLBased(id, "src", src, app.getBaseHref()));
+        }
+      }
+    });
+    app.nodes.attachNodeCallback((node) => {
+      if (!(node instanceof HTMLImageElement)) {
+        return;
+      }
+      app.nodes.attachElementListener("error", node, sendImgSrc);
+      app.nodes.attachElementListener("load", node, sendImgSrc);
+      sendImgSrc.call(node);
+      observer.observe(node, { attributes: true });
+    });
+  }
+
+  // node_modules/@openreplay/tracker/lib/modules/input.js
+  function isInput(node) {
+    if (!(node instanceof HTMLInputElement)) {
+      return false;
+    }
+    const type3 = node.type;
+    return type3 === "text" || type3 === "password" || type3 === "email" || type3 === "search" || type3 === "number" || type3 === "range";
+  }
+  function isCheckable(node) {
+    if (!(node instanceof HTMLInputElement)) {
+      return false;
+    }
+    const type3 = node.type;
+    return type3 === "checkbox" || type3 === "radio";
+  }
+  var labelElementFor = IN_BROWSER && "labels" in HTMLInputElement.prototype ? (node) => {
+    let p3 = node;
+    while ((p3 = p3.parentNode) !== null) {
+      if (p3.nodeName === "LABEL") {
+        return p3;
+      }
+    }
+    const labels = node.labels;
+    if (labels !== null && labels.length === 1) {
+      return labels[0];
+    }
+  } : (node) => {
+    let p3 = node;
+    while ((p3 = p3.parentNode) !== null) {
+      if (p3.nodeName === "LABEL") {
+        return p3;
+      }
+    }
+    const id = node.id;
+    if (id) {
+      const labels = document.querySelectorAll('label[for="' + id + '"]');
+      if (labels !== null && labels.length === 1) {
+        return labels[0];
+      }
+    }
+  };
+  function getInputLabel(node) {
+    let label = getLabelAttribute(node);
+    if (label === null) {
+      const labelElement = labelElementFor(node);
+      label = labelElement === void 0 ? node.placeholder || node.name : labelElement.innerText;
+    }
+    return normSpaces(label).slice(0, 100);
+  }
+  function input_default(app, opts) {
+    const options = Object.assign({
+      obscureInputNumbers: true,
+      obscureInputEmails: true,
+      defaultInputMode: 0
+    }, opts);
+    function sendInputTarget(id, node) {
+      const label = getInputLabel(node);
+      if (label !== "") {
+        app.send(new SetInputTarget(id, label));
+      }
+    }
+    function sendInputValue(id, node) {
+      let value = node.value;
+      let inputMode = options.defaultInputMode;
+      if (node.type === "password" || hasOpenreplayAttribute(node, "hidden")) {
+        inputMode = 2;
+      } else if (hasOpenreplayAttribute(node, "obscured") || inputMode === 0 && (options.obscureInputNumbers && /\d\d\d\d/.test(value) || options.obscureInputEmails && (node.type === "email" || !!~value.indexOf("@")))) {
+        inputMode = 1;
+      }
+      let mask = 0;
+      switch (inputMode) {
+        case 2:
+          mask = -1;
+          value = "";
+          break;
+        case 1:
+          mask = value.length;
+          value = "";
+          break;
+      }
+      app.send(new SetInputValue(id, value, mask));
+    }
+    const inputValues = /* @__PURE__ */ new Map();
+    const checkableValues = /* @__PURE__ */ new Map();
+    const registeredTargets = /* @__PURE__ */ new Set();
+    app.attachStopCallback(() => {
+      inputValues.clear();
+      checkableValues.clear();
+      registeredTargets.clear();
+    });
+    app.ticker.attach(() => {
+      inputValues.forEach((value, id) => {
+        const node = app.nodes.getNode(id);
+        if (!isInput(node)) {
+          inputValues.delete(id);
+          return;
+        }
+        if (value !== node.value) {
+          inputValues.set(id, node.value);
+          if (!registeredTargets.has(id)) {
+            registeredTargets.add(id);
+            sendInputTarget(id, node);
+          }
+          sendInputValue(id, node);
+        }
+      });
+      checkableValues.forEach((checked, id) => {
+        const node = app.nodes.getNode(id);
+        if (!isCheckable(node)) {
+          checkableValues.delete(id);
+          return;
+        }
+        if (checked !== node.checked) {
+          checkableValues.set(id, node.checked);
+          app.send(new SetInputChecked(id, node.checked));
+        }
+      });
+    });
+    app.ticker.attach(Set.prototype.clear, 100, false, registeredTargets);
+    app.nodes.attachNodeCallback(app.safe((node) => {
+      const id = app.nodes.getID(node);
+      if (id === void 0) {
+        return;
+      }
+      if (isInput(node)) {
+        inputValues.set(id, node.value);
+        sendInputValue(id, node);
+        return;
+      }
+      if (isCheckable(node)) {
+        checkableValues.set(id, node.checked);
+        app.send(new SetInputChecked(id, node.checked));
+        return;
+      }
+    }));
+  }
+
+  // node_modules/@openreplay/tracker/lib/modules/mouse.js
+  function _getSelector(target) {
+    let el = target;
+    let selector = null;
+    do {
+      if (el.id) {
+        return `#${el.id}` + (selector ? ` > ${selector}` : "");
+      }
+      selector = el.className.split(" ").map((cn2) => cn2.trim()).filter((cn2) => cn2 !== "").reduce((sel, cn2) => `${sel}.${cn2}`, el.tagName.toLowerCase()) + (selector ? ` > ${selector}` : "");
+      if (el === document.body) {
+        return selector;
+      }
+      el = el.parentElement;
+    } while (el !== document.body && el !== null);
+    return selector;
+  }
+  function getTarget(target) {
+    if (target instanceof Element) {
+      return _getTarget(target);
+    }
+    return null;
+  }
+  function _getTarget(target) {
+    let element = target;
+    while (element !== null && element !== document.documentElement) {
+      if (hasOpenreplayAttribute(element, "masked")) {
+        return null;
+      }
+      element = element.parentElement;
+    }
+    if (target instanceof SVGElement) {
+      let owner = target.ownerSVGElement;
+      while (owner !== null) {
+        target = owner;
+        owner = owner.ownerSVGElement;
+      }
+    }
+    element = target;
+    while (element !== null && element !== document.documentElement) {
+      const tag = element.tagName.toUpperCase();
+      if (tag === "LABEL") {
+        return null;
+      }
+      if (tag === "INPUT") {
+        return element;
+      }
+      if (tag === "BUTTON" || tag === "A" || tag === "LI" || element.onclick != null || element.getAttribute("role") === "button" || getLabelAttribute(element) !== null) {
+        return element;
+      }
+      element = element.parentElement;
+    }
+    return target === document.documentElement ? null : target;
+  }
+  function mouse_default(app) {
+    function getTargetLabel(target) {
+      const dl = getLabelAttribute(target);
+      if (dl !== null) {
+        return dl;
+      }
+      const tag = target.tagName.toUpperCase();
+      if (tag === "INPUT") {
+        return getInputLabel(target);
+      }
+      if (tag === "BUTTON" || tag === "A" || tag === "LI" || target.onclick != null || target.getAttribute("role") === "button") {
+        const label = app.observer.getInnerTextSecure(target);
+        return normSpaces(label).slice(0, 100);
+      }
+      return "";
+    }
+    let mousePositionX = -1;
+    let mousePositionY = -1;
+    let mousePositionChanged = false;
+    let mouseTarget = null;
+    let mouseTargetTime = 0;
+    app.attachStopCallback(() => {
+      mousePositionX = -1;
+      mousePositionY = -1;
+      mousePositionChanged = false;
+      mouseTarget = null;
+    });
+    const sendMouseMove = () => {
+      if (mousePositionChanged) {
+        app.send(new MouseMove(mousePositionX, mousePositionY));
+        mousePositionChanged = false;
+      }
+    };
+    const selectorMap = {};
+    function getSelector(id, target) {
+      return selectorMap[id] = selectorMap[id] || _getSelector(target);
+    }
+    app.attachEventListener(document.documentElement, "mouseover", (e3) => {
+      const target = getTarget(e3.target);
+      if (target !== mouseTarget) {
+        mouseTarget = target;
+        mouseTargetTime = performance.now();
+      }
+    });
+    app.attachEventListener(document, "mousemove", (e3) => {
+      mousePositionX = e3.clientX;
+      mousePositionY = e3.clientY;
+      mousePositionChanged = true;
+    }, false);
+    app.attachEventListener(document, "click", (e3) => {
+      const target = getTarget(e3.target);
+      if (!e3.clientX && !e3.clientY || target === null) {
+        return;
+      }
+      const id = app.nodes.getID(target);
+      if (id !== void 0) {
+        sendMouseMove();
+        app.send(new MouseClick(id, mouseTarget === target ? Math.round(performance.now() - mouseTargetTime) : 0, getTargetLabel(target), getSelector(id, target)), true);
+      }
+      mouseTarget = null;
+    });
+    app.ticker.attach(sendMouseMove, 10);
+  }
+
+  // node_modules/@openreplay/tracker/lib/modules/timing.js
+  function getPaintBlocks(resources) {
+    const paintBlocks = [];
+    const elements = document.getElementsByTagName("*");
+    const styleURL = /url\(("[^"]*"|'[^']*'|[^)]*)\)/i;
+    for (let i3 = 0; i3 < elements.length; i3++) {
+      const element = elements[i3];
+      let src = "";
+      if (element instanceof HTMLImageElement) {
+        src = element.currentSrc || element.src;
+      }
+      if (!src) {
+        const backgroundImage = getComputedStyle(element).getPropertyValue("background-image");
+        if (backgroundImage) {
+          const matches = styleURL.exec(backgroundImage);
+          if (matches !== null) {
+            src = matches[1];
+            if (src.startsWith('"') || src.startsWith("'")) {
+              src = src.substr(1, src.length - 2);
+            }
+          }
+        }
+      }
+      if (!src)
+        continue;
+      const time = src.substr(0, 10) === "data:image" ? 0 : resources[src];
+      if (time === void 0)
+        continue;
+      const rect = element.getBoundingClientRect();
+      const top = Math.max(rect.top, 0);
+      const left = Math.max(rect.left, 0);
+      const bottom = Math.min(rect.bottom, window.innerHeight || document.documentElement && document.documentElement.clientHeight || 0);
+      const right = Math.min(rect.right, window.innerWidth || document.documentElement && document.documentElement.clientWidth || 0);
+      if (bottom <= top || right <= left)
+        continue;
+      const area = (bottom - top) * (right - left);
+      paintBlocks.push({ time, area });
+    }
+    return paintBlocks;
+  }
+  function calculateSpeedIndex(firstContentfulPaint, paintBlocks) {
+    let a3 = Math.max(document.documentElement && document.documentElement.clientWidth || 0, window.innerWidth || 0) * Math.max(document.documentElement && document.documentElement.clientHeight || 0, window.innerHeight || 0) / 10;
+    let s3 = a3 * firstContentfulPaint;
+    for (let i3 = 0; i3 < paintBlocks.length; i3++) {
+      const { time, area } = paintBlocks[i3];
+      a3 += area;
+      s3 += area * (time > firstContentfulPaint ? time : firstContentfulPaint);
+    }
+    return a3 === 0 ? 0 : s3 / a3;
+  }
+  function timing_default(app, opts) {
+    const options = Object.assign({
+      captureResourceTimings: true,
+      capturePageLoadTimings: true,
+      capturePageRenderTimings: true
+    }, opts);
+    if (!("PerformanceObserver" in window)) {
+      options.captureResourceTimings = false;
+    }
+    if (!options.captureResourceTimings) {
+      return;
+    }
+    const mQueue = [];
+    function sendOnStart(m2) {
+      if (app.active()) {
+        app.send(m2);
+      } else {
+        mQueue.push(m2);
+      }
+    }
+    app.attachStartCallback(function() {
+      mQueue.forEach((m2) => app.send(m2));
+    });
+    let resources = {};
+    function resourceTiming(entry) {
+      if (entry.duration < 0 || !isURL(entry.name) || app.isServiceURL(entry.name))
+        return;
+      if (resources !== null) {
+        resources[entry.name] = entry.startTime + entry.duration;
+      }
+      sendOnStart(new ResourceTiming(entry.startTime + performance.timing.navigationStart, entry.duration, entry.responseStart && entry.startTime ? entry.responseStart - entry.startTime : 0, entry.transferSize > entry.encodedBodySize ? entry.transferSize - entry.encodedBodySize : 0, entry.encodedBodySize || 0, entry.decodedBodySize || 0, entry.name, entry.initiatorType));
+    }
+    const observer = new PerformanceObserver((list) => list.getEntries().forEach(resourceTiming));
+    performance.getEntriesByType("resource").forEach(resourceTiming);
+    observer.observe({ entryTypes: ["resource"] });
+    let firstPaint = 0, firstContentfulPaint = 0;
+    if (options.capturePageLoadTimings) {
+      let pageLoadTimingSent = false;
+      app.ticker.attach(() => {
+        if (pageLoadTimingSent) {
+          return;
+        }
+        if (firstPaint === 0 || firstContentfulPaint === 0) {
+          performance.getEntriesByType("paint").forEach((entry) => {
+            const { name, startTime } = entry;
+            switch (name) {
+              case "first-paint":
+                firstPaint = startTime;
+                break;
+              case "first-contentful-paint":
+                firstContentfulPaint = startTime;
+                break;
+            }
+          });
+        }
+        if (performance.timing.loadEventEnd || performance.now() > 3e4) {
+          pageLoadTimingSent = true;
+          const { navigationStart, requestStart, responseStart, responseEnd, domContentLoadedEventStart, domContentLoadedEventEnd, loadEventStart, loadEventEnd } = performance.timing;
+          app.send(new PageLoadTiming(requestStart - navigationStart || 0, responseStart - navigationStart || 0, responseEnd - navigationStart || 0, domContentLoadedEventStart - navigationStart || 0, domContentLoadedEventEnd - navigationStart || 0, loadEventStart - navigationStart || 0, loadEventEnd - navigationStart || 0, firstPaint, firstContentfulPaint));
+        }
+      }, 30);
+    }
+    if (options.capturePageRenderTimings) {
+      let visuallyComplete = 0, interactiveWindowStartTime = 0, interactiveWindowTickTime = 0, paintBlocks = null;
+      let pageRenderTimingSent = false;
+      app.ticker.attach(() => {
+        if (pageRenderTimingSent) {
+          return;
+        }
+        const time = performance.now();
+        if (resources !== null) {
+          visuallyComplete = Math.max.apply(null, Object.keys(resources).map((k2) => resources[k2]));
+          if (time - visuallyComplete > 1e3) {
+            paintBlocks = getPaintBlocks(resources);
+            resources = null;
+          }
+        }
+        if (interactiveWindowTickTime !== null) {
+          if (time - interactiveWindowTickTime > 50) {
+            interactiveWindowStartTime = time;
+          }
+          interactiveWindowTickTime = time - interactiveWindowStartTime > 5e3 ? null : time;
+        }
+        if (paintBlocks !== null && interactiveWindowTickTime === null || time > 3e4) {
+          pageRenderTimingSent = true;
+          resources = null;
+          const speedIndex = paintBlocks === null ? 0 : calculateSpeedIndex(firstContentfulPaint || firstPaint, paintBlocks);
+          const timeToInteractive = interactiveWindowTickTime === null ? Math.max(interactiveWindowStartTime, firstContentfulPaint, performance.timing.domContentLoadedEventEnd - performance.timing.navigationStart || 0) : 0;
+          app.send(new PageRenderTiming(speedIndex, firstContentfulPaint > visuallyComplete ? firstContentfulPaint : visuallyComplete, timeToInteractive));
+        }
+      });
+    }
+  }
+
+  // node_modules/@openreplay/tracker/lib/modules/scroll.js
+  function scroll_default(app) {
+    let documentScroll = false;
+    const nodeScroll = /* @__PURE__ */ new Map();
+    const sendSetViewportScroll = app.safe(() => app.send(new SetViewportScroll(window.pageXOffset || document.documentElement && document.documentElement.scrollLeft || document.body && document.body.scrollLeft || 0, window.pageYOffset || document.documentElement && document.documentElement.scrollTop || document.body && document.body.scrollTop || 0)));
+    const sendSetNodeScroll = app.safe((s3, node) => {
+      const id = app.nodes.getID(node);
+      if (id !== void 0) {
+        app.send(new SetNodeScroll(id, s3[0], s3[1]));
+      }
+    });
+    app.attachStartCallback(sendSetViewportScroll);
+    app.attachStopCallback(() => {
+      documentScroll = false;
+      nodeScroll.clear();
+    });
+    app.attachEventListener(window, "scroll", (e3) => {
+      const target = e3.target;
+      if (target === document) {
+        documentScroll = true;
+        return;
+      }
+      if (target instanceof Element) {
+        {
+          nodeScroll.set(target, [target.scrollLeft, target.scrollTop]);
+        }
+      }
+    });
+    app.ticker.attach(() => {
+      if (documentScroll) {
+        sendSetViewportScroll();
+        documentScroll = false;
+      }
+      nodeScroll.forEach(sendSetNodeScroll);
+      nodeScroll.clear();
+    }, 5, false);
+  }
+
+  // node_modules/@openreplay/tracker/lib/modules/viewport.js
+  function viewport_default(app) {
+    let url, width, height;
+    let navigationStart = performance.timing.navigationStart;
+    const sendSetPageLocation = app.safe(() => {
+      const { URL: URL2 } = document;
+      if (URL2 !== url) {
+        url = URL2;
+        app.send(new SetPageLocation(url, document.referrer, navigationStart));
+        navigationStart = 0;
+      }
+    });
+    const sendSetViewportSize = app.safe(() => {
+      const { innerWidth, innerHeight } = window;
+      if (innerWidth !== width || innerHeight !== height) {
+        width = innerWidth;
+        height = innerHeight;
+        app.send(new SetViewportSize(width, height));
+      }
+    });
+    const sendSetPageVisibility = document.hidden === void 0 ? Function.prototype : app.safe(() => app.send(new SetPageVisibility(document.hidden)));
+    app.attachStartCallback(() => {
+      url = "";
+      width = height = -1;
+      sendSetPageLocation();
+      sendSetViewportSize();
+      sendSetPageVisibility();
+    });
+    if (document.hidden !== void 0) {
+      app.attachEventListener(document, "visibilitychange", sendSetPageVisibility, false, false);
+    }
+    app.ticker.attach(sendSetPageLocation, 1, false);
+    app.ticker.attach(sendSetViewportSize, 5, false);
+  }
+
+  // node_modules/@openreplay/tracker/lib/modules/longtasks.js
+  function longtasks_default(app) {
+    if (!("PerformanceObserver" in window) || !("PerformanceLongTaskTiming" in window)) {
+      return;
+    }
+    const contexts = ["unknown", "self", "same-origin-ancestor", "same-origin-descendant", "same-origin", "cross-origin-ancestor", "cross-origin-descendant", "cross-origin-unreachable", "multiple-contexts"];
+    const containerTypes = ["window", "iframe", "embed", "object"];
+    function longTask(entry) {
+      let type3 = "", src = "", id = "", name = "";
+      const container = entry.attribution[0];
+      if (container != null) {
+        type3 = container.containerType;
+        name = container.containerName;
+        id = container.containerId;
+        src = container.containerSrc;
+      }
+      app.send(new LongTask(entry.startTime + performance.timing.navigationStart, entry.duration, Math.max(contexts.indexOf(entry.name), 0), Math.max(containerTypes.indexOf(type3), 0), name, id, src));
+    }
+    const observer = new PerformanceObserver((list) => list.getEntries().forEach(longTask));
+    observer.observe({ entryTypes: ["longtask"] });
+  }
+
+  // node_modules/@openreplay/tracker/lib/modules/cssrules.js
+  function cssrules_default(app) {
+    if (app === null) {
+      return;
+    }
+    if (!window.CSSStyleSheet) {
+      app.send(new TechnicalInfo("no_stylesheet_prototype_in_window", ""));
+      return;
+    }
+    const processOperation = app.safe((stylesheet, index, rule) => {
+      const sendMessage = typeof rule === "string" ? (nodeID2) => app.send(new CSSInsertRuleURLBased(nodeID2, rule, index, app.getBaseHref())) : (nodeID2) => app.send(new CSSDeleteRule(nodeID2, index));
+      if (stylesheet.ownerNode == null) {
+        throw new Error("Owner Node not found");
+      }
+      const nodeID = app.nodes.getID(stylesheet.ownerNode);
+      if (nodeID !== void 0) {
+        sendMessage(nodeID);
+      }
+    });
+    const { insertRule, deleteRule } = CSSStyleSheet.prototype;
+    CSSStyleSheet.prototype.insertRule = function(rule, index = 0) {
+      processOperation(this, index, rule);
+      return insertRule.call(this, rule, index);
+    };
+    CSSStyleSheet.prototype.deleteRule = function(index) {
+      processOperation(this, index);
+      return deleteRule.call(this, index);
+    };
+    app.nodes.attachNodeCallback((node) => {
+      if (!(node instanceof HTMLStyleElement)) {
+        return;
+      }
+      if (!(node.sheet instanceof CSSStyleSheet)) {
+        return;
+      }
+      if (node.textContent !== null && node.textContent.trim().length > 0) {
+        return;
+      }
+      const rules = node.sheet.cssRules;
+      for (let i3 = 0; i3 < rules.length; i3++) {
+        processOperation(node.sheet, i3, rules[i3].cssText);
+      }
+    });
+  }
+
+  // node_modules/@openreplay/tracker/lib/index.js
+  var DOCS_SETUP = "/installation/setup-or";
+  function processOptions(obj) {
+    if (obj == null) {
+      console.error(`OpenReplay: invalid options argument type. Please, check documentation on ${DOCS_HOST}${DOCS_SETUP}`);
+      return false;
+    }
+    if (typeof obj.projectKey !== "string") {
+      if (typeof obj.projectKey !== "number") {
+        if (typeof obj.projectID !== "number") {
+          console.error(`OpenReplay: projectKey is missing or wrong type (string is expected). Please, check ${DOCS_HOST}${DOCS_SETUP} for more information.`);
+          return false;
+        } else {
+          obj.projectKey = obj.projectID.toString();
+          deprecationWarn("`projectID` option", "`projectKey` option", DOCS_SETUP);
+        }
+      } else {
+        console.warn("OpenReplay: projectKey is expected to have a string type.");
+        obj.projectKey = obj.projectKey.toString();
+      }
+    }
+    if (typeof obj.sessionToken !== "string" && obj.sessionToken != null) {
+      console.warn(`OpenReplay: invalid options argument type. Please, check documentation on ${DOCS_HOST}${DOCS_SETUP}`);
+    }
+    return true;
+  }
+  var API = class {
+    constructor(options) {
+      this.options = options;
+      this.app = null;
+      this.handleError = (e3) => {
+        if (this.app === null) {
+          return;
+        }
+        if (e3 instanceof Error) {
+          this.app.send(getExceptionMessage(e3, []));
+        } else if (e3 instanceof ErrorEvent || "PromiseRejectionEvent" in window && e3 instanceof PromiseRejectionEvent) {
+          const msg = getExceptionMessageFromEvent(e3);
+          if (msg != null) {
+            this.app.send(msg);
+          }
+        }
+      };
+      if (!IN_BROWSER || !processOptions(options)) {
+        return;
+      }
+      if (window.__OPENREPLAY__) {
+        console.error("OpenReplay: one tracker instance has been initialised already");
+        return;
+      }
+      if (!options.__DISABLE_SECURE_MODE && location.protocol !== "https:") {
+        console.error("OpenReplay: Your website must be publicly accessible and running on SSL in order for OpenReplay to properly capture and replay the user session. You can disable this check by setting `__DISABLE_SECURE_MODE` option to `true` if you are testing in localhost. Keep in mind, that asset files on a local machine are not available to the outside world. This might affect tracking if you use css files.");
+        return;
+      }
+      const doNotTrack = options.respectDoNotTrack && (navigator.doNotTrack == "1" || window.doNotTrack == "1");
+      this.app = doNotTrack || !("Map" in window) || !("Set" in window) || !("MutationObserver" in window) || !("performance" in window) || !("timing" in performance) || !("startsWith" in String.prototype) || !("Blob" in window) || !("Worker" in window) ? null : new App2(options.projectKey, options.sessionToken, options);
+      if (this.app !== null) {
+        viewport_default(this.app);
+        cssrules_default(this.app);
+        connection_default(this.app);
+        console_default(this.app, options);
+        exception_default(this.app, options);
+        img_default(this.app);
+        input_default(this.app, options);
+        mouse_default(this.app);
+        timing_default(this.app, options);
+        performance_default(this.app, options);
+        scroll_default(this.app);
+        longtasks_default(this.app);
+        window.__OPENREPLAY__ = this;
+      } else {
+        console.log("OpenReplay: browser doesn't support API required for tracking or doNotTrack is set to 1.");
+        const req = new XMLHttpRequest();
+        const orig = options.ingestPoint || DEFAULT_INGEST_POINT;
+        req.open("POST", orig + "/v1/web/not-started");
+        req.send(JSON.stringify({
+          trackerVersion: "3.4.7",
+          projectKey: options.projectKey,
+          doNotTrack
+        }));
+      }
+    }
+    use(fn2) {
+      return fn2(this.app, this.options);
+    }
+    isActive() {
+      if (this.app === null) {
+        return false;
+      }
+      return this.app.active();
+    }
+    active() {
+      deprecationWarn("'active' method", "'isActive' method", "/");
+      return this.isActive();
+    }
+    start() {
+      if (!IN_BROWSER) {
+        console.error(`OpenReplay: you are trying to start Tracker on a node.js environment. If you want to use OpenReplay with SSR, please, use componentDidMount or useEffect API for placing the \`tracker.start()\` line. Check documentation on ${DOCS_HOST}${DOCS_SETUP}`);
+        return;
+      }
+      if (this.app === null) {
+        return;
+      }
+      this.app.start();
+    }
+    stop() {
+      if (this.app === null) {
+        return;
+      }
+      this.app.stop();
+    }
+    getSessionToken() {
+      if (this.app === null) {
+        return null;
+      }
+      return this.app.getSessionToken();
+    }
+    getSessionID() {
+      if (this.app === null) {
+        return null;
+      }
+      return this.app.getSessionID();
+    }
+    sessionID() {
+      deprecationWarn("'sessionID' method", "'getSessionID' method", "/");
+      return this.getSessionID();
+    }
+    setUserID(id) {
+      if (typeof id === "string" && this.app !== null) {
+        this.app.send(new UserID(id));
+      }
+    }
+    userID(id) {
+      deprecationWarn("'userID' method", "'setUserID' method", "/");
+      this.setUserID(id);
+    }
+    setUserAnonymousID(id) {
+      if (typeof id === "string" && this.app !== null) {
+        this.app.send(new UserAnonymousID(id));
+      }
+    }
+    userAnonymousID(id) {
+      deprecationWarn("'userAnonymousID' method", "'setUserAnonymousID' method", "/");
+      this.setUserAnonymousID(id);
+    }
+    setMetadata(key, value) {
+      if (typeof key === "string" && typeof value === "string" && this.app !== null) {
+        this.app.send(new Metadata(key, value));
+      }
+    }
+    metadata(key, value) {
+      deprecationWarn("'metadata' method", "'setMetadata' method", "/");
+      this.setMetadata(key, value);
+    }
+    event(key, payload, issue = false) {
+      if (typeof key === "string" && this.app !== null) {
+        if (issue) {
+          return this.issue(key, payload);
+        } else {
+          try {
+            payload = JSON.stringify(payload);
+          } catch (e3) {
+            return;
+          }
+          this.app.send(new RawCustomEvent(key, payload));
+        }
+      }
+    }
+    issue(key, payload) {
+      if (typeof key === "string" && this.app !== null) {
+        try {
+          payload = JSON.stringify(payload);
+        } catch (e3) {
+          return;
+        }
+        this.app.send(new CustomIssue(key, payload));
+      }
+    }
+  };
+
+  // index.jsx
+  var tracker = new API({
+    projectKey: "VzGISOLFpFFv1yHRdHHJ",
+    ingestPoint: "https://data.ercu.be/ingest"
+  });
   import_react_modal.default.setAppElement("#react-root");
   var userId;
   var userProgress;
@@ -32723,6 +35456,7 @@ problem_1 = sum (check [1..999])
     api_host: "https://data.chameleon.typecheck.me"
   });
   import_mixpanel_browser2.default.identify(userId);
+  tracker.start({ userID: userId });
   store_default.dispatch(switchTaskThunk(userProgress + 1));
   window.addEventListener("keyup", (event) => {
     const keyName = event.key;
@@ -32814,7 +35548,7 @@ problem_1 = sum (check [1..999])
       }
     }
   });
-  var App2 = () => {
+  var App3 = () => {
     let wellTyped = useSelector((state) => state.debugger.wellTyped);
     return /* @__PURE__ */ import_react14.default.createElement(import_react14.default.Fragment, null, /* @__PURE__ */ import_react14.default.createElement(import_react_modal.default, {
       isOpen: wellTyped,
@@ -32870,7 +35604,7 @@ problem_1 = sum (check [1..999])
   };
   import_react_dom2.default.render(/* @__PURE__ */ import_react14.default.createElement(import_react14.default.StrictMode, null, /* @__PURE__ */ import_react14.default.createElement(Provider_default, {
     store: store_default
-  }, /* @__PURE__ */ import_react14.default.createElement(App2, null))), document.getElementById("react-root"));
+  }, /* @__PURE__ */ import_react14.default.createElement(App3, null))), document.getElementById("react-root"));
 })();
 /*
 object-assign

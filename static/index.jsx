@@ -25,6 +25,12 @@ import mixpanel from 'mixpanel-browser';
 import { Event, Source, track } from './report';
 import { getMode } from './util';
 import * as R from 'ramda';
+import Tracker from '@openreplay/tracker';
+
+const tracker = new Tracker({
+  projectKey: "VzGISOLFpFFv1yHRdHHJ",
+  ingestPoint: "https://data.ercu.be/ingest",
+});
 
 Modal.setAppElement('#react-root');
 
@@ -46,6 +52,7 @@ mixpanel.init('6be6077e1d5b8de6978c65490e1666ea', {
 });
 
 mixpanel.identify(userId);
+tracker.start({ userID: userId});
 
 store.dispatch(switchTaskThunk(userProgress + 1));
 
