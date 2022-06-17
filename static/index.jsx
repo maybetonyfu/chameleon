@@ -46,13 +46,14 @@ if (localStorage.getItem('userId') === null) {
 }
 
 mixpanel.init('6be6077e1d5b8de6978c65490e1666ea', {
-  debug: true,
+  debug: false,
   ignore_dnt: true,
   api_host: 'https://data.chameleon.typecheck.me',
 });
 
 mixpanel.identify(userId);
-tracker.start({ userID: userId});
+tracker.start();
+tracker.setUserID(userId)
 
 store.dispatch(switchTaskThunk(userProgress + 1));
 

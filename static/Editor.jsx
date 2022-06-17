@@ -115,7 +115,6 @@ const Cell = ({ text, line, ch }) => {
   return (
     <div onClick={_ => {
       let offset = fulltext.split('\n').filter((l, ln) => ln < line).map(l => l.length + 1).reduce((x, y) => x + y, 0) + ch
-      console.log(offset)
       dispatch(setCursorPosition(offset))
     }} className='inline-block h-6 relative' style={{ width: '0.6rem' }}>
       {highlighters}
