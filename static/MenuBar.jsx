@@ -106,7 +106,7 @@ const MenuBar = () => {
               <option value={8}>Example 9</option>
             </select>{' '}
           </>
-        ) : null}
+        ) : <span className='mx-4'>Task {currentTaskNum + 1}/9 </span>}
         <button
           className='bg-gray-300 px-4 py-1 rounded-md mx-2 flex h-8 justify-center items-center  hint--bottom'
           aria-label='Reset the code challenge to its initial state'
