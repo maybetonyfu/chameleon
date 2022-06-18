@@ -149,6 +149,9 @@ const App = () => {
   return (
     <>
       <div className='w-full h-full flex flex-col'>
+        <div className='py-2 px-4 bg-green-100'>
+          This is a playground for Chameleon. You can try out differnet examples here. This page has no data collection.
+        </div>
         <MenuBar></MenuBar>
         <div className='flex-grow'>
           <Splitter initialSizes={[60, 40]}>

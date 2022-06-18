@@ -28188,6 +28188,7 @@ For more info, visit https://reactjs.org/link/mock-scheduler`);
 
   // code.js
   var dropEvery = (n3) => `module Task${n3} where
+-- Objective: fix the type error in this file
 
 divides x y = y \`mod\` x == 0
 
@@ -28205,6 +28206,8 @@ dropEvery' (x:xs) n i =
     in current : dropEvery' xs n (i+1)
 `;
   var rotate = (n3) => `module Task${n3} where
+-- Objective: fix the type error in this file
+
 -- Rotate a list N places to the left.
 
 rotate1 :: [a] -> [a]
@@ -28222,6 +28225,7 @@ rotate x y
   | otherwise = rotate rotate1Back x (y+1)
 `;
   var insertAt = (n3) => `module Task${n3} where
+-- Objective: fix the type error in this file
 
 -- Insert an element at a given position into a list.
 
@@ -28235,6 +28239,7 @@ insertAt el lst n =
 
 `;
   var balanceTree = (n3) => `module Task${n3} where
+-- Objective: fix the type error in this file
 
 data Tree a = Empty | Branch a (Tree a) (Tree a)
 leaf x = Branch x Empty Empty
@@ -28250,6 +28255,8 @@ countBranches Empty = 0
 countBranches (Branch _ l r) = 1 + l + r
 `;
   var compress = (n3) => `module Task${n3} where
+-- Objective: fix the type error in this file
+
 --  Eliminate consecutive duplicates of list elements.
 
 compress = foldr skipDups
@@ -28267,6 +28274,7 @@ test :: Bool
 test =  expect == actual
 `;
   var uconandvcon = (n3) => `module Task${n3} where
+-- Objective: fix the type error in this file
 
 data U = UCon Bool Int (Int, Int)
 
@@ -28283,6 +28291,7 @@ test = actual == expect
 
 `;
   var quicksort = (n3) => `module Task${n3} where
+-- Objective: fix the type error in this file
 
 quick :: [Int] -> [Int]
 quick []   = []
@@ -28300,6 +28309,7 @@ split (x:xs) n (littles, bigs) =
     else split xs n (littles, x:bigs)
 `;
   var printXML = (n3) => `module Task${n3} where
+-- Objective: fix the type error in this file
 
 data XML = XML Position Part
 data Position = Top | Bottom | Left | Right
@@ -28324,6 +28334,7 @@ printXML (Text text) = text
 
 `;
   var euler1 = (n3) => `module Task${n3} where
+-- Objective: fix the type error in this file
 
 -- Add all the natural numbers below 1000
 -- that are multiples of 3 or 5.
@@ -30366,7 +30377,6 @@ problem_1 = sum (check [1..999])
     return /* @__PURE__ */ import_react9.default.createElement("div", {
       onClick: (_3) => {
         let offset = fulltext.split("\n").filter((l3, ln2) => ln2 < line).map((l3) => l3.length + 1).reduce((x2, y3) => x2 + y3, 0) + ch;
-        console.log(offset);
         dispatch(setCursorPosition(offset));
       },
       className: "inline-block h-6 relative",
@@ -30596,7 +30606,7 @@ problem_1 = sum (check [1..999])
     if (false) {
       track = ({ event, task: task2, mode, source }) => {
         import_mixpanel_browser.default.track(event, {
-          Stage: "testing",
+          Stage: "live",
           Task: task2,
           Mode: mode,
           "Input Source": source
@@ -31169,7 +31179,9 @@ problem_1 = sum (check [1..999])
       value: 7
     }, "Example 8"), /* @__PURE__ */ import_react13.default.createElement("option", {
       value: 8
-    }, "Example 9")), " ") : null, /* @__PURE__ */ import_react13.default.createElement("button", {
+    }, "Example 9")), " ") : /* @__PURE__ */ import_react13.default.createElement("span", {
+      className: "mx-4"
+    }, "Task ", currentTaskNum + 1, "/9 "), /* @__PURE__ */ import_react13.default.createElement("button", {
       className: "bg-gray-300 px-4 py-1 rounded-md mx-2 flex h-8 justify-center items-center  hint--bottom",
       "aria-label": "Reset the code challenge to its initial state",
       onClick: (_3) => {
@@ -31194,7 +31206,7 @@ problem_1 = sum (check [1..999])
         });
         if (currentTaskNum === 8) {
           let participant_id = localStorage.getItem("userId");
-          window.location = "https://tally.so/r/nrjAxX?participant_id=" + participant_id;
+          window.location = `https://tally.so/r/nrjAxX?participant_id=${participant_id}`;
         } else {
           localStorage.setItem("userProgress", currentTaskNum);
           dispatch(switchTaskThunk(currentTaskNum + 1));
@@ -31324,7 +31336,9 @@ problem_1 = sum (check [1..999])
   var App2 = () => {
     return /* @__PURE__ */ import_react14.default.createElement(import_react14.default.Fragment, null, /* @__PURE__ */ import_react14.default.createElement("div", {
       className: "w-full h-full flex flex-col"
-    }, /* @__PURE__ */ import_react14.default.createElement(MenuBar_default, null), /* @__PURE__ */ import_react14.default.createElement("div", {
+    }, /* @__PURE__ */ import_react14.default.createElement("div", {
+      className: "py-2 px-4 bg-green-100"
+    }, "This is a playground for Chameleon. You can try out differnet examples here. This page has no data collection."), /* @__PURE__ */ import_react14.default.createElement(MenuBar_default, null), /* @__PURE__ */ import_react14.default.createElement("div", {
       className: "flex-grow"
     }, /* @__PURE__ */ import_react14.default.createElement(y2, {
       initialSizes: [60, 40]
