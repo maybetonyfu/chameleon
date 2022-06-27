@@ -31336,9 +31336,7 @@ problem_1 = sum (check [1..999])
   var App2 = () => {
     return /* @__PURE__ */ import_react14.default.createElement(import_react14.default.Fragment, null, /* @__PURE__ */ import_react14.default.createElement("div", {
       className: "w-full h-full flex flex-col"
-    }, /* @__PURE__ */ import_react14.default.createElement("div", {
-      className: "py-2 px-4 bg-green-100"
-    }, "This is a playground for Chameleon. You can try out differnet examples here. This page has no data collection."), /* @__PURE__ */ import_react14.default.createElement(MenuBar_default, null), /* @__PURE__ */ import_react14.default.createElement("div", {
+    }, /* @__PURE__ */ import_react14.default.createElement(MenuBar_default, null), /* @__PURE__ */ import_react14.default.createElement("div", {
       className: "flex-grow"
     }, /* @__PURE__ */ import_react14.default.createElement(y2, {
       initialSizes: [60, 40]
