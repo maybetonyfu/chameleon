@@ -6,7 +6,8 @@
   "scripts": {
     "build": "esbuild index.jsx --define:OUTPUT_TARGET=\\\"userstudy\\\"  --define:process.env.NODE_ENV=\\\"production\\\" --bundle --minify --sourcemap --outfile=build/out.js",
     "dev": "esbuild index.jsx  --define:OUTPUT_TARGET=\\\"userstudy\\\"  --define:process.env.NODE_ENV=\\\"development\\\" --bundle --sourcemap --outfile=build/out.js --watch",
-    "playground": "esbuild playground.jsx --define:OUTPUT_TARGET=\\\"playground\\\" --define:process.env.NODE_ENV=\\\"development\\\" --bundle --outfile=build/playground.js --watch"
+    "build:playground": "esbuild playground.jsx --define:OUTPUT_TARGET=\\\"playground\\\" --define:process.env.NODE_ENV=\\\"production\\\" --bundle --minify --sourcemap --bundle --outfile=build/playground.js",
+    "dev:playground": "esbuild playground.jsx --define:OUTPUT_TARGET=\\\"playground\\\" --define:process.env.NODE_ENV=\\\"development\\\" --bundle --outfile=build/playground.js --watch"
   },
   "keywords": [],
   "author": "",
