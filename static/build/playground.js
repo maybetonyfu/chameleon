@@ -30981,7 +30981,7 @@ problem_1 = sum (check [1..999])
       className: "code mx-0.5"
     }, "::"), /* @__PURE__ */ import_react11.default.createElement("div", {
       className: "code px-0.5 rounded-sm"
-    }, type3)), /* @__PURE__ */ import_react11.default.createElement("div", {
+    }, unAlias(type3))), /* @__PURE__ */ import_react11.default.createElement("div", {
       className: "ml-1 text-sm italic"
     }, " Imported from Prelude"));
   };
@@ -31019,7 +31019,7 @@ problem_1 = sum (check [1..999])
       className: "code mx-0.5"
     }, "::"), /* @__PURE__ */ import_react11.default.createElement("div", {
       className: "code px-0.5 rounded-sm " + (affinity === "L" ? "marker2" : "marker1")
-    }, type3)), multipleExps ? /* @__PURE__ */ import_react11.default.createElement("div", {
+    }, unAlias(type3))), multipleExps ? /* @__PURE__ */ import_react11.default.createElement("div", {
       className: "flex items-center"
     }, /* @__PURE__ */ import_react11.default.createElement("div", {
       className: "text-sm text-gray-500"

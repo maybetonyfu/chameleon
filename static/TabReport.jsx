@@ -7,6 +7,8 @@ import {
   ChevronDoubleLeftIcon,
   ChevronDoubleRightIcon,
 } from '@heroicons/react/outline';
+import { unAlias } from './util'
+
 import {
   nextStep,
   prevStep,
@@ -502,7 +504,7 @@ const GlobalTypeHints = ({ exp, type }) => {
       <div className='flex items-center'>
         <div className='code'>{exp}</div>
         <div className='code mx-0.5'>::</div>
-        <div className={'code px-0.5 rounded-sm'}>{type}</div>
+        <div className={'code px-0.5 rounded-sm'}>{unAlias(type)}</div>
       </div>
       <div className='ml-1 text-sm italic'> Imported from Prelude</div>
     </div>
@@ -556,7 +558,7 @@ const ReleventItem = ({ item }) => {
               (affinity === 'L' ? 'marker2' : 'marker1')
             }
           >
-            {type}
+            {unAlias(type)}
           </div>
         </div>
         {multipleExps ? (
